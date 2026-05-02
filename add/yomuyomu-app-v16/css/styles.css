@@ -1,0 +1,443 @@
+/**
+ * styles.css
+ * 
+ * よむよむお題目 v16 - メインスタイルシート
+ * 
+ * デザイン：モバイルファースト、緑系カラースキーム
+ * カラーパレット：
+ *   - メイン：#2e7d32（濃緑）
+ *   - 薄：#e8f5e9（薄緑背景）
+ *   - 強調：#ffc107（黄）
+ *   - 暗：#1a1a1a（ほぼ黒）
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Sans', 'Helvetica Neue', sans-serif;
+  background: #ffffff;
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ============================================
+   チュートリアル
+   ============================================ */
+
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  overflow-y: auto;
+}
+
+.tutorial-content {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tutorial-step {
+  display: block;
+}
+
+.tutorial-step h2 {
+  font-size: 1.8rem;
+  margin: 0 0 20px 0;
+  color: #1a1a1a;
+}
+
+.benefit-item {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.benefit-item .icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.benefit-item p {
+  flex: 1;
+  margin: 0;
+}
+
+.schedule-section {
+  margin: 20px 0;
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.schedule-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+}
+
+.schedule-section select,
+.schedule-section input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin: 8px 0;
+}
+
+/* ============================================
+   ボタン
+   ============================================ */
+
+.btn-primary {
+  width: 100%;
+  padding: 12px 16px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 12px 0;
+  transition: background 0.2s;
+}
+
+.btn-primary:active {
+  background: #1b5e20;
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 12px 16px;
+  background: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 8px 0;
+}
+
+/* ============================================
+   メイン画面
+   ============================================ */
+
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.practice-log h2 {
+  font-size: 1.5rem;
+  margin: 0 0 20px 0;
+  color: #1a1a1a;
+}
+
+.practice-summary {
+  background: #e8f5e9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary-item {
+  background: white;
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+  border-left: 4px solid #2e7d32;
+}
+
+.summary-item.highlight {
+  border-left-color: #ffc107;
+}
+
+.summary-item h4 {
+  font-size: 0.85rem;
+  color: #999;
+  margin: 0 0 8px 0;
+}
+
+.big-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin: 0;
+  line-height: 1;
+}
+
+.small-text {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 4px 0 0 0;
+}
+
+.practice-input-section {
+  margin: 20px 0;
+}
+
+.practice-input-section h3 {
+  font-size: 1rem;
+  margin: 0 0 12px 0;
+  color: #333;
+}
+
+.input-group {
+  margin: 12px 0;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.input-group small {
+  display: block;
+  color: #999;
+  font-size: 0.8rem;
+  margin: 4px 0 0 0;
+}
+
+/* ============================================
+   モーダル
+   ============================================ */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUpModal 0.3s ease-out;
+}
+
+@keyframes slideUpModal {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #999;
+}
+
+.modal-body {
+  padding: 16px;
+}
+
+.modal-footer {
+  padding: 16px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 8px;
+}
+
+.modal-footer button {
+  flex: 1;
+}
+
+.section {
+  margin-bottom: 16px;
+}
+
+.section h4 {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.event-input-group {
+  margin-bottom: 12px;
+}
+
+.event-input-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0 0 4px 0;
+}
+
+.event-input-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.event-input-group small {
+  display: block;
+  color: #999;
+  font-size: 0.8rem;
+  margin: 4px 0 0 0;
+}
+
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   プロンプト
+   ============================================ */
+
+.post-practice-reflection {
+  position: fixed;
+  bottom: 80px;
+  left: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  z-index: 100;
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.reflection-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reflection-content p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.prompt-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prompt-buttons button {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.prompt-buttons .btn-primary {
+  background: white;
+  color: #2e7d32;
+  margin: 0;
+}
+
+.prompt-buttons .btn-secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  margin: 0;
+}
+
+/* ============================================
+   レスポンシブ
+   ============================================ */
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .tutorial-step h2 {
+    font-size: 1.5rem;
+  }
+  
+  .big-number {
+    font-size: 1.5rem;
+  }
+}

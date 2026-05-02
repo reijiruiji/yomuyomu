@@ -1,0 +1,142 @@
+{
+  "name": "よむよむお題目 - Yomuyomu Odaimoku",
+  "short_name": "よむよむ",
+  "description": "Nichiren Buddhist chanting web app - 法華経勤行・念仏カウンター・功徳ポイント・リーダーボード・布施管理",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2d7a4a",
+  "background_color": "#f0f5f1",
+  "dir": "ltr",
+  "lang": "ja-JP",
+  "categories": [
+    "productivity",
+    "lifestyle"
+  ],
+  "screenshots": [
+    {
+      "src": "/images/screenshot-1-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/screenshot-1-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/screenshot-2-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/screenshot-2-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "purpose": "maskable"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "今すぐ念仏する",
+      "short_name": "念仏",
+      "description": "アプリを開いて念仏カウントを開始",
+      "url": "/?shortcut=chanting",
+      "icons": [
+        {
+          "src": "/images/icon-shortcut-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "統計を見る",
+      "short_name": "統計",
+      "description": "ダッシュボードで勤行統計を表示",
+      "url": "/?shortcut=stats",
+      "icons": [
+        {
+          "src": "/images/icon-shortcut-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "リーダーボード",
+      "short_name": "ランク",
+      "description": "リーダーボードランクを確認",
+      "url": "/?shortcut=leaderboard",
+      "icons": [
+        {
+          "src": "/images/icon-shortcut-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+yomuyomu",
+      "url": "/?action=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/import",
+      "accept": {
+        "application/json": [
+          ".json"
+        ]
+      },
+      "launch_type": "single-client"
+    }
+  ]
+}

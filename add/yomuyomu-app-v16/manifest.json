@@ -1,0 +1,53 @@
+{
+  "name": "よむよむお題目 - 修行が数字で証明されるアプリ",
+  "short_name": "よむよむお題目",
+  "description": "毎日のお題目・勤行を記録し、あなたの『成功パターン』を発見。修行が数字で証明されるアプリ。",
+  
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  
+  "background_color": "#ffffff",
+  "theme_color": "#2e7d32",
+  
+  "orientation": "portrait-primary",
+  
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot1-540x720.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "修行ログ画面"
+    }
+  ],
+  
+  "categories": ["lifestyle", "productivity"]
+}

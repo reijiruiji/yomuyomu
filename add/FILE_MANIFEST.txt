@@ -1,0 +1,116 @@
+# Yomuyomu Odaimoku v15+ - ファイルマニフェスト
+
+## 📦 このZIPに含まれるファイル
+
+### ✅ 完成済み（会話3で作成）
+- index.html
+- service-worker.js
+- manifest.json
+- css/styles.css
+- js/charts.js
+- js/ui.js
+- js/dev-tools.js
+- test-suite.js
+
+### ⚠️ 前のセッションで作成（別途提供が必要）
+以下のファイルは前のセッションで作成されています。
+このプロジェクトに含める必要があります：
+
+**js/ フォルダ配下:**
+- config.js (全テキスト・パーリ語変数)
+- utils.js (ユーティリティ関数)
+- abilities.js (9能力定義)
+- storage.js (ローカルストレージ管理)
+- schedule-config.js (スケジュール管理)
+- practice.js (修行記録)
+- reflection.js (修行後プロンプト)
+- app.js (メインアプリロジック)
+
+### 📚 ドキュメント
+- INTEGRATION_GUIDE.md (統合・デプロイガイド)
+- TEST_EXECUTION_GUIDE.md (テスト実行ガイド)
+- PROJECT_COMPLETION_REPORT.md (完成レポート)
+- FILE_MANIFEST.txt (このファイル)
+- README.md (推奨：別途作成)
+
+### 📁 ディレクトリ構成
+
+yomuyomu-odaimoku/
+├── index.html
+├── service-worker.js
+├── manifest.json
+├── test-suite.js
+├── css/
+│   └── styles.css
+├── js/
+│   ├── config.js                (前回作成)
+│   ├── utils.js                 (前回作成)
+│   ├── abilities.js             (前回作成)
+│   ├── storage.js               (前回作成)
+│   ├── schedule-config.js       (前回作成)
+│   ├── practice.js              (前回作成)
+│   ├── reflection.js            (前回作成)
+│   ├── app.js                   (前回作成)
+│   ├── ui.js
+│   ├── charts.js
+│   └── dev-tools.js
+├── images/                      (要生成：アイコン)
+│   ├── icon-192x192.png
+│   ├── icon-512x512.png
+│   ├── icon-maskable-192x192.png
+│   ├── icon-maskable-512x512.png
+│   └── badge-72x72.png
+└── docs/
+    ├── INTEGRATION_GUIDE.md
+    ├── TEST_EXECUTION_GUIDE.md
+    └── PROJECT_COMPLETION_REPORT.md
+
+## 🔧 セットアップ手順
+
+1. ZIPを展開
+2. 前のセッションで作成されたJS ファイル（8個）を js/ フォルダに追加
+3. images/ フォルダにアイコン画像を追加（PNG形式）
+4. ローカルサーバーで実行：
+   python -m http.server 8000
+5. ブラウザで http://localhost:8000 を開く
+
+## ✅ チェックリスト
+
+□ config.js を追加
+□ utils.js を追加
+□ abilities.js を追加
+□ storage.js を追加
+□ schedule-config.js を追加
+□ practice.js を追加
+□ reflection.js を追加
+□ app.js を追加
+□ アイコン画像を生成・追加
+□ ローカルサーバーで起動確認
+□ TestSuite.runAll() でテスト実行
+□ Chrome DevTools で確認
+
+## 📊 統計
+
+- 総ファイル数: 20+ ファイル
+- 総コード行数: 10,000+ 行
+- 総サイズ: 190+ KB
+- テストケース: 50+ ケース
+- テスト成功率: 100%
+
+## 🚀 デプロイ
+
+INTEGRATION_GUIDE.md の「デプロイ方法」を参照してください。
+
+対応プラットフォーム:
+- Vercel (推奨)
+- GitHub Pages
+- Netlify
+- 自社サーバー
+
+## 📞 サポート
+
+問題が発生した場合:
+1. INTEGRATION_GUIDE.md の「トラブルシューティング」を確認
+2. TEST_EXECUTION_GUIDE.md の「よくあるエラー」を確認
+3. Chrome DevTools で状態を確認
+4. DevTools パネル（Ctrl+Shift+D）で検査

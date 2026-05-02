@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- メタ情報 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Nichiren Buddhist chanting web app - 法華経勤行・念仏カウンター・功徳ポイント・リーダーボード・布施管理">
+  <meta name="theme-color" content="#2d7a4a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="よむよむ">
+
+  <!-- タイトル -->
+  <title>よむよむお題目 - Yomuyomu Odaimoku</title>
+
+  <!-- PWA マニフェスト -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- アイコン -->
+  <link rel="icon" type="image/png" href="/images/icon-192x192.png">
+  <link rel="apple-touch-icon" href="/images/icon-192x192.png">
+
+  <!-- スタイルシート -->
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <!-- 本番環境チェック -->
+  <script>
+    // Node_ENV 設定（デバッグツールの無効化判定用）
+    window.NODE_ENV = 'development'; // 本番: 'production'
+  </script>
+</head>
+<body>
+  <!-- ========== ナビゲーション ========== -->
+  <nav>
+    <ul>
+      <li><a href="#" class="nav-link active" data-screen="dashboard">📊 ダッシュボード</a></li>
+      <li><a href="#" class="nav-link" data-screen="practice">🙏 勤行</a></li>
+      <li><a href="#" class="nav-link" data-screen="stats">📈 統計</a></li>
+      <li><a href="#" class="nav-link" data-screen="leaderboard">👑 ランク</a></li>
+      <li><a href="#" class="nav-link" data-screen="settings">⚙️ 設定</a></li>
+    </ul>
+  </nav>
+
+  <!-- ========== メインコンテンツエリア ========== -->
+  <main id="app">
+    <!-- ダッシュボード画面 -->
+    <section id="screen-dashboard" class="screen active">
+      <header>
+        <h1>よむよむお題目</h1>
+        <p class="subtitle">Nichiren Buddhist Chanting Practice</p>
+      </header>
+
+      <div id="dashboard" class="container">
+        <!-- 本日の統計 -->
+        <div class="dashboard-grid">
+          <div class="stat-card">
+            <div class="stat-label">本日の念仏</div>
+            <div class="stat-value" id="stat-today-count">0</div>
+            <small class="stat-label">回</small>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">本日の勤行</div>
+            <div class="stat-value" id="stat-today-time">0分</div>
+            <small class="stat-label">時間</small>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">本日の功徳</div>
+            <div class="stat-value" id="stat-today-merit">0</div>
+            <small class="stat-label">ポイント</small>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">現在のストリーク</div>
+            <div class="stat-value" id="stat-today-streak">0日</div>
+            <small class="stat-label">連続実施</small>
+          </div>
+        </div>
+
+        <!-- アチーブメント -->
+        <div class="card">
+          <h3>🏆 アチーブメント</h3>
+          <div id="achievement-badges" class="flex gap-1 flex-wrap">
+            <!-- 動的に挿入 -->
+          </div>
+        </div>
+
+        <!-- グラフセクション -->
+        <div class="card">
+          <h3>📊 修行量の推移</h3>
+          <canvas id="chart-practice-history"></canvas>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3>💚 功徳の内訳</h3>
+            <canvas id="chart-merit-breakdown"></canvas>
+          </div>
+
+          <div class="card">
+            <h3>🌟 能力スコア</h3>
+            <canvas id="chart-ability-scores"></canvas>
+          </div>
+
+          <div class="card">
+            <h3>⚡ 修行内訳</h3>
+            <canvas id="chart-practice-composition"></canvas>
+          </div>
+        </div>
+
+        <!-- 週間統計 -->
+        <div class="card">
+          <h3>📅 今週の統計</h3>
+          <div class="dashboard-grid">
+            <div class="stat-card">
+              <div class="stat-label">念仏総数</div>
+              <div class="stat-value" id="stat-week-count">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">平均時間</div>
+              <div class="stat-value" id="stat-week-avg">0秒</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">週間功徳</div>
+              <div class="stat-value" id="stat-week-merit">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">実施日</div>
+              <div class="stat-value" id="stat-week-rank">0/7</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 月間統計 -->
+        <div class="card">
+          <h3>📆 今月の統計</h3>
+          <div class="dashboard-grid">
+            <div class="stat-card">
+              <div class="stat-label">念仏総数</div>
+              <div class="stat-value" id="stat-month-count">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">平均時間</div>
+              <div class="stat-value" id="stat-month-avg">0秒</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">月間功徳</div>
+              <div class="stat-value" id="stat-month-merit">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">目標進捗</div>
+              <div class="stat-value" id="stat-month-progress">0/30</div>
+            </div>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" id="progress-bar-month" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 勤行画面 -->
+    <section id="screen-practice" class="screen">
+      <header>
+        <h1>🙏 勤行を始める</h1>
+        <p class="subtitle">法華経お題目を唱える</p>
+      </header>
+
+      <div class="container">
+        <div class="card">
+          <h3>念仏カウンター</h3>
+          <div style="text-align: center; margin: 2rem 0;">
+            <div id="chanting-count" style="font-size: 3rem; font-weight: bold; color: #2d7a4a; margin: 1rem 0;">
+              0
+            </div>
+            <button class="btn btn-primary" id="btn-start-chanting" style="width: 100%; margin: 0.5rem 0;">
+              念仏を開始
+            </button>
+            <button class="btn btn-outline" id="btn-reset-count" style="width: 100%; margin: 0.5rem 0;">
+              リセット
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>勤行記録</h3>
+          <form id="practice-form">
+            <div class="form-group">
+              <label for="practice-date">日付</label>
+              <input type="date" id="practice-date" required>
+            </div>
+
+            <div class="form-group">
+              <label for="practice-count">念仏回数</label>
+              <input type="number" id="practice-count" min="0" required>
+            </div>
+
+            <div class="form-group">
+              <label for="practice-duration">時間（分）</label>
+              <input type="number" id="practice-duration" min="0" step="0.5" required>
+            </div>
+
+            <div class="form-group">
+              <label for="practice-notes">メモ</label>
+              <textarea id="practice-notes" placeholder="今日の感想や気づき"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              記録を保存
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 統計画面 -->
+    <section id="screen-stats" class="screen">
+      <header>
+        <h1>📈 統計分析</h1>
+        <p class="subtitle">修行の変化を見る</p>
+      </header>
+
+      <div class="container">
+        <div class="card">
+          <h3>修行量の推移（月別）</h3>
+          <canvas id="chart-monthly-history"></canvas>
+        </div>
+
+        <div class="card">
+          <h3>能力成長グラフ</h3>
+          <canvas id="chart-ability-growth"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- リーダーボード画面 -->
+    <section id="screen-leaderboard" class="screen">
+      <header>
+        <h1>👑 リーダーボード</h1>
+        <p class="subtitle">修行の成果を確認</p>
+      </header>
+
+      <div class="container">
+        <div class="card">
+          <h3>🎖️ あなたのランク</h3>
+          <div style="text-align: center; margin: 2rem 0;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">👤</div>
+            <div id="stat-user-name" style="font-size: 1.5rem; font-weight: bold; color: #2d7a4a; margin-bottom: 0.5rem;">
+              ゲスト
+            </div>
+            <div id="stat-rank-level" style="font-size: 1.25rem; color: #4a9d66; margin-bottom: 1.5rem;">
+              初心者
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>📊 あなたの成績</h3>
+          <div class="dashboard-grid">
+            <div class="stat-card">
+              <div class="stat-label">総念仏回数</div>
+              <div class="stat-value" id="stat-total-count">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">総勤行時間</div>
+              <div class="stat-value" id="stat-total-duration">0時間</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">総功徳</div>
+              <div class="stat-value" id="stat-total-merit">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>💰 布施（Dana）</h3>
+          <div class="stat-card" style="margin-bottom: 1rem;">
+            <div class="stat-label">総布施額</div>
+            <div class="stat-value" id="stat-total-dana">¥0</div>
+          </div>
+          <div class="stat-card" style="margin-bottom: 1rem;">
+            <div class="stat-label">布施回数</div>
+            <div class="stat-value" id="stat-dana-count">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">平均布施額</div>
+            <div class="stat-value" id="stat-dana-avg">¥0</div>
+          </div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" id="btn-add-dana">
+            布施を追加
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>📝 最近の布施</h3>
+          <div id="dana-recent-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 設定画面 -->
+    <section id="screen-settings" class="screen">
+      <header>
+        <h1>⚙️ 設定</h1>
+        <p class="subtitle">アプリの設定を管理</p>
+      </header>
+
+      <div class="container">
+        <div class="card">
+          <h3>👤 プロフィール</h3>
+          <div class="form-group">
+            <label for="settings-name">ユーザー名</label>
+            <input type="text" id="settings-name" placeholder="お名前">
+          </div>
+          <div class="form-group">
+            <label for="settings-email">メールアドレス</label>
+            <input type="email" id="settings-email" placeholder="example@mail.com">
+          </div>
+          <button class="btn btn-primary" style="width: 100%;">
+            プロフィールを保存
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>🔔 通知設定</h3>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="settings-notifications" checked>
+              Push 通知を有効にする
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="settings-notification-time">通知時刻</label>
+            <input type="time" id="settings-notification-time" value="08:00">
+          </div>
+          <button class="btn btn-secondary" style="width: 100%;">
+            テスト通知を送信
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>💾 データ管理</h3>
+          <button class="btn btn-secondary" style="width: 100%; margin: 0.5rem 0;" id="btn-export-data">
+            📥 データをエクスポート
+          </button>
+          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-import-data">
+            📤 データをインポート
+          </button>
+          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-clear-data">
+            🗑️ すべてクリア
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>📱 PWA</h3>
+          <button class="btn btn-secondary" style="width: 100%; margin: 0.5rem 0;" id="btn-install-pwa">
+            ホーム画面に追加
+          </button>
+          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-cache-status">
+            キャッシュ状態を確認
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>📊 バージョン & ヘルプ</h3>
+          <p>
+            <strong>アプリ</strong>: よむよむお題目 v15+<br>
+            <strong>バージョン</strong>: <span id="app-version">1.0.0</span><br>
+            <strong>最終更新</strong>: <span id="app-updated">読み込み中...</span>
+          </p>
+          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;" id="btn-check-updates">
+            更新を確認
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== フッター ========== -->
+  <footer>
+    <p>&copy; 2024 Yomuyomu Odaimoku. 南無妙法蓮華経</p>
+    <p style="margin-top: 0.5rem;">
+      <a href="#" id="footer-about">このアプリについて</a> •
+      <a href="#" id="footer-privacy">プライバシー</a> •
+      <a href="#" id="footer-contact">お問い合わせ</a>
+    </p>
+  </footer>
+
+  <!-- ========== JavaScript ========== -->
+
+  <!-- 設定・用語・パーリ語 -->
+  <script src="/js/config.js"></script>
+
+  <!-- ユーティリティ関数 -->
+  <script src="/js/utils.js"></script>
+
+  <!-- 能力定義 -->
+  <script src="/js/abilities.js"></script>
+
+  <!-- ストレージ管理 -->
+  <script src="/js/storage.js"></script>
+
+  <!-- スケジュール設定 -->
+  <script src="/js/schedule-config.js"></script>
+
+  <!-- 修行記録 -->
+  <script src="/js/practice.js"></script>
+
+  <!-- 修行後プロンプト -->
+  <script src="/js/reflection.js"></script>
+
+  <!-- メインアプリロジック -->
+  <script src="/js/app.js"></script>
+
+  <!-- UI 更新機能 -->
+  <script src="/js/ui.js"></script>
+
+  <!-- グラフ描画（Chart.js CDN） -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="/js/charts.js"></script>
+
+  <!-- デバッグツール -->
+  <script src="/js/dev-tools.js"></script>
+
+  <!-- ========== Service Worker 登録 ========== -->
+  <script>
+    /**
+     * Service Worker の登録
+     */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('[SW] Registered successfully:', registration);
+            
+            // 更新チェック（1時間ごと）
+            setInterval(() => {
+              registration.update();
+            }, 60 * 60 * 1000);
+          })
+          .catch(error => {
+            console.error('[SW] Registration failed:', error);
+          });
+
+        // Service Worker からのメッセージを受信
+        navigator.serviceWorker.addEventListener('message', event => {
+          console.log('[APP] Message from SW:', event.data);
+
+          // キャッシュクリア通知
+          if (event.data.type === 'cache-cleared') {
+            showInfo('キャッシュをクリアしました');
+          }
+
+          // 同期完了通知
+          if (event.data.type === 'sync-complete') {
+            showSuccess('データを同期しました');
+            if (typeof updateDashboard !== 'undefined') {
+              updateDashboard();
+            }
+          }
+        });
+      });
+    } else {
+      console.warn('[APP] Service Worker not supported');
+    }
+  </script>
+
+  <!-- ========== スクリーン切り替え ========== -->
+  <script>
+    /**
+     * ナビゲーションクリック時にスクリーンを切り替え
+     */
+    document.querySelectorAll('[data-screen]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const screenName = link.getAttribute('data-screen');
+
+        // 前のスクリーンを非表示
+        document.querySelectorAll('.screen').forEach(screen => {
+          screen.classList.remove('active');
+        });
+
+        // ナビゲーション非アクティブ化
+        document.querySelectorAll('[data-screen]').forEach(nav => {
+          nav.classList.remove('active');
+        });
+
+        // 新しいスクリーンを表示
+        const newScreen = document.getElementById(`screen-${screenName}`);
+        if (newScreen) {
+          newScreen.classList.add('active');
+        }
+
+        // ナビゲーションをアクティブ化
+        link.classList.add('active');
+
+        console.log(`[APP] Screen switched to: ${screenName}`);
+      });
+    });
+  </script>
+
+  <!-- ========== Push 通知リクエスト ========== -->
+  <script>
+    /**
+     * Push 通知の許可をリクエスト
+     */
+    function requestNotificationPermission() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            console.log('[APP] Notification permission granted');
+            showSuccess('通知を有効にしました');
+          }
+        });
+      }
+    }
+
+    // ページ読み込み後に許可をリクエスト
+    window.addEventListener('load', () => {
+      setTimeout(requestNotificationPermission, 2000);
+    });
+  </script>
+
+  <!-- ========== PWA インストールプロンプト ========== -->
+  <script>
+    let deferredPrompt;
+
+    /**
+     * beforeinstallprompt イベント
+     * PWA インストールプロンプトをキャプチャ
+     */
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      console.log('[APP] Install prompt captured');
+
+      // ボタンをアクティブにする
+      const installBtn = document.getElementById('btn-install-pwa');
+      if (installBtn) {
+        installBtn.style.display = 'block';
+      }
+    });
+
+    /**
+     * PWA インストールボタンのクリックハンドラ
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      const installBtn = document.getElementById('btn-install-pwa');
+      if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const choiceResult = await deferredPrompt.userChoice;
+            if (choiceResult.outcome === 'accepted') {
+              console.log('[APP] User accepted the install prompt');
+              showSuccess('アプリをホーム画面に追加しました');
+            }
+            deferredPrompt = null;
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
