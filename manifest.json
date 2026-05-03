@@ -1,13 +1,13 @@
 {
   "name": "よむよむお題目 - Yomuyomu Odaimoku",
   "short_name": "よむよむ",
-  "description": "法華経勤行・念仏カウンター・功徳ポイント",
+  "description": "法華経勤行・お題目カウンター・功徳ポイント",
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#2d7a4a",
-  "background_color": "#f0f5f1",
+  "theme_color": "#bf7f2e",
+  "background_color": "#faf8f5",
   "dir": "ltr",
   "lang": "ja-JP",
   "icons": [

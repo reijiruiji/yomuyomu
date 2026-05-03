@@ -3,9 +3,9 @@
 <head>
   <!-- メタ情報 -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Nichiren Buddhist chanting web app - 法華経勤行・念仏カウンター・功徳ポイント・リーダーボード・布施管理">
-  <meta name="theme-color" content="#2d7a4a">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Nichiren Buddhist chanting web app - 法華経勤行・お題目カウンター・功徳（回）・リーダーボード・布施管理">
+  <meta name="theme-color" content="#bf7f2e">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="よむよむ">
@@ -22,6 +22,7 @@
 
   <!-- スタイルシート -->
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/yomuyomu-v15.css">
 
   <!-- 本番環境チェック -->
   <script>
@@ -30,352 +31,976 @@
   </script>
 </head>
 <body>
-  <!-- ========== ナビゲーション ========== -->
-  <nav>
-    <ul>
-      <li><a href="#" class="nav-link active" data-screen="dashboard">📊 ダッシュボード</a></li>
-      <li><a href="#" class="nav-link" data-screen="practice">🙏 勤行</a></li>
-      <li><a href="#" class="nav-link" data-screen="stats">📈 統計</a></li>
-      <li><a href="#" class="nav-link" data-screen="leaderboard">👑 ランク</a></li>
-      <li><a href="#" class="nav-link" data-screen="settings">⚙️ 設定</a></li>
-    </ul>
-  </nav>
+<!-- ════ TUTORIAL ════ -->
+<div class="tscr" id="t1">
+  <div class="tut-title-wrap" id="tutTitle" aria-label="よむよむお題目"></div>
+  <div class="hint-bounce" id="t1hint" style="opacity:0">▼ タップして続ける</div>
+</div>
+<div class="tscr hidden" id="t2">
+  <div style="max-width:300px;text-align:center">
+    <div class="worry-header" id="w0">こんなお悩みありませんか？</div>
+    <div class="worry-li" id="w1">🔢 お題目を唱えた回数を忘れてしまう</div>
+    <div class="worry-li" id="w2">📖 法華経の勤行、何回唱えたか忘れる</div>
+    <div class="worry-li" id="w3">👓 本だと文字が小さくて読みにくい</div>
+    <div class="worry-solve" id="wS">そんなお悩みを解決します。</div>
+  </div>
+</div>
+<div class="tscr hidden" id="t3">
+  <div style="max-width:300px;text-align:center;width:100%">
+    <div class="tut-ask">
+      <span style="animation-delay:.1s">あなたのお名前を</span>
+      <span style="animation-delay:.5s">教えていただけますでしょうか？</span>
+    </div>
+    <div class="tut-inp-wrap" id="tutInpWrap">
+      <input class="tut-inp" type="text" id="tutName" placeholder="お名前" autocomplete="off" maxlength="20">
+      <button class="btn-done" id="tutNameBtn">完了 →</button>
+    </div>
+  </div>
+</div>
+<div class="tscr hidden" id="t4">
+  <div style="max-width:310px;text-align:center;width:100%">
+    <p id="tutGreet" style="font-size:13px;color:var(--mu);margin-bottom:.4rem;animation:rUp .5s ease-out both"></p>
+    <p style="font-size:.95rem;font-weight:600;color:var(--a);margin-bottom:.875rem;animation:rUp .5s ease-out .2s both">見やすい文字はどれですか？</p>
+    <div class="font-opt" data-f="kanji" style="animation-delay:.15s">漢字（南無妙法蓮華経）</div>
+    <div class="font-opt" data-f="hira"  style="animation-delay:.27s">ひらがな（なむみょうほうれんげきょう）</div>
+    <div class="font-opt" data-f="roma"  style="animation-delay:.39s">ローマ字（Namu Myoho Renge Kyo）</div>
+    <button type="button" class="btn-done" id="btn-tut-after-font" style="margin-top:.625rem">次へ（記録の考え方）→</button>
+  </div>
+</div>
+
+<div class="tscr hidden" id="t5">
+  <div class="tutorial-modern-inner tut-scroll">
+    <h2 class="tmod-h">🚀 人生が変わるアプリ</h2>
+    <p class="tmod-lead" style="text-align:center;font-weight:600">毎日の修行で得られるもの：</p>
+    <div class="benefits-list-modern">
+      <div class="benefit-item-modern">
+        <span class="tmod-icon" aria-hidden="true">🧠</span>
+        <p><strong>心が落ち着く</strong><br />雑念が減り、判断が早くなる</p>
+      </div>
+      <div class="benefit-item-modern">
+        <span class="tmod-icon" aria-hidden="true">⚡</span>
+        <p><strong>自分をコントロールできるようになる</strong><br />「やる」と決めたことが続きやすくなる</p>
+      </div>
+      <div class="benefit-item-modern">
+        <span class="tmod-icon" aria-hidden="true">🍀</span>
+        <p><strong>人生が整いやすくなる</strong><br />良い出会いや思わぬ朗報を大切にできる</p>
+      </div>
+      <div class="benefit-item-modern">
+        <span class="tmod-icon" aria-hidden="true">📈</span>
+        <p><strong>「成功パターン」が見えてくる</strong><br />修行量と日々のメモを自分のデータとして並べられる</p>
+      </div>
+    </div>
+    <p class="tmod-footnote" style="text-align:center">
+      継続と記録が、生活のリズムをつくる手助けになります。<br />
+      <strong>※</strong>医療効果・宗教的救済・幸運の保証をするものではありません。相関や因果の「証明」でもありません。
+    </p>
+    <button type="button" class="btn-done" id="btn-tut-step5-next">詳しく見る →</button>
+  </div>
+</div>
+
+<div class="tscr hidden" id="t6">
+  <div class="tutorial-modern-inner tut-scroll">
+    <h2 class="tmod-h">📊 3 つの「変化」を可視化</h2>
+    <p class="tmod-lead small">表示は任意です。まずは修行ログだけからでも大丈夫です。</p>
+    <div class="features-modern">
+      <div class="feature-card-modern">
+        <h3 class="tmod-card-h">1️⃣ 修行ログ</h3>
+        <p>毎日の修行を記録</p>
+        <div class="what-you-get-modern">
+          <p><strong>これで分かること：</strong></p>
+          <ul>
+            <li>いつ・どれだけ続けたかの土台データ</li>
+            <li>自分に合うペース（短時間多回／まとめて等）の傾向</li>
+            <li>継続のモチベーション（見える化）</li>
+          </ul>
+        </div>
+        <p class="demo-data-modern">例：今月の功徳が先月より伸びた →「忙しくても短く唱えた日が続いた」など、あとから読み返せます。</p>
+      </div>
+      <div class="feature-card-modern">
+        <h3 class="tmod-card-h">2️⃣ 心の状態を数値化</h3>
+        <p>任意の主観スライダーとメモ</p>
+        <div class="what-you-get-modern">
+          <p><strong>これで分かること：</strong></p>
+          <ul>
+            <li>その日のコンディションの「自分基準」</li>
+            <li>修行の前後でメモを並べたときの振り返り</li>
+          </ul>
+        </div>
+        <p class="demo-data-modern">※医療的な測定や診断ではありません。あくまで自己記録です。</p>
+      </div>
+      <div class="feature-card-modern">
+        <h3 class="tmod-card-h">3️⃣ 人生の変化をデータでつなぐ</h3>
+        <p>出来事件数・メモを修行と同日に残せる</p>
+        <div class="what-you-get-modern">
+          <p><strong>これで分かること：</strong></p>
+          <ul>
+            <li>「この週はメモが多かった」など一覧としての並び</li>
+            <li>CSV を出して自分で分析するための材料</li>
+          </ul>
+        </div>
+        <p class="demo-data-modern">※自動で「幸運が◯%増えた」とは言いません。因果の断定はしません。</p>
+      </div>
+    </div>
+    <p class="tmod-footnote">大切なのは<strong>自分に嘘をつきにくい記録</strong>です。続けるほど、比較・振り返りがしやすくなります。</p>
+    <button type="button" class="btn-done" id="btn-tut-step6-next">ホーム画面に追加（推奨）→</button>
+  </div>
+</div>
+
+<div class="tscr hidden" id="t7">
+  <div class="tutorial-modern-inner tut-scroll">
+    <h2 class="tmod-h">📱 ホーム画面におすすめ</h2>
+    <p class="tmod-lead small">
+      <strong>このアプリでの「功徳」</strong>は、<strong>どれだけ修行を記録したか</strong>をまとめる指標です。<br />
+      <strong>「幸運」</strong>に近いほうは、<strong>自分以外の要因で運がよさそうに感じた出来事</strong>をカウンタとメモで残す運用です。<br />
+      因果や科学的証明、未来の約束ものではありません。
+    </p>
+    <div class="tut-pwa-steps">
+      <details class="tut-pwa-box" open>
+        <summary class="tut-pwa-sum">📱 iPhone / iPad（Safari）</summary>
+        <ol class="tut-pwa-ol">
+          <li>このページを <strong>Safari</strong> で開いていることを確認してください。</li>
+          <li>画面下の<strong>共有</strong>（□に上向き矢印のアイコン）をタップ。</li>
+          <li>下にスクロールして<strong>ホーム画面に追加</strong>を選ぶ。</li>
+          <li>右上の<strong>追加</strong>で名前を確認して確定。</li>
+        </ol>
+      </details>
+      <details class="tut-pwa-box">
+        <summary class="tut-pwa-sum">🤖 Android（Chrome を想定）</summary>
+        <ol class="tut-pwa-ol">
+          <li>このページを <strong>Chrome</strong> で開いていることを確認してください。</li>
+          <li>右上の<strong>⋮ メニュー</strong>から <strong>ホーム画面に追加</strong> または <strong>アプリをインストール</strong> を選ぶ（端末・バージョンで表記が異なります）。</li>
+          <li>案内に従い、ホーム画面上にこのアプリのショートカット（アイコン）を置く。</li>
+          <li>メニューに項目が無いブラウザの場合は、別ブラウザで開き直してください。</li>
+        </ol>
+      </details>
+    </div>
+    <p class="tmod-footnote" style="margin-top:.75rem">
+      ブラウザの「ホーム画面に追加」は任意ですが、続けやすくなります。手順だけ先に読むこともできます。
+    </p>
+    <label class="tut-pwa-done-label">
+      <input type="checkbox" id="tut-add-home-done" />
+      上の手順を確認しました（または、あとでもう一度ヒントから開けます）
+    </label>
+    <button type="button" class="btn-done" id="btn-tut-finish-all" disabled aria-disabled="true">アプリを始める 🪷</button>
+  </div>
+</div>
 
   <!-- ========== メインコンテンツエリア ========== -->
   <main id="app">
-    <!-- ダッシュボード画面 -->
-    <section id="screen-dashboard" class="screen active">
+    <section id="screen-practice" class="screen active">
       <header>
-        <h1>よむよむお題目</h1>
-        <p class="subtitle">Nichiren Buddhist Chanting Practice</p>
+        <h1>よむよむお題目（統合）</h1>
+        <p class="subtitle">お題目・勤行・暦・統計・設定は、下のタブで切り替わります。設定で統計の文字サイズや枠幅も調整できます。</p>
       </header>
+      <div class="container">
+        <p style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <button type="button" class="btn btn-outline" id="btn-yomy-walkthrough">画面ガイド</button>
+          <button type="button" class="btn btn-outline" id="btn-yomy-reset-tutorial">チュートリアルをやり直す</button>
+        </p>
+        <!-- 開発・レイアウト固定用：お題目・勤行まわりの基準幅 390px（実機は親のコンテナでセンター表示） -->
+        <div class="yomy-fixed-device" id="yomy-fixed-device">
+        <div class="yomy-v15-shell">
+<div class="yomy-v15-app" style="display:none">
+  <div id="mbtn" onclick="togMenu()"><div class="hbl"></div><div class="hbl"></div><div class="hbl"></div></div>
+  <div id="mover" onclick="togMenu()"></div>
+  <div id="mpanel">
+    <h3 style="font-size:13px;font-weight:600;color:var(--a);margin-bottom:.25rem" id="menuName"></h3>
+    <p style="font-size:10px;color:var(--mu);margin-bottom:.875rem" id="menuSub"></p>
+    <hr style="border:none;border-top:1px solid var(--bo);margin-bottom:.875rem">
+    <p style="font-size:11px;font-weight:600;color:var(--a);margin-bottom:.3rem">💡 あなたの１日の価値</p>
+    <div class="sl-row"><label>価値</label><input type="range" id="dvR" min="1000" max="100000" step="1000" value="5000"><span id="dvV">¥5k</span></div>
+    <p style="font-size:10px;color:var(--di);margin-bottom:.75rem">¥1,000〜¥100,000 / 日</p>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <p style="font-size:11px;color:var(--mu);margin-bottom:.4rem">テーマカラー</p>
+    <input type="range" class="hue-track" id="hueSlider" min="0" max="360" value="35" style="margin-bottom:.875rem">
+    <button class="btn-s" id="modeBtn" onclick="togDark()" style="display:block;width:100%;text-align:center;margin-bottom:.875rem">🌙 ダーク</button>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <p style="font-size:11px;color:var(--mu);margin-bottom:.4rem">音声感度</p>
+    <div class="sl-row"><label>感度</label><input type="range" id="sensR" min="0" max="9" value="8" step="1"><span id="sensV">8</span></div>
+    <p style="font-size:10px;color:var(--di);margin-bottom:.75rem">低め＝厳格 / 高め＝ゆるい</p>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <p style="font-size:11px;color:var(--mu);margin-bottom:.4rem">お名前変更</p>
+    <div class="rpair"><input type="text" id="nameChange" placeholder="新しいお名前"><button class="btn-s" onclick="changeName()">変更</button></div>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <button class="btn-s" id="danaPromptBtn" onclick="openDana()" style="width:100%;padding:8px;background:linear-gradient(135deg,#c2185b,#e91e63);color:#fff;border-color:#c2185b">🙏 ダーナ（布施）</button>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <button class="btn-s" onclick="resetAll()" style="color:var(--err);border-color:var(--err);width:100%;padding:8px">リセット（全データ削除）</button>
+  </div>
 
-      <div id="dashboard" class="container">
-        <!-- 本日の統計 -->
-        <div class="dashboard-grid">
-          <div class="stat-card">
-            <div class="stat-label">本日の念仏</div>
-            <div class="stat-value" id="stat-today-count">0</div>
-            <small class="stat-label">回</small>
-          </div>
+  <div class="app-hd" id="appHdBar" onclick="togMenu()" role="button" tabindex="0"
+    aria-controls="mpanel" aria-label="サイドメニューを開く" title="ヘッダーをタップしてメニュー">
+    <div style="width:36px"></div>
+    <div style="flex:1;text-align:center">
+      <div class="app-logo">🪷 よむよむお題目</div>
+      <div class="app-sub" id="menuSub" style="font-size:10px"></div>
+      <div class="app-sub" id="hdrInfo"></div>
+    </div>
+    <div style="width:36px"></div>
+  </div>
 
-          <div class="stat-card">
-            <div class="stat-label">本日の勤行</div>
-            <div class="stat-value" id="stat-today-time">0分</div>
-            <small class="stat-label">時間</small>
-          </div>
+  <div class="tabs">
+    <button class="tab on" type="button" data-t="chant">🥁<br />お題目</button>
+    <button class="tab" type="button" data-t="gongyou">📖<br />勤行</button>
+    <button class="tab" type="button" data-t="cal">📅<br />暦</button>
+    <button class="tab" type="button" data-t="awakening" style="display:none">🧘<br />覚醒度</button>
+    <button class="tab" type="button" data-t="stats">📈<br />統計</button>
+    <button class="tab" type="button" data-t="analysis">🧾<br />分析</button>
+    <button class="tab" type="button" data-t="settings">⚙<br />設定</button>
+  </div>
 
-          <div class="stat-card">
-            <div class="stat-label">本日の功徳</div>
-            <div class="stat-value" id="stat-today-merit">0</div>
-            <small class="stat-label">ポイント</small>
-          </div>
+  <!-- ── お題目 ── -->
+  <div class="tc on" id="tc-chant">
+    <div class="tab-hd">
+      <span class="tab-hd-title">🥁 お題目カウンター</span>
+      <button class="hint-btn" onclick="showHint('chant')">?</button>
+    </div>
+    <div id="todayBanner"></div>
+    <div id="multPill" style="display:none"></div>
+    <div class="card card-a" id="countCard">
+      <div class="count-wrap">
+        <div class="count-num" id="sesNum">0</div>
+        <div class="count-sub" id="cumul">累計: 0回</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>お題目カウンター</h3>
+      <div style="text-align:center; margin:1.5rem 0;">
+        <div id="chanting-count" style="font-size:3rem; font-weight:700; color:var(--a); margin:1rem 0;">0</div>
+        <button class="btn btn-primary" id="btn-start-chanting" style="width:100%; margin:0.5rem 0;">お題目を開始</button>
+        <button class="btn btn-outline" id="btn-reset-count" style="width:100%; margin:0.5rem 0;">リセット</button>
+      </div>
+    </div>
+    <div class="merit-grid">
+      <div class="mc"><div class="mv" id="meritV">0</div><div class="ml">功徳（回）</div></div>
+      <div class="mc"><div class="mv" id="dvDisp">¥5,000</div><div class="ml">１日の価値</div></div>
+      <button class="btn-big" id="openReflectionFromChant" style="margin-top: 8px;">📝 今日の振り返りを記録</button>
+    </div>
 
-          <div class="stat-card">
-            <div class="stat-label">現在のストリーク</div>
-            <div class="stat-value" id="stat-today-streak">0日</div>
-            <small class="stat-label">連続実施</small>
-          </div>
+    <div id="smsg" class="smsg"></div>
+    <button class="btn-big" id="manBtn">📿 太鼓を叩く +1</button>
+  </div>
+
+  <!-- ── 勤行 ── -->
+  <div class="tc" id="tc-gongyou">
+    <div class="tab-hd">
+      <span class="tab-hd-title">📖 勤行 — 法華経</span>
+      <div style="display:flex;gap:5px;align-items:center">
+        <button class="btn-s" id="rouletteBtn">🎰</button>
+        <button class="hint-btn" onclick="showHint('gongyou')">?</button>
+        <button class="btn-big" id="openReflectionFromGongyo" style="margin-top: 8px;">📝 今日の振り返りを記録</button>
+      </div>
+    </div>
+
+    <!-- 太鼓の達人スタイルカルーセル -->
+    <div class="gc-stage-wrap" id="gcWrap">
+      <div id="gcStage"><!-- カード挿入 --></div>
+    </div>
+    <div class="card" style="margin-top:1rem;">
+      <h3>勤行記録</h3>
+      <form id="practice-form">
+        <div class="form-group">
+          <label for="practice-date">日付</label>
+          <input type="date" id="practice-date" required />
         </div>
-
-        <!-- アチーブメント -->
-        <div class="card">
-          <h3>🏆 アチーブメント</h3>
-          <div id="achievement-badges" class="flex gap-1 flex-wrap">
-            <!-- 動的に挿入 -->
-          </div>
+        <div class="form-group">
+          <label for="practice-count">お題目回数</label>
+          <input type="number" id="practice-count" min="1" required />
         </div>
-
-        <!-- グラフセクション -->
-        <div class="card">
-          <h3>📊 修行量の推移</h3>
-          <canvas id="chart-practice-history"></canvas>
+        <div class="form-group">
+          <label for="practice-duration">時間（分）</label>
+          <input type="number" id="practice-duration" min="0" step="0.5" required />
         </div>
-
-        <div class="dashboard-grid">
-          <div class="card">
-            <h3>💚 功徳の内訳</h3>
-            <canvas id="chart-merit-breakdown"></canvas>
-          </div>
-
-          <div class="card">
-            <h3>🌟 能力スコア</h3>
-            <canvas id="chart-ability-scores"></canvas>
-          </div>
-
-          <div class="card">
-            <h3>⚡ 修行内訳</h3>
-            <canvas id="chart-practice-composition"></canvas>
-          </div>
+        <div class="form-group">
+          <label for="practice-notes">メモ</label>
+          <textarea id="practice-notes" placeholder="今日の感想や気づき"></textarea>
         </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">記録を保存</button>
+      </form>
+    </div>
+    <div class="gc-nav">
+      <div class="gc-arrow" id="gcPrev">‹</div>
+      <div class="gc-counter" id="gcCounter">1 / 1</div>
+      <div class="gc-arrow" id="gcNext">›</div>
+    </div>
 
-        <!-- 週間統計 -->
-        <div class="card">
-          <h3>📅 今週の統計</h3>
-          <div class="dashboard-grid">
-            <div class="stat-card">
-              <div class="stat-label">念仏総数</div>
-              <div class="stat-value" id="stat-week-count">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">平均時間</div>
-              <div class="stat-value" id="stat-week-avg">0秒</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">週間功徳</div>
-              <div class="stat-value" id="stat-week-merit">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">実施日</div>
-              <div class="stat-value" id="stat-week-rank">0/7</div>
-            </div>
-          </div>
-        </div>
+    <button class="btn-big accent" id="gcReadBtn" style="margin-top:.25rem">📖 読む（経文を表示）</button>
+    <div style="display:flex;gap:7px;margin-bottom:.75rem">
+      <button class="btn-big" id="gcCount" style="flex:2;margin-bottom:0">+1 唱えた</button>
+      <button class="btn-s" id="gcReset" style="padding:10px">リセット</button>
+    </div>
+    <div class="card" style="padding:.75rem">
+      <p style="font-size:11px;font-weight:500;color:var(--a);margin-bottom:5px">この勤行の進捗</p>
+      <div id="gcProgress" style="font-size:12px;color:var(--mu)">0回</div>
+    </div>
+  </div>
 
-        <!-- 月間統計 -->
-        <div class="card">
-          <h3>📆 今月の統計</h3>
-          <div class="dashboard-grid">
-            <div class="stat-card">
-              <div class="stat-label">念仏総数</div>
-              <div class="stat-value" id="stat-month-count">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">平均時間</div>
-              <div class="stat-value" id="stat-month-avg">0秒</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">月間功徳</div>
-              <div class="stat-value" id="stat-month-merit">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">目標進捗</div>
-              <div class="stat-value" id="stat-month-progress">0/30</div>
-            </div>
-          </div>
-          <div class="progress">
-            <div class="progress-bar" id="progress-bar-month" style="width: 0%;"></div>
-          </div>
+  <!-- ── カレンダー ── -->
+  <div class="tc" id="tc-cal">
+    <div class="tab-hd">
+      <span class="tab-hd-title">📅 読経カレンダー</span>
+      <button class="hint-btn" onclick="showHint('cal')">?</button>
+    </div>
+    <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
+    <div id="vHeat">
+      <div class="card">
+        <p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">読経記録（過去16週）</p>
+        <div class="hw" id="heatmap"></div>
+        <div class="lgd">
+          <div class="li"><div class="ld" id="lg0" style="border:1px solid var(--bo)"></div>なし</div>
+          <div class="li"><div class="ld" id="lg1"></div>少</div>
+          <div class="li"><div class="ld" id="lg2"></div>多</div>
         </div>
       </div>
-    </section>
-
-    <!-- 勤行画面 -->
-    <section id="screen-practice" class="screen">
-      <header>
-        <h1>🙏 勤行を始める</h1>
-        <p class="subtitle">法華経お題目を唱える</p>
-      </header>
-
-      <div class="container">
-        <div class="card">
-          <h3>念仏カウンター</h3>
-          <div style="text-align: center; margin: 2rem 0;">
-            <div id="chanting-count" style="font-size: 3rem; font-weight: bold; color: #2d7a4a; margin: 1rem 0;">
-              0
-            </div>
-            <button class="btn btn-primary" id="btn-start-chanting" style="width: 100%; margin: 0.5rem 0;">
-              念仏を開始
-            </button>
-            <button class="btn btn-outline" id="btn-reset-count" style="width: 100%; margin: 0.5rem 0;">
-              リセット
-            </button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>勤行記録</h3>
-          <form id="practice-form">
-            <div class="form-group">
-              <label for="practice-date">日付</label>
-              <input type="date" id="practice-date" required>
-            </div>
-
-            <div class="form-group">
-              <label for="practice-count">念仏回数</label>
-              <input type="number" id="practice-count" min="0" required>
-            </div>
-
-            <div class="form-group">
-              <label for="practice-duration">時間（分）</label>
-              <input type="number" id="practice-duration" min="0" step="0.5" required>
-            </div>
-
-            <div class="form-group">
-              <label for="practice-notes">メモ</label>
-              <textarea id="practice-notes" placeholder="今日の感想や気づき"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%;">
-              記録を保存
-            </button>
-          </form>
+      <div class="card"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
+    </div>
+    <div id="vMon" style="display:none">
+      <div class="card">
+        <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
+        <div class="cg" id="calGrid"></div>
+        <div class="lgd" style="margin-top:8px">
+          <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
+          <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
+          <div class="li"><span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px">己巳</span></div>
+          <div class="li"><span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px">寅</span></div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- 統計画面 -->
-    <section id="screen-stats" class="screen">
-      <header>
-        <h1>📈 統計分析</h1>
-        <p class="subtitle">修行の変化を見る</p>
-      </header>
+  <!-- ── 覚醒度（v16プロトタイプ：日次テスト） ── -->
+  <div class="tc" id="tc-awakening" style="display:none">
+    <div class="tab-hd">
+      <span class="tab-hd-title">🧘 覚醒度（記録用テスト）</span>
+      <button class="hint-btn" type="button" onclick="showHint('stats')">?</button>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:6px">今日のチェック（任意）</p>
+      <p style="font-size:11px;color:var(--mu);line-height:1.6;margin:0 0 10px">
+        体感を記録するための入力欄です。診断や効果保証ではありません。入力はいつでも更新できます。
+      </p>
 
-      <div class="container">
-        <div class="card">
-          <h3>修行量の推移（月別）</h3>
-          <canvas id="chart-monthly-history"></canvas>
+      <label class="yomy-daily-label" for="aw-samadhi">定（集中度）0〜10</label>
+      <input class="yomy-daily-num" id="aw-samadhi" type="number" inputmode="numeric" min="0" max="10" placeholder="例：7" />
+
+      <label class="yomy-daily-label" for="aw-sila">戒（意図的選択の回数）</label>
+      <input class="yomy-daily-num" id="aw-sila" type="number" inputmode="numeric" min="0" max="999" placeholder="例：3" />
+
+      <p style="font-size:11px;font-weight:600;color:var(--a);margin:.75rem 0 .25rem">根（五感）0〜10</p>
+      <div class="dashboard-grid yomy-stats-quad" style="margin-top:6px">
+        <div class="stat-card">
+          <div class="stat-label">聴覚</div>
+          <input class="yomy-daily-num" id="aw-hearing" type="number" inputmode="numeric" min="0" max="10" placeholder="0-10" />
         </div>
-
-        <div class="card">
-          <h3>能力成長グラフ</h3>
-          <canvas id="chart-ability-growth"></canvas>
+        <div class="stat-card">
+          <div class="stat-label">視覚</div>
+          <input class="yomy-daily-num" id="aw-sight" type="number" inputmode="numeric" min="0" max="10" placeholder="0-10" />
         </div>
-      </div>
-    </section>
-
-    <!-- リーダーボード画面 -->
-    <section id="screen-leaderboard" class="screen">
-      <header>
-        <h1>👑 リーダーボード</h1>
-        <p class="subtitle">修行の成果を確認</p>
-      </header>
-
-      <div class="container">
-        <div class="card">
-          <h3>🎖️ あなたのランク</h3>
-          <div style="text-align: center; margin: 2rem 0;">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">👤</div>
-            <div id="stat-user-name" style="font-size: 1.5rem; font-weight: bold; color: #2d7a4a; margin-bottom: 0.5rem;">
-              ゲスト
-            </div>
-            <div id="stat-rank-level" style="font-size: 1.25rem; color: #4a9d66; margin-bottom: 1.5rem;">
-              初心者
-            </div>
-          </div>
+        <div class="stat-card">
+          <div class="stat-label">嗅覚</div>
+          <input class="yomy-daily-num" id="aw-smell" type="number" inputmode="numeric" min="0" max="10" placeholder="0-10" />
         </div>
-
-        <div class="card">
-          <h3>📊 あなたの成績</h3>
-          <div class="dashboard-grid">
-            <div class="stat-card">
-              <div class="stat-label">総念仏回数</div>
-              <div class="stat-value" id="stat-total-count">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">総勤行時間</div>
-              <div class="stat-value" id="stat-total-duration">0時間</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">総功徳</div>
-              <div class="stat-value" id="stat-total-merit">0</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>💰 布施（Dana）</h3>
-          <div class="stat-card" style="margin-bottom: 1rem;">
-            <div class="stat-label">総布施額</div>
-            <div class="stat-value" id="stat-total-dana">¥0</div>
-          </div>
-          <div class="stat-card" style="margin-bottom: 1rem;">
-            <div class="stat-label">布施回数</div>
-            <div class="stat-value" id="stat-dana-count">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">平均布施額</div>
-            <div class="stat-value" id="stat-dana-avg">¥0</div>
-          </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" id="btn-add-dana">
-            布施を追加
-          </button>
-        </div>
-
-        <div class="card">
-          <h3>📝 最近の布施</h3>
-          <div id="dana-recent-list"></div>
+        <div class="stat-card">
+          <div class="stat-label">味覚</div>
+          <input class="yomy-daily-num" id="aw-taste" type="number" inputmode="numeric" min="0" max="10" placeholder="0-10" />
         </div>
       </div>
-    </section>
+      <label class="yomy-daily-label" for="aw-touch">触覚 0〜10</label>
+      <input class="yomy-daily-num" id="aw-touch" type="number" inputmode="numeric" min="0" max="10" placeholder="0-10" />
 
-    <!-- 設定画面 -->
-    <section id="screen-settings" class="screen">
-      <header>
-        <h1>⚙️ 設定</h1>
-        <p class="subtitle">アプリの設定を管理</p>
-      </header>
+      <button type="button" class="btn-big accent" id="btn-save-awakening" style="width:100%;margin-top:.75rem">
+        今日の覚醒度を保存
+      </button>
+      <p style="font-size:10px;color:var(--di);line-height:1.5;margin:.6rem 0 0">
+        保存すると「統計」の相関や推移に反映されるよう、段階的に拡張します（v16プロトタイプ）。
+      </p>
+    </div>
+  </div>
 
-      <div class="container">
-        <div class="card">
-          <h3>👤 プロフィール</h3>
-          <div class="form-group">
-            <label for="settings-name">ユーザー名</label>
-            <input type="text" id="settings-name" placeholder="お名前">
-          </div>
-          <div class="form-group">
-            <label for="settings-email">メールアドレス</label>
-            <input type="email" id="settings-email" placeholder="example@mail.com">
-          </div>
-          <button class="btn btn-primary" style="width: 100%;">
-            プロフィールを保存
-          </button>
+  <!-- ── 統計・ランク・布施（旧トップクラス統計へ）── -->
+  <div class="tc" id="tc-stats">
+    <div class="tab-hd">
+      <span class="tab-hd-title">📈 統計（見える化）</span>
+    </div>
+    <div class="card yomy-stats-insights-wrap">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">📊 3つの指標（わかりやすく）</p>
+      <div class="yomy-insights-grid">
+        <div class="yomy-insight-card yomy-insight-merit">
+          <h4 class="yomy-insight-h">功徳（今月）</h4>
+          <p class="yomy-insight-num" id="insight-merit-num">—</p>
+          <p class="yomy-insight-unit" id="insight-merit-sub">先月比 · ポイント</p>
+          <p class="yomy-insight-msg" id="insight-merit-msg">データがたまると表示されます。</p>
         </div>
-
-        <div class="card">
-          <h3>🔔 通知設定</h3>
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="settings-notifications" checked>
-              Push 通知を有効にする
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="settings-notification-time">通知時刻</label>
-            <input type="time" id="settings-notification-time" value="08:00">
-          </div>
-          <button class="btn btn-secondary" style="width: 100%;">
-            テスト通知を送信
-          </button>
+        <div class="yomy-insight-card yomy-insight-mind">
+          <h4 class="yomy-insight-h">覚醒度（記録用）平均</h4>
+          <p class="yomy-insight-num" id="insight-mind-num">—</p>
+          <p class="yomy-insight-unit" id="insight-mind-sub">今月 · 0〜100</p>
+          <p class="yomy-insight-msg" id="insight-mind-msg">主観ログ等から計算する記録用指標です。診断や効果保証ではありません。</p>
         </div>
-
-        <div class="card">
-          <h3>💾 データ管理</h3>
-          <button class="btn btn-secondary" style="width: 100%; margin: 0.5rem 0;" id="btn-export-data">
-            📥 データをエクスポート
-          </button>
-          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-import-data">
-            📤 データをインポート
-          </button>
-          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-clear-data">
-            🗑️ すべてクリア
-          </button>
+        <div class="yomy-insight-card yomy-insight-events">
+          <h4 class="yomy-insight-h">幸運（今月）</h4>
+          <p class="yomy-insight-num" id="insight-events-num">—</p>
+          <p class="yomy-insight-unit" id="insight-events-sub">「予期しない幸運」カウンタ合計</p>
+          <p class="yomy-insight-msg" id="insight-events-msg">体感のメモ用です。幸運が増える保証・予測ではありません。</p>
         </div>
-
-        <div class="card">
-          <h3>📱 PWA</h3>
-          <button class="btn btn-secondary" style="width: 100%; margin: 0.5rem 0;" id="btn-install-pwa">
-            ホーム画面に追加
-          </button>
-          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-cache-status">
-            キャッシュ状態を確認
-          </button>
-        </div>
-
-        <div class="card">
-          <h3>📊 バージョン & ヘルプ</h3>
-          <p>
-            <strong>アプリ</strong>: よむよむお題目 v15+<br>
-            <strong>バージョン</strong>: <span id="app-version">1.0.0</span><br>
-            <strong>最終更新</strong>: <span id="app-updated">読み込み中...</span>
+      </div>
+      <div class="yomy-correlation-box">
+        <h4 class="yomy-insight-h">💡 あなたの「続け方」のヒント</h4>
+        <p class="yomy-correlation-text" id="insight-pattern-text">
+          記録が増えるほど、先月・前週との比較がしやすくなります。因果や確率としては解釈しません。
+        </p>
+        <div class="yomy-correlation-metrics" id="insight-corr-wrap" style="margin-top:10px">
+          <h4 class="yomy-insight-h">🔎 相関（参考）</h4>
+          <p class="yomy-correlation-text" style="margin:0 0 6px;color:var(--mu)">
+            ※相関係数 \(r\) は「同時に増減しやすいか」の目安です。原因の証明ではありません。
           </p>
-          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;" id="btn-check-updates">
-            更新を確認
-          </button>
+          <ul class="yomy-corr-list" style="margin:0;padding-left:1.2rem;color:var(--tx);font-size:11px;line-height:1.6">
+            <li>修行量（功徳）と幸運：相関係数 r = <strong id="insight-corr-merit-fortune">—</strong></li>
+            <li>覚醒度（記録用インデックス）と幸運：相関係数 r = <strong id="insight-corr-awake-fortune">—</strong></li>
+            <li>修行継続日数と覚醒度（記録用インデックス）：相関係数 r = <strong id="insight-corr-days-awake">—</strong></li>
+          </ul>
+          <button class="btn-big" id="openReflectionFromGongyo" style="margin-top: 8px;">📝 今日の振り返りを記録</button>
+        </div>
+      </div>
+      <p style="font-size:10px;color:var(--di);line-height:1.5;margin-top:10px">
+        ※表示は端末内データの要約です。「科学的証明」「幸運の予測」ではありません。
+      </p>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:10px">📌 本日・ざっくり</p>
+      <div class="dashboard-grid yomy-stats-quad">
+        <div class="stat-card">
+          <div class="stat-label">本日お題目</div>
+          <div class="stat-value" id="stat-today-count">0</div>
+          <small class="stat-label">回</small>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">本日の勤行</div>
+          <div class="stat-value" id="stat-today-time">0分</div>
+          <small class="stat-label">時間</small>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">本日の功徳</div>
+          <div class="stat-value" id="stat-today-merit">0</div>
+          <small class="stat-label">ポイント</small>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">現在のストリーク</div>
+          <div class="stat-value" id="stat-today-streak">0日</div>
+          <small class="stat-label">連続実施</small>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:13px;color:var(--a);margin-bottom:10px">🏆 アチーブメント</h3>
+      <div id="achievement-badges" class="flex gap-1 flex-wrap"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:13px;color:var(--a);margin-bottom:10px">📊 3軸の推移（週）</h3>
+      <div style="max-height:220px"><canvas id="chart-practice-history"></canvas></div>
+    </div>
+    <div class="dashboard-grid yomy-stats-charts">
+      <div class="card">
+        <h3 style="font-size:13px;color:var(--a);margin-bottom:10px">💚 功徳の内訳</h3>
+        <div style="max-height:200px"><canvas id="chart-merit-breakdown"></canvas></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:13px;color:var(--a);margin-bottom:10px">🌟 能力スコア</h3>
+        <div style="max-height:200px"><canvas id="chart-ability-scores"></canvas></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:13px;color:var(--a);margin-bottom:10px">⚡ 修行内訳</h3>
+        <div style="max-height:200px"><canvas id="chart-practice-composition"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:13px;color:var(--a);margin-bottom:10px">📅 今週の統計</h3>
+      <div class="dashboard-grid yomy-stats-quad">
+        <div class="stat-card">
+          <div class="stat-label">総数</div>
+          <div class="stat-value" id="stat-week-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">平均時間</div>
+          <div class="stat-value" id="stat-week-avg">0秒</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">週間功徳</div>
+          <div class="stat-value" id="stat-week-merit">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">実施日</div>
+          <div class="stat-value" id="stat-week-rank">0/7</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:13px;color:var(--a);margin-bottom:10px">📆 今月の統計</h3>
+      <div class="dashboard-grid yomy-stats-quad">
+        <div class="stat-card">
+          <div class="stat-label">総数</div>
+          <div class="stat-value" id="stat-month-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">平均時間</div>
+          <div class="stat-value" id="stat-month-avg">0秒</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">月間功徳</div>
+          <div class="stat-value" id="stat-month-merit">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">目標進捗</div>
+          <div class="stat-value" id="stat-month-progress">0/30</div>
+        </div>
+      </div>
+      <div class="progress" style="margin-top:12px">
+        <div class="progress-bar" id="progress-bar-month" style="width: 0%"></div>
+      </div>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">📓 任意: 今日の主観ログ</p>
+      <p style="font-size:10px;color:var(--mu);margin-bottom:10px;line-height:1.5">
+        0〜10 で入力（未入力でも利用可能）。すべて埋めると<br />CSV の
+        <code style="font-size:9px">evidence_day_index</code> と内部スコアに反映されます。
+      </p>
+      <div class="emotion-grid">
+        <label for="emo-pain">苦しさ（強いほど↑）</label>
+        <input type="number" id="emo-pain" inputmode="numeric" min="0" max="10" step="1" placeholder="―" />
+        <label for="emo-refresh">すっきり</label>
+        <input type="number" id="emo-refresh" inputmode="numeric" min="0" max="10" step="1" placeholder="―" />
+        <label for="emo-joy">喜び</label>
+        <input type="number" id="emo-joy" inputmode="numeric" min="0" max="10" step="1" placeholder="―" />
+      </div>
+      <div class="trow" style="margin-top:10px;gap:8px">
+        <button type="button" class="btn-s" id="btn-save-emotion" style="flex:1;padding:10px">今日の分を保存</button>
+        <button type="button" class="btn-s" id="btn-clear-emotion" style="padding:10px">クリア</button>
+      </div>
+      <p style="font-size:11px;color:var(--mu);margin-top:10px">
+        今日の記録用インデックス: <strong id="stat-today-evidence" style="color:var(--a)">—</strong>
+        <span style="display:block;margin-top:4px;font-size:10px"
+          >(行動のみのときは唱数・功徳から。主観3項目そろえるとブレンド)</span>
+      </p>
+    </div>
+    <details class="yomy-algo-details">
+      <summary>内部アルゴリズム（説明のみ・記録用スコア）</summary>
+      <pre id="algo-explainer"></pre>
+    </details>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:10px">🎖️ あなたのランク</p>
+      <div style="text-align:center;margin:1rem 0">
+        <div style="font-size:2rem;margin-bottom:.5rem">👤</div>
+        <div id="stat-user-name" style="font-size:1rem;font-weight:700;color:var(--a);margin-bottom:.35rem;">ゲスト</div>
+        <div id="stat-rank-level" style="font-size:.9rem;color:var(--mu);margin-bottom:0">初心者</div>
+      </div>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:10px">修行量の推移（月別）</p>
+      <div style="max-height:260px"><canvas id="chart-monthly-history"></canvas></div>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:10px">功徳の推移（グラフ）</p>
+      <div style="max-height:260px"><canvas id="chart-ability-growth"></canvas></div>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:10px">📊 累計サマリー</p>
+      <div class="merit-grid">
+        <div class="mc"><div class="mv" id="stat-total-count">0</div><div class="ml">総読誦（回）</div></div>
+        <div class="mc"><div class="mv" id="stat-total-duration">0分</div><div class="ml">総勤行</div></div>
+      </div>
+      <div class="mc" style="margin-top:8px;border-radius:11px;text-align:center;padding:.75rem">
+        <div class="mv" id="stat-total-merit">0</div>
+        <div class="ml">総功徳</div>
+      </div>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:10px">💰 布施（ダーナ）</p>
+      <div class="merit-grid">
+        <div class="mc"><div class="mv" id="stat-total-dana">¥0</div><div class="ml">総額</div></div>
+        <div class="mc"><div class="mv" id="stat-dana-count">0</div><div class="ml">回数</div></div>
+      </div>
+      <div class="mc" style="margin-top:8px;border-radius:11px;text-align:center;padding:.75rem">
+        <div class="mv" id="stat-dana-avg">¥0</div><div class="ml">平均</div></div>
+      <button class="btn-big accent" style="margin-top:.75rem" type="button" id="btn-add-dana">布施を追加</button>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">📝 最近の布施</p>
+      <div id="dana-recent-list"></div>
+    </div>
+  </div>
+
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">SNS用テンプレ</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn-s" id="btn-sns-x">X</button>
+        <button type="button" class="btn-s" id="btn-sns-line">LINE</button>
+        <button type="button" class="btn-s" id="btn-sns-ig">Instagram</button>
+        <button type="button" class="btn-s" id="btn-copy-sns">コピー</button>
+      </div>
+      <textarea id="sns-output" class="yomy-daily-ta" rows="6" style="margin-top:10px" placeholder="テンプレが出ます"></textarea>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">データ出力</p>
+      <button type="button" class="btn-big accent" id="btn-export-csv-sessions-2">📄 CSV（sessions）</button>
+      <button type="button" class="btn-big" id="btn-export-json-2" style="margin-top:.4rem;background:var(--bc2)">📥 JSON（バックアップ）</button>
+    </div>
+
+    <div class="card" id="dev-note-card" style="display:none">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">開発者ツール：note 自動投稿（実験）</p>
+      <p style="font-size:11px;color:var(--mu);line-height:1.6;margin:0 0 10px">
+        DEBUG_MODE のときだけ表示します。トークンは保存しません。失敗したら curl をコピーして手動で試せます。
+      </p>
+      <label class="yomy-daily-label" for="note-token">note トークン（貼り付け）</label>
+      <input type="password" id="note-token" class="yomy-daily-num" placeholder="Bearer トークン" />
+      <button type="button" class="btn-big accent" id="btn-post-note" style="width:100%;margin-top:.6rem">note に投稿を試す</button>
+      <button type="button" class="btn-big" id="btn-copy-curl" style="width:100%;margin-top:.4rem;background:var(--bc2)">curl をコピー</button>
+      <pre id="note-result" class="info-formula" style="white-space:pre-wrap;margin-top:.6rem"></pre>
+    </div>
+  </div>
+
+  <!-- ── 設定 ── -->
+  <div class="tc" id="tc-settings">
+    <div class="tab-hd">
+      <span class="tab-hd-title">⚙️ アプリ設定</span>
+      <button class="hint-btn" type="button" onclick="togMenu()" title="高度な設定・テーマも☰から">⋯</button>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">🎯 データと公開の考え方</p>
+      <p style="font-size:11px;color:var(--mu);line-height:1.65">
+        このアプリは端末内に記録し、<strong>自動で SNS へ投稿しません</strong>。研究や note
+        向けに使うときは、CSV や JSON を自分で匿名化し、同意の範囲で共有してください。医療効果や修行効果を保証するものではありません。
+      </p>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">👤 プロフィール</p>
+      <label for="settings-name" style="font-size:11px;color:var(--mu)">ユーザー名</label>
+      <input type="text" id="settings-name" placeholder="お名前" autocomplete="name" />
+      <label for="settings-email" style="font-size:11px;color:var(--mu);margin-top:.6rem;display:block">メール</label>
+      <input type="email" id="settings-email" placeholder="任意" autocomplete="email" />
+      <button type="button" class="btn-big accent" id="btn-save-profile" style="margin-top:.75rem">
+        プロフィールを保存
+      </button>
+      <div class="card">
+     <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px;">📊 データ分析・出力</p>
+     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+       <button type="button" class="btn-s" id="btn-gen-week-settings">今週のレポート</button>
+       <button type="button" class="btn-s" id="btn-gen-month-settings">今月のレポート</button>
+       <button type="button" class="btn-s" id="btn-copy-report-settings">コピー</button>S
+     </div>
+      <textarea id="report-output-settings" class="yomy-daily-ta" rows="5" placeholder="レポートが表示されます"></textarea>
+      <hr style="margin:12px 0;">
+      <button type="button" class="btn-big accent" id="btn-export-csv-sessions-settings" style="margin-bottom:8px;">📄 CSV出力</button>
+      <button type="button" class="btn-big" id="btn-export-json-settings">📥 JSONバックアップ</button>
+    </div>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">📐 表示（統計の見やすさ）</p>
+      <p style="font-size:11px;color:var(--mu);margin-bottom:8px;line-height:1.5">
+        狭いシェルでもビューポートが広いとグリッドが崩れるため、ここで調整できます。
+      </p>
+      <label for="settings-ui-frame" style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">メイン枠の幅</label>
+      <select id="settings-ui-frame" style="width:100%;margin-bottom:10px;padding:9px;border-radius:8px;border:1px solid var(--bo);background:var(--bi);color:var(--tx)">
+        <option value="narrow">狭い（360px）</option>
+        <option value="default" selected>標準（390px）</option>
+        <option value="wide">広い（428px）</option>
+      </select>
+      <label for="settings-ui-text" style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">統計まわりの文字</label>
+      <select id="settings-ui-text" style="width:100%;margin-bottom:10px;padding:9px;border-radius:8px;border:1px solid var(--bo);background:var(--bi);color:var(--tx)">
+        <option value="compact">小さめ</option>
+        <option value="normal" selected>標準</option>
+        <option value="comfort">大きめ</option>
+      </select>
+      <label for="settings-theme-mode" style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">テーマ（明るさ）</label>
+      <select id="settings-theme-mode" style="width:100%;margin-bottom:10px;padding:9px;border-radius:8px;border:1px solid var(--bo);background:var(--bi);color:var(--tx)">
+        <option value="light" selected>ライト</option>
+        <option value="dark">ダーク</option>
+      </select>
+      <label for="settings-theme-preset" style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">色プリセット</label>
+      <select id="settings-theme-preset" style="width:100%;margin-bottom:10px;padding:9px;border-radius:8px;border:1px solid var(--bo);background:var(--bi);color:var(--tx)">
+        <option value="default">標準</option>
+        <option value="calm">落ち着いた色</option>
+      </select>
+      <label style="font-size:11px;color:var(--mu);display:flex;gap:8px;align-items:center;margin-bottom:10px">
+        <input type="checkbox" id="settings-debug-mode" /> デバッグログ（console、`DEBUG_MODE`）
+      </label>
+      <button type="button" class="btn-big accent" id="btn-save-display" style="margin-top:4px">表示を保存</button>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">🔔 通知</p>
+      <label style="font-size:12px;display:flex;gap:8px;align-items:center;margin-bottom:.5rem">
+        <input type="checkbox" id="settings-notifications" checked /> Push を有効
+      </label>
+      <label for="settings-notification-time" style="font-size:11px;color:var(--mu)">時刻</label>
+      <input type="time" id="settings-notification-time" value="08:00" />
+      <button type="button" class="btn-big" id="btn-test-notification" style="margin-top:.75rem;background:var(--bc2);color:var(--tx)">
+        テスト通知を送信
+      </button>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">💾 データ</p>
+      <button type="button" class="btn-big accent" style="margin-bottom:.35rem" id="btn-export-csv-sessions">
+        📄 セッション CSV
+      </button>
+      <button type="button" class="btn-big" style="margin-bottom:.35rem;background:var(--bc2)" id="btn-export-data">
+        📥 JSON エクスポート
+      </button>
+      <button type="button" class="btn-big" style="margin-bottom:.35rem;background:var(--bc2)" id="btn-import-data">📤 インポート</button>
+      <button type="button" class="btn-big stop" style="margin-bottom:0" id="btn-clear-data">🗑️ すべてクリア</button>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">📱 PWA</p>
+      <p class="muted-hint">インストールしても自動ではレイアウトは変わりません。細い画面は下部メニューを利用ください。</p>
+      <button type="button" class="btn-big accent" id="btn-install-pwa">ホームに追加</button>
+      <button type="button" class="btn-big" style="margin-top:.4rem;background:var(--bc2)" id="btn-cache-status">
+        キャッシュ確認
+      </button>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:8px">ℹ️ ヘルプ</p>
+      <p style="font-size:11px;color:var(--mu);line-height:1.6">
+        アプリ・よむよむお題目 v15+<br />
+        ver <span id="app-version">1.0.0</span> · 更新 <span id="app-updated">読み込み中…</span><br />
+        デバッグ: <kbd style="border:1px solid var(--bo);padding:1px 4px;border-radius:4px">Ctrl+Shift+D</kbd>
+      </p>
+      <button type="button" class="btn-big" style="margin-top:.5rem;background:var(--bc2)" id="btn-check-updates">
+        更新を確認
+      </button>
+    </div>
+  </div>
+
+</div>
+        </div>
         </div>
       </div>
     </section>
-  </main>
+  <!-- ════ 読経オーバーレイ ════ -->
+<div id="readingOverlay">
+  <div class="read-hd">
+    <button class="btn-s" onclick="closeReading()">✕</button>
+    <div class="read-title" id="readTitle"></div>
+    <div class="read-pgn" id="readPgn"></div>
+  </div>
+  <div class="read-prog-bar"><div class="read-prog-fill" id="readProg" style="width:0%"></div></div>
+  <div class="read-body" id="readBody">
+    <div id="readPages"></div>
+  </div>
+  <div class="page-dots" id="pageDots"></div>
+  <div class="read-nav" id="readNav"></div>
+</div>
+
+<!-- ════ OVERLAYS ════ -->
+<div class="overlay" id="hintOverlay">
+  <div class="popup">
+    <div style="font-size:28px;margin-bottom:.5rem" id="hintIcon">💡</div>
+    <h3 id="hintTitle">ヒント</h3>
+    <div id="hintBody"></div>
+    <button class="btn-s" onclick="document.getElementById('hintOverlay').classList.remove('show')" style="margin-top:.875rem;width:100%;padding:10px">閉じる</button>
+  </div>
+</div>
+<div class="overlay" id="dayPop">
+  <div class="popup">
+    <div id="popDate" style="font-size:12px;color:var(--mu);margin-bottom:7px"></div>
+    <div id="popCount" style="font-size:48px;font-weight:600;color:var(--a)"></div>
+    <div style="font-size:11px;color:var(--mu);margin-top:3px">回</div>
+    <button class="btn-s" onclick="document.getElementById('dayPop').classList.remove('show')" style="margin-top:.875rem;padding:7px 20px">閉じる</button>
+  </div>
+</div>
+
+<!-- Help popup -->
+<div class="overlay" id="helpOverlay">
+  <div class="popup">
+    <h3 id="helpTitle" style="color:var(--a);margin-bottom:.75rem;">ヘルプ</h3>
+    <div id="helpBody" style="font-size:12px;color:var(--mu);line-height:1.8;text-align:left;margin-bottom:1rem;"></div>
+    <button class="btn-s" onclick="document.getElementById('helpOverlay').classList.remove('show')" style="width:100%;padding:10px;">閉じる</button>
+  </div>
+</div>
+
+<!-- 修行後ひとこと（バー）-->
+<div id="post-practice-prompt" class="yomy-reflection-tip" hidden data-variant="practice">
+  <div class="yomy-reflection-inner">
+    <p class="yomy-reflection-msg" id="reflection-prompt-msg">修行おつかれさまです。<br />今日はどんな一日でしたか？</p>
+    <div class="yomy-reflection-actions">
+      <button type="button" class="btn-s" style="flex:1;padding:10px;background:var(--a);color:#fff;border-color:var(--a)" id="reflection-open-summary">
+        今日の記録をつける
+      </button>
+      <button type="button" class="btn-s" style="padding:10px" id="reflection-dismiss">後で</button>
+    </div>
+  </div>
+</div>
+
+<!-- 一日の記録モーダル -->
+<div class="overlay" id="dailySummaryOverlay">
+  <div class="popup yomy-daily-popup">
+    <h3 id="modal-date-title">今日の一日</h3>
+    <div class="yomy-daily-body">
+      <p class="yomy-daily-p" style="font-size:11px;line-height:1.55;color:var(--mu);margin:0 0 .75rem">
+        <strong>功徳</strong>＝記録された修行量から得るアプリ内の指標です。
+        <strong>幸運まわり</strong>は、嬉しいこと・朗報などを件数／メモで残す自分用のログです（保証や予言ではありません）。
+      </p>
+      <div class="yomy-daily-section">
+        <h4 class="yomy-daily-h">📿 今日の修行（記録のみ）</h4>
+        <p id="modal-practice-info" class="yomy-daily-p"></p>
+        <label class="yomy-daily-label" for="daily-gongyo-type" style="margin-top:.55rem">勤行（種類）</label>
+        <select id="daily-gongyo-type" class="yomy-daily-num" style="appearance:auto">
+          <option value="none">なし</option>
+          <option value="morning">朝（標準 2840）</option>
+          <option value="evening">夜（標準 1420）</option>
+          <option value="custom">カスタム（文字数を入力）</option>
+        </select>
+        <label class="yomy-daily-label" for="daily-gongyo-custom-chars">カスタム文字数（任意）</label>
+        <input type="number" class="yomy-daily-num" id="daily-gongyo-custom-chars" inputmode="numeric" min="0" max="99999" placeholder="例：1200" />
+      </div>
+      <div class="yomy-daily-section">
+        <h4 class="yomy-daily-h">📍 今日の出来事（任意・件数）</h4>
+        <label class="yomy-daily-label" for="daily-joy-count">嬉しい出来事</label>
+        <input type="number" class="yomy-daily-num" id="daily-joy-count" inputmode="numeric" min="0" max="999" placeholder="0" />
+        <label class="yomy-daily-label" for="daily-luck-count">予期しない幸運・朗報など</label>
+        <input type="number" class="yomy-daily-num" id="daily-luck-count" inputmode="numeric" min="0" max="999" placeholder="0" />
+        <label class="yomy-daily-label" for="daily-relation-count">人間関係がよかった出来事</label>
+        <input type="number" class="yomy-daily-num" id="daily-relation-count" inputmode="numeric" min="0" max="999" placeholder="0" />
+      </div>
+      <div class="yomy-daily-section">
+        <h4 class="yomy-daily-h">💭 今日の気づき（任意）</h4>
+        <textarea id="daily-memo" placeholder="短文メモなど" rows="3" class="yomy-daily-ta"></textarea>
+      </div>
+      <div class="yomy-daily-section yomy-daily-check">
+        <label><input type="checkbox" id="include-awakening-test" /> 覚醒度テストにも取り組みたい（希望のみ記録）</label>
+      </div>
+      <button type="button" class="btn-big accent" id="daily-summary-save" style="width:100%;margin-top:.5rem">
+        保存する
+      </button>
+      <button type="button" class="btn-big" style="width:100%;margin-top:.4rem;background:var(--bc2)" id="daily-summary-cancel">
+        閉じる
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 週のふりかえり（条件：金曜/日曜など） -->
+<div class="overlay" id="weeklySummaryOverlay">
+  <div class="popup yomy-daily-popup">
+    <h3 id="weekly-title">この週のふりかえり</h3>
+    <div class="yomy-daily-body">
+      <p class="yomy-daily-p" style="font-size:11px;line-height:1.55;color:var(--mu);margin:0 0 .75rem">
+        週のまとめは任意です。書ける範囲でOKです。
+      </p>
+      <label class="yomy-daily-label" for="weekly-memo">一言メモ（任意）</label>
+      <textarea id="weekly-memo" placeholder="例：落ち着いた週／忙しかったが続けた 等" rows="4" class="yomy-daily-ta"></textarea>
+      <button type="button" class="btn-big accent" id="weekly-save" style="width:100%;margin-top:.6rem">保存する</button>
+      <button type="button" class="btn-big" id="weekly-cancel" style="width:100%;margin-top:.4rem;background:var(--bc2)">後で</button>
+    </div>
+  </div>
+</div>
+
+<!-- 月のふりかえり（月末） -->
+<div class="overlay" id="monthlySummaryOverlay">
+  <div class="popup yomy-daily-popup">
+    <h3 id="monthly-title">この月のふりかえり</h3>
+    <div class="yomy-daily-body">
+      <p class="yomy-daily-p" style="font-size:11px;line-height:1.55;color:var(--mu);margin:0 0 .75rem">
+        月のまとめは任意です。後からでも更新できます。
+      </p>
+      <label class="yomy-daily-label" for="monthly-memo">一言メモ（任意）</label>
+      <textarea id="monthly-memo" placeholder="例：続け方がわかった／気持ちの波が見えた 等" rows="4" class="yomy-daily-ta"></textarea>
+      <button type="button" class="btn-big accent" id="monthly-save" style="width:100%;margin-top:.6rem">保存する</button>
+      <button type="button" class="btn-big" id="monthly-cancel" style="width:100%;margin-top:.4rem;background:var(--bc2)">後で</button>
+    </div>
+  </div>
+</div>
+
+<!-- 成長の記録 → 覚醒度テストの導線 -->
+<div class="overlay" id="growthOverlay">
+  <div class="popup yomy-daily-popup">
+    <h3>成長の記録（任意）</h3>
+    <div class="yomy-daily-body">
+      <p class="yomy-daily-p" style="font-size:11px;line-height:1.55;color:var(--mu);margin:0 0 .75rem">
+        「どんな変化があったか」を残すと、あとで振り返りやすくなります。
+      </p>
+      <label class="yomy-daily-label" for="growth-memo">変化メモ（任意）</label>
+      <textarea id="growth-memo" placeholder="例：イライラが減った／続け方が見えた 等" rows="4" class="yomy-daily-ta"></textarea>
+      <button type="button" class="btn-big accent" id="growth-next" style="width:100%;margin-top:.6rem">覚醒度テストも記録する</button>
+      <button type="button" class="btn-big" id="growth-skip" style="width:100%;margin-top:.4rem;background:var(--bc2)">今回はしない</button>
+    </div>
+  </div>
+</div>
+
+<!-- 覚醒度テスト（ポップアップ） -->
+<div class="overlay" id="awakeningNewOverlay">
+  <div class="popup yomy-daily-popup" style="max-width: 400px;">
+    <h3>📝 今日の振り返り</h3>
+    <div class="yomy-daily-body">
+      <p style="font-size: 11px; color: var(--mu); margin-bottom: 12px;">以下の項目を 0〜10 で評価してください</p>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="font-weight: 600;">① 今日の集中度</label>
+        <input type="range" min="0" max="10" value="5" id="new-focus" oninput="document.getElementById('new-score-focus').innerText=this.value">
+        <div style="text-align: center;"><span id="new-score-focus">5</span>/10</div>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="font-weight: 600;">② 今日のリラックス度</label>
+        <input type="range" min="0" max="10" value="5" id="new-relax" oninput="document.getElementById('new-score-relax').innerText=this.value">
+        <div style="text-align: center;"><span id="new-score-relax">5</span>/10</div>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="font-weight: 600;">③ 今日の気づき</label>
+        <input type="range" min="0" max="10" value="5" id="new-awareness" oninput="document.getElementById('new-score-awareness').innerText=this.value">
+        <div style="text-align: center;"><span id="new-score-awareness">5</span>/10</div>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="font-weight: 600;">④ 今日の嬉しい出来事</label>
+        <input type="range" min="0" max="10" value="0" id="new-joy" oninput="document.getElementById('new-score-joy').innerText=this.value">
+        <div style="text-align: center;"><span id="new-score-joy">0</span>/10</div>
+      </div>
+      
+      <button class="btn-big accent" id="saveNewAwakening">保存する</button>
+      <div id="newAwakeningResult" style="margin-top: 16px; background: var(--bi); border-radius: 8px; padding: 12px; display: none;">
+        <p style="font-weight: 600;">📊 今日のあなたの具合</p>
+        <div id="newResultText"></div>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button class="btn-s" id="shareX">𝕏 で共有</button>
+          <button class="btn-s" id="shareLine">LINE で共有</button>
+          <button class="btn-s" id="shareCopy">コピー</button>
+        </div>
+      </div>
+      <button class="btn-big" id="closeNewAwakening" style="margin-top: 8px; background: var(--bc2);">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- Dana popup -->
+<div class="overlay" id="danaOverlay">
+  <div class="popup">
+    <div style="font-size:32px;margin-bottom:.75rem;">🙏</div>
+    <h3>「ありがたい」気持ちを<br>届けませんか？</h3>
+    <p style="font-size:13px;color:var(--mu);margin-bottom:1rem;">見返りを求めない純粋な喜捨が、功徳をさらに高めます。</p>
+    <div style="background:var(--bi);padding:.75rem;border-radius:8px;margin-bottom:1rem;font-size:11px;color:var(--mu);text-align:center;">功徳（回）= 唱数（回）として記録します。※増幅や保証を意味しません</div>
+    <div class="trow" style="justify-content:center;margin-bottom:.75rem;">
+      <button class="btn-s on" id="dfreqD">毎日</button>
+      <button class="btn-s" id="dfreqW">毎週</button>
+      <button class="btn-s" id="dfreqM">毎月</button>
+    </div>
+    <div class="rpair">
+      <input type="number" id="danaIn" placeholder="金額（円）" min="0">
+      <button class="btn-s" id="danaSet">設定</button>
+    </div>
+    <button class="btn-s" onclick="closeDana()" style="margin-top:.75rem;width:100%;padding:10px;">閉じる</button>
+  </div>
+</div>
+<!-- Tutorial walkthrough -->
+<div id="tutWalkOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;">
+  <div style="position:fixed;bottom:0;left:0;right:0;background:var(--bc);border-radius:20px 20px 0 0;padding:2rem 1.5rem 1.5rem;max-height:60vh;overflow-y:auto;box-shadow:0 -4px 20px rgba(0,0,0,.2);">
+    <div id="twTitle" style="font-size:1.1rem;font-weight:700;color:var(--a);margin-bottom:.5rem;"></div>
+    <div id="twBody" style="font-size:13px;color:var(--mu);line-height:1.7;margin-bottom:1.5rem;"></div>
+    <div style="display:flex;gap:8px;">
+      <button id="twSkip" onclick="endTutWalk()" class="btn-s" style="flex:1;">スキップ</button>
+      <button class="btn-s" id="twNext" onclick="nextTutStep()" style="flex:1;color:#fff;background:var(--a);border-color:var(--a);">次へ →</button>
+    </div>
+  </div>
+</div>
+
+</main>
 
   <!-- ========== フッター ========== -->
   <footer>
@@ -395,8 +1020,13 @@
   <!-- ユーティリティ関数 -->
   <script src="/js/utils.js"></script>
 
+  <script src="/js/debug.js"></script>
+
   <!-- 能力定義 -->
   <script src="/js/abilities.js"></script>
+
+  <!-- 記録用メトリクス（storage CSV より先に読み込む） -->
+  <script src="/js/evidence-metrics.js"></script>
 
   <!-- ストレージ管理 -->
   <script src="/js/storage.js"></script>
@@ -410,6 +1040,12 @@
   <!-- 修行後プロンプト -->
   <script src="/js/reflection.js"></script>
 
+  <!-- 覚醒度（v16プロトタイプ） -->
+  <script src="/js/awakening.js"></script>
+
+  <!-- 分析（レポート/CSV/SNS） -->
+  <script src="/js/analysis.js"></script>
+
   <!-- メインアプリロジック -->
   <script src="/js/app.js"></script>
 
@@ -421,6 +1057,8 @@
   <script src="/js/charts.js"></script>
 
   <!-- デバッグツール -->
+  <script src="/js/yomuyomu-v15-data.js"></script>
+  <script src="/js/yomuyomu-v15-core.js"></script>
   <script src="/js/dev-tools.js"></script>
 
   <!-- ========== Service Worker 登録 ========== -->
@@ -464,41 +1102,6 @@
     } else {
       console.warn('[APP] Service Worker not supported');
     }
-  </script>
-
-  <!-- ========== スクリーン切り替え ========== -->
-  <script>
-    /**
-     * ナビゲーションクリック時にスクリーンを切り替え
-     */
-    document.querySelectorAll('[data-screen]').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        const screenName = link.getAttribute('data-screen');
-
-        // 前のスクリーンを非表示
-        document.querySelectorAll('.screen').forEach(screen => {
-          screen.classList.remove('active');
-        });
-
-        // ナビゲーション非アクティブ化
-        document.querySelectorAll('[data-screen]').forEach(nav => {
-          nav.classList.remove('active');
-        });
-
-        // 新しいスクリーンを表示
-        const newScreen = document.getElementById(`screen-${screenName}`);
-        if (newScreen) {
-          newScreen.classList.add('active');
-        }
-
-        // ナビゲーションをアクティブ化
-        link.classList.add('active');
-
-        console.log(`[APP] Screen switched to: ${screenName}`);
-      });
-    });
   </script>
 
   <!-- ========== Push 通知リクエスト ========== -->

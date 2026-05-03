@@ -3,7 +3,7 @@
  */
 
 const TERMINOLOGY = {
-  chanting: 'お題目（念仏）',
+  chanting: 'お題目',
   gongyo: '勤行',
   CHANT: 'お題目',
   GONGYO: '勤行',

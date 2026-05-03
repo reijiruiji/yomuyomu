@@ -32,16 +32,16 @@ const chartInstances = {
   statsAbilityGrowth: null,
 };
 
-// グラフの色設定
+// グラフの色（styles.css と同じ色相 --h:35 に合わせた近似 hex）
 const CHART_COLORS = {
-  primary: '#2d7a4a',      // 深緑
-  secondary: '#4a9d66',    // 明るい緑
-  accent: '#7ec894',       // ライム緑
-  lightBg: '#e8f1eb',      // 背景色
-  error: '#d32f2f',        // エラー赤
-  warning: '#f0a500',      // 警告橙
-  info: '#2196f3',         // 情報青
-  success: '#2d7a4a',      // 成功緑
+  primary: '#bf7f2e',
+  secondary: '#d9a046',
+  accent: '#e8bc6a',
+  lightBg: '#f5f0e8',
+  error: '#d32f2f',
+  warning: '#f0a500',
+  info: '#2196f3',
+  success: '#bf7f2e',
 };
 
 // ========== グラフ初期化 ==========
@@ -60,13 +60,11 @@ async function renderCharts() {
       return;
     }
 
-    // 各グラフを初期化
+    // 各グラフを初期化（ダッシュボード用。統計タブ内グラフは非表示になりがちなため遅延描画）
     renderPracticeHistoryChart(userData);
     renderMeritBreakdownChart(userData);
     renderAbilityScoresChart(userData);
     renderPracticeCompositionChart(userData);
-    renderStatsMonthlyHistoryChart(userData);
-    renderStatsAbilityGrowthChart(userData);
 
     console.log('[Charts] All charts initialized');
   } catch (error) {
@@ -90,11 +88,26 @@ async function updateCharts() {
       if (chart) chart.destroy();
     });
 
-    renderCharts();
+    await renderCharts();
+    await refreshPracticeStatsCharts(userData);
   } catch (error) {
     console.error('[Charts] Failed to update charts:', error);
   }
 }
+
+async function refreshPracticeStatsCharts(userDataOptional) {
+  if (typeof Chart === 'undefined') return;
+  const userData = userDataOptional || (await StorageManager.getUserData());
+  if (!userData) return;
+  renderStatsMonthlyHistoryChart(userData);
+  renderStatsAbilityGrowthChart(userData);
+  queueMicrotask(() => {
+    if (chartInstances.statsMonthlyHistory) chartInstances.statsMonthlyHistory.resize();
+    if (chartInstances.statsAbilityGrowth) chartInstances.statsAbilityGrowth.resize();
+  });
+}
+
+window.refreshPracticeStatsCharts = refreshPracticeStatsCharts;
 
 // ========== 1. 修行量の推移（Line Chart） ==========
 
@@ -118,42 +131,52 @@ function renderPracticeHistoryChart(userData, period = 'week') {
     chartInstances.practiceHistory.destroy();
   }
 
-  // データを集計
-  const { labels, data } = aggregatePracticeData(userData, period);
+  // データを集計（3軸：功徳/幸運/覚醒度）
+  const { labels, data } = aggregateThreeAxisWeekly(userData);
+  const shell = document.querySelector('#screen-practice .yomy-v15-shell');
+  const isDark = !!shell?.classList.contains('dark');
+  const legendColor = isDark ? '#ddd' : '#333';
+  const tickColor = isDark ? '#cfcfcf' : '#666';
+  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : '#e0e0e0';
 
   // グラフを描画
   chartInstances.practiceHistory = new Chart(canvas, {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: labels,
       datasets: [
         {
-          label: TERMINOLOGY.chanting || '念仏',
-          data: data.chanting,
+          type: 'bar',
+          label: '功徳（合計）',
+          data: data.merit,
           borderColor: CHART_COLORS.primary,
-          backgroundColor: `${CHART_COLORS.primary}10`, // 透明度付き
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          pointBackgroundColor: CHART_COLORS.primary,
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
+          backgroundColor: `${CHART_COLORS.primary}55`,
+          borderWidth: 1,
+          borderRadius: 6,
+          yAxisID: 'yMerit',
         },
         {
-          label: TERMINOLOGY.gongyo || '勤行',
-          data: data.gongyo,
+          type: 'bar',
+          label: '幸運（件）',
+          data: data.fortune,
           borderColor: CHART_COLORS.secondary,
-          backgroundColor: `${CHART_COLORS.secondary}10`,
+          backgroundColor: `${CHART_COLORS.secondary}55`,
+          borderWidth: 1,
+          borderRadius: 6,
+          yAxisID: 'yMerit',
+        },
+        {
+          type: 'line',
+          label: '覚醒度（記録用・0〜100）',
+          data: data.awakening,
+          borderColor: '#ffb300',
+          backgroundColor: 'rgba(255,179,0,0.18)',
           borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          pointBackgroundColor: CHART_COLORS.secondary,
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
+          tension: 0.35,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          fill: false,
+          yAxisID: 'yAwake',
         },
       ],
     },
@@ -165,13 +188,13 @@ function renderPracticeHistoryChart(userData, period = 'week') {
           position: 'top',
           labels: {
             font: { size: 12, family: '-apple-system, BlinkMacSystemFont, "Segoe UI"' },
-            color: '#333',
+            color: legendColor,
             padding: 15,
           },
         },
         title: {
           display: true,
-          text: `修行量の推移（${period === 'week' ? '週別' : '月別'}）`,
+          text: '3軸の推移（週）',
           font: { size: 14, weight: 'bold' },
           color: CHART_COLORS.primary,
           padding: 20,
@@ -184,35 +207,47 @@ function renderPracticeHistoryChart(userData, period = 'week') {
           cornerRadius: 8,
           titleFont: { size: 12, weight: 'bold' },
           bodyFont: { size: 11 },
-          callbacks: {
-            afterLabel: (context) => {
-              // 回数単位を表示
-              return '回';
-            },
-          },
         },
       },
       scales: {
-        y: {
+        yMerit: {
+          position: 'left',
           beginAtZero: true,
-          max: calculateMaxValue(data),
+          suggestedMax: calculateMaxValue({ chanting: data.merit, gongyo: data.fortune }),
           ticks: {
-            color: '#666',
+            color: tickColor,
             font: { size: 11 },
           },
           grid: {
-            color: '#e0e0e0',
+            color: gridColor,
             drawTicks: false,
           },
           title: {
             display: true,
-            text: '回数',
-            color: '#666',
+            text: '功徳 / 幸運',
+            color: tickColor,
+          },
+        },
+        yAwake: {
+          position: 'right',
+          beginAtZero: true,
+          suggestedMax: 100,
+          ticks: {
+            color: tickColor,
+            font: { size: 11 },
+          },
+          grid: {
+            drawOnChartArea: false,
+          },
+          title: {
+            display: true,
+            text: '覚醒度（記録用）',
+            color: tickColor,
           },
         },
         x: {
           ticks: {
-            color: '#666',
+            color: tickColor,
             font: { size: 11 },
           },
           grid: {
@@ -222,6 +257,71 @@ function renderPracticeHistoryChart(userData, period = 'week') {
       },
     },
   });
+}
+
+function aggregateThreeAxisWeekly(userData, weeks = 8) {
+  const sessions = userData.sessions || [];
+  const startOfWeek = (d) => {
+    const dt = new Date(d);
+    dt.setHours(12, 0, 0, 0);
+    const day = dt.getDay(); // 0=Sun
+    dt.setDate(dt.getDate() - day);
+    return dt;
+  };
+  const addDays = (d, n) => {
+    const dt = new Date(d);
+    dt.setDate(dt.getDate() + n);
+    return dt;
+  };
+  const fmt = (d) => d.toISOString().split('T')[0].slice(5);
+
+  const now = new Date();
+  const thisWeek = startOfWeek(now);
+  const buckets = [];
+  for (let i = weeks - 1; i >= 0; i--) {
+    const ws = addDays(thisWeek, -7 * i);
+    const we = addDays(ws, 6);
+    buckets.push({
+      key: ws.toISOString().split('T')[0],
+      label: `${fmt(ws)}〜${fmt(we)}`,
+      merit: 0,
+      fortune: 0,
+      awakeSum: 0,
+      awakeN: 0,
+    });
+  }
+  const byKey = new Map(buckets.map((b) => [b.key, b]));
+
+  sessions.forEach((s) => {
+    if (!s?.date) return;
+    const d = new Date(`${String(s.date).split('T')[0]}T12:00:00`);
+    const ws = startOfWeek(d).toISOString().split('T')[0];
+    const b = byKey.get(ws);
+    if (!b) return;
+    b.merit += Number(s.merit) || 0;
+    b.fortune += Number(s.journal_luck_count) || 0;
+    if (
+      typeof EvidenceMetrics !== 'undefined' &&
+      EvidenceMetrics.computeEvidenceDayIndex
+    ) {
+      const idx = EvidenceMetrics.computeEvidenceDayIndex(s)?.index;
+      if (Number.isFinite(idx)) {
+        b.awakeSum += idx;
+        b.awakeN += 1;
+      }
+    }
+  });
+
+  return {
+    labels: buckets.map((b) => b.label),
+    data: {
+      merit: buckets.map((b) => Math.round(b.merit)),
+      fortune: buckets.map((b) => Math.round(b.fortune)),
+      awakening: buckets.map((b) =>
+        b.awakeN ? Math.round((b.awakeSum / b.awakeN) * 10) / 10 : null,
+      ),
+    },
+  };
 }
 
 /**
@@ -339,7 +439,7 @@ function renderMeritBreakdownChart(userData) {
       labels: [TERMINOLOGY.chanting || '念仏', TERMINOLOGY.gongyo || '勤行'],
       datasets: [
         {
-          label: '功徳ポイント',
+          label: '功徳',
           data: [meritChanting, meritGongyo],
           backgroundColor: [CHART_COLORS.primary, CHART_COLORS.secondary],
           borderColor: [CHART_COLORS.primary, CHART_COLORS.secondary],
@@ -393,7 +493,7 @@ function renderMeritBreakdownChart(userData) {
           },
           title: {
             display: true,
-            text: '功徳ポイント',
+            text: '功徳',
             color: '#666',
           },
         },
@@ -699,7 +799,7 @@ function renderStatsAbilityGrowthChart(userData) {
       labels,
       datasets: [
         {
-          label: '累計功徳ポイント',
+          label: '累計功徳',
           data: cumulativeMerit,
           borderColor: CHART_COLORS.secondary,
           backgroundColor: `${CHART_COLORS.secondary}22`,

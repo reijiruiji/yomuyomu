@@ -4,7 +4,7 @@
   <!-- メタ情報 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Nichiren Buddhist chanting web app - 法華経勤行・念仏カウンター・功徳ポイント・リーダーボード・布施管理">
+  <meta name="description" content="Nichiren Buddhist chanting web app - 法華経勤行・お題目カウンター・功徳ポイント・リーダーボード・布施管理">
   <meta name="theme-color" content="#2d7a4a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -47,14 +47,14 @@
     <section id="screen-dashboard" class="screen active">
       <header>
         <h1>よむよむお題目</h1>
-        <p class="subtitle">Nichiren Buddhist Chanting Practice</p>
+        <p class="subtitle">Nichiren Buddhist Odaimoku Practice</p>
       </header>
 
       <div id="dashboard" class="container">
         <!-- 本日の統計 -->
         <div class="dashboard-grid">
           <div class="stat-card">
-            <div class="stat-label">本日の念仏</div>
+            <div class="stat-label">本日のお題目</div>
             <div class="stat-value" id="stat-today-count">0</div>
             <small class="stat-label">回</small>
           </div>
@@ -114,7 +114,7 @@
           <h3>📅 今週の統計</h3>
           <div class="dashboard-grid">
             <div class="stat-card">
-              <div class="stat-label">念仏総数</div>
+            <div class="stat-label">お題目総数</div>
               <div class="stat-value" id="stat-week-count">0</div>
             </div>
             <div class="stat-card">
@@ -137,7 +137,7 @@
           <h3>📆 今月の統計</h3>
           <div class="dashboard-grid">
             <div class="stat-card">
-              <div class="stat-label">念仏総数</div>
+            <div class="stat-label">お題目総数</div>
               <div class="stat-value" id="stat-month-count">0</div>
             </div>
             <div class="stat-card">
@@ -169,13 +169,13 @@
 
       <div class="container">
         <div class="card">
-          <h3>念仏カウンター</h3>
+          <h3>お題目カウンター</h3>
           <div style="text-align: center; margin: 2rem 0;">
             <div id="chanting-count" style="font-size: 3rem; font-weight: bold; color: #2d7a4a; margin: 1rem 0;">
               0
             </div>
             <button class="btn btn-primary" id="btn-start-chanting" style="width: 100%; margin: 0.5rem 0;">
-              念仏を開始
+              お題目を開始
             </button>
             <button class="btn btn-outline" id="btn-reset-count" style="width: 100%; margin: 0.5rem 0;">
               リセット
@@ -192,7 +192,7 @@
             </div>
 
             <div class="form-group">
-              <label for="practice-count">念仏回数</label>
+              <label for="practice-count">お題目回数</label>
               <input type="number" id="practice-count" min="0" required>
             </div>
 
@@ -259,7 +259,7 @@
           <h3>📊 あなたの成績</h3>
           <div class="dashboard-grid">
             <div class="stat-card">
-              <div class="stat-label">総念仏回数</div>
+            <div class="stat-label">総お題目回数</div>
               <div class="stat-value" id="stat-total-count">0</div>
             </div>
             <div class="stat-card">

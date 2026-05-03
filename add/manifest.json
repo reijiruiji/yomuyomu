@@ -1,7 +1,7 @@
 {
   "name": "よむよむお題目 - Yomuyomu Odaimoku",
   "short_name": "よむよむ",
-  "description": "Nichiren Buddhist chanting web app - 法華経勤行・念仏カウンター・功徳ポイント・リーダーボード・布施管理",
+  "description": "Nichiren Buddhist chanting web app - 法華経勤行・お題目カウンター・功徳ポイント・リーダーボード・布施管理",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -73,9 +73,9 @@
   "prefer_related_applications": false,
   "shortcuts": [
     {
-      "name": "今すぐ念仏する",
-      "short_name": "念仏",
-      "description": "アプリを開いて念仏カウントを開始",
+      "name": "今すぐお題目する",
+      "short_name": "お題目",
+      "description": "アプリを開いてお題目カウントを開始",
       "url": "/?shortcut=chanting",
       "icons": [
         {

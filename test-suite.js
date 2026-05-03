@@ -300,14 +300,14 @@ const TestSuite = (() => {
       assert(app !== null, 'Main app container not found');
     });
 
-    test('ナビゲーションが存在する', () => {
-      const nav = document.querySelector('nav');
-      assert(nav !== null, 'Navigation not found');
+    test('統合メイン画面が存在する', () => {
+      const main = document.getElementById('screen-practice');
+      assert(main !== null, 'Integrated practice screen not found');
     });
 
-    test('ダッシュボード画面が存在する', () => {
-      const dashboard = document.getElementById('screen-dashboard');
-      assert(dashboard !== null, 'Dashboard screen not found');
+    test('統計タブ領域が存在する', () => {
+      const stats = document.getElementById('tc-stats');
+      assert(stats !== null, 'Stats tab panel not found');
     });
 
     test('統計キャンバス要素が存在する', () => {

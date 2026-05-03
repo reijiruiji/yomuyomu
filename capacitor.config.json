@@ -1,0 +1,8 @@
+{
+  "appId": "app.yomuyomu.odaimoku",
+  "appName": "よむよむお題目",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}

@@ -86,6 +86,44 @@ function showInfo(message) {
 
 // ========== ダッシュボード更新 ==========
 
+let __algoExplainerDone = false;
+
+/** 統計タブの「内部アルゴリズム」説明文を一度だけ反映 */
+function initAlgoExplainerOnce() {
+  if (__algoExplainerDone) return;
+  const pre = document.getElementById('algo-explainer');
+  if (pre && typeof EvidenceMetrics !== 'undefined' && EvidenceMetrics.algorithmSummaryLines) {
+    pre.textContent = EvidenceMetrics.algorithmSummaryLines().join('\n');
+    __algoExplainerDone = true;
+  }
+}
+
+/** 今日の主観入力欄と evidence インデックス表示をセッションと同期 */
+function hydrateEmotionFormFromSession(userData) {
+  initAlgoExplainerOnce();
+  const today = window.getTodayDateString?.() || new Date().toISOString().split('T')[0];
+  const s = userData?.sessions?.find((x) => x.date === today);
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = val == null ? '' : String(val);
+  };
+  setVal('emo-pain', s?.log_pain);
+  setVal('emo-refresh', s?.log_refresh);
+  setVal('emo-joy', s?.log_joy);
+  const evEl = document.getElementById('stat-today-evidence');
+  if (!evEl) return;
+  if (
+    !s ||
+    typeof EvidenceMetrics === 'undefined' ||
+    !EvidenceMetrics.computeEvidenceDayIndex
+  ) {
+    evEl.textContent = '—';
+    return;
+  }
+  evEl.textContent = String(EvidenceMetrics.computeEvidenceDayIndex(s).index);
+}
+
 /**
  * ダッシュボード全体を更新する（統計情報）
  * storage.js から最新データを取得し、DOM を更新
@@ -105,10 +143,251 @@ async function updateDashboard() {
     updateMonthlyStats(userData);
     updateLeaderboardStats(userData);
     updateDanaStats(userData);
+    updateStatsInsights(userData);
 
+    hydrateEmotionFormFromSession(userData);
+    initAlgoExplainerOnce();
   } catch (error) {
     console.error('ダッシュボード更新エラー:', error);
     showError('ダッシュボードの更新に失敗しました');
+  }
+}
+
+function sumMeritMonth(sessions, year, monthZero) {
+  return (sessions || []).reduce((sum, s) => {
+    const d = new Date(`${s.date}T12:00:00`);
+    if (d.getFullYear() === year && d.getMonth() === monthZero)
+      return sum + (Number(s.merit) || 0);
+    return sum;
+  }, 0);
+}
+
+function sumJournalMonth(sessions, year, monthZero) {
+  return (sessions || []).reduce((sum, s) => {
+    const d = new Date(`${s.date}T12:00:00`);
+    if (d.getFullYear() !== year || d.getMonth() !== monthZero) return sum;
+    return (
+      sum +
+      (Number(s.journal_joy_count) || 0) +
+      (Number(s.journal_luck_count) || 0) +
+      (Number(s.journal_relation_count) || 0)
+    );
+  }, 0);
+}
+
+function sumLuckMonth(sessions, year, monthZero) {
+  return (sessions || []).reduce((sum, s) => {
+    const d = new Date(`${s.date}T12:00:00`);
+    if (d.getFullYear() !== year || d.getMonth() !== monthZero) return sum;
+    return sum + (Number(s.journal_luck_count) || 0);
+  }, 0);
+}
+
+function avgEvidenceMonth(sessions, year, monthZero) {
+  const list = (sessions || []).filter((s) => {
+    const d = new Date(`${s.date}T12:00:00`);
+    return d.getFullYear() === year && d.getMonth() === monthZero;
+  });
+  if (
+    !list.length ||
+    typeof EvidenceMetrics === 'undefined' ||
+    !EvidenceMetrics.computeEvidenceDayIndex
+  )
+    return null;
+  let t = 0;
+  list.forEach((s) => {
+    t += EvidenceMetrics.computeEvidenceDayIndex(s).index;
+  });
+  return Math.round((t / list.length) * 10) / 10;
+}
+
+function computePearsonR(xs, ys) {
+  const pairs = [];
+  for (let i = 0; i < Math.min(xs.length, ys.length); i++) {
+    const x = Number(xs[i]);
+    const y = Number(ys[i]);
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+    pairs.push([x, y]);
+  }
+  if (pairs.length < 3) return null;
+  const n = pairs.length;
+  let sx = 0;
+  let sy = 0;
+  for (let i = 0; i < n; i++) {
+    sx += pairs[i][0];
+    sy += pairs[i][1];
+  }
+  const mx = sx / n;
+  const my = sy / n;
+  let num = 0;
+  let dx = 0;
+  let dy = 0;
+  for (let i = 0; i < n; i++) {
+    const vx = pairs[i][0] - mx;
+    const vy = pairs[i][1] - my;
+    num += vx * vy;
+    dx += vx * vx;
+    dy += vy * vy;
+  }
+  if (dx <= 0 || dy <= 0) return null;
+  const r = num / Math.sqrt(dx * dy);
+  if (!Number.isFinite(r)) return null;
+  return Math.max(-1, Math.min(1, r));
+}
+
+function formatR(r) {
+  if (r == null) return '—';
+  const v = Math.round(r * 100) / 100;
+  return (v >= 0 ? '+' : '') + v.toFixed(2);
+}
+
+/** 統計タブ上部の「ペース」カード（断定表現は避ける） */
+function updateStatsInsights(userData) {
+  const sessions = userData.sessions || [];
+  const now = new Date();
+  const cy = now.getFullYear();
+  const cm = now.getMonth();
+  let py = cy;
+  let pm = cm - 1;
+  if (pm < 0) {
+    pm = 11;
+    py -= 1;
+  }
+
+  const meritCur = sumMeritMonth(sessions, cy, cm);
+  const meritPrev = sumMeritMonth(sessions, py, pm);
+  let meritPct = null;
+  if (meritPrev > 0) meritPct = Math.round(((meritCur - meritPrev) / meritPrev) * 100);
+  else if (meritCur > 0) meritPct = 100;
+
+  const nM = document.getElementById('insight-merit-num');
+  const sM = document.getElementById('insight-merit-sub');
+  const mM = document.getElementById('insight-merit-msg');
+  if (nM) nM.textContent = meritCur > 0 ? String(meritCur) : sessions.length ? '0' : '—';
+  if (sM)
+    sM.textContent =
+      meritPct == null
+        ? '先月と比較（先月 0 のときは表示しません）'
+        : `先月比 ${meritPct >= 0 ? '+' : ''}${meritPct}% · 功徳（合計）`;
+  if (mM) {
+    if (!sessions.length)
+      mM.textContent = '記録がたまると、今月の伸びをざっくり比較できます。';
+    else if (meritPct == null && meritPrev <= 0 && meritCur >= 0)
+      mM.textContent = '今月の功徳が溜まりつつあります。先月にもデータがあると比較できます。';
+    else if (meritPct != null && meritPct >= 0)
+      mM.textContent = '記録上、今月の功徳合計は先月より多い傾向です（個人の体感とは限りません）。';
+    else if (meritPct != null)
+      mM.textContent = '記録上は先月より少なめです。ペースは日々でかまいません。';
+    else mM.textContent = '功徳は唱数・時間などから算出したアプリ内スコアです。';
+  }
+
+  const avgCur = avgEvidenceMonth(sessions, cy, cm);
+  const avgPrev = avgEvidenceMonth(sessions, py, pm);
+  const nH = document.getElementById('insight-mind-num');
+  const sH = document.getElementById('insight-mind-sub');
+  const mH = document.getElementById('insight-mind-msg');
+  if (nH) nH.textContent = avgCur != null ? String(avgCur) : '—';
+  if (sH)
+    sH.textContent =
+      avgPrev != null && avgCur != null
+        ? `先月平均 ${avgPrev} と比べてこの月は ${avgCur >= avgPrev ? '上' : '下'}`
+        : '今月の日次インデックスの平均';
+  if (mH) {
+    mH.textContent =
+      avgCur == null
+        ? 'インデックスは任意の主観ログがそろうとブレンドされます。詳細は「内部アルゴリズム」参照。'
+        : '数値だけの記録であり、心地よさや健康状態を断定するものではありません。';
+  }
+
+  const jCur = sumJournalMonth(sessions, cy, cm);
+  const jPrev = sumJournalMonth(sessions, py, pm);
+  const nE = document.getElementById('insight-events-num');
+  const sE = document.getElementById('insight-events-sub');
+  const mE = document.getElementById('insight-events-msg');
+  const luckCur = sumLuckMonth(sessions, cy, cm);
+  const luckPrev = sumLuckMonth(sessions, py, pm);
+  if (nE) nE.textContent = String(luckCur);
+  if (sE)
+    sE.textContent =
+      luckPrev !== luckCur
+        ? `先月との差（件）: ${luckCur >= luckPrev ? '+' : ''}${luckCur - luckPrev}`
+        : '「予期しない幸運」カウンタ合計';
+  if (mE)
+    mE.textContent =
+      luckCur > 0
+        ? '幸運カウンタは「自分の外側の要因」をメモするためのものです。'
+        : 'まだ入力がなければ 0 です。無理に埋める必要はありません。';
+
+  const pEl = document.getElementById('insight-pattern-text');
+  if (pEl) {
+    let t =
+      '継続して記録すると、「忙しい週ほど短く」「ゆるい週は長め」など、自分なりのリズムが見えてきます。';
+    const upMerit = meritPct != null && meritPct >= 10;
+    const upLuck = luckCur > luckPrev && luckCur > 0;
+    if (upMerit && upLuck)
+      t =
+        '今月は記録された功徳の合計も、幸運カウンタの合計も、先月より多いタイミングがありました（因果の証明ではありません）。';
+    else if (upMerit)
+      t = '記録された功徳のペースが、今月は先月より伸びやすい日がありました。生活リズムの参考にしてください。';
+    else if (luckCur > 0 || meritCur > 0)
+      t =
+        '休みなく続けなくて大丈夫です。「ここだけは唱えた」が残るだけでも、後から並べられます。';
+    pEl.textContent = t;
+  }
+
+  // 相関（参考）：功徳・幸運・記録用インデックス
+  const corrMeritFortuneEl = document.getElementById('insight-corr-merit-fortune');
+  const corrAwakeFortuneEl = document.getElementById('insight-corr-awake-fortune');
+  const corrDaysAwakeEl = document.getElementById('insight-corr-days-awake');
+
+  if (corrMeritFortuneEl || corrAwakeFortuneEl || corrDaysAwakeEl) {
+    const byDate = [...sessions]
+      .filter((s) => s && s.date)
+      .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+
+    const merits = [];
+    const fortunes = [];
+    const awakens = [];
+    const days = [];
+
+    let streak = 0;
+    let prev = null;
+    const nextDate = (d) => {
+      const dt = new Date(`${d}T12:00:00`);
+      dt.setDate(dt.getDate() + 1);
+      return dt.toISOString().split('T')[0];
+    };
+
+    byDate.forEach((s) => {
+      const date = String(s.date).split('T')[0];
+      if (!prev) streak = 1;
+      else streak = nextDate(prev) === date ? streak + 1 : 1;
+      prev = date;
+
+      const merit = Number(s.merit) || 0;
+      const fortune = Number(s.journal_luck_count) || 0;
+      let awake = null;
+      if (
+        typeof EvidenceMetrics !== 'undefined' &&
+        EvidenceMetrics.computeEvidenceDayIndex
+      ) {
+        const idx = EvidenceMetrics.computeEvidenceDayIndex(s)?.index;
+        if (Number.isFinite(idx)) awake = idx;
+      }
+
+      merits.push(merit);
+      fortunes.push(fortune);
+      awakens.push(awake);
+      days.push(streak);
+    });
+
+    const rMeritFortune = computePearsonR(merits, fortunes);
+    const rAwakeFortune = computePearsonR(awakens, fortunes);
+    const rDaysAwake = computePearsonR(days, awakens);
+
+    if (corrMeritFortuneEl) corrMeritFortuneEl.textContent = formatR(rMeritFortune);
+    if (corrAwakeFortuneEl) corrAwakeFortuneEl.textContent = formatR(rAwakeFortune);
+    if (corrDaysAwakeEl) corrDaysAwakeEl.textContent = formatR(rDaysAwake);
   }
 }
 
@@ -118,7 +397,7 @@ async function updateDashboard() {
  */
 function updateTodayStats(userData) {
   // 本日のデータを計算
-  const today = new Date().toISOString().split('T')[0];
+  const today = window.getTodayDateString?.() || new Date().toISOString().split('T')[0];
   const todaySession = userData.sessions?.find(s => s.date === today) || {};
 
   // 本日の勤行回数（念仏回数）
@@ -137,7 +416,7 @@ function updateTodayStats(userData) {
     timeElement.textContent = `${minutes}分${seconds}秒`;
   }
 
-  // 本日の功徳ポイント
+  // 本日の功徳（合計）
   const todayMerit = todaySession.merit || 0;
   const meritElement = document.getElementById('stat-today-merit');
   if (meritElement) {
@@ -311,6 +590,10 @@ function updateLeaderboardStats(userData) {
 
   // ランク評価（功徳による）
   const totalMerit = totalSessions.reduce((sum, s) => sum + (s.merit || 0), 0);
+  const meritAggEl = document.getElementById('stat-total-merit');
+  if (meritAggEl) {
+    meritAggEl.textContent = totalMerit.toLocaleString('ja-JP');
+  }
   const rankElement = document.getElementById('stat-rank-level');
   if (rankElement) {
     let rankLabel = '初心者';

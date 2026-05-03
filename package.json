@@ -1,0 +1,20 @@
+{
+  "name": "yomuyomu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "よむよむお題目 — 静的 Web。必要時に Capacitor でネイティブへ。",
+  "scripts": {
+    "cap:copy": "npx cap copy",
+    "cap:sync": "npx cap sync",
+    "cap:open:ios": "npx cap open ios",
+    "cap:open:android": "npx cap open android",
+    "cap:build": "npx cap copy"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/ios": "^6.2.0"
+  },
+  "devDependencies": {}
+}
