@@ -137,6 +137,23 @@ async function updateDashboard() {
       return;
     }
 
+    // 今日の日付を取得
+    const today = new Date().toISOString().split('T')[0];
+    const todaySession = userData.sessions?.find(s => s.date === today);
+
+    // 振り返りボタンの表示制御
+    const reflectionButtons = ['openReflectionFromChant', 'openReflectionFromGongyo', 'openReflectionFromStats'];
+    reflectionButtons.forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        if (todaySession) {
+          btn.classList.remove('gone');
+        } else {
+          btn.classList.add('gone');
+        }
+      }
+    });
+
     // 各統計セクションを更新
     updateTodayStats(userData);
     updateWeeklyStats(userData);
@@ -268,7 +285,7 @@ function updateStatsInsights(userData) {
     sM.textContent =
       meritPct == null
         ? '先月と比較（先月 0 のときは表示しません）'
-        : `先月比 ${meritPct >= 0 ? '+' : ''}${meritPct}% · 功徳（合計）`;
+        : `先月比 ${meritPct >= 0 ? '+' : ''}${meritPct}% · 心の安定度（合計）`;
   if (mM) {
     if (!sessions.length)
       mM.textContent = '記録がたまると、今月の伸びをざっくり比較できます。';
@@ -278,7 +295,7 @@ function updateStatsInsights(userData) {
       mM.textContent = '記録上、今月の功徳合計は先月より多い傾向です（個人の体感とは限りません）。';
     else if (meritPct != null)
       mM.textContent = '記録上は先月より少なめです。ペースは日々でかまいません。';
-    else mM.textContent = '功徳は唱数・時間などから算出したアプリ内スコアです。';
+    else mM.textContent = '心の安定度は唱数・時間などから算出したアプリ内スコアです。';
   }
 
   const avgCur = avgEvidenceMonth(sessions, cy, cm);
@@ -291,12 +308,12 @@ function updateStatsInsights(userData) {
     sH.textContent =
       avgPrev != null && avgCur != null
         ? `先月平均 ${avgPrev} と比べてこの月は ${avgCur >= avgPrev ? '上' : '下'}`
-        : '今月の日次インデックスの平均';
+        : '今月の自己制御力の平均';
   if (mH) {
     mH.textContent =
       avgCur == null
-        ? 'インデックスは任意の主観ログがそろうとブレンドされます。詳細は「内部アルゴリズム」参照。'
-        : '数値だけの記録であり、心地よさや健康状態を断定するものではありません。';
+        ? '自己制御力は任意の主観ログがそろうとブレンドされます。詳細は「内部アルゴリズム」参照。'
+        : '数値だけの記録であり、自己制御力を断定するものではありません。';
   }
 
   const jCur = sumJournalMonth(sessions, cy, cm);
@@ -311,11 +328,11 @@ function updateStatsInsights(userData) {
     sE.textContent =
       luckPrev !== luckCur
         ? `先月との差（件）: ${luckCur >= luckPrev ? '+' : ''}${luckCur - luckPrev}`
-        : '「予期しない幸運」カウンタ合計';
+        : '「人生満足度」カウンタ合計';
   if (mE)
     mE.textContent =
       luckCur > 0
-        ? '幸運カウンタは「自分の外側の要因」をメモするためのものです。'
+        ? '人生満足度カウンタは「自分の内面的な充実」をメモするためのものです。'
         : 'まだ入力がなければ 0 です。無理に埋める必要はありません。';
 
   const pEl = document.getElementById('insight-pattern-text');
@@ -326,9 +343,9 @@ function updateStatsInsights(userData) {
     const upLuck = luckCur > luckPrev && luckCur > 0;
     if (upMerit && upLuck)
       t =
-        '今月は記録された功徳の合計も、幸運カウンタの合計も、先月より多いタイミングがありました（因果の証明ではありません）。';
+        '今月は記録された心の安定度の合計も、人生満足度カウンタの合計も、先月より多いタイミングがありました（因果の証明ではありません）。';
     else if (upMerit)
-      t = '記録された功徳のペースが、今月は先月より伸びやすい日がありました。生活リズムの参考にしてください。';
+      t = '記録された心の安定度のペースが、今月は先月より伸びやすい日がありました。生活リズムの参考にしてください。';
     else if (luckCur > 0 || meritCur > 0)
       t =
         '休みなく続けなくて大丈夫です。「ここだけは唱えた」が残るだけでも、後から並べられます。';

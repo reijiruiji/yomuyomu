@@ -1,5 +1,6 @@
 var GG = window.YOMUYOMU_V15_GG;
 var GG_N = window.YOMUYOMU_V15_GG_N;
+window.GG = GG;
 
 var RD=new Date(2025,0,1),RRK=0,RBR=2,RC60=2;
 var RKN=['先勝','友引','先負','仏滅','大安','赤口'];
@@ -248,6 +249,7 @@ function init(){
   hydrateStFromStorageManager(function(){
     var saved=lsG(UK);
     if(saved&&saved.userName){Object.assign(st,saved);normalizeV15Tab();}
+    window.st = st;
     var ready=st.userName&&String(st.userName).trim().length>0;
     if(ready){
       for(var i=1;i<=7;i++){var s=document.getElementById('t'+i);if(s)s.classList.add('gone');}

@@ -132,7 +132,9 @@
     }
 
     const durationSec = Math.round(minutes * 60);
-    const merit_gongyo = Math.round(minutes * 10);
+    const selectedGongyo = window.st?.selectedGongyo;
+    const gongyo = window.GG?.find(g => g.id === selectedGongyo);
+    const merit_gongyo = gongyo ? gongyo.lines.join('').length * 10 : 0;
     const merit_chanting = Math.max(0, Math.round(count * (window.merit_system?.chant?.per_unit ?? 1)));
     const merit = merit_chanting + merit_gongyo;
     const count_gongyo = minutes > 0 ? Math.max(1, Math.round(minutes / 20)) : 0;
