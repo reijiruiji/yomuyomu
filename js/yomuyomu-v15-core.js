@@ -396,7 +396,7 @@ function buildCarousel(){
       '<div class="gc-num">'+(i+1)+'/'+GG_N+'</div>'+
       '<div class="gc-title">'+g.t+'</div>'+
       '<div class="gc-sub">'+g.s+'</div>'+
-      (hasText?'<div class="gc-badge">📖 読める</div>':'')+
+      (unlocked && hasText?'<div class="gc-badge">📖 読める</div>':'')+
       (!unlocked?'<div class="gc-badge" style="background:rgba(0,0,0,.35);border:1px solid var(--bo)">🔒 未解放</div>':'')+
       '<div class="gc-desc">'+g.d+'</div>';
     if(!unlocked){
@@ -769,12 +769,14 @@ window.addEventListener('resize',function(){if(st.tab==='gongyou')buildCarousel(
 // ══════════════════════════════════════════════════════════
 init();
 
-document.getElementById('btn-yomy-walkthrough')?.addEventListener('click',function(){startTutWalk();});
-document.getElementById('btn-yomy-reset-tutorial')?.addEventListener('click',function(){
-  if(!confirm('チュートリアルを最初からやり直しますか？\n（お題目・勤行タブの記録もリセットされます）'))return;
-  localStorage.removeItem(UK);
-  localStorage.removeItem(LBK);
-  if(typeof StorageManager!=='undefined'){
-    StorageManager.getUserData().then(function(u){delete u.v15;return StorageManager.saveUserData(u);}).finally(function(){location.reload();});
-  }else location.reload();
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('btn-yomy-walkthrough')?.addEventListener('click',function(){startTutWalk();});
+  document.getElementById('btn-yomy-reset-tutorial')?.addEventListener('click',function(){
+    if(!confirm('チュートリアルを最初からやり直しますか？\n（お題目・勤行タブの記録もリセットされます）'))return;
+    localStorage.removeItem(UK);
+    localStorage.removeItem(LBK);
+    if(typeof StorageManager!=='undefined'){
+      StorageManager.getUserData().then(function(u){delete u.v15;return StorageManager.saveUserData(u);}).finally(function(){location.reload();});
+    }else location.reload();
+  });
 });
