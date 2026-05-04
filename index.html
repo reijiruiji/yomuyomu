@@ -1,567 +1,1428 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <!-- メタ情報 -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Nichiren Buddhist chanting web app - 法華経勤行・念仏カウンター・功徳ポイント・リーダーボード・布施管理">
-  <meta name="theme-color" content="#2d7a4a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="よむよむ">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>よむよむお題目</title>
+<style>
+:root{
+  --h:35;--s:68%;
+  --a:hsl(var(--h),var(--s),48%);--ag:hsla(var(--h),var(--s),48%,.15);
+  --bg:hsl(var(--h),28%,97%);--bc:hsl(var(--h),22%,100%);
+  --bc2:hsl(var(--h),20%,93%);--bi:hsl(var(--h),22%,95%);
+  --bo:hsl(var(--h),22%,84%);--boa:hsl(var(--h),38%,70%);
+  --tx:hsl(var(--h),24%,14%);--mu:hsl(var(--h),16%,50%);--di:hsl(var(--h),12%,70%);
+  --ok:#2e7d32;--err:#c0392b;--warn:#b8860b;
+}
+body.dark{
+  --bg:hsl(var(--h),18%,7%);--bc:hsl(var(--h),18%,11%);--bc2:hsl(var(--h),16%,15%);
+  --bi:hsl(var(--h),18%,8%);--bo:hsl(var(--h),18%,20%);--boa:hsl(var(--h),28%,28%);
+  --tx:hsl(var(--h),18%,92%);--mu:hsl(var(--h),12%,55%);--di:hsl(var(--h),12%,35%);
+  --ok:#4caf50;--err:#ef5350;--warn:#f9a825;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100dvh;background:var(--bg);color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI',sans-serif;
+  overflow-x:hidden;transition:background .25s,color .2s;}
 
-  <!-- タイトル -->
-  <title>よむよむお題目 - Yomuyomu Odaimoku</title>
+/* ── TUTORIAL ── */
+.tscr{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;background:var(--bg);padding:2rem 1.5rem;overflow-y:auto;transition:opacity .4s;}
+.tscr.hidden{opacity:0;pointer-events:none;}
+.tscr.gone{display:none;}
+.tut-title-wrap{writing-mode:vertical-rl;font-size:clamp(2.2rem,9vw,3.8rem);font-weight:700;
+  line-height:1.3;letter-spacing:.18em;color:var(--a);text-shadow:0 0 30px var(--ag);
+  margin:1.5rem auto;min-height:11rem;}
+.tut-char{display:inline-block;opacity:0;animation:brushIn .42s ease-out forwards;}
+@keyframes brushIn{from{opacity:0;transform:scaleY(.55) translateY(10px)}to{opacity:1;transform:none}}
+.worry-header{font-size:1.05rem;font-weight:700;color:var(--a);margin-bottom:.875rem;opacity:0;
+  transform:translateY(12px);transition:opacity .4s,transform .4s;}
+.worry-header.show{opacity:1;transform:none;}
+.worry-li{font-size:14px;padding:.6rem 0;border-bottom:1px solid var(--bo);opacity:0;
+  transform:translateY(14px);transition:opacity .4s,transform .4s;}
+.worry-li.show{opacity:1;transform:none;}
+.worry-solve{font-size:1rem;font-weight:600;color:var(--a);margin-top:.875rem;opacity:0;transition:opacity .45s;}
+.worry-solve.show{opacity:1;}
+.tut-ask span{display:block;font-size:clamp(.95rem,4vw,1.1rem);color:var(--tx);text-align:center;
+  line-height:2.2;opacity:0;animation:rUp .5s ease-out forwards;}
+@keyframes rUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.tut-inp-wrap{width:100%;max-width:280px;margin-top:1.25rem;opacity:0;animation:fFront .5s ease-out .8s both;}
+@keyframes fFront{from{opacity:0;transform:perspective(500px) translateZ(50px) scale(1.08)}to{opacity:1;transform:none}}
+.tut-inp-wrap.vanish{animation:toVanish .45s ease-out forwards!important;}
+@keyframes toVanish{to{opacity:0;transform:perspective(500px) translateZ(-260px) scale(.06)}}
+.tut-inp{width:100%;background:var(--bi);border:1.5px solid var(--bo);border-radius:10px;
+  padding:13px;color:var(--tx);font-size:16px;outline:none;text-align:center;transition:border-color .2s;}
+.tut-inp:focus{border-color:var(--boa);}
+.btn-done{width:100%;padding:13px;margin-top:.75rem;font-size:15px;font-weight:600;
+  border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;}
+.font-opt{padding:12px 16px;border-radius:11px;font-size:13px;font-weight:500;background:var(--bc);
+  border:1.5px solid var(--bo);color:var(--tx);cursor:pointer;margin-bottom:.5rem;text-align:center;
+  transition:all .18s;opacity:0;animation:rUp .4s ease-out both;}
+.font-opt:hover,.font-opt.sel{background:var(--a);border-color:var(--a);color:#fff;}
+.hint-bounce{font-size:12px;color:var(--mu);margin-top:1.25rem;animation:bnc 1.5s ease-in-out infinite;}
+@keyframes bnc{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 
-  <!-- PWA マニフェスト -->
-  <link rel="manifest" href="/manifest.json">
+/* ── APP ── */
+#app{display:none;min-height:100dvh;}
+#app.vis{display:block;animation:rUp .4s ease-out;}
+#mbtn{position:fixed;top:10px;right:10px;z-index:400;width:37px;height:37px;border-radius:50%;
+  background:var(--bc);border:1px solid var(--bo);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+.hbl{width:14px;height:2px;background:var(--tx);border-radius:1px;}
+#mpanel{position:fixed;top:0;right:0;bottom:0;width:min(280px,84vw);background:var(--bc);
+  border-left:1px solid var(--bo);z-index:390;transform:translateX(100%);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:4rem 1.1rem 2rem;}
+#mpanel.open{transform:translateX(0);}
+#mover{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:380;opacity:0;pointer-events:none;transition:opacity .28s;}
+#mover.open{opacity:1;pointer-events:all;}
+.hue-track{width:100%;height:9px;border-radius:4px;border:none;cursor:pointer;-webkit-appearance:none;outline:none;
+  background:linear-gradient(to right,hsl(0,70%,55%),hsl(40,75%,52%),hsl(80,65%,48%),hsl(140,60%,45%),hsl(200,65%,50%),hsl(260,65%,55%),hsl(310,65%,55%),hsl(360,70%,55%));}
+.hue-track::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--bc);border:3px solid var(--a);cursor:pointer;}
+.app-hd{display:flex;align-items:center;padding:.7rem 1rem;background:var(--bg);
+  border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;}
+.app-logo{font-size:14px;font-weight:700;color:var(--a);}
+.app-sub{font-size:10px;color:var(--mu);margin-top:1px;}
+.tabs{display:flex;background:var(--bi);border-bottom:1px solid var(--bo);position:sticky;top:52px;z-index:90;}
+.tab{flex:1;padding:9px 2px;font-size:11px;border:none;background:transparent;color:var(--mu);
+  cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.tab.on{color:var(--a);border-bottom-color:var(--a);font-weight:600;}
+.tc{display:none;padding:.875rem;}
+.tc.on{display:block;}
+.card{background:var(--bc);border:1px solid var(--bo);border-radius:13px;padding:1rem;margin-bottom:.75rem;}
+.card-a{border-color:var(--boa);}
+.count-wrap{text-align:center;padding:1.35rem 1rem;}
+.count-num{font-size:clamp(56px,20vw,90px);font-weight:300;line-height:1;letter-spacing:-.03em;
+  background:linear-gradient(155deg,var(--tx) 20%,var(--a));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.count-sub{font-size:12px;color:var(--mu);margin-top:8px;}
+.merit-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bo);border-radius:12px;overflow:hidden;margin-bottom:.75rem;}
+.mc{background:var(--bc);padding:.8rem;text-align:center;}
+.mv{font-size:clamp(15px,5vw,22px);font-weight:600;color:var(--a);}
+.ml{font-size:10px;color:var(--mu);margin-top:2px;}
+.btn-big{display:block;width:100%;padding:14px;margin-bottom:.6rem;font-size:14px;font-weight:600;
+  border-radius:13px;cursor:pointer;letter-spacing:.05em;border:none;background:var(--tx);
+  color:var(--bg);box-shadow:0 3px 10px rgba(0,0,0,.1);transition:transform .1s,opacity .1s;}
+.btn-big:active{transform:scale(.97);}
+.btn-big.stop{background:linear-gradient(135deg,#c62828,#ef5350);color:#fff;}
+.btn-big.accent{background:var(--a);color:#fff;}
+.btn-big:disabled{opacity:.45;}
+.btn-out{display:block;width:100%;padding:11px;font-size:13px;font-weight:500;border-radius:12px;
+  cursor:pointer;background:transparent;color:var(--tx);border:1px solid var(--di);margin-bottom:.75rem;transition:border-color .15s;}
+.btn-out:hover{border-color:var(--a);}
+.btn-s{padding:5px 11px;font-size:11px;border-radius:7px;cursor:pointer;background:var(--bc2);
+  color:var(--mu);border:1px solid var(--bo);transition:all .15s;white-space:nowrap;}
+.btn-s:hover,.btn-s.on{color:var(--a);border-color:var(--boa);background:var(--bc);}
+.trow{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:.6rem;}
+.sl-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;margin-bottom:.6rem;}
+.sl-row label{font-size:11px;color:var(--mu);white-space:nowrap;}
+.sl-row span{font-size:11px;color:var(--a);min-width:28px;text-align:right;}
+input[type=range]{width:100%;height:4px;border-radius:2px;background:var(--boa);-webkit-appearance:none;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--a);cursor:pointer;border:2px solid var(--bc);}
+.smsg{font-size:11px;text-align:center;min-height:16px;margin-bottom:.5rem;line-height:1.4;}
+.sl{color:var(--a)}.se{color:var(--err)}.sw{color:var(--warn)}
+.mdot{display:inline-block;width:7px;height:7px;background:var(--a);border-radius:50%;animation:blink 1s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.1}}
+input[type=text],input[type=number],textarea{width:100%;background:var(--bi);border:1px solid var(--bo);
+  border-radius:8px;padding:9px 11px;color:var(--tx);font-size:14px;outline:none;}
+input:focus,textarea:focus{border-color:var(--boa);}
+textarea{resize:none;min-height:72px;line-height:1.6;}
+.rpair{display:flex;gap:7px;margin-bottom:.5rem;}.rpair input{flex:1;}
+.banner{display:flex;align-items:center;gap:6px;padding:.5rem .875rem;border-radius:50px;
+  margin-bottom:.75rem;font-size:11px;font-weight:600;color:#fff;}
+.ban-tensha{background:linear-gradient(90deg,#880e4f,#c2185b);}
+.ban-ichiryu{background:linear-gradient(90deg,hsl(var(--h),60%,33%),var(--a));}
+.ban-tora{background:linear-gradient(90deg,#e65100,#f57c00);}
+.ban-tsuchi{background:linear-gradient(90deg,#0277bd,#0288d1);}
+.mult-pill{display:inline-flex;align-items:center;background:var(--a);color:#fff;border-radius:20px;padding:2px 10px;font-size:10px;font-weight:700;margin-bottom:.5rem;}
 
-  <!-- アイコン -->
-  <link rel="icon" type="image/png" href="/images/icon-192x192.png">
-  <link rel="apple-touch-icon" href="/images/icon-192x192.png">
+/* ── マイク許可カード ── */
+.mic-card{background:linear-gradient(135deg,var(--bc) 0%,hsla(var(--h),40%,95%,.6) 100%);
+  border:2px solid var(--boa);border-radius:14px;padding:1.25rem;margin-bottom:.75rem;text-align:center;}
+.mic-card h4{font-size:13px;font-weight:700;color:var(--a);margin-bottom:.5rem;}
+.mic-card p{font-size:11px;color:var(--mu);line-height:1.6;margin-bottom:.75rem;}
+.mic-steps{list-style:none;text-align:left;font-size:11px;color:var(--mu);line-height:1.8;margin-bottom:.75rem;}
+.mic-steps li::before{content:'→ ';color:var(--a);}
+.badge-ok{display:inline-flex;align-items:center;gap:4px;background:rgba(46,125,50,.12);
+  border:1px solid #4caf50;border-radius:20px;padding:2px 10px;font-size:10px;color:var(--ok);}
+.badge-warn{display:inline-flex;align-items:center;gap:4px;background:rgba(184,134,11,.1);
+  border:1px solid var(--warn);border-radius:20px;padding:2px 10px;font-size:10px;color:var(--warn);}
 
-  <!-- スタイルシート -->
-  <link rel="stylesheet" href="/css/styles.css">
+/* ── HINT BUTTON ── */
+.hint-btn{width:24px;height:24px;border-radius:50%;background:var(--bc2);border:1px solid var(--boa);
+  color:var(--a);font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;
+  align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.hint-btn:hover{background:var(--a);color:#fff;}
+.tab-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.tab-hd-title{font-size:13px;font-weight:600;color:var(--a);}
 
-  <!-- 本番環境チェック -->
-  <script>
-    // Node_ENV 設定（デバッグツールの無効化判定用）
-    window.NODE_ENV = 'development'; // 本番: 'production'
-  </script>
+/* ══ TAIKO-STYLE CAROUSEL ══ */
+.gc-stage-wrap{
+  position:relative;
+  width:100%;
+  overflow:hidden;
+  touch-action:pan-y;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 14%,black 86%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0%,black 14%,black 86%,transparent 100%);
+}
+#gcStage{
+  position:relative;
+  height:195px;   /* 固定！ JS でここを変更しない */
+  width:100%;
+  overflow:visible;
+}
+.gc-card2{
+  position:absolute;
+  top:50%;
+  /* transform は JS で translateY(-50%) scale(x) を常に付ける */
+  border-radius:14px;
+  background:var(--bc);
+  border:1.5px solid var(--bo);
+  padding:10px 8px;
+  text-align:center;
+  cursor:pointer;
+  user-select:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  will-change:transform,left,opacity;
+  box-sizing:border-box;
+}
+.gc-card2.active{border-color:var(--boa);box-shadow:0 4px 20px var(--ag);}
+/* ── ルーレット着地バウンス ── */
+@keyframes gcBounce{
+  0%  {transform:translateY(-50%) scale(1.22);}
+  55% {transform:translateY(-50%) scale(0.92);}
+  78% {transform:translateY(-50%) scale(1.06);}
+  100%{transform:translateY(-50%) scale(1);}
+}
+.gc-card2.land{animation:gcBounce .42s cubic-bezier(.34,1.56,.64,1);}
+.gc-card2 .gc-num{font-size:9px;color:var(--di);margin-bottom:3px;}
+.gc-card2 .gc-title{font-size:11px;font-weight:700;color:var(--a);line-height:1.3;margin-bottom:2px;}
+.gc-card2 .gc-sub{font-size:9px;color:var(--mu);line-height:1.3;}
+.gc-card2 .gc-badge{display:inline-block;font-size:8px;color:#fff;background:var(--a);
+  border-radius:20px;padding:1px 6px;margin-top:4px;}
+.gc-card2 .gc-desc{font-size:9px;color:var(--mu);margin-top:5px;line-height:1.45;text-align:left;
+  max-height:42px;overflow:hidden;}
+.gc-nav{display:flex;align-items:center;justify-content:space-between;margin:.5rem 0 .75rem;}
+.gc-arrow{width:38px;height:38px;border-radius:50%;background:var(--bc);border:1px solid var(--boa);
+  color:var(--a);display:flex;align-items:center;justify-content:center;font-size:22px;
+  cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none;}
+.gc-arrow:hover{background:var(--bc2);}
+.gc-arrow:active{transform:scale(.9);}
+.gc-counter{font-size:11px;color:var(--mu);}
+
+/* ── READING OVERLAY ── */
+#readingOverlay{position:fixed;inset:0;z-index:500;background:var(--bg);display:none;flex-direction:column;}
+#readingOverlay.show{display:flex;}
+.read-hd{display:flex;align-items:center;padding:.75rem 1rem;border-bottom:1px solid var(--bo);background:var(--bc);gap:.5rem;}
+.read-title{flex:1;text-align:center;font-size:13px;font-weight:600;color:var(--a);}
+.read-pgn{font-size:10px;color:var(--di);white-space:nowrap;}
+.read-prog-bar{height:3px;background:var(--bo);}
+.read-prog-fill{height:100%;background:var(--a);transition:width .3s;}
+.read-body{flex:1;overflow:hidden;position:relative;}
+#readPages{display:flex;transition:transform .35s cubic-bezier(.4,0,.2,1);}
+.read-page{flex-shrink:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:1.5rem;min-height:50vh;}
+.page-dots{display:flex;gap:5px;justify-content:center;padding:.625rem .5rem;flex-wrap:wrap;max-height:28px;overflow:hidden;}
+.page-dot{width:6px;height:6px;border-radius:50%;background:var(--di);transition:all .2s;flex-shrink:0;}
+.page-dot.on{background:var(--a);transform:scale(1.35);}
+.read-nav{display:flex;gap:.75rem;padding:.875rem 1rem;border-top:1px solid var(--bo);background:var(--bc);}
+.read-nav button{flex:1;margin-bottom:0;}
+/* 経文テキスト */
+.rk{font-size:clamp(18px,6vw,32px);font-weight:300;color:var(--a);letter-spacing:.1em;margin-bottom:.5rem;text-align:center;line-height:1.9;}
+.rh{font-size:clamp(12px,4vw,15px);color:var(--tx);letter-spacing:.04em;margin-bottom:.3rem;text-align:center;line-height:1.8;}
+.rr{font-size:clamp(10px,3vw,12px);color:var(--mu);font-style:italic;margin-bottom:.3rem;text-align:center;line-height:1.6;}
+.rm2{font-size:clamp(10px,3vw,11px);color:var(--mu);background:var(--bc2);border-radius:12px;padding:4px 12px;display:inline-block;margin-top:.3rem;text-align:center;line-height:1.6;}
+
+/* ── HEATMAP / CAL ── */
+.hw{display:flex;gap:3px;overflow-x:auto;padding-bottom:4px;}
+.hc{display:flex;flex-direction:column;gap:3px;}
+.hcell{width:12px;height:12px;border-radius:3px;flex-shrink:0;border:1px solid transparent;}
+.lgd{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px;}
+.li{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--mu);}
+.ld{width:8px;height:8px;border-radius:2px;}
+.cn{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ct{font-size:13px;font-weight:600;color:var(--a);}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cdow{font-size:9px;color:var(--di);text-align:center;padding:3px 0;}
+.cday{background:var(--bc2);border:1px solid var(--bo);border-radius:6px;padding:3px 2px;min-height:48px;cursor:pointer;font-size:9px;}
+.cday.today{border-color:var(--a);box-shadow:0 0 5px var(--ag);}
+.cday.cem{background:transparent;border-color:transparent;cursor:default;}
+.cdn{font-size:10px;font-weight:500;color:var(--tx);margin-bottom:1px;}
+.cday.csun .cdn{color:#d32f2f;}.cday.csat .cdn{color:#1565c0;}
+.crk{font-size:7px;color:var(--di);}.crk.ta{color:var(--ok);}
+.cbs{display:flex;flex-wrap:wrap;gap:1px;margin-top:1px;}
+.cb{font-size:7px;padding:1px 2px;border-radius:2px;color:#fff;}
+
+/* ── RANKING ── */
+.srow{display:flex;gap:7px;margin-bottom:.75rem;}
+.stat{flex:1;background:var(--bc2);border:1px solid var(--bo);border-radius:9px;padding:9px;text-align:center;}
+.sv{font-size:clamp(14px,5vw,19px);font-weight:600;color:var(--a);}
+.sk{font-size:10px;color:var(--mu);margin-top:2px;}
+.re{display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid var(--bo);font-size:12px;}
+.re.me{background:hsla(var(--h),50%,50%,.06);border-radius:8px;padding:8px;}
+.rm3{color:var(--a);font-weight:600;font-size:12px;}
+
+/* ── OVERLAY / POPUP ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:600;display:none;align-items:center;justify-content:center;padding:1rem;}
+.overlay.show{display:flex;}
+.popup{background:var(--bc);border:1px solid var(--boa);border-radius:18px;padding:1.5rem;
+  text-align:center;width:100%;max-width:340px;max-height:85dvh;overflow-y:auto;}
+.popup h3{font-size:15px;font-weight:700;color:var(--a);margin-bottom:.625rem;}
+.popup p,.popup li{font-size:12px;color:var(--mu);line-height:1.7;text-align:left;margin-bottom:.5rem;}
+.popup ul{padding-left:1.25rem;}
+.info-formula{font-size:10px;color:var(--mu);background:var(--bi);border-radius:8px;padding:8px 12px;margin:.5rem 0;line-height:1.8;text-align:left;}
+
+/* ── FLASH / PARTICLE ── */
+@keyframes flash{0%{box-shadow:0 0 0 0 hsla(var(--h),var(--s),48%,.8)}50%{box-shadow:0 0 0 18px transparent,inset 0 0 25px var(--ag)}100%{box-shadow:0 0 0 0 transparent}}
+.flashing{animation:flash .5s ease-out;}
+.particle{position:fixed;pointer-events:none;z-index:999;font-size:17px;animation:ptcl 1.2s ease-out forwards;}
+@keyframes ptcl{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(.35)}}
+</style>
 </head>
 <body>
-  <!-- ========== ナビゲーション ========== -->
-  <nav>
-    <ul>
-      <li><a href="#" class="nav-link active" data-screen="dashboard">📊 ダッシュボード</a></li>
-      <li><a href="#" class="nav-link" data-screen="practice">🙏 勤行</a></li>
-      <li><a href="#" class="nav-link" data-screen="stats">📈 統計</a></li>
-      <li><a href="#" class="nav-link" data-screen="leaderboard">👑 ランク</a></li>
-      <li><a href="#" class="nav-link" data-screen="settings">⚙️ 設定</a></li>
-    </ul>
-  </nav>
 
-  <!-- ========== メインコンテンツエリア ========== -->
-  <main id="app">
-    <!-- ダッシュボード画面 -->
-    <section id="screen-dashboard" class="screen active">
-      <header>
-        <h1>よむよむお題目</h1>
-        <p class="subtitle">Nichiren Buddhist Chanting Practice</p>
-      </header>
+<!-- ════ TUTORIAL ════ -->
+<div class="tscr" id="t1">
+  <div class="tut-title-wrap" id="tutTitle" aria-label="よむよむお題目"></div>
+  <div class="hint-bounce" id="t1hint" style="opacity:0">▼ タップして続ける</div>
+  <button id="tutWalkBtn" onclick="event.stopPropagation();startTutWalk();" class="btn-s" style="opacity:0;margin-top:1.5rem;padding:10px 28px;font-size:14px;transition:opacity .5s;">チュートリアル</button>
+</div>
+<div class="tscr hidden" id="t2">
+  <div style="max-width:300px;text-align:center">
+    <div class="worry-header" id="w0">こんなお悩みありませんか？</div>
+    <div class="worry-li" id="w1">🔢 お題目を唱えた回数を忘れてしまう</div>
+    <div class="worry-li" id="w2">📖 法華経の勤行、何回唱えたか忘れる</div>
+    <div class="worry-li" id="w3">👓 本だと文字が小さくて読みにくい</div>
+    <div class="worry-solve" id="wS">そんなお悩みを解決します。</div>
+  </div>
+</div>
+<div class="tscr hidden" id="t3">
+  <div style="max-width:300px;text-align:center;width:100%">
+    <div class="tut-ask">
+      <span style="animation-delay:.1s">あなたのお名前を</span>
+      <span style="animation-delay:.5s">教えていただけますでしょうか？</span>
+    </div>
+    <div class="tut-inp-wrap" id="tutInpWrap">
+      <input class="tut-inp" type="text" id="tutName" placeholder="お名前" autocomplete="off" maxlength="20">
+      <button class="btn-done" id="tutNameBtn">完了 →</button>
+    </div>
+  </div>
+</div>
+<div class="tscr hidden" id="t4">
+  <div style="max-width:310px;text-align:center;width:100%">
+    <p id="tutGreet" style="font-size:13px;color:var(--mu);margin-bottom:.4rem;animation:rUp .5s ease-out both"></p>
+    <p style="font-size:.95rem;font-weight:600;color:var(--a);margin-bottom:.875rem;animation:rUp .5s ease-out .2s both">見やすい文字はどれですか？</p>
+    <div class="font-opt" data-f="kanji" style="animation-delay:.15s">漢字（南無妙法蓮華経）</div>
+    <div class="font-opt" data-f="hira"  style="animation-delay:.27s">ひらがな（なむみょうほうれんげきょう）</div>
+    <div class="font-opt" data-f="roma"  style="animation-delay:.39s">ローマ字（Namu Myoho Renge Kyo）</div>
+    <button class="btn-done" id="fontNext" style="margin-top:.625rem">アプリを始める 🪷</button>
+  </div>
+</div>
 
-      <div id="dashboard" class="container">
-        <!-- 本日の統計 -->
-        <div class="dashboard-grid">
-          <div class="stat-card">
-            <div class="stat-label">本日の念仏</div>
-            <div class="stat-value" id="stat-today-count">0</div>
-            <small class="stat-label">回</small>
-          </div>
+<!-- ════ MAIN APP ════ -->
+<div id="app">
+  <div id="mbtn" onclick="togMenu()"><div class="hbl"></div><div class="hbl"></div><div class="hbl"></div></div>
+  <div id="mover" onclick="togMenu()"></div>
+  <div id="mpanel">
+    <h3 style="font-size:13px;font-weight:600;color:var(--a);margin-bottom:.25rem" id="menuName"></h3>
+    <p style="font-size:10px;color:var(--mu);margin-bottom:.875rem" id="menuSub"></p>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <p style="font-size:11px;color:var(--mu);margin-bottom:.4rem">お名前変更</p>
+    <div class="rpair"><input type="text" id="nameChange" placeholder="新しいお名前"><button class="btn-s" onclick="changeName()">変更</button></div>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <button class="btn-s" id="danaPromptBtn" onclick="openDana()" style="width:100%;padding:8px;background:linear-gradient(135deg,#c2185b,#e91e63);color:#fff;border-color:#c2185b">🙏 ダーナ（布施）</button>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <button class="btn-s" onclick="startTutWalk();togMenu();" style="width:100%;padding:8px">チュートリアル</button>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <button class="btn-s" onclick="resetAll()" style="color:var(--err);border-color:var(--err);width:100%;padding:8px">リセット（全データ削除）</button>
+  </div>
 
-          <div class="stat-card">
-            <div class="stat-label">本日の勤行</div>
-            <div class="stat-value" id="stat-today-time">0分</div>
-            <small class="stat-label">時間</small>
-          </div>
+  <div class="app-hd">
+    <div style="width:36px"></div>
+    <div style="flex:1;text-align:center">
+      <div class="app-logo">🪷 よむよむお題目</div>
+      <div class="app-sub" id="hdrInfo"></div>
+    </div>
+    <div style="width:36px"></div>
+  </div>
 
-          <div class="stat-card">
-            <div class="stat-label">本日の功徳</div>
-            <div class="stat-value" id="stat-today-merit">0</div>
-            <small class="stat-label">ポイント</small>
-          </div>
+  <div class="tabs">
+    <button class="tab on" data-t="chant">🥁 お題目</button>
+    <button class="tab" data-t="gongyou">📖 勤行</button>
+    <button class="tab" data-t="cal">📅 暦</button>
+    <button class="tab" data-t="rank">🏆 功徳</button>
+  </div>
 
-          <div class="stat-card">
-            <div class="stat-label">現在のストリーク</div>
-            <div class="stat-value" id="stat-today-streak">0日</div>
-            <small class="stat-label">連続実施</small>
-          </div>
-        </div>
+  <!-- ── お題目 ── -->
+  <div class="tc on" id="tc-chant">
+    <div class="tab-hd">
+      <span class="tab-hd-title">🥁 お題目カウンター</span>
+      <button class="hint-btn" onclick="showHint('chant')">?</button>
+    </div>
+    <div id="todayBanner"></div>
+    <div id="multPill" style="display:none"></div>
+    <div class="card card-a" id="countCard">
+      <div class="count-wrap">
+        <div class="count-num" id="sesNum">0</div>
+        <div class="count-sub" id="cumul">累計: 0回</div>
+      </div>
+    </div>
+    <div class="merit-grid">
+      <div class="mc"><div class="mv" id="meritV">0</div><div class="ml">功徳スコア</div></div>
+      <div class="mc"><div class="mv" id="dvDisp">¥5,000</div><div class="ml">１日の価値</div></div>
+    </div>
 
-        <!-- アチーブメント -->
-        <div class="card">
-          <h3>🏆 アチーブメント</h3>
-          <div id="achievement-badges" class="flex gap-1 flex-wrap">
-            <!-- 動的に挿入 -->
-          </div>
-        </div>
+    <div id="smsg" class="smsg"></div>
+    <button class="btn-big" id="manBtn">カウント</button>
+  </div>
 
-        <!-- グラフセクション -->
-        <div class="card">
-          <h3>📊 修行量の推移</h3>
-          <canvas id="chart-practice-history"></canvas>
-        </div>
+  <!-- ── 勤行 ── -->
+  <div class="tc" id="tc-gongyou">
+    <div class="tab-hd">
+      <span class="tab-hd-title">📖 勤行 — 法華経</span>
+      <div style="display:flex;gap:5px;align-items:center">
+        <button class="btn-s" id="rouletteBtn">🎰</button>
+        <button class="hint-btn" onclick="showHint('gongyou')">?</button>
+      </div>
+    </div>
 
-        <div class="dashboard-grid">
-          <div class="card">
-            <h3>💚 功徳の内訳</h3>
-            <canvas id="chart-merit-breakdown"></canvas>
-          </div>
+    <!-- 太鼓の達人スタイルカルーセル -->
+    <div class="gc-stage-wrap" id="gcWrap">
+      <div id="gcStage"><!-- カード挿入 --></div>
+    </div>
+    <div class="gc-nav">
+      <div class="gc-arrow" id="gcPrev">‹</div>
+      <div class="gc-counter" id="gcCounter">1 / 1</div>
+      <div class="gc-arrow" id="gcNext">›</div>
+    </div>
 
-          <div class="card">
-            <h3>🌟 能力スコア</h3>
-            <canvas id="chart-ability-scores"></canvas>
-          </div>
+    <button class="btn-big accent" id="gcReadBtn" style="margin-top:.25rem">📖 読む（経文を表示）</button>
+    <div style="display:flex;gap:7px;margin-bottom:.75rem">
+      <button class="btn-big" id="gcCount" style="flex:2;margin-bottom:0">唱えた</button>
+      <button class="btn-s" id="gcReset" style="padding:10px">リセット</button>
+    </div>
+    <div class="card" style="padding:.75rem">
+      <p style="font-size:11px;font-weight:500;color:var(--a);margin-bottom:5px">この勤行とのご縁</p>
+      <div id="gcProgress" style="font-size:12px;color:var(--mu)">0回</div>
+    </div>
+  </div>
 
-          <div class="card">
-            <h3>⚡ 修行内訳</h3>
-            <canvas id="chart-practice-composition"></canvas>
-          </div>
-        </div>
-
-        <!-- 週間統計 -->
-        <div class="card">
-          <h3>📅 今週の統計</h3>
-          <div class="dashboard-grid">
-            <div class="stat-card">
-              <div class="stat-label">念仏総数</div>
-              <div class="stat-value" id="stat-week-count">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">平均時間</div>
-              <div class="stat-value" id="stat-week-avg">0秒</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">週間功徳</div>
-              <div class="stat-value" id="stat-week-merit">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">実施日</div>
-              <div class="stat-value" id="stat-week-rank">0/7</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 月間統計 -->
-        <div class="card">
-          <h3>📆 今月の統計</h3>
-          <div class="dashboard-grid">
-            <div class="stat-card">
-              <div class="stat-label">念仏総数</div>
-              <div class="stat-value" id="stat-month-count">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">平均時間</div>
-              <div class="stat-value" id="stat-month-avg">0秒</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">月間功徳</div>
-              <div class="stat-value" id="stat-month-merit">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">目標進捗</div>
-              <div class="stat-value" id="stat-month-progress">0/30</div>
-            </div>
-          </div>
-          <div class="progress">
-            <div class="progress-bar" id="progress-bar-month" style="width: 0%;"></div>
-          </div>
+  <!-- ── カレンダー ── -->
+  <div class="tc" id="tc-cal">
+    <div class="tab-hd">
+      <span class="tab-hd-title">📅 読経カレンダー</span>
+      <button class="hint-btn" onclick="showHint('cal')">?</button>
+    </div>
+    <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
+    <div id="vHeat">
+      <div class="card">
+        <p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">読経記録（過去16週）</p>
+        <div class="hw" id="heatmap"></div>
+        <div class="lgd">
+          <div class="li"><div class="ld" id="lg0" style="border:1px solid var(--bo)"></div>なし</div>
+          <div class="li"><div class="ld" id="lg1"></div>少</div>
+          <div class="li"><div class="ld" id="lg2"></div>多</div>
         </div>
       </div>
-    </section>
-
-    <!-- 勤行画面 -->
-    <section id="screen-practice" class="screen">
-      <header>
-        <h1>🙏 勤行を始める</h1>
-        <p class="subtitle">法華経お題目を唱える</p>
-      </header>
-
-      <div class="container">
-        <div class="card">
-          <h3>念仏カウンター</h3>
-          <div style="text-align: center; margin: 2rem 0;">
-            <div id="chanting-count" style="font-size: 3rem; font-weight: bold; color: #2d7a4a; margin: 1rem 0;">
-              0
-            </div>
-            <button class="btn btn-primary" id="btn-start-chanting" style="width: 100%; margin: 0.5rem 0;">
-              念仏を開始
-            </button>
-            <button class="btn btn-outline" id="btn-reset-count" style="width: 100%; margin: 0.5rem 0;">
-              リセット
-            </button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>勤行記録</h3>
-          <form id="practice-form">
-            <div class="form-group">
-              <label for="practice-date">日付</label>
-              <input type="date" id="practice-date" required>
-            </div>
-
-            <div class="form-group">
-              <label for="practice-count">念仏回数</label>
-              <input type="number" id="practice-count" min="0" required>
-            </div>
-
-            <div class="form-group">
-              <label for="practice-duration">時間（分）</label>
-              <input type="number" id="practice-duration" min="0" step="0.5" required>
-            </div>
-
-            <div class="form-group">
-              <label for="practice-notes">メモ</label>
-              <textarea id="practice-notes" placeholder="今日の感想や気づき"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%;">
-              記録を保存
-            </button>
-          </form>
+      <div class="card"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
+    </div>
+    <div id="vMon" style="display:none">
+      <div class="card">
+        <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
+        <div class="cg" id="calGrid"></div>
+        <div class="lgd" style="margin-top:8px">
+          <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
+          <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
+          <div class="li"><span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px">己巳</span></div>
+          <div class="li"><span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px">寅</span></div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- 統計画面 -->
-    <section id="screen-stats" class="screen">
-      <header>
-        <h1>📈 統計分析</h1>
-        <p class="subtitle">修行の変化を見る</p>
-      </header>
-
-      <div class="container">
-        <div class="card">
-          <h3>修行量の推移（月別）</h3>
-          <canvas id="chart-monthly-history"></canvas>
-        </div>
-
-        <div class="card">
-          <h3>能力成長グラフ</h3>
-          <canvas id="chart-ability-growth"></canvas>
-        </div>
+  <!-- ── 功徳ランキング ── -->
+  <div class="tc" id="tc-rank">
+    <div class="tab-hd">
+      <span class="tab-hd-title">🏆 功徳ランキング</span>
+      <button class="hint-btn" onclick="showHint('rank')">?</button>
+    </div>
+    <div class="srow">
+      <div class="stat"><div class="sv" id="myM">0</div><div class="sk">功徳スコア</div></div>
+      <div class="stat"><div class="sv" id="myC">0</div><div class="sk">累計回数</div></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <p style="font-size:12px;font-weight:600;color:var(--a)">功徳ランキング</p>
+        <button class="btn-s" id="refLb">更新</button>
       </div>
-    </section>
+      <div id="lbList"></div>
+    </div>
+    <div class="card" style="background:hsla(var(--h),40%,55%,.07);border-color:var(--boa)">
+      <p style="font-size:11px;font-weight:600;color:var(--a);margin-bottom:5px">功徳倍増デー</p>
+      <p style="font-size:10px;color:var(--mu)">大安×2・一粒万倍日×2・天赦日×3・寅の日×1.5・己巳の日×1.5</p>
+    </div>
+  </div>
+</div>
 
-    <!-- リーダーボード画面 -->
-    <section id="screen-leaderboard" class="screen">
-      <header>
-        <h1>👑 リーダーボード</h1>
-        <p class="subtitle">修行の成果を確認</p>
-      </header>
+<!-- ════ 読経オーバーレイ ════ -->
+<div id="readingOverlay">
+  <div class="read-hd">
+    <button class="btn-s" onclick="closeReading()">✕</button>
+    <div class="read-title" id="readTitle"></div>
+    <div class="read-pgn" id="readPgn"></div>
+  </div>
+  <div class="read-prog-bar"><div class="read-prog-fill" id="readProg" style="width:0%"></div></div>
+  <div class="read-body" id="readBody">
+    <div id="readPages"></div>
+  </div>
+  <div class="page-dots" id="pageDots"></div>
+  <div class="read-nav" id="readNav"></div>
+</div>
 
-      <div class="container">
-        <div class="card">
-          <h3>🎖️ あなたのランク</h3>
-          <div style="text-align: center; margin: 2rem 0;">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">👤</div>
-            <div id="stat-user-name" style="font-size: 1.5rem; font-weight: bold; color: #2d7a4a; margin-bottom: 0.5rem;">
-              ゲスト
-            </div>
-            <div id="stat-rank-level" style="font-size: 1.25rem; color: #4a9d66; margin-bottom: 1.5rem;">
-              初心者
-            </div>
-          </div>
-        </div>
+<!-- ════ OVERLAYS ════ -->
+<div class="overlay" id="hintOverlay">
+  <div class="popup">
+    <div style="font-size:28px;margin-bottom:.5rem" id="hintIcon">💡</div>
+    <h3 id="hintTitle">ヒント</h3>
+    <div id="hintBody"></div>
+    <button class="btn-s" onclick="document.getElementById('hintOverlay').classList.remove('show')" style="margin-top:.875rem;width:100%;padding:10px">閉じる</button>
+  </div>
+</div>
+<div class="overlay" id="dayPop">
+  <div class="popup">
+    <div id="popDate" style="font-size:12px;color:var(--mu);margin-bottom:7px"></div>
+    <div id="popCount" style="font-size:48px;font-weight:600;color:var(--a)"></div>
+    <div style="font-size:11px;color:var(--mu);margin-top:3px">回</div>
+    <button class="btn-s" onclick="document.getElementById('dayPop').classList.remove('show')" style="margin-top:.875rem;padding:7px 20px">閉じる</button>
+  </div>
+</div>
 
-        <div class="card">
-          <h3>📊 あなたの成績</h3>
-          <div class="dashboard-grid">
-            <div class="stat-card">
-              <div class="stat-label">総念仏回数</div>
-              <div class="stat-value" id="stat-total-count">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">総勤行時間</div>
-              <div class="stat-value" id="stat-total-duration">0時間</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">総功徳</div>
-              <div class="stat-value" id="stat-total-merit">0</div>
-            </div>
-          </div>
-        </div>
+<!-- Help popup -->
+<div class="overlay" id="helpOverlay">
+  <div class="popup">
+    <h3 id="helpTitle" style="color:var(--a);margin-bottom:.75rem;">ヘルプ</h3>
+    <div id="helpBody" style="font-size:12px;color:var(--mu);line-height:1.8;text-align:left;margin-bottom:1rem;"></div>
+    <button class="btn-s" onclick="document.getElementById('helpOverlay').classList.remove('show')" style="width:100%;padding:10px;">閉じる</button>
+  </div>
+</div>
 
-        <div class="card">
-          <h3>💰 布施（Dana）</h3>
-          <div class="stat-card" style="margin-bottom: 1rem;">
-            <div class="stat-label">総布施額</div>
-            <div class="stat-value" id="stat-total-dana">¥0</div>
-          </div>
-          <div class="stat-card" style="margin-bottom: 1rem;">
-            <div class="stat-label">布施回数</div>
-            <div class="stat-value" id="stat-dana-count">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">平均布施額</div>
-            <div class="stat-value" id="stat-dana-avg">¥0</div>
-          </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" id="btn-add-dana">
-            布施を追加
-          </button>
-        </div>
+<!-- Dana popup -->
+<div class="overlay" id="danaOverlay">
+  <div class="popup">
+    <div style="font-size:32px;margin-bottom:.75rem;">🙏</div>
+    <h3>「ありがたい」気持ちを<br>届けませんか？</h3>
+    <p style="font-size:13px;color:var(--mu);margin-bottom:1rem;">見返りを求めない純粋な喜捨が、功徳をさらに高めます。</p>
+    <div style="background:var(--bi);padding:.75rem;border-radius:8px;margin-bottom:1rem;font-size:11px;color:var(--mu);text-align:center;">功徳 = 唱数 × (1 + ダーナ日換算 × 0.1) × 吉日倍率</div>
+    <div class="trow" style="justify-content:center;margin-bottom:.75rem;">
+      <button class="btn-s on" id="dfreqD">毎日</button>
+      <button class="btn-s" id="dfreqW">毎週</button>
+      <button class="btn-s" id="dfreqM">毎月</button>
+    </div>
+    <div class="rpair">
+      <input type="number" id="danaIn" placeholder="金額（円）" min="0">
+      <button class="btn-s" id="danaSet">設定</button>
+    </div>
+    <button class="btn-s" onclick="closeDana()" style="margin-top:.75rem;width:100%;padding:10px;">閉じる</button>
+  </div>
+</div>
 
-        <div class="card">
-          <h3>📝 最近の布施</h3>
-          <div id="dana-recent-list"></div>
-        </div>
-      </div>
-    </section>
+<!-- Tutorial walkthrough -->
+<div id="tutWalkOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;">
+  <div style="position:fixed;bottom:0;left:0;right:0;background:var(--bc);border-radius:20px 20px 0 0;padding:2rem 1.5rem 1.5rem;max-height:60vh;overflow-y:auto;box-shadow:0 -4px 20px rgba(0,0,0,.2);">
+    <div id="twTitle" style="font-size:1.1rem;font-weight:700;color:var(--a);margin-bottom:.5rem;"></div>
+    <div id="twBody" style="font-size:13px;color:var(--mu);line-height:1.7;margin-bottom:1.5rem;"></div>
+    <div style="display:flex;gap:8px;">
+      <button id="twSkip" onclick="endTutWalk()" class="btn-s" style="flex:1;">スキップ</button>
+      <button class="btn-s" id="twNext" onclick="nextTutStep()" style="flex:1;color:#fff;background:var(--a);border-color:var(--a);">次へ →</button>
+    </div>
+  </div>
+</div>
 
-    <!-- 設定画面 -->
-    <section id="screen-settings" class="screen">
-      <header>
-        <h1>⚙️ 設定</h1>
-        <p class="subtitle">アプリの設定を管理</p>
-      </header>
+<script>
+// ══════════════════════════════════════════════════════════
+//  カレンダー定数
+// ══════════════════════════════════════════════════════════
+var RD=new Date(2025,0,1),RRK=0,RBR=2,RC60=2;
+var RKN=['先勝','友引','先負','仏滅','大安','赤口'];
+var ICH={1:[1,6],2:[2,7],3:[0,3],4:[2,7],5:[4,9],6:[0,3],7:[1,6],8:[2,7],9:[0,3],10:[6,9],11:[2,7],12:[0,3]};
+var TEN={'2025-03-14':1,'2025-05-29':1,'2025-08-11':1,'2025-12-25':1,'2026-03-09':1,'2026-05-24':1,'2026-10-05':1,'2026-12-20':1};
+var DOW=['日','月','火','水','木','金','土'];
+function ddiff(d){return Math.round((d-RD)/86400000);}
+function dss(d){return d.toISOString().split('T')[0];}
+function today(){return dss(new Date());}
+function fmt(n){return Number(n).toLocaleString('ja-JP',{maximumFractionDigits:1});}
+function lsG(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
+function lsS(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function dayI(date){
+  var diff=ddiff(date),mon=date.getMonth()+1;
+  var br=((RBR+diff)%12+12)%12,c60=((RC60+diff)%60+60)%60,rk=((RRK+diff)%6+6)%6;
+  return{rk:rk,rky:RKN[rk],taian:rk===4,ich:(ICH[mon]||[]).indexOf(br)>=0,tora:br===2,tsuchi:c60===5,tensha:!!TEN[dss(date)]};
+}
+function getMult(i){var m=1;if(i.taian)m*=2;if(i.ich)m*=2;if(i.tora)m*=1.5;if(i.tsuchi)m*=1.5;if(i.tensha)m*=3;return m;}
+function banItems(i){var a=[];if(i.tensha)a.push({t:'天赦日 功徳×3',c:'tensha'});if(i.ich)a.push({t:'一粒万倍日 功徳×2',c:'ichiryu'});if(i.tsuchi)a.push({t:'己巳の日 功徳×1.5',c:'tsuchi'});if(i.tora)a.push({t:'寅の日 功徳×1.5',c:'tora'});return a;}
+function dayBadges(i){var b=[];if(i.tensha)b.push({t:'天赦',bg:'#c2185b'});if(i.ich)b.push({t:'一粒',bg:'hsl(var(--h),65%,42%)'});if(i.tsuchi)b.push({t:'己巳',bg:'#0277bd'});if(i.tora)b.push({t:'寅',bg:'#e65100'});return b;}
+function calcMerit(c,dv,m){return Math.round(c*(dv/1000)*(m||1)*10)/10;}
 
-      <div class="container">
-        <div class="card">
-          <h3>👤 プロフィール</h3>
-          <div class="form-group">
-            <label for="settings-name">ユーザー名</label>
-            <input type="text" id="settings-name" placeholder="お名前">
-          </div>
-          <div class="form-group">
-            <label for="settings-email">メールアドレス</label>
-            <input type="email" id="settings-email" placeholder="example@mail.com">
-          </div>
-          <button class="btn btn-primary" style="width: 100%;">
-            プロフィールを保存
-          </button>
-        </div>
+// ══════════════════════════════════════════════════════════
+//  勤行データ   lines: [漢字, よみがな, ローマ字, 意味]
+//  \n → 読経画面で改行
+// ══════════════════════════════════════════════════════════
+var GG=[
+/* 0 三宝礼 */
+{id:'sanbo',t:'三宝礼',s:'常用勤行・礼拝',d:'三宝（仏・法・僧）に帰依礼拝。すべての勤行の始まり。',
+ lines:[
+  ['南無帰依仏','なむきえぶつ','Namu Kie Butsu','仏（覚れる者）に帰依します'],
+  ['南無帰依法','なむきえほう','Namu Kie Ho','法（教え）に帰依します'],
+  ['南無帰依僧','なむきえそう','Namu Kie So','僧（共同体）に帰依します'],
+ ]},
+/* 1 懺悔文 */
+{id:'zange',t:'懺悔文',s:'常用勤行・懺悔',d:'身・口・意の三業の罪を懺悔します。清らかな心で修行に臨みます。',
+ lines:[
+  ['我昔所造諸悪業','がしゃくしょぞうしょあくごう','Ga shaku sho zo sho aku go','私がかつて造った諸々の悪業は'],
+  ['皆由無始貪瞋痴','かいゆむしとんじんち','Kai yu mu shi ton jin chi','すべて無始よりの貪・瞋・痴によるもの'],
+  ['従身語意之所生','じゅうしんごいししょしょう','Ju shin go i shi sho sho','身・語・意の三業から生じた'],
+  ['一切我今皆懺悔','いっさいがこんかいさんげ','Is sai ga kon kai san ge','これらすべてを今、私は懺悔します'],
+ ]},
+/* 2 開経偈 */
+{id:'kaikege',t:'開経偈',s:'常用勤行・開経',d:'お経拝読の前に唱える偈。無上の法に値い奉れた喜びを表します。',
+ lines:[
+  ['無上甚深微妙法','むじょうじんじんみみょうほう','Mujo jin jin mi myo ho','この上なく深い微妙の法は'],
+  ['百千万劫難遭遇','ひゃくせんまんごうなんそうぐう','Hyaku sen man go nan so gu','百千万劫にも値い奉ること難し'],
+  ['我今見聞得受持','がこんけんもんとくじゅじ','Ga kon ken mon toku ju ji','我今見聞し受持することを得たり'],
+  ['願解如来真実義','がんげにょらいしんじつぎ','Gan ge nyo rai shin jitsu gi','願わくは如来の真実義を解せん'],
+ ]},
+/* 3 方便品第二（要部） */
+{id:'h2',t:'方便品第二',s:'妙法蓮華経・巻一',d:'法華経の核心。一切衆生に仏性があること（一仏乗）を説く。日蓮宗の日常勤行の柱。',
+ lines:[
+  ['爾時世尊\n従三昧安詳而起\n告舎利弗','にじせそん\nじゅうさんまいあんじょうにき\nこくしゃりほつ','Ni ji se son\nJu san mai an jo ni ki\nKoku sha ri hotsu','その時、世尊は\n三昧より静かに立ち上がり\n舎利弗に告げた'],
+  ['諸仏智慧甚深無量\n其智慧門難解難入','しょぶつちえじんじんむりょう\nごちえもんなんげなんにゅう','Sho butsu chie jin jin muryo\nGo chie mon nan ge nan nyu','諸仏の智慧は甚深にして無量であり\nその智慧の門は解し難く入り難い'],
+  ['仏曽親近\n百千万億無数諸仏\n尽行諸仏無量道法','ぶつそしんごん\nひゃくせんまんおくむすうしょぶつ\nじんぎょうしょぶつむりょうどうほう','Butsu so shin gon\nHya ku sen man oku mu su sho butsu\nJin gyo sho butsu mu ryo do ho','仏は無数の諸仏に親近し\n百千万億の諸仏に\n諸仏の無量の道法を尽く修行して'],
+  ['勇猛精進名称普聞\n成就甚深未曽有法','ゆうみょうしょうじんみょうしょうふもん\nじょうじゅじんじんみぞうほう','Yu myo sho jin myo sho fu mon\nJo ju jin jin mi zo u ho','勇猛精進し名称普く聞こえ\n甚深にして未曽有の法を成就し'],
+  ['舎利弗\n吾今亦復如是\n知諸衆生\n有種種欲\n深心所著\n随其本性\n以種種因縁\n譬喩言辞\n方便力而為説法','しゃりほつ\nごこんやくぶにょぜ\nちしょしゅじょう\nうしゅじゅよく\nじんしんしょちゃく\nずいごほんしょう\nいしゅじゅいんねん\nひゆごんじ\nほうべんりきにいせっぽう','Sha ri hotsu\nGo kon yaku bu nyo ze\nChi sho shu jo\nU shu ju yoku\nJin shin sho cha ku\nZui go hon sho\nI shu ju in nen\nHi yu gon ji\nHo ben riki ni i set po','舎利弗よ、我今もまたかくのごとく\n諸衆生を知り\n種種の欲をもち\n深心に著しているを\nその本性に随って\n種種の因縁\n譬喩・言辞\n方便力をもって法を説く'],
+  ['如来知見広大深遠\n無礙無障\n力無所畏\n禅定解脱三昧深入無際\n成就一切未曽有法','にょらいちけんこうだいじんのん\nむげむしょう\nりきむしょい\nぜんじょうげだつさんまいじんにゅうむさい\nじょうじゅいっさいみぞうほう','Nyo rai chi ken ko dai jin non\nMu ge mu sho\nRiki mu sho i\nZen jo ge datsu san mai jin nyu mu sai\nJo ju is sai mi zo u ho','如来の知見は広大深遠にして\n無礙・無障\n力・無所畏\n禅定・解脱・三昧は深入にして\n一切の未曽有の法を成就している'],
+ ]},
+/* 4 如来壽量品第十六 長行（散文）要部 */
+{id:'h16a',t:'如来壽量品第十六 長行',s:'妙法蓮華経・巻六',d:'自我偈（偈頌）に先立つ散文部分。「我実成仏已来」久遠実成を説く最重要の法門。',
+ lines:[
+  ['爾時仏告諸菩薩\n及一切大衆','にじぶつこくしょぼさつ\nぎゅういっさいだいしゅ','Ni ji butsu ko ku sho bo satsu\nGyu is sai dai shu','その時、仏は諸菩薩\nおよび一切大衆に告げた'],
+  ['善男子\n汝等当信解\n如来誠諦之語','ぜんなんし\nにょとうとうしんげ\nにょらいじょうていしご','Zen nan shi\nNyo to to shin ge\nNyo rai jo tei shi go','善男子よ\n汝ら如来の\n誠実なる言葉を信じ理解せよ'],
+  ['我実成仏已来\n無量無辺\n百千万億那由他劫','がじつじょうぶついらい\nむりょうむへん\nひゃくせんまんおくなゆたこう','Ga jitsu jo butsu i rai\nMu ryo mu hen\nHya ku sen man oku na yu ta ko','私が実に成仏してから\n無量無辺\n百千万億那由他劫が経っている'],
+  ['我常住此娑婆世界\n説法教化\n亦於余処\n百千万億那由他\n阿僧祇国\n導利衆生','がじょうじゅうしさばせかい\nせっぽうきょうけ\nやくおよしょ\nひゃくせんまんおくなゆた\nあそうぎこく\nどうりしゅじょう','Ga jo ju u shi sa ba se kai\nSet po kyo ke\nYa ku o yo sho\nHya ku sen man oku na yu ta\nA so gi ko ku\nDo ri shu jo','私は常にこの娑婆世界に住して\n法を説き教化し\nまた他の国々\n百千万億那由他\n阿僧祇の国においても\n衆生を導き利益している'],
+  ['若衆生有種種罪業\n応堕悪道\n承我神力\n皆得衆罪消滅','にゃくしゅじょううしゅじゅざいごう\nおうだあくどう\nじょうがじんりき\nかいとくしゅざいしょうめつ','Nyaku shu jo u shu ju zai go\nO da a ku do\nJo ga jin riki\nKai to ku shu zai sho metsu','もし衆生に種種の罪業があり\n悪道に堕ちるべくとも\n我が神力を承けて\n皆、衆罪を消滅させることができる'],
+  ['我浄土不毀\n而衆見焼尽\n我此衆生\n皆以為父母','がじょうどふき\nにしゅけんしょうじん\nがしのしゅじょう\nかいいいふも','Ga jo do fu ki\nNi shu ken sho jin\nGa shi no shu jo\nKai i i fu mo','我が浄土は毀れないが\n衆生はそれが焼き尽くされると見る\n我はこれらの衆生を\n皆、父母とも思っている'],
+ ]},
+/* 5 如来壽量品第十六 自我偈（全節） */
+{id:'h16b',t:'如来壽量品第十六 自我偈',s:'妙法蓮華経・巻六',d:'「自我偈（じがげ）」は日蓮宗勤行の中心。久遠の仏との繋がりを感じながら一節ずつ読誦します。',
+ lines:[
+  ['自我得仏来\n所経諸劫数','じがとくぶつらい\nしょきょうしょこうすう','Ji ga toku butsu rai\nSho kyo sho ko su','私が仏道を得てより以来\n経てきた劫の数は'],
+  ['無量百千万\n億載阿僧祇','むりょうひゃくせんまん\nおくさいあそうぎ','Muryo hyaku sen man\nOku sai a so gi','無量の百千万\n億の阿僧祇（無量数）'],
+  ['常説法教化\n無数億衆生','じょうせっぽうきょうけ\nむすうおくしゅじょう','Jo sep po kyo ke\nMu su oku shu jo','常に法を説き教化し\n無数億の衆生を'],
+  ['令入於仏道\n爾来無量劫','りょうにゅうおぶつどう\nにらいむりょうこう','Ryo nyu o butsu do\nNi rai mu ryo ko','仏道に入らせてきた\nそれより無量劫'],
+  ['為度衆生故\n方便現涅槃','いどしゅじょうこ\nほうべんげんねはん','I do shu jo ko\nHo ben gen ne han','衆生を度するがゆえに\n方便として涅槃を現じたが'],
+  ['而実不滅度\n常住此説法','にじつふめつど\nじょうじゅうしせっぽう','Ni jitsu fu metsu do\nJo ju u shi sep po','実際には滅度していない\n常にここに住して法を説いている'],
+  ['我常住於此\n以諸神通力','がじょうじゅうおし\nいしょじんずうりき','Ga jo ju u o shi\nI sho jin zu riki','我は常にここに住して\n諸々の神通力をもって'],
+  ['令顛倒衆生\n雖近而不見','りょうてんどうしゅじょう\nすいごんにふけん','Ryo ten do shu jo\nSui gon ni fu ken','顛倒している衆生をして\n近けれども見えざらしめる'],
+  ['衆見我滅度\n広供養舎利\n咸皆懐恋慕\n而生渇仰心','しゅけんがめつど\nこうくようしゃり\nかんかいかいれんぼ\nにしょうかつごうしん','Shu ken ga metsu do\nKo ku yo sha ri\nKan kai kai ren bo\nNi sho ka tsu go shin','衆生は我の滅度を見て\n広く舎利を供養し\n皆ことごとく恋慕の心を懐き\n渇仰の心を生ずる'],
+  ['衆生既信伏\n質直意柔軟\n一心欲見仏\n不自惜身命','しゅじょうきしんぶく\nしちじきいにゅうなん\nいっしんよっけんぶつ\nふじしゃくしんみょう','Shu jo ki shin buku\nShi chi jiki i nyu nan\nIs shin yok ken butsu\nFu ji sha ku shin myo','衆生すでに信伏し\n質直にして意柔軟\n一心に仏を見たてまつらんと欲し\n身命を惜しまず'],
+  ['時我及衆僧\n倶出霊鷲山\n我時語衆生\n常在此不滅','じがぎゅうしゅそう\nくしゅつりょうじゅせん\nがじごしゅじょう\nじょうざいしふめつ','Ji ga gyu shu so\nKu shutsu ryo ju sen\nGa ji go shu jo\nJo zai shi fu metsu','その時、我と衆僧は\nともに霊鷲山に出でて\n我は衆生に告げる\n常にここにあって滅せず'],
+  ['以方便力故\n現有滅不滅\n余国有衆生\n恭敬信楽者','いほうべんりきこ\nげんうめつふめつ\nよこくうしゅじょう\nくぎょうしんぎょうしゃ','I ho ben riki ko\nGen u metsu fu metsu\nYo koku u shu jo\nKu gyo shin gyo sha','方便の力をもって\n滅・不滅を現ずるなり\n他の国に衆生があり\n恭敬し信楽するならば'],
+  ['我復於彼中\n為説無上法\n汝等不聞此\n但謂我滅度','がぶおひちゅう\nいせつむじょうほう\nにょとうふもんし\nただいがめつど','Ga bu o hi chu\nI setsu mu jo ho\nNyo to fu mon shi\nTa da i ga metsu do','我はかの中に赴いて\n無上法を説く\n汝らこれを聞かずして\nただ我の滅度と思っている'],
+  ['我見諸衆生\n没在於苦海\n故不為現身\n令其生渇仰','がけんしょしゅじょう\nもつざいおくかい\nことふいげんしん\nりょうごしょうかつごう','Ga ken sho shu jo\nMotsu zai o ku kai\nKo to fu i gen shin\nRyo go sho ka tsu go','我は諸衆生が\n苦海に沈んでいるを見て\nゆえに身を現さず\n渇仰の心を生ぜしめる'],
+  ['因其心恋慕\n乃出為説法\n神通力如是\n於阿僧祇劫\n常在霊鷲山','いんごしんれんぼ\nないしゅついせっぽう\nじんずうりきにょぜ\nおあそうぎこう\nじょうざいりょうじゅせん','In go shin ren bo\nNai shutsu i sep po\nJin zu riki nyo ze\nO a so gi ko\nJo zai ryo ju sen','その恋慕の心に因りて\n乃ち出でて法を説く\n神通力かくのごとく\n阿僧祇劫において\n常に霊鷲山に在り'],
+  ['及余諸住処\n衆生見劫尽\n大火所焼時\n我此土安穏\n天人常充満','ぎゅうよしょじゅうしょ\nしゅじょうけんこうじん\nだいかしょしょうじ\nがしどあんのん\nてんにんじょうじゅうまん','Gyu yo sho ju sho\nShu jo ken ko jin\nDai ka sho sho ji\nGa shi do an non\nTen nin jo ju man','その他の住処でも\n衆生が劫の尽きるを見て\n大火の焼く時も\n我がこの土は安穏にして\n天人常に充満す'],
+  ['園林諸堂閣\n種種宝荘厳\n宝樹多花果\n衆生所遊楽','おんりんしょどうかく\nしゅじゅほうしょうごん\nほうじゅたけか\nしゅじょうしょゆうらく','On rin sho do kaku\nShu ju ho sho gon\nHo ju ta ke ka\nShu jo sho yu raku','園林・諸堂閣は\n種種の宝で荘厳され\n宝樹に花果多く\n衆生が遊楽する所'],
+  ['諸天撃天鼓\n常作衆伎楽\n雨曼陀羅花\n散仏及大衆','しょてんげきてんく\nじょうさしゅうぎがく\nうまんだらけ\nさんぶつぎゅうだいしゅ','Sho ten geki ten ku\nJo sa shu gi gaku\nU man da ra ke\nSan butsu gyu dai shu','諸天は天鼓を撃ち\n常に衆伎楽を奏でる\n曼陀羅花を雨のごとく降らせ\n仏及び大衆に散ずる'],
+  ['我浄土不毀\n而衆見焼尽\n憂怖諸苦悩\n如是皆充満','がじょうどふき\nにしゅけんしょうじん\nうふしょくのう\nにょぜかいじゅうまん','Ga jo do fu ki\nNi shu ken sho jin\nU fu sho ku no\nNyo ze kai ju man','我が浄土は毀れず\n衆生は焼き尽くされたと見る\n憂怖・諸苦悩は\nかくのごとく皆充満す'],
+  ['我常知衆生\n行道不行道\n随所応可度\n為説種種法','がじょうちしゅじょう\nぎょうどうふぎょうどう\nずいしょおうかど\nいせつしゅじゅほう','Ga jo chi shu jo\nGyo do fu gyo do\nZui sho o ka do\nI setsu shu ju ho','我は常に衆生を知り\n道を行じるか行じないかを\n度すべき所に随って\n種種の法を説く'],
+  ['毎自作是念\n以何令衆生\n得入無上慧\n速成就仏身','まいじさぜねん\nいがりょうしゅじょう\nとくにゅうむじょうえ\nそくじょうじゅぶつしん','Mai ji sa ze nen\nI ga ryo shu jo\nToku nyu mu jo e\nSoku jo ju butsu shin','毎に自らかく念ずる\n何をもって衆生をして\n無上の慧に入らしめ\n速やかに仏身を成就せしめんかを'],
+ ]},
+/* 6 観世音菩薩普門品 偈頌 */
+{id:'h25',t:'観世音菩薩普門品 偈頌',s:'妙法蓮華経・巻八',d:'観音様の御加護を偈頌で讃嘆。難をすべて除く観音の誓願を一節ずつ読誦します。',
+ lines:[
+  ['世尊妙相具\n我今重問彼\n仏子何因縁\n名為観世音','せそんみょうそうぐ\nがこんじゅうもんぴ\nぶっしがいんねん\nみょういかんぜおん','Se son myo so gu\nGa kon ju mon pi\nBus shi ga in nen\nMyo i kan ze on','世尊は妙相を具えている\n我今かの方について重ねて問う\n仏子は何の因縁から\n観世音と名付けられたのか'],
+  ['具足妙相尊\n偈答無尽意\n汝聴観音行\n善応諸方所','ぐそくみょうそうそん\nげとうむじんに\nにょちょうかんおんぎょう\nぜんおうしょほうしょ','Gu soku myo so son\nGe to mu jin ni\nNyo cho kan on gyo\nZen o sho ho sho','妙相を具えた世尊は\n無尽意に偈をもって答えた\n汝、観音の行を聴け\n善くあらゆる所に応ずる'],
+  ['弘誓深如海\n歴劫不思議\n侍多千億仏\n発大清浄願','ぐぜいじんにょかい\nれきこうふしぎ\nじたせんおくぶつ\nほつだいしょうじょうがん','Gu zei jin nyo kai\nRe ki ko fu shi gi\nJi ta sen oku butsu\nHo tsu dai sho jo gan','弘誓は深いこと海のごとく\n劫を歴て不思議なり\n多くの千億の仏に侍して\n大清浄の願を発した'],
+  ['我為汝略説\n聞名及見身\n心念不空過\n能滅諸有苦','がいにょりゃくせつ\nもんみょうぎゅうけんしん\nしんねんふくうか\nのうめつしょうく','Ga i nyo ryaku setsu\nMon myo gyu ken shin\nShin nen fu ku ka\nNo u metsu sho u ku','我汝のために略して説こう\n名を聞き身を見て\n心に念ずれば空しく過ぎず\n能く諸の有の苦を滅する'],
+  ['仮使興害意\n推落大火坑\n念彼観音力\n火坑変成池','かしこうがいい\nすいらくだいかきょう\nねんぴかんおんりき\nかきょうへんじょうち','Ka shi ko gai i\nSui raku dai ka kyo\nNen pi kan on riki\nKa kyo hen jo chi','たとい害意を持つ者に\n大火坑に推し落とされても\n観音の力を念ずれば\n火坑は変じて池となる'],
+  ['或漂流巨海\n龍魚諸鬼難\n念彼観音力\n波浪不能没','わくひょうりゅうこかい\nりゅうぎょしょきなん\nねんぴかんおんりき\nはろうふのうもつ','Waku hyo ryu ko kai\nRyu gyo sho ki nan\nNen pi kan on riki\nHa ro fu no u motsu','あるいは大海を漂流し\n龍・魚・諸鬼の難にあっても\n観音の力を念ずれば\n波浪に溺れることはない'],
+  ['念念勿生疑\n観世音浄聖\n於苦悩死厄\n能為作依怙','ねんねんもつしょうぎ\nかんぜおんじょうしょう\nおくのうしやく\nのういさくえこ','Nen nen motsu sho gi\nKan ze on jo sho\nO ku no shi ya ku\nNo i sa ku e ko','念念に疑いを生ずることなかれ\n観世音は清浄なる聖なり\n苦悩・死厄において\n能く頼みとなる'],
+ ]},
+/* 7 廻向文 */
+{id:'eko',t:'廻向文',s:'常用勤行・廻向',d:'勤行の締め。功徳をすべての衆生へ回し向けます。',
+ lines:[
+  ['願以此功徳','がんにしくどく','Gan ni shi ku doku','願わくは此の功徳をもって'],
+  ['普及於一切','ふぎゅうおいっさい','Fu gyu o is sai','普く一切に及ぼし'],
+  ['我等與衆生','がとうよしゅじょう','Ga to yo shu jo','我等と衆生と'],
+  ['皆共成仏道','かいくじょうぶつどう','Kai ku jo butsu do','皆共に仏道を成ぜん'],
+ ]},
+/* ── 無量義経 3品 ── */
+{id:'m1',t:'無量義経 徳行品第一',s:'無量義経（開経）',d:'仏の無量の徳行を讃嘆する品。法華経の前に読誦されます。',lines:[
+ ['如是我聞\n一時仏住王舎城耆闍崛山中\n与大比丘衆万二千人倶','にょぜがもん\nいちじぶつじゅうおうじゃじょうぎじゃくっせんちゅう\nようだいびくしゅまんにせんにんぐ','Nyo ze ga mon\nIchi ji butsu ju o ja jo...\nYo dai bi ku shu man ni sen nin gu','このように私は聞いた\nある時、仏は王舎城の耆闍崛山に\n大比丘衆一万二千人とともに住していた'],
+ ['無量義者\n従一法生\n其一法者\n所謂無相','むりょうぎしゃ\nじゅういっぽうしょう\nごいっぽうしゃ\nしょいむそう','Mu ryo gi sha\nJu itsu po sho\nGo itsu po sha\nSho i mu so','無量の義は\n一つの法より生ずる\nその一法とは\nいわゆる無相というものである'],
+ ['一切煩悩皆已除断\n其心自在無復障礙\n善解如来方便之法','いっさいぼんのうかいいじょだん\nごしんじざいむぶしょうげ\nぜんげにょらいほうべんしほう','Is sai bon no kai i jo dan\nGo shin ji zai mu bu sho ge\nZen ge nyo rai ho ben shi ho','一切の煩悩をすでに除断し\nその心は自在にして障礙なく\n如来の方便の法を善く理解する'],
+ ['若有衆生\n聞此法者\n所得功徳\n不可称量','にゃくうしゅじょう\nもんしほうしゃ\nしょとくくどく\nふかしょうりょう','Nyaku u shu jo\nMon shi ho sha\nSho to ku ku do ku\nFu ka sho ryo','もし衆生があって\nこの法を聞くならば\n得る所の功徳は\n称え量ることができない'],
+]},
+{id:'m2',t:'無量義経 説法品第二',s:'無量義経',d:'仏の説法の功徳・方法を説く品。智慧と言葉の力が与えられます。',lines:[
+ ['善男子\n経典之王最為第一\n深妙難解','ぜんなんし\nきょうてんしおうさいいだいいち\nじんみょうなんげ','Zen nan shi\nKyo ten shi o sai i dai ichi\nJin myo nan ge','善男子よ\n経典の王は最も第一にして\n深妙にして解し難い'],
+ ['如来説法初中後善\n其義深遠\n其語巧妙','にょらいせっぽうしょちゅうごぜん\nごぎじんのん\nごごぎょうみょう','Nyo rai set po sho chu go zen\nGo gi jin non\nGo go gyo myo','如来の説法は初め中頃後ろみな善にして\nその義は深遠\nその語は巧妙なり'],
+ ['能令衆生諸善根生\n令諸苦厄悉得解脱','のうりょうしゅじょうしょぜんごんしょう\nりょうしょくやくしつとくげだつ','No ryo shu jo sho zen gon sho\nRyo sho ku yaku shitsu to ku ge datsu','衆生をして諸善根を生ぜしめ\n諸々の苦厄をして悉く解脱を得せしめる'],
+]},
+{id:'m3',t:'無量義経 十功德品第三',s:'無量義経',d:'この経を受持する十の功徳を説く品。功徳が積まれ罪障が消滅します。',lines:[
+ ['善男子\n此経功徳不可思議\n乃至菩薩亦不能測','ぜんなんし\nしきょうくどくふかしぎ\nないしぼさつやくふのうそく','Zen nan shi\nShi kyo ku do ku fu ka shi gi\nNai shi bo satsu ya ku fu no u so ku','善男子よ\nこの経の功徳は不可思議にして\n菩薩でさえ測ることができない'],
+ ['若有衆生\n得聞是経\n一切罪障悉皆消滅','にゃくうしゅじょう\nとくもんぜきょう\nいっさいざいしょうしつかいしょうめつ','Nyaku u shu jo\nToku mon ze kyo\nIs sai zai sho shitsu kai sho metsu','もし衆生があって\nこの経を聞くことを得たならば\n一切の罪障は悉くみな消滅する'],
+ ['所謂第一離悪道功徳\n第二不堕三途功徳\n第三善神擁護功徳','しょいだいいちりあくどうくどく\nだいにふださんずくどく\nだいさんぜんじんようごくどく','Sho i dai ichi ri a ku do ku do ku\nDai ni fu da san zu ku do ku\nDai san zen jin yo go ku do ku','いわゆる第一は悪道を離れる功徳\n第二は三途に堕ちない功徳\n第三は善神が擁護する功徳'],
+]},
+/* ── 妙法蓮華経 全28品 ── */
+{id:'h1',t:'序品第一',s:'妙法蓮華経・巻一',d:'法華経の序品。仏が三昧に入り光を放ち十方世界を照らす。法華経が説かれる壮大な序章。',lines:[
+ ['如是我聞\n一時仏住王舎城耆闍崛山中\n与大比丘衆万二千人倶','にょぜがもん\nいちじぶつじゅうおうじゃじょうぎじゃくっせんちゅう\nようだいびくしゅまんにせんにんぐ','Nyo ze ga mon\nIchi ji butsu ju o ja jo gi ja ku sen chu\nYo dai bi ku shu man ni sen nin gu','このように私は聞いた\nある時、仏は王舎城の耆闍崛山に\n大比丘衆一万二千人とともに住していた'],
+ ['爾時世尊\n四衆囲繞\n供養恭敬尊重讃嘆\n為諸菩薩説大乗経','にじせそん\nししゅいにょう\nくようくぎょうそんじゅうさんだん\nいしょぼさつせつだいじょうきょう','Ni ji se son\nShi shu i nyo\nKu yo ku gyo son ju san dan\nI sho bo satsu setsu dai jo kyo','その時、世尊は\n四衆に囲繞され\n供養・恭敬・尊重・讃嘆されながら\n諸菩薩のために大乗経を説いていた'],
+ ['爾時仏放眉間白毫相光\n照東方万八千世界\n靡不周遍','にじぶつほうみけんびゃくごうそうこう\nしょうとうぼうまんはっせんせかい\nびふしゅうへん','Ni ji butsu ho mi ken bya ku go so ko\nSho to bo man has sen se kai\nBi fu shu hen','その時、仏は眉間の白毫相光を放ち\n東方一万八千の世界を照らし\n行き渡らないところはなかった'],
+ ['爾時弥勒菩薩\n作是念\n今者世尊\n現神変相\n以何因縁\n而現此瑞','にじみろくぼさつ\nさぜねん\nこんじゃせそん\nげんじんべんそう\nいがいんねん\nにげんしずい','Ni ji mi roku bo satsu\nSa ze nen\nKon ja se son\nGen jin ben so\nI ga in nen\nNi gen shi zui','その時、弥勒菩薩は\nかく思念した\n今この世尊は\n神変の相を現じているが\n何の因縁から\nこの瑞相を現じているのだろうか'],
+]},
+{id:'h3',t:'譬喩品第三',s:'妙法蓮華経・巻二',d:'三車火宅の譬喩。燃える家から子を救い出す長者の話。迷いの世界から衆生を救う仏の慈悲。',lines:[
+ ['舎利弗\n汝已慇懃三請不止\n豈得不説','しゃりほつ\nにょいおんごんさんしんふし\nあにとくふせつ','Sha ri hotsu\nNyo i on gon san shin fu shi\nA ni to ku fu setsu','舎利弗よ\n汝はすでに懇ろに三度請い止まない\nどうして説かずにいられようか'],
+ ['譬如長者\n有一大宅\n其宅久朽\n舎宇頽落\n梁棟傾危','たとえばちょうじゃ\nういちだいたく\nごたくきゅうきゅう\nしゃうたいらく\nりょうとうけいき','Ta to e ba cho ja\nU ichi dai ta ku\nGo ta ku kyu kyu\nSha u tai ra ku\nRyo to kei ki','たとえば長者があって\n一つの大きな家があった\nその家は老朽化し\n棟や梁が傾き\n梁や棟が危うく傾いていた'],
+ ['長者見是\n大火起四面倶然\n即便思惟\n我虽能於此所焼之門安隠得出\n而諸子等\n楽著嬉戯\n不受我教\n不畏火難','ちょうじゃけんぜ\nだいかきしめんぐねん\nそくべんしい\nがすいのうおしのしょうしもんあんのんとくしゅつ\nにしょしとう\nぎゃくちゃっきき\nふじゅがきょう\nふいかなん','Cho ja ken ze\nDai ka ki shi men gu nen\nSo ku ben shi i\nGa sui no u o shi no sho shi mon an non to ku shutsu\nNi sho shi to\nGya ku cha ki ki\nFu ju ga kyo\nFu i ka nan','長者はこれを見て\n大火が起き四方から燃えているのを見た\n即ち思惟した\n私はこの燃える門から安らかに出ることができる\nところが子供たちは\n遊びに夢中になって\n私の教えを受け入れず\n火の難を恐れない'],
+ ['以方便力\n告諸子等\n吾有種種\n珍異玩好\n羊車鹿車大牛之車\n今在門外\n汝等出来\n吾為汝等\n造作此車','いほうべんりき\nこくしょしとう\nごうしゅじゅ\nちんいがんこう\nようしゃろくしゃだいごしご\nこんざいもんがい\nにょとうしゅっらい\nごいにょとう\nぞうさしご','I ho ben riki\nKo ku sho shi to\nGo u shu ju\nChin i gan ko\nYo sha ro ku sha dai go shi go\nKon zai mon gai\nNyo to shutsu rai\nGo i nyo to\nZo sa shi go','方便の力をもって\n諸子に告げた\n吾は種種の\n珍しい玩具を持っている\n羊の車・鹿の車・大きな牛の車\n今、門外にある\n汝らよ出て来なさい\n吾は汝らのために\nこれらの車を造ってやろう'],
+]},
+{id:'h4',t:'信解品第四',s:'妙法蓮華経・巻二',d:'長者窮子の譬喩。父（仏）から離れた子（衆生）が、ゆっくりと父のもとに帰る物語。',lines:[
+ ['譬若有人\n年既幼稚\n捨父逃走\n久住他国\n或十二十\n至五十歳','たとえばうにん\nねんきゆうち\nしゃふとうそう\nくじゅうたこく\nわくじゅうにじゅう\nしごじゅうさい','Ta to e ba u nin\nNen ki yu chi\nSha fu to so\nKu ju ta ko ku\nWa ku ju ni ju\nShi go ju sai','たとえばある人が\n年齢はまだ幼くして\n父を捨てて逃げ走り\n久しく他国に住み\n或いは十二十年\n五十歳に至った'],
+ ['其父見子\n以不知故\n傍人認之\n望見其子\n而以私心大歓喜言\n我今庫蔵\n財物無量\n多少取与随意無難','ごふけんし\nいふちこ\nぼうにんにんし\nぼうけんごし\nにいししんだいかんきごん\nがこんこぞう\nざいもつむりょう\ntaしょうしゅよずいいむなん','Go fu ken shi\nI fu chi ko\nBo nin nin shi\nBo ken go shi\nNi i shi shin dai kan ki gon\nGa kon ko zo\nZai motsu mu ryo\nTa sho shu yo zui i mu nan','その父は子を見て\nしかし知らないので\n周りの人が知らせ\n遠くから子を望み見て\n心の中で大いに歓喜して言った\n我が今の蔵には\n財物が無量にある\n多かれ少なかれ意のままに取って与えよう'],
+ ['如来亦復如是\n知一切衆生\n有楽小法\n深著五欲\n為此等故\n説於涅槃\n彼若聞之\n便生信受','にょらいやくぶにょぜ\nちいっさいしゅじょう\nうぎゃくしょうほう\nじんちゃくごよく\nいしとうこ\nせつおねはん\nぴわくもんし\nべんしょうしんじゅ','Nyo rai ya ku bu nyo ze\nChi is sai shu jo\nU gya ku sho ho\nJin cha ku go yo ku\nI shi to ko\nSetsu o ne han\nPi wa ku mon shi\nBen sho shin ju','如来もまたかくのごとく\n一切衆生が\n小さな法を楽しみ\n五欲に深く著しているのを知って\nこれらのために\n涅槃を説いたのであり\n彼らがこれを聞けば\nすなわち信受するであろう'],
+]},
+{id:'h5',t:'薬草諭品第五',s:'妙法蓮華経・巻三',d:'大雨の譬喩。仏の法は大雨のようにすべての衆生に平等に注がれる。一乗の教えの核心。',lines:[
+ ['迦葉\n譬如三千大千世界\n山川渓谷土地\n所生卉木叢林\n及諸薬草\n種類若干','かしょう\nたとえばさんぜんだいせんせかい\nせんせんけいこくとち\nしょしょうきもくそうりん\nぎゅうしょやくそう\nしゅるいにゃくかん','Ka sho\nTa to e ba san zen dai sen se kai\nSen sen kei ko ku to chi\nSho sho ki mo ku so rin\nGyu sho ya ku so\nShu rui nyaku kan','迦葉よ\nたとえば三千大千世界の\n山川・渓谷・土地に\n生ずる草木・叢林\nおよび諸々の薬草\nその種類は様々'],
+ ['密雲弥布\n遍覆三千大千世界\n一時等澍\n其雨普等\n流澍無量','みつうんみふ\nへんぷさんぜんだいせんせかい\nいちじとうじゅ\nごうふほとう\nりゅうじゅむりょう','Mitsu un mi fu\nHen pu san zen dai sen se kai\nIchi ji to ju\nGo u fu ho to\nRyu ju mu ryo','密雲が満ちて広がり\n三千大千世界を遍く覆い\n一時に等しく雨を降らせ\nその雨は普く等しく\n流れて無量'],
+ ['如来説法\n一相一味\n所謂解脱相\n離相\n滅相\n究竟至於一切種智','にょらいせっぽう\nいっそういちみ\nしょいげだつそう\nりそう\nめつそう\nくきょうしおういっさいしゅち','Nyo rai set po\nIs so ichi mi\nSho i ge datsu so\nRi so\nMetsu so\nKu kyo shi o is sai shu chi','如来の説法は\n一相にして一味\nいわゆる解脱の相\n離の相\n滅の相にして\n究竟として一切種智に至る'],
+ ['迦葉当知\n如来是諸法之王\n若有所説\n皆不虚也','かしょうとうち\nにょらいぜしょほうしおう\nにゃくうしょせつ\nかいふこや','Ka sho to chi\nNyo rai ze sho ho shi o\nNyaku u sho setsu\nKai fu ko ya','迦葉よ知るべし\n如来は諸法の王\nもし説くことがあれば\n皆虚しくはない'],
+]},
+{id:'h6',t:'授記品第六',s:'妙法蓮華経・巻三',d:'摩訶迦葉・大目犍連・摩訶迦旃延・須菩提の四大弟子に成仏の記別が与えられる品。',lines:[
+ ['爾時世尊説此偈已\n告諸大衆\n我此弟子摩訶迦葉\n於未来世当得奉覲\n三百万億諸仏世尊','にじせそんせつしげい\nこくしょだいしゅ\nがしでしまかかしょう\nおみらいせとうとくぶごん\nさんびゃくまんおくしょぶつせそん','Ni ji se son setsu shi ge i\nKo ku sho dai shu\nGa shi de shi ma ka ka sho\nO mi rai se to to ku bu gon\nSan bya ku man oku sho butsu se son','その時、世尊はこの偈を説き終えて\n大衆に告げた\n我がこの弟子摩訶迦葉は\n未来世において\n三百万億の諸仏世尊に奉覲することを得るであろう'],
+ ['其仏寿命十二小劫\n大弟子衆其数無量\n仏土厳浄\n其地瑠璃\n道路平正','ごぶつじゅみょうじゅうにしょうこう\nだいでしじゅごすうむりょう\nぶつどごんじょう\nごちるり\nどうろびょうじょう','Go butsu ju myo ju ni sho ko\nDai de shi shu go su mu ryo\nBu tsu do gon jo\nGo chi ru ri\nDo ro byo jo','その仏の寿命は十二小劫\n大弟子衆のその数は無量\n仏土は厳浄にして\nその大地は瑠璃\n道路は平坦に整えられている'],
+ ['亦告大目犍連\n汝当作仏\n号多摩羅跋栴檀香如来','やくこくだいもっけんれん\nにょとうさぶつ\nごうたまらばつせんだんこうにょらい','Ya ku ko ku dai mot ken ren\nNyo to sa butsu\nGo ta ma ra batsu sen dan ko nyo rai','また大目犍連に告げた\n汝は当に仏となるべし\n号を多摩羅跋栴檀香如来という'],
+]},
+{id:'h7',t:'化城喩品第七',s:'妙法蓮華経・巻三',d:'化城（幻の城）の譬喩。小乗涅槃は仮の休息所で、真の目的地（一仏乗）への旅は続く。',lines:[
+ ['諸比丘\n如来知是一切衆生之大導師\n若応以小乗化度者\n作大化城而語之言','しょびく\nにょらいちぜいっさいしゅじょうしだいどうし\nにゃくおういしょうじょうけどしゃ\nさだいけじょうにごしごん','Sho bi ku\nNyo rai chi ze is sai shu jo shi dai do shi\nNyaku o u i sho jo ke do sha\nSa dai ke jo ni go shi gon','諸比丘よ\n如来はこれ一切衆生の大導師と知って\nもし小乗をもって化度すべき者には\n大きな化城をつくり言った'],
+ ['汝等勿怖勿得退還\n今此化城\n汝可止息\n随意所作\n若入此城\n快得安隠','にょとうもつふもつとくたいげん\nこんしけじょう\nにょかしそく\nずいいしょさ\nにゃくにゅうしじょう\nけとくあんのん','Nyo to motsu fu motsu to ku tai gen\nKon shi ke jo\nNyo ka shi so ku\nZui i sho sa\nNyaku nyu shi jo\nKe to ku an non','汝らよ恐れるな退き返してはならない\n今この化城に\n汝らは止まり息んでよい\n意のままに行いなさい\nもしこの城に入れば\n快く安穏を得るだろう'],
+ ['仏知彼等\n心得息已\n滅此化城\n語衆人言\n汝等行来\n宝処在近\n向者大城\n我所化作\n為止息耳','ぶつちひとう\nしんとくそくい\nめつしけじょう\nごしゅうにんごん\nにょとうぎょうらい\nほうしょざいごん\nこうじゃだいじょう\nがしょけさ\nいしそくじ','Butsu chi hi to\nShin to ku so ku i\nMetsu shi ke jo\nGo shu nin gon\nNyo to gyo rai\nHo sho zai gon\nKo ja dai jo\nGa sho ke sa\nI shi so ku ji','仏は彼らが\n心に休息を得たと知って\nこの化城を滅した\n衆人に語っていった\n汝らよ行こう\n宝の在る処は近い\n先の大きな城は\n我が化してつくったもの\n止まり息むためだけのもの'],
+]},
+{id:'h8',t:'五百弟子授記品第八',s:'妙法蓮華経・巻四',d:'衣裏珠の譬喩。友人が衣の裏に縫い込んだ宝珠（仏性）に気づかず貧しく生きた話。',lines:[
+ ['譬若有人\n至親友家\n酔酒而臥\n是時親友官事当行\n以無価宝珠繋其衣裏\n与之而去\n其人酔臥都不覚知','たとえばうにん\nしのしんゆうか\nすいしゅにがん\nこのじしんゆうかんじとうぎょう\nいむけほうじゅけごえり\nよしにきょ\nごにんすいがとふかくち','Ta to e ba u nin\nShi no shin yu ka\nSui shu ni gan\nKo no ji shin yu kan ji to gyo\nI mu ke ho ju ke go e ri\nYo shi ni kyo\nGo nin sui ga to fu kaku chi','たとえばある人が\n親しい友人の家に行き\n酔って臥した\nその時、友人は官の仕事で行かなければならず\n価もない宝珠をその衣の裏に縫い付け\n与えて去った\nその人は酔って臥し全く気づかなかった'],
+ ['以是観之\n如来亦復如是\n在菩薩時\n教化我等\n令発一切智心','いぜかんし\nにょらいやくぶにょぜ\nざいぼさつじ\nきょうけがとう\nりょうほついっさいちしん','I ze kan shi\nNyo rai ya ku bu nyo ze\nZai bo satsu ji\nKyo ke ga to\nRyo hotsu is sai chi shin','これを観ずるに\n如来もまたかくのごとく\n菩薩であった時\n我らを教化して\n一切智心を発せしめた'],
+]},
+{id:'h9',t:'授學無學人記品第九',s:'妙法蓮華経・巻四',d:'阿難・羅睺羅をはじめ学・無学の二千人に成仏の記別が与えられる品。',lines:[
+ ['爾時阿難羅睺羅\n而作是念\n我等毎自思惟\n設得受記不亦快乎','にじあなんらごら\nにさぜねん\nがとうまいじしい\nせつとくじゅきふやくけいこ','Ni ji a nan ra go ra\nNi sa ze nen\nGa to mai ji shi i\nSetsu to ku ju ki fu ya ku kei ko','その時、阿難・羅睺羅は\nかく思念した\n我らはいつも思惟して\nもし記別を得ることができれば快くないことがあろうか'],
+ ['阿難汝於来世当得作仏\n号山海慧自在通王如来\n応供正遍知明行足善逝\n世間解無上士調御丈夫\n天人師仏世尊','あなんにょおらいせとうとくさぶつ\nごうせんかいえじざいつうのうにょらい\nおうぐしょうへんちみょうぎょうそくぜんぜい\nせけんけむじょうしじょうごじょうぶ\nてんにんしぶつせそん','A nan nyo o rai se to to ku sa butsu\nGo sen kai e ji zai tsu no nyo rai\nO gu sho hen chi myo gyo so ku zen zei\nSe ken ke mu jo shi jo go jo bu\nTen nin shi butsu se son','阿難よ汝は来世において仏となることを得るであろう\n号を山海慧自在通王如来\n応供・正遍知・明行足・善逝\n世間解・無上士・調御丈夫\n天人師・仏・世尊'],
+ ['亦記羅睺羅\n汝於来世\n当得作仏\n号蹈七宝華如来','やくきらごら\nにょおらいせ\nとうとくさぶつ\nごうとうしちほうけにょらい','Ya ku ki ra go ra\nNyo o rai se\nTo to ku sa butsu\nGo to shi chi ho ke nyo rai','また羅睺羅に記した\n汝は来世において\n仏となることを得るであろう\n号を蹈七宝華如来という'],
+]},
+{id:'h10',t:'法師品第十',s:'妙法蓮華経・巻四',d:'法華経の一偈一句を聞いて喜ぶ者は如来の使い。受持・読誦・解説・書写する者の功徳を説く。',lines:[
+ ['薬王\n今告汝\n我所説諸経\n而於此経最為第一','やくおう\nこんこくにょ\nがしょせつしょきょう\nにおしきょうさいいだいいち','Ya ku o\nKon ko ku nyo\nGa sho setsu sho kyo\nNi o shi kyo sai i dai ichi','薬王よ\n今汝に告げる\n我の説く諸経のうち\nこの経において最も第一なり'],
+ ['若有人受持読誦\n解説書写妙法華経\n乃至一偈\n於此経巻\n敬視如仏','にゃくにんじゅじどくじゅ\nげせつしょしゃみょうほうけきょう\nないしいちげ\nおしきょうかん\nきょうしにょぶつ','Nyaku nin ju ji do ku ju\nGe setsu sho sha myo ho ke kyo\nNai shi ichi ge\nO shi kyo kan\nKyo shi nyo butsu','もし人が受持・読誦し\n解説・書写し妙法蓮華経の\n一偈にさえ\nこの経巻を\n仏のごとく敬い見るなら'],
+ ['当知此人則如来使\n如来所遣\n行如来事','とうちぜにんそくにょらいし\nにょらいしょけん\nぎょうにょらいじ','To chi ze nin so ku nyo rai shi\nNyo rai sho ken\nGyo nyo rai ji','知るべしこの人はすなわち如来の使いであり\n如来から遣わされて\n如来の事を行ずる者である'],
+]},
+{id:'h11',t:'見宝塔品第十一',s:'妙法蓮華経・巻四',d:'大地から荘厳な七宝の塔が涌現し、中から多宝如来の声が響く。釈迦と多宝が並坐する壮大な場面。',lines:[
+ ['爾時仏前\n有七宝塔\n高五百由旬\n縦広二百五十由旬\n従地涌出住在空中','にじぶつぜん\nうしちほうとう\nこうごひゃくゆじゅん\nじゅうこうにひゃくごじゅうゆじゅん\nじゅうちゆうしゅつじゅうざいくうちゅう','Ni ji butsu zen\nU shichi ho to\nKo go hya ku yu jun\nJu ko ni hya ku go ju yu jun\nJu chi yu shutsu ju zai ku chu','その時、仏の前に\n七宝の塔があって\n高さ五百由旬\n縦横二百五十由旬\n地から涌き出て空中に住していた'],
+ ['爾時宝塔中\n出大音声\n歎言善哉善哉\n釈迦牟尼世尊\n能以平等大慧\n教菩薩法\n仏所護念\n妙法華経\n為大衆説','にじほうとうちゅう\nしゅつだいおんじょう\nたんごんぜんざいぜんざい\nしゃかむにせそん\nのういびょうどうだいえ\nきょうぼさつほう\nぶっしょごねん\nみょうほうけきょう\nいだいしゅせつ','Ni ji ho to chu\nShutsu dai on jo\nTan gon zen zai zen zai\nSha ka mu ni se son\nNo u i byo do dai e\nKyo bo satsu ho\nBu sho go nen\nMyo ho ke kyo\nI dai shu setsu','その時、宝塔の中から\n大音声が出て\n善哉善哉と讃嘆した\n釈迦牟尼世尊は\n平等の大智慧をもって\n菩薩の法を教え\n仏の護念する\n妙法蓮華経を\n大衆のために説く'],
+ ['爾時釈迦牟尼仏\n見多宝仏已\n告多宝仏言\n此釈迦牟尼仏\n欲見世尊','にじしゃかむにぶつ\nけんたほうぶつい\nこくたほうぶつごん\nしのしゃかむにぶつ\nよっけんせそん','Ni ji sha ka mu ni butsu\nKen ta ho butsu i\nKo ku ta ho butsu gon\nShi no sha ka mu ni butsu\nYo ken se son','その時、釈迦牟尼仏は\n多宝仏を見て\n多宝仏に告げた\nこの釈迦牟尼仏は\n世尊（多宝仏）を見たてまつらんと欲している'],
+]},
+{id:'h12',t:'提婆達多品第十二',s:'妙法蓮華経・巻五',d:'悪逆の提婆達多も未来に成仏する記別を得る。八歳の龍女が即座に成仏する革命的な品。',lines:[
+ ['汝等諦観\n竜女身\n速得成仏\n無有疑也','にょとうたいかん\nりゅうにょしん\nそくとくじょうぶつ\nむうぎや','Nyo to tai kan\nRyu nyo shin\nSoku to ku jo butsu\nMu u gi ya','汝らよ諦観せよ\n龍女の身\n速やかに成仏するを\n疑うことなかれ'],
+ ['爾時衆会\n皆見竜女\n忽然之間\n変成男子\n具菩薩行\n即往南方無垢世界\n坐宝蓮華\n成等正覚','にじしゅうえ\nかいけんりゅうにょ\nこつねんしけん\nへんじょうなんし\nぐぼさつぎょう\nそくおうなんぼうむくせかい\nざほうれんか\nじょうとうしょうかく','Ni ji shu e\nKai ken ryu nyo\nKotsu nen shi ken\nHen jo nan shi\nGu bo satsu gyo\nSo ku o nan bo mu ku se kai\nZa ho ren ka\nJo to sho kaku','その時、衆会は\n皆、龍女が\n忽然の間に\n男子に変じ\n菩薩行を具えて\n即ち南方の無垢世界に往き\n宝蓮華に坐して\n等正覚を成ずるを見た'],
+ ['智積菩薩\n及舎利弗\n一切衆会\n黙然信受','ちしゃくぼさつ\nぎゅうしゃりほつ\nいっさいしゅうえ\nもくねんしんじゅ','Chi sha ku bo satsu\nGyu sha ri hotsu\nIs sai shu e\nMo ku nen shin ju','智積菩薩も\nおよび舎利弗も\n一切の衆会も\n黙然として信受した'],
+]},
+{id:'h13',t:'勧持品第十三',s:'妙法蓮華経・巻五',d:'八万の菩薩が悪世末代に法を弘めることを誓う品。日蓮大聖人が最も重んじた誓願の品。',lines:[
+ ['世尊在世時\n猶多怨嫉\n況滅度之後','せそんざいせじ\nゆうたおんしつ\nきょうめつどしご','Se son zai se ji\nYu ta on shitsu\nKyo metsu do shi go','世尊が世に在す時でさえ\nなお多くの怨嫉があった\nましてや滅度の後においておや'],
+ ['我等自言\n世尊滅後\n十方世界\n広宣此経\n以報仏恩','がとうじごん\nせそんめつご\nじっぽうせかい\nこうせんしきょう\nいほうぶつおん','Ga to ji gon\nSe son metsu go\nJip po se kai\nKo sen shi kyo\nI ho butsu on','我らは自ら言う\n世尊の滅後\n十方世界に\n広くこの経を宣べ\n仏恩に報いようと'],
+ ['刀杖加毀\n及数擯出\n如是等難\n皆当忍之\n以弘此経','とうじょうかき\nぎゅうかずひんしゅつ\nにょぜとうなん\nかいとうにんし\nいこうしきょう','To jo ka ki\nGyu ka zu hin shutsu\nNyo ze to nan\nKai to nin shi\nI ko shi kyo','刀杖で毀られても\n度々追い出されても\nこのような難を\n皆よく忍んで\nこの経を弘めよう'],
+]},
+{id:'h14',t:'安楽行品第十四',s:'妙法蓮華経・巻五',d:'末法の世に法華経を弘める者の四種の安楽行を説く。身・口・意・誓願の四安楽行。',lines:[
+ ['文殊師利\n菩薩摩訶薩\n末世末法後\n欲説是経\n当安住四法','もんじゅしり\nぼさつまかさつ\nまっせまっぽうご\nよくせつぜきょう\nとうあんじゅうしほう','Mon ju shi ri\nBo satsu ma ka sa tsu\nMat se mat po go\nYo ku setsu ze kyo\nTo an ju shu ho','文殊師利よ\n菩薩摩訶薩は\n末世・末法の後に\nこの経を説こうとするなら\n四法に安住すべきである'],
+ ['若菩薩摩訶薩\n在後悪世\n欲説是経\n当懐大慈悲心\n柔和能忍\n而説此経','にゃくぼさつまかさつ\nざいごあくせ\nよくせつぜきょう\nとうかいだいじひしん\nにゅうわのうにん\nにせつしきょう','Nyaku bo satsu ma ka sa tsu\nZai go a ku se\nYo ku setsu ze kyo\nTo kai dai ji hi shin\nNyu wa no u nin\nNi setsu shi kyo','もし菩薩摩訶薩が\n後の悪世において\nこの経を説こうとするなら\n大慈悲心を懐いて\n柔和にして能く忍耐し\nこの経を説くべきである'],
+ ['又文殊師利\n菩薩摩訶薩\n於後末世\n法欲滅時\n受持読誦此経者\n無懐嫉妒\n諂誑\n亦勿軽罵\n学仏道者\n求其長短','またもんじゅしり\nぼさつまかさつ\nおごまっせ\nほうよくめつじ\nじゅじどくじゅしきょうしゃ\nむかいしっとう\nてんもう\nやくもつきょうめ\ngぎゃくぶつどうしゃ\nぐごちょうたん','Ma ta mon ju shi ri\nBo satsu ma ka sa tsu\nO go mat se\nHo yo ku metsu ji\nJu ji do ku ju shi kyo sha\nMu kai shitsu to\nTen mo\nYa ku motsu kyo me\nGa ku butsu do sha\nGu go cho tan','また文殊師利よ\n菩薩摩訶薩は\n後の末世\n法が滅しようとする時\nこの経を受持・読誦する者は\n嫉妒を懐かず\n諂い欺かず\nまた軽々しく罵倒せず\n仏道を学ぶ者の\n長短を求めてはならない'],
+]},
+{id:'h15',t:'従地涌出品第十五',s:'妙法蓮華経・巻五',d:'大地から無数の菩薩が涌現し、全員が釈迦の弟子と明かされる。久遠実成への布石となる壮大な場面。',lines:[
+ ['爾時三千大千世界\n地皆振裂\n而於其中\n有無量千万億菩薩摩訶薩\n同時涌出','にじさんぜんだいせんせかい\nちかいしんれつ\nにおごちゅう\nうむりょうせんまんおくぼさつまかさつ\nどうじゆうしゅつ','Ni ji san zen dai sen se kai\nChi kai shin retsu\nNi o go chu\nU mu ryo sen man oku bo satsu ma ka sa tsu\nDo ji yu shutsu','その時、三千大千世界の\n大地はすべて振れ裂け\nその中に\n無量千万億の菩薩摩訶薩が\n同時に涌出した'],
+ ['是諸菩薩\n皆是久発道心\n於釈迦牟尼仏所\n種諸善根\n一心求仏道','ぜしょぼさつ\nかいぜくほつどうしん\nおしゃかむにぶつしょ\nしゅしょぜんごん\nいっしんぐぶつどう','Ze sho bo satsu\nKai ze ku hotsu do shin\nO sha ka mu ni butsu sho\nShu sho zen gon\nIs shin gu butsu do','これらの諸菩薩は\n皆、久しく道心を発して\n釈迦牟尼仏のもとで\n諸善根を種えて\n一心に仏道を求めてきた'],
+ ['弥勒菩薩\n及余諸菩薩\n合掌以偈問仏言\n是諸無数衆\n以何因縁集\n説其本末事','みろくぼさつ\nぎゅうよしょぼさつ\nがっしょういげもんぶつごん\nぜしょむすうしゅ\nいがいんねんじゅう\nせつごほんまつじ','Mi roku bo satsu\nGyu yo sho bo satsu\nGas sho i ge mon butsu gon\nZe sho mu su shu\nI ga in nen ju\nSetsu go hon matsu ji','弥勒菩薩は\nおよびその他の諸菩薩が\n合掌して偈をもって仏に問うた\nこれらの無数の衆は\n何の因縁によって集まったのか\nその本末の事を説いてください'],
+]},
+{id:'h17',t:'分別功徳品第十七',s:'妙法蓮華経・巻六',d:'如来壽量品を聞いた者の功徳を分別して説く品。信解・随喜・読誦それぞれの功徳。',lines:[
+ ['爾時大会\n聞仏説寿命劫数\n長遠如是\n無量無辺\n阿僧祇衆生得大饒益','にじだいえ\nもんぶつせつじゅみょうこうすう\nちょうおんにょぜ\nむりょうむへん\nあそうぎしゅじょうとくだいにょうやく','Ni ji dai e\nMon butsu setsu ju myo ko su\nCho on nyo ze\nMu ryo mu hen\nA so gi shu jo to ku dai nyo yaku','その時、大会は\n仏が寿命の劫数の\n長遠なること斯くのごとく\n無量無辺と説くを聞いて\n阿僧祇の衆生が大いなる利益を得た'],
+ ['若善男子善女人\n聞如来寿命長遠如是\n乃至能生一念信解\n所得功徳無有限量','にゃくぜんなんしぜんにょにん\nもんにょらいじゅみょうちょうおんにょぜ\nないしのうしょういちねんしんげ\nしょとくくどくむうげんりょう','Nyaku zen nan shi zen nyo nin\nMon nyo rai ju myo cho on nyo ze\nNai shi no u sho i ichi nen shin ge\nSho to ku ku do ku mu u gen ryo','もし善男子・善女人が\n如来の寿命の長遠なること斯くのごとくと聞いて\nわずかでも一念の信解を生ずるならば\n得る所の功徳は限り量ることなし'],
+ ['又如来滅後\n若有人\n聞妙法華経\n乃至一偈一句\n一念随喜者\n我亦与授\n阿耨多羅三藐三菩提記','またにょらいめつご\nにゃくうにん\nもんみょうほうけきょう\nないしいちげいちく\nいちねんずいきしゃ\nがやくよじゅ\nあのくたらさんみゃくさんぼだいき','Ma ta nyo rai metsu go\nNyaku u nin\nMon myo ho ke kyo\nNai shi ichi ge ichi ku\nIchi nen zui ki sha\nGa ya ku yo ju\nA no ku ta ra san mya ku san bo dai ki','また如来の滅後\nもし人があって\n妙法蓮華経を聞き\n乃至一偈一句でも\n一念に随喜する者があれば\n我もまた与えて授けよう\n阿耨多羅三藐三菩提の記を'],
+]},
+{id:'h18',t:'随喜功徳品第十八',s:'妙法蓮華経・巻六',d:'法華経を聞いて随喜し他に伝えた者の功徳。第五十番目に伝わっても無量の功徳。',lines:[
+ ['弥勒\n若有人\n聞是法華経随喜者\n得幾所福','みろく\nにゃくうにん\nもんぜほうけきょうずいきしゃ\nとくきしょふく','Mi ro ku\nNyaku u nin\nMon ze ho ke kyo zui ki sha\nTo ku ki sho fu ku','弥勒よ\nもし人が\nこの法華経を聞いて随喜する者は\n如何ほどの福を得るか'],
+ ['其人随喜之徳\n尚不可量\n況初聴者\n其福尤多\n不可思議\n無量無辺阿僧祇','ごにんずいきしとく\nなおふかりょう\nきょうしょちょうしゃ\nごふくゆうた\nふかしぎ\nむりょうむへんあそうぎ','Go nin zui ki shi to ku\nNa o fu ka ryo\nKyo sho cho sha\nGo fu ku yu ta\nFu ka shi gi\nMu ryo mu hen a so gi','その人の随喜の徳は\nなお測ることができない\nましていわんや初めて聴く者は\nその福は尤も多く\n不可思議にして\n無量無辺阿僧祇なり'],
+]},
+{id:'h19',t:'法師功徳品第十九',s:'妙法蓮華経・巻六',d:'法華経を受持・読誦する法師が得る六根清浄の功徳を詳しく説く品。',lines:[
+ ['仏告常精進菩薩\n若善男子善女人\n受持是法華経\n若読若誦若解説若書写\n是人当得八百眼功徳','ぶつこくじょうしょうじんぼさつ\nにゃくぜんなんしぜんにょにん\nじゅじぜほうけきょう\nにゃくどくにゃくじゅにゃくげせつにゃくしょしゃ\nぜにんとうとくはっぴゃくげんくどく','Butsu ko ku jo sho jin bo satsu\nNyaku zen nan shi zen nyo nin\nJu ji ze ho ke kyo\nNyaku do ku nyaku ju nyaku ge setsu nyaku sho sha\nZe nin to to ku hap pya ku gen ku do ku','仏は常精進菩薩に告げた\nもし善男子・善女人が\nこの法華経を受持し\n読み・誦え・解説し・書写するならば\nこの人は当に八百の眼の功徳を得るべし'],
+ ['是人以清浄眼\n見于三千大千世界\n内外所有山林河海\n下至阿鼻地獄\n上至有頂\n亦見其中一切衆生','ぜにんいしょうじょうげん\nけんおさんぜんだいせんせかい\nないがいしょうさんりんかかい\nげしあびじごく\nじょうしうちょう\nやくけんごちゅういっさいしゅじょう','Ze nin i sho jo gen\nKen o san zen dai sen se kai\nNai gai sho san rin ka kai\nGe shi a bi ji go ku\nJo shi u cho\nYa ku ken go chu is sai shu jo','この人は清浄な眼をもって\n三千大千世界の\n内外にあるすべての山林・河海\n下は阿鼻地獄に至るまで\n上は有頂に至るまでを見\n亦その中の一切の衆生を見る'],
+]},
+{id:'h20',t:'常不軽菩薩品第二十',s:'妙法蓮華経・巻七',d:'出会う人すべてに「あなたは必ず仏になる」と礼拝し続けた常不軽菩薩の物語。謙虚な礼拝の精神。',lines:[
+ ['有一菩薩比丘\n名常不軽\n以何因縁名常不軽','ういちぼさつびく\nみょうじょうふきょう\nいがいんねんみょうじょうふきょう','U ichi bo satsu bi ku\nMyo jo fu kyo\nI ga in nen myo jo fu kyo','一人の菩薩比丘がいた\n名を常不軽という\n何の因縁から常不軽と名付けられたか'],
+ ['此比丘凡有所見\n若比丘比丘尼\n優婆塞優婆夷\n皆悉礼拝讃嘆\n而作是言\n我深敬汝等\n不敢軽慢\n所以者何\n汝等皆行菩薩道\n当得作仏','しびくぼんうしょけん\nにゃくびくびくに\nうばそくうばい\nかいしつらいはいさんだん\nにさぜごん\nがじんきょうにょとう\nふかんきょうまん\nしょいしゃが\nにょとうかいぎょうぼさつどう\nとうとくさぶつ','Shi bi ku bon u sho ken\nNyaku bi ku bi ku ni\nU ba so ku u ba i\nKai shitsu rai hai san dan\nNi sa ze gon\nGa jin kyo nyo to\nFu kan kyo man\nSho i sha ga\nNyo to kai gyo bo satsu do\nTo to ku sa butsu','この比丘は見る者すべて\n比丘・比丘尼\n優婆塞・優婆夷に\n皆ことごとく礼拝讃嘆して\nかく言った\n我は汝らを深く敬い敢えて軽慢せず\n何故かというと\n汝らは皆、菩薩道を行じ\n必ず仏となることを得るからである'],
+]},
+{id:'h21',t:'如来神力品第二十一',s:'妙法蓮華経・巻七',d:'釈迦牟尼仏が神通力を現し、広長舌を梵天まで届かせ十方世界を照らす品。法を嘱累する。',lines:[
+ ['爾時仏前\n以神通力\n出広長舌上至梵世\n一切毛孔放若干種光\n皆悉遍照十方世界','にじぶつぜん\nいじんずうりき\nしゅつこうちょうぜつじょうしぼんせ\nいっさいもうこうほうにゃくかんしゅこう\nかいしつへんしょうじっぽうせかい','Ni ji butsu zen\nI jin zu riki\nShutsu ko cho zetsu jo shi bon se\nIs sai mo ko ho nyaku kan shu ko\nKai shitsu hen sho jip po se kai','その時、仏は\n神通力をもって\n広長舌を出し梵天世界にまで届かせ\n一切の毛穴から種種の光を放ち\n皆ことごとく十方世界を遍照した'],
+ ['是諸仏各在本国\n同出広長舌相\n遍覆三千大千世界\n説千万億種\n無量無数不可思議功徳之言','ぜしょぶつかくざいほんこく\nどうしゅつこうちょうぜっそう\nへんぷさんぜんだいせんせかい\nせつせんまんおくしゅ\nむりょうむすうふかしぎくどくしごん','Ze sho butsu ka ku zai hon ko ku\nDo shutsu ko cho zetsu so\nHen pu san zen dai sen se kai\nSetsu sen man oku shu\nMu ryo mu su fu ka shi gi ku do ku shi gon','これらの諸仏が各々本国において\n同じく広長舌相を出し\n三千大千世界を遍く覆い\n千万億種\n無量無数不可思議の功徳の言葉を説いた'],
+]},
+{id:'h22',t:'囑累品第二十二',s:'妙法蓮華経・巻七',d:'釈迦牟尼仏が諸菩薩の頂を摩して法を付嘱し、広宣流布を託す品。',lines:[
+ ['爾時釈迦牟尼仏\n従法座起\n現大神力\n以右手摩\n無量菩薩摩訶薩頂\n而作是言','にじしゃかむにぶつ\nじゅうほうざき\nげんだいじんりき\nいうしゅも\nむりょうぼさつまかさつちょう\nにさぜごん','Ni ji sha ka mu ni butsu\nJu ho za ki\nGen dai jin riki\nI u shu mo\nMu ryo bo satsu ma ka sa tsu cho\nNi sa ze gon','その時、釈迦牟尼仏は\n法座から立ち上がり\n大神力を現して\n右手をもって\n無量菩薩摩訶薩の頂を摩し\n言った'],
+ ['我於無量百千万億阿僧祇劫\n修習是難得\n阿耨多羅三藐三菩提法\n今以付属汝等','がおむりょうひゃくせんまんおくあそうぎこう\nしゅうじゅぜなんとく\nあのくたらさんみゃくさんぼだいほう\nこんにふしょくにょとう','Ga o mu ryo hya ku sen man oku a so gi ko\nShu ju ze nan to ku\nA no ku ta ra san mya ku san bo dai ho\nKon ni fu sho ku nyo to','我は無量百千万億阿僧祇劫において\nこの難得の\n阿耨多羅三藐三菩提の法を修習してきた\n今これを汝らに付属する'],
+ ['当広宣流布\n令得広大之利','とうこうせんるふ\nりょうとくこうだいしり','To ko sen ru fu\nRyo to ku ko dai shi ri','広く宣べ流布させよ\n広大の利益を得させよ'],
+]},
+{id:'h23',t:'薬王菩薩本事品第二十三',s:'妙法蓮華経・巻七',d:'薬王菩薩が過去世に法華経を聞き身を焼いて供養した深い信仰を説く品。',lines:[
+ ['一切衆生喜見菩薩\n楽修苦行\n於日月浄明徳仏法中\n精進経行','いっさいしゅじょうきけんぼさつ\nぎゃくしゅくぎょう\nおにちがつじょうみょうとくぶつほうちゅう\nしょうじんきょうぎょう','Is sai shu jo ki ken bo satsu\nGya ku shu ku gyo\nO ni chi ga tsu jo myo to ku butsu ho chu\nSho jin kyo gyo','一切衆生喜見菩薩は\n苦行を好んで修し\n日月浄明徳仏の法の中において\n精進経行した'],
+ ['即以神通力\n飛行詣仏所\n頭面礼仏足\n合十指爪\n以偈讃仏','そくいじんずうりき\nひぎょうけいぶつしょ\nずめんらいぶつそく\nごうじゅっしそう\nいげさんぶつ','So ku i jin zu riki\nHi gyo kei butsu sho\nZu men rai butsu so ku\nGo ju shi so\nI ge san butsu','即ち神通力をもって\n飛行して仏の所に詣で\n頭を仏足に礼して\n十指爪を合わせ\n偈をもって仏を讃えた'],
+ ['是薬王菩薩\n于今在此\n以是因縁\n名薬王菩薩','ぜやくおうぼさつ\nうこんざいし\nいぜいんねん\nみょうやくおうぼさつ','Ze ya ku o bo satsu\nU kon zai shi\nI ze in nen\nMyo ya ku o bo satsu','この薬王菩薩は\n今もなお此処に在って\nこの因縁をもって\n薬王菩薩と名付けられる'],
+]},
+{id:'h24',t:'妙音菩薩品第二十四',s:'妙法蓮華経・巻七',d:'東方の妙音菩薩が多様な姿（三十四身）に化して衆生を救う品。言葉に慈悲の力が宿る。',lines:[
+ ['爾時釈迦牟尼仏\n放大人相肉髻光\n及放眉間白毫相光\n遍照東方\n百八万億那由他恒河沙等諸仏世界','にじしゃかむにぶつ\nほうだいにんそうにっけいこう\nぎゅうほうみけんびゃくごうそうこう\nへんしょうとうぼう\nひゃくはちまんおくなゆたごうがしゃとうしょぶつせかい','Ni ji sha ka mu ni butsu\nHo dai nin so nik kei ko\nGyu ho mi ken bya ku go so ko\nHen sho to bo\nHya ku hachi man oku na yu ta go ga sha to sho butsu se kai','その時、釈迦牟尼仏は\n大人相の肉髻光を放ち\nおよび眉間の白毫相光を放って\n東方の\n百八万億那由他恒河沙等の諸仏世界を遍照した'],
+ ['妙音菩薩者\n久已種諸善根\n親近供養\n無量百千万億諸仏\n深植善根','みょうおんぼさつしゃ\nくいしゅしょぜんごん\nしんごんくよう\nむりょうひゃくせんまんおくしょぶつ\nじんじょくぜんごん','Myo on bo satsu sha\nKu i shu sho zen gon\nShin gon ku yo\nMu ryo hya ku sen man oku sho butsu\nJin jo ku zen gon','妙音菩薩は\n久しく諸善根を種え\n無量百千万億の諸仏に\n親近し供養して\n深く善根を植えた'],
+]},
+{id:'h25b',t:'観世音菩薩普門品（全文）',s:'妙法蓮華経・巻八',d:'観音様の三十三身の化現と普門示現。上の「偈頌」版は偈頌部分のみ。こちらで全文カウントができます。',lines:[
+ ['無尽意菩薩\n即従座起\n偏袒右肩\n合掌向仏\n而作是言\n世尊観世音菩薩\n以何因縁\n名観世音','むじんにぼさつ\nそくじゅうざき\nへんたんうけん\nがっしょうこうぶつ\nにさぜごん\nせそんかんぜおんぼさつ\nいがいんねん\nみょうかんぜおん','Mu jin ni bo satsu\nSo ku ju za ki\nHen tan u ken\nGas sho ko butsu\nNi sa ze gon\nSe son kan ze on bo satsu\nI ga in nen\nMyo kan ze on','無尽意菩薩は\n即ち座から立ち上がり\n右肩を偏袒して\n合掌して仏に向かい\nかく言った\n世尊よ観世音菩薩は\n何の因縁から\n観世音と名付けられたのですか'],
+ ['若有無量百千万億衆生\n受諸苦悩\n聞是観世音菩薩\n一心称名\n観世音菩薩\n即時観其音声\n皆得解脱','にゃくうむりょうひゃくせんまんおくしゅじょう\nじゅしょくのう\nもんぜかんぜおんぼさつ\nいっしんしょうみょう\nかんぜおんぼさつ\nそくじかんごおんじょう\nかいとくげだつ','Nyaku u mu ryo hya ku sen man oku shu jo\nJu sho ku no\nMon ze kan ze on bo satsu\nIs shin sho myo\nKan ze on bo satsu\nSo ku ji kan go on jo\nKai to ku ge datsu','もし無量百千万億の衆生が\n諸々の苦悩を受けて\n観世音菩薩を聞いて\n一心に名を称えれば\n観世音菩薩は\n即時にその音声を観じて\n皆、解脱を得させる'],
+ ['善男子\n若有国土衆生\n応以仏身得度者\n観世音菩薩\n即現仏身\n而為説法','ぜんなんし\nにゃくうこくどしゅじょう\nおういぶつしんとくどしゃ\nかんぜおんぼさつ\nそくげんぶつしん\nにいせっぽう','Zen nan shi\nNyaku u ko ku do shu jo\nO u i butsu shin to ku do sha\nKan ze on bo satsu\nSo ku gen butsu shin\nNi i set po','善男子よ\nもし国土の衆生が\n仏身をもって度すべき者があれば\n観世音菩薩は\n即ち仏身を現じて\n法を説く'],
+]},
+{id:'h26',t:'陀羅尼品第二十六',s:'妙法蓮華経・巻八',d:'薬王・勇施・毘沙門天・持国天らが陀羅尼（真言）を説いて法師を守護する品。',lines:[
+ ['爾時薬王菩薩\n即従座起\n偏袒右肩\n合掌向仏\n而白仏言\n世尊若善男子善女人\n受持法華経者\n得幾所福','にじやくおうぼさつ\nそくじゅうざき\nへんたんうけん\nがっしょうこうぶつ\nにびゃくぶつごん\nせそんにゃくぜんなんしぜんにょにん\nじゅじほうけきょうしゃ\nとくきしょふく','Ni ji ya ku o bo satsu\nSo ku ju za ki\nHen tan u ken\nGas sho ko butsu\nNi bya ku butsu gon\nSe son nyaku zen nan shi zen nyo nin\nJu ji ho ke kyo sha\nTo ku ki sho fu ku','その時、薬王菩薩は\n即ち座から立ち上がり\n右肩を偏袒して\n合掌して仏に向かい\n仏に申した\n世尊よもし善男子・善女人が\n法華経を受持する者は\nどれほどの福を得るでしょうか'],
+ ['陀羅尼曰\nアニ　マニ　マネ　ママネ\nシリ　シリタビ\nシャンテ　ムクテ　ムクタビ\nサメ　アビサメ\nサンテ　サンテ\nブッダビロキテ　ダルマパリクシテ\nサンガニルゴシャニ\nバヤビシュッデー\nマンテ　マンテ　マハマンテ\nシャンテ　スバハ','だらにわっ\nあに　まに　まね　ままね\nしり　しりたび\nしゃんて　むくて　むくたび\nさめ　あびさめ\nさんて　さんて\nぶっだびろきて　だるまぱりくして\nさんがにるごしゃに\nばやびしゅっでー\nまんて　まんて　まはまんて\nしゃんて　すばは','Dharani:\nAni Mani Mane Mamane\nShiri Shiritabi\nShante Mukute Muktabi\nSame Abisame\nSante Sante\nBuddhavilokhite Dharmapariksita\nSanghanirghoshani\nBhayabishuddhe\nMante Mante Mahamante\nShante Svaha','薬王菩薩の陀羅尼：\nアニ　マニ　マネ　ママネ\nシリ　シリタビ\nシャンテ　ムクテ　ムクタビ\nサメ　アビサメ\nサンテ　サンテ\nブッダビロキテ　ダルマパリクシテ\nサンガニルゴシャニ\nバヤビシュッデー\nマンテ　マンテ　マハマンテ\nシャンテ　スバハ'],
+]},
+{id:'h27',t:'妙荘厳王本事品第二十七',s:'妙法蓮華経・巻八',d:'邪見の妙荘厳王が二人の息子の導きで仏法に帰依した話。家族への弘法と功徳。',lines:[
+ ['爾時仏告大衆\n乃往古世無量無辺不可思議阿僧祇劫\n有仏名雲雷音宿王華智如来','にじぶつこくだいしゅ\nないおうこせむりょうむへんふかしぎあそうぎこう\nうぶつみょううんらいおんしゅくおうけちにょらい','Ni ji butsu ko ku dai shu\nNai o ko se mu ryo mu hen fu ka shi gi a so gi ko\nU butsu myo un rai on shu ku o ke chi nyo rai','その時、仏は大衆に告げた\n遠い昔の世、無量無辺不可思議阿僧祇劫のことに\n仏が居られた名を雲雷音宿王華智如来という'],
+ ['其国有王\n名妙荘厳\n其王夫人名浄徳\n有二子\n一名浄蔵\n二名浄眼','ごこくうおう\nみょうしょうごん\nごおうふにんみょうじょうとく\nうにし\nいちみょうじょうぞう\nにみょうじょうげん','Go ko ku u o\nMyo sho gon\nGo o fu nin myo jo to ku\nU ni shi\nIchi myo jo zo\nNi myo jo gen','その国に王があり\n名を妙荘厳という\nその王の夫人は名を浄徳という\n二人の息子があって\n一を浄蔵\n二を浄眼という'],
+ ['爾時浄蔵浄眼二子\n到其母所\n合十指爪掌\n白言\n惟願母往詣雲雷音宿王華智仏所','にじじょうぞうじょうげんにし\nとうごもしょ\nごうじゅっしそうしょう\nびゃくごん\nゆいがんもおうけいうんらいおんしゅくおうけちぶつしょ','Ni ji jo zo jo gen ni shi\nTo go mo sho\nGo ju shi so sho\nBya ku gon\nYui gan mo o kei un rai on shu ku o ke chi butsu sho','その時、浄蔵・浄眼の二子は\nその母のもとに行き\n十指爪を合わせ掌を合わせて\n申した\n願わくは母よ雲雷音宿王華智仏のもとに往詣して'],
+]},
+{id:'h28',t:'普賢菩薩勧発品第二十八',s:'妙法蓮華経・巻八',d:'普賢菩薩が法華経の持者を守護することを誓う品。法華経の結びの品。行動力と慈悲心が育まれる。',lines:[
+ ['爾時普賢菩薩\n以自在神通力威徳名聞\n与大菩薩衆無量無辺不可称数\n従東方来','にじふげんぼさつ\nいじざいじんずうりきいとくみょうもん\nようだいぼさつしゅむりょうむへんふかしょうすう\nじゅうとうぼうき','Ni ji fu gen bo satsu\nI ji zai jin zu riki i to ku myo mon\nYo dai bo satsu shu mu ryo mu hen fu ka sho su\nJu to bo ki','その時、普賢菩薩が\n自在な神通力・威徳と名声をもって\n大菩薩衆、無量無辺数えることができない人とともに\n東方からやって来た'],
+ ['若有受持読誦\n正憶念是法華経者\n当知是人\n則見釈迦牟尼仏\n如従仏口聞此経典','にゃくうじゅじどくじゅ\nしょうおくねんぜほうけきょうしゃ\nとうちぜにん\nそくけんしゃかむにぶつ\nにょじゅうぶつくもんしきょうてん','Nyaku u ju ji do ku ju\nSho o ku nen ze ho ke kyo sha\nTo chi ze nin\nSo ku ken sha ka mu ni butsu\nNyo ju butsu ku mon shi kyo ten','もし受持・読誦し\nこの法華経を正しく憶念する者は\n知るべし、この人は\n釈迦牟尼仏を見\n仏の口からこの経典を聞くに等しい'],
+ ['若有受持読誦解説書写\n妙法蓮華経\n是人命終\n往忉利天上\n八万四千天女\n作衆伎楽而来迎之','にゃくうじゅじどくじゅげせつしょしゃ\nみょうほうれんけきょう\nぜにんみょうじゅう\nおうとうりてんじょう\nはちまんしせんてんにょ\nさしゅうぎがくにらいごうし','Nyaku u ju ji do ku ju ge setsu sho sha\nMyo ho ren ke kyo\nZe nin myo ju\nO to ri ten jo\nHa chi man shi sen ten nyo\nSa shu gi gaku ni rai go shi','もし受持・読誦・解説・書写し\n妙法蓮華経を読む者は\nこの人が命終わった時\n忉利天上に往き\n八万四千の天女が\n衆伎楽を奏でて迎えに来る'],
+]},
+{id:'kanbo',t:'佛説観普賢菩薩行法経（結経）',s:'結経',d:'法華経の結びの経典。普賢菩薩の行法を観ずることで六根清浄を得る教えを説く。',lines:[
+ ['如是我聞\n一時仏在毘舎離国大林精舎重閣講堂\n与大比丘衆五百人倶','にょぜがもん\nいちじぶつざいびしゃりこくだいりんしょうじゃじゅうかくこうどう\nようだいびくしゅごひゃくにんぐ','Nyo ze ga mon\nIchi ji butsu zai bi sha ri ko ku dai rin sho ja ju ka ku ko do\nYo dai bi ku shu go hya ku nin gu','このように私は聞いた\nある時、仏は毘舎離国の大林精舎重閣講堂に\n大比丘衆五百人とともに住していた'],
+ ['仏告阿難\n聴汝受持\n読誦此経\n広為衆生分別解説\n令得清浄','ぶつこくあなん\nちょうにょじゅじ\nどくじゅしきょう\nこういしゅじょうふんべつげせつ\nりょうとくしょうじょう','Butsu ko ku a nan\nCho nyo ju ji\nDo ku ju shi kyo\nKo u i shu jo fun betsu ge setsu\nRyo to ku sho jo','仏は阿難に告げた\n聴よ汝よ\nこの経を受持し\n読誦して広く衆生のために分別し解説して\n清浄を得せしめよ'],
+ ['若我滅後\n此経住世\n能奉行者\n則是行般若波羅蜜\n亦行法華首楞厳三昧','にゃくがめつご\nしきょうじゅうせ\nのうぶぎょうしゃ\nそくぜぎょうはんにゃはらみつ\nやくぎょうほうけしゅりょうごんさんまい','Nyaku ga metsu go\nShi kyo ju se\nNo u bu gyo sha\nSo ku ze gyo han nya ha ra mi tsu\nYa ku gyo ho ke shu ryo gon san mai','もし我が滅後に\nこの経が世に住して\n能く奉行する者があれば\nすなわちこれ般若波羅蜜を行じ\nまた法華・首楞厳三昧を行ずることなり'],
+ ['仏説此経已\n普賢等諸菩薩\n舎利弗等諸声聞\n及諸天龍\n人非人等\n一切大会\n皆大歓喜\n受持仏語\n作礼而去','ぶつせつしきょうい\nふげんとうしょぼさつ\nしゃりほつとうしょしょうもん\nぎゅうしょてんりゅう\nにんひにんとう\nいっさいだいえ\nかいだいかんき\nじゅじぶつご\nさらいにきょ','Butsu setsu shi kyo i\nFu gen to sho bo satsu\nSha ri hotsu to sho sho mon\nGyu sho ten ryu\nNin hi nin to\nIs sai dai e\nKai dai kan ki\nJu ji butsu go\nSa rai ni kyo','仏がこの経を説き終えて\n普賢等の諸菩薩\n舎利弗等の諸声聞\nおよび諸天・龍\n人・非人等\n一切の大会は\n皆大いに歓喜して\n仏語を受持し\n礼をして去った'],
+]},
+];
+var GG_N=GG.length;
 
-        <div class="card">
-          <h3>🔔 通知設定</h3>
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="settings-notifications" checked>
-              Push 通知を有効にする
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="settings-notification-time">通知時刻</label>
-            <input type="time" id="settings-notification-time" value="08:00">
-          </div>
-          <button class="btn btn-secondary" style="width: 100%;">
-            テスト通知を送信
-          </button>
-        </div>
+// ══════════════════════════════════════════════════════════
+//  ステート
+// ══════════════════════════════════════════════════════════
+var UK='yomy_v14',LBK='yomy_lb_v14';
+var st={
+  userName:'',daily:{},totalChants:0,sessionCount:0,
+  tab:'chant',calView:'heat',calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),
+  hue:35,dark:false,sensitivity:8,fontPref:'kanji',dailyValue:5000,gIdx:0,gCounts:{}
+};
+var actx=null,rhythmInt=null,rhythmBeat=0;
+var gcAnimating=false,gcCurReal=0;
+var readLineIdx=0,readLines=[];
+var CARD_W=155, STEP=118;
 
-        <div class="card">
-          <h3>💾 データ管理</h3>
-          <button class="btn btn-secondary" style="width: 100%; margin: 0.5rem 0;" id="btn-export-data">
-            📥 データをエクスポート
-          </button>
-          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-import-data">
-            📤 データをインポート
-          </button>
-          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-clear-data">
-            🗑️ すべてクリア
-          </button>
-        </div>
+// ══════════════════════════════════════════════════════════
+//  ユーティリティ
+// ══════════════════════════════════════════════════════════
+function dss(d){return d.toISOString().split('T')[0];}
+function today(){return dss(new Date());}
+function fmt(n){return Number(n).toLocaleString('ja-JP',{maximumFractionDigits:1});}
+function lsG(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
+function lsS(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 
-        <div class="card">
-          <h3>📱 PWA</h3>
-          <button class="btn btn-secondary" style="width: 100%; margin: 0.5rem 0;" id="btn-install-pwa">
-            ホーム画面に追加
-          </button>
-          <button class="btn btn-outline" style="width: 100%; margin: 0.5rem 0;" id="btn-cache-status">
-            キャッシュ状態を確認
-          </button>
-        </div>
+// ══════════════════════════════════════════════════════════
+//  チュートリアル
+// ══════════════════════════════════════════════════════════
+var tutIdx=1;
+function swTut(to){
+  var cur=document.getElementById('t'+tutIdx);if(!cur)return;
+  cur.style.opacity='0';
+  setTimeout(function(){
+    cur.classList.add('hidden');cur.style.opacity='';tutIdx=to;
+    var nxt=document.getElementById('t'+to);
+    if(nxt){nxt.classList.remove('hidden','gone');nxt.style.opacity='0';setTimeout(function(){nxt.style.opacity='';nxt.style.transition='opacity .4s';},20);}
+  },380);
+}
+function animTitle(){
+  var chars='よむよむお題目'.split('');var w=document.getElementById('tutTitle');w.innerHTML='';
+  chars.forEach(function(c,i){var s=document.createElement('span');s.className='tut-char';s.textContent=c;s.style.animationDelay=(i*.2)+'s';w.appendChild(s);});
+  var total=chars.length*200+500;
+  setTimeout(function(){
+    var h=document.getElementById('t1hint');h.style.opacity='1';h.style.transition='opacity .5s';
+    var b=document.getElementById('tutWalkBtn');if(b){b.style.opacity='1';}
+  },total);
+  setTimeout(function(){animWorries();},total+1600);
+}
+function animWorries(){
+  swTut(2);
+  setTimeout(function(){
+    document.getElementById('w0').classList.add('show');
+    setTimeout(function(){document.getElementById('w1').classList.add('show');},400);
+    setTimeout(function(){document.getElementById('w2').classList.add('show');},850);
+    setTimeout(function(){document.getElementById('w3').classList.add('show');},1300);
+    setTimeout(function(){document.getElementById('wS').classList.add('show');},1800);
+    setTimeout(function(){swTut(3);},3200);
+  },450);
+}
+['t1','t2'].forEach(function(id){
+  document.getElementById(id).addEventListener('click',function(){
+    if(tutIdx===1)animWorries();else if(tutIdx===2)swTut(3);
+  });
+});
+document.getElementById('tutNameBtn').addEventListener('click',function(){
+  var n=document.getElementById('tutName').value.trim();if(!n){document.getElementById('tutName').focus();return;}
+  st.userName=n;
+  document.getElementById('tutInpWrap').classList.add('vanish');
+  setTimeout(function(){document.getElementById('tutGreet').textContent=n+'さんとお呼びしますね。';swTut(4);},480);
+});
+document.getElementById('tutName').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('tutNameBtn').click();});
+document.querySelectorAll('.font-opt').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.font-opt').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel');st.fontPref=b.getAttribute('data-f');
+  });
+});
+document.getElementById('fontNext').addEventListener('click',function(){
+  lsS(UK,st);
+  for(var i=1;i<=4;i++){var s=document.getElementById('t'+i);if(s)s.classList.add('gone');}
+  launchApp();
+});
 
-        <div class="card">
-          <h3>📊 バージョン & ヘルプ</h3>
-          <p>
-            <strong>アプリ</strong>: よむよむお題目 v15+<br>
-            <strong>バージョン</strong>: <span id="app-version">1.0.0</span><br>
-            <strong>最終更新</strong>: <span id="app-updated">読み込み中...</span>
-          </p>
-          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;" id="btn-check-updates">
-            更新を確認
-          </button>
-        </div>
-      </div>
-    </section>
-  </main>
+// ══════════════════════════════════════════════════════════
+//  ヘルプシステム（軽量版・選択的ロード）
+// ══════════════════════════════════════════════════════════
+var HELP_CONTENT={
+  'chant':{title:'お題目について',body:'「南無妙法蓮華経」の読誦回数をカウントします。\nリズミカルに太鼓の合いの手を入れながらお題目を唱えましょう'},
+  'gongyou':{title:'勤行の操作方法',body:'← → ボタンまたはスワイプでお経を選びます。\nボタンで1回カウント。ルーレット機能も使えます。'},
+  'kichijitsu':{title:'吉日の功徳倍率',body:'天赦日 功徳×3\n一粒万倍日 功徳×2\n大安 功徳×2\n寅の日・己巳の日 功徳×1.5'}
+};
+function showHelp(key){
+  var h=HELP_CONTENT[key]||{title:'ヘルプ',body:''};
+  document.getElementById('helpTitle').textContent=h.title;
+  document.getElementById('helpBody').innerHTML=h.body.replace(/\n/g,'<br>');
+  document.getElementById('helpOverlay').classList.add('show');
+}
+document.getElementById('helpOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
 
-  <!-- ========== フッター ========== -->
-  <footer>
-    <p>&copy; 2024 Yomuyomu Odaimoku. 南無妙法蓮華経</p>
-    <p style="margin-top: 0.5rem;">
-      <a href="#" id="footer-about">このアプリについて</a> •
-      <a href="#" id="footer-privacy">プライバシー</a> •
-      <a href="#" id="footer-contact">お問い合わせ</a>
-    </p>
-  </footer>
+// ══════════════════════════════════════════════════════════
+//  チュートリアルウォークスルー（軽量版）
+// ══════════════════════════════════════════════════════════
+var TUT_STEPS=[
+  {title:'お題目タブ',body:'ここで「南無妙法蓮華経」の読誦回数をカウントします。'},
+  {title:'勤行タブ',body:'法華経が読めます。吉日には功徳が倍増します。'},
+  {title:'カレンダータブ',body:'日別の読誦記録を確認できます。'},
+  {title:'はじまりました',body:'これからよろしくお願いいたします。🪷'}
+];
+var tutWalkStep=0;
+function startTutWalk(){
+  tutWalkStep=0;
+  document.getElementById('tutWalkOverlay').style.display='block';
+  showTutStep(0);
+}
+function showTutStep(idx){
+  var step=TUT_STEPS[idx];
+  document.getElementById('twTitle').textContent=step.title;
+  document.getElementById('twBody').textContent=step.body;
+  var nextBtn=document.getElementById('twNext');
+  nextBtn.textContent=idx===TUT_STEPS.length-1?'始める ✨':'次へ →';
+}
+function nextTutStep(){
+  tutWalkStep++;
+  if(tutWalkStep>=TUT_STEPS.length){endTutWalk();return;}
+  showTutStep(tutWalkStep);
+}
+function endTutWalk(){
+  document.getElementById('tutWalkOverlay').style.display='none';
+}
 
-  <!-- ========== JavaScript ========== -->
+// ══════════════════════════════════════════════════════════
+//  お布施（DANA）機能
+// ══════════════════════════════════════════════════════════
+function openDana(){document.getElementById('danaOverlay').classList.add('show');}
+function closeDana(){document.getElementById('danaOverlay').classList.remove('show');}
+document.getElementById('danaOverlay').addEventListener('click',function(e){if(e.target===this)closeDana();});
+['D','W','M'].forEach(function(x){
+  var b=document.getElementById('dfreq'+x);
+  if(b)b.addEventListener('click',function(){st.danaFreq={D:'day',W:'week',M:'month'}[x];syncFreqBtns();lsS(UK,st);});
+});
+function syncFreqBtns(){
+  ['D','W','M'].forEach(function(x){
+    var b=document.getElementById('dfreq'+x);
+    if(b)b.classList.toggle('on',st.danaFreq==={D:'day',W:'week',M:'month'}[x]);
+  });
+}
+document.getElementById('danaSet').addEventListener('click',function(){
+  var v=parseFloat(document.getElementById('danaIn').value);if(isNaN(v)||v<0)return;
+  st.donation=v;document.getElementById('danaIn').value='';lsS(UK,st);closeDana();
+});
+if(!st.danaFreq)st.danaFreq='day';
 
-  <!-- 設定・用語・パーリ語 -->
-  <script src="/js/config.js"></script>
+// ══════════════════════════════════════════════════════════
+//  初期化
+// ══════════════════════════════════════════════════════════
+function init(){
+  var saved=lsG(UK);
+  if(saved&&saved.userName){
+    Object.assign(st,saved);
+    for(var i=1;i<=4;i++){var s=document.getElementById('t'+i);if(s)s.classList.add('gone');}
+    applyHue(st.hue);applyMode(st.dark);syncSliders();
+    launchApp();
+  } else {
+    animTitle();
+  }
+}
+function launchApp(){
+  var app=document.getElementById('app');app.style.display='block';app.classList.add('vis');
+  document.getElementById('menuName').textContent=st.userName;
+  buildCarousel();updateChantUI();renderBanner();actTab(st.tab||'chant');
+}
 
-  <!-- ユーティリティ関数 -->
-  <script src="/js/utils.js"></script>
 
-  <!-- 能力定義 -->
-  <script src="/js/abilities.js"></script>
+// ══════════════════════════════════════════════════════════
+//  テーマ
+// ══════════════════════════════════════════════════════════
+function applyHue(h){st.hue=h;document.documentElement.style.setProperty('--h',h);}
+function applyMode(d){st.dark=d;document.body.classList.toggle('dark',d);document.getElementById('modeBtn').textContent=d?'☀️ ライト':'🌙 ダーク';}
+function togDark(){applyMode(!st.dark);lsS(UK,st);}
+function togMenu(){document.getElementById('mpanel').classList.toggle('open');document.getElementById('mover').classList.toggle('open');}
+function changeName(){var v=document.getElementById('nameChange').value.trim();if(!v)return;st.userName=v;lsS(UK,st);document.getElementById('menuName').textContent=v;togMenu();}
+function resetAll(){if(!confirm('全データを削除しますか？'))return;localStorage.removeItem(UK);localStorage.removeItem(LBK);location.reload();}
+function syncSliders(){
+  document.getElementById('hueSlider').value=st.hue;
+  document.getElementById('sensR').value=st.sensitivity;document.getElementById('sensV').textContent=st.sensitivity;
+  document.getElementById('dvR').value=st.dailyValue;document.getElementById('dvV').textContent='¥'+Math.round(st.dailyValue/1000)+'k';
+}
+function syncSens(v){st.sensitivity=v;document.getElementById('sensR').value=v;document.getElementById('sensV').textContent=v;lsS(UK,st);}
+document.getElementById('hueSlider').addEventListener('input',function(e){applyHue(+e.target.value);lsS(UK,st);if(st.tab==='cal')renderCal();});
+document.getElementById('sensR').addEventListener('input',function(e){syncSens(+e.target.value);});
+document.getElementById('dvR').addEventListener('input',function(e){st.dailyValue=+e.target.value;document.getElementById('dvV').textContent='¥'+Math.round(st.dailyValue/1000)+'k';updateChantUI();lsS(UK,st);});
 
-  <!-- ストレージ管理 -->
-  <script src="/js/storage.js"></script>
+// ══════════════════════════════════════════════════════════
+//  お題目カウント
+// ══════════════════════════════════════════════════════════
+function calcMerit(c,dv,m){return Math.round(c*(dv/1000)*(m||1)*10)/10;}
+function renderBanner(){
+  var info=dayI(new Date()),items=banItems(info);
+  var el=document.getElementById('todayBanner');
+  if(!items.length){el.innerHTML='';el.style.display='none';}
+  else{el.className='banner ban-'+items[0].c;el.innerHTML='✨ '+items.map(function(i){return i.t;}).join(' / ');el.style.display='flex';}
+  var m=getMult(info),pill=document.getElementById('multPill');
+  if(m>1){pill.style.display='block';pill.innerHTML='<div class="mult-pill">×'+m.toFixed(1)+' 吉日倍率適用中</div>';}
+  else pill.style.display='none';
+}
+function updateChantUI(){
+  var info=dayI(new Date()),mult=getMult(info),merit=calcMerit(st.totalChants,st.dailyValue,mult);
+  document.getElementById('sesNum').textContent=st.sessionCount;
+  document.getElementById('cumul').textContent='累計: '+st.totalChants+'回';
+  document.getElementById('meritV').textContent=fmt(merit);
+  document.getElementById('dvDisp').textContent='¥'+fmt(st.dailyValue);
+  document.getElementById('dvV').textContent='¥'+Math.round(st.dailyValue/1000)+'k';
+  var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(merit);
+}
+function trigFlash(){var c=document.getElementById('countCard');c.classList.add('flashing');setTimeout(function(){c.classList.remove('flashing');},500);try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}}
+function spawnP(){['🌸','✨','🪷'].forEach(function(e){var p=document.createElement('div');p.className='particle';p.textContent=e;p.style.left=(20+Math.random()*60)+'%';p.style.top=(20+Math.random()*40)+'%';document.body.appendChild(p);setTimeout(function(){p.remove();},1200);});}
+function addChants(n){
+  if(n<=0)return;var t=today();
+  st.daily[t]=(st.daily[t]||0)+n;st.totalChants+=n;st.sessionCount+=n;
+  trigFlash();mokuS();rhythm(st.sessionCount);
+  if(st.sessionCount%10===0){spawnP();accentS();}
+  updateChantUI();lsS(UK,st);persistLb();
+  if(st.tab==='cal')renderCal();
+}
+function persistLb(){
+  var info=dayI(new Date()),merit=calcMerit(st.totalChants,st.dailyValue,getMult(info));
+  var lb=lsG(LBK)||[];var idx=lb.findIndex(function(e){return e.name===st.userName;});
+  var entry={name:st.userName,merit:merit,chants:st.totalChants};
+  if(idx>=0)lb[idx]=entry;else lb.push(entry);
+  lb.sort(function(a,b){return b.merit-a.merit;});lsS(LBK,lb.slice(0,50));
+}
 
-  <!-- スケジュール設定 -->
-  <script src="/js/schedule-config.js"></script>
+// ══════════════════════════════════════════════════════════
+//  音声認識
+// ══════════════════════════════════════════════════════════
+//  音声認識（削除済み）
+// ══════════════════════════════════════════════════════════
+// 音声認識機能は削除されました
 
-  <!-- 修行記録 -->
-  <script src="/js/practice.js"></script>
+// ══════════════════════════════════════════════════════════
+//  音
+// ══════════════════════════════════════════════════════════
+function getAx(){if(!actx)try{actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}return actx;}
+function mokuS(){var c=getAx();if(!c)return;if(c.state==='suspended')c.resume();var now=c.currentTime,o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=300;f.Q.value=8;o.type='sine';o.frequency.setValueAtTime(280,now);o.frequency.exponentialRampToValueAtTime(140,now+.12);o.connect(f);f.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.45,now);g.gain.exponentialRampToValueAtTime(.001,now+.28);o.start(now);o.stop(now+.3);}
+function accentS(){var c=getAx();if(!c)return;var now=c.currentTime,o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(520,now);o.frequency.exponentialRampToValueAtTime(380,now+.4);o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.18,now);g.gain.exponentialRampToValueAtTime(.001,now+.5);o.start(now);o.stop(now+.5);}
+// づん！用の重低音
+function thumkS(freq,vol){
+  var c=getAx();if(!c)return;if(c.state==='suspended')c.resume();
+  var now=c.currentTime,f=freq||140,v=vol||0.75;
+  var o=c.createOscillator(),g=c.createGain(),lp=c.createBiquadFilter();
+  lp.type='lowpass';lp.frequency.value=520;lp.Q.value=4;
+  o.type='sine';o.frequency.setValueAtTime(f,now);o.frequency.exponentialRampToValueAtTime(f*0.38,now+.22);
+  o.connect(lp);lp.connect(g);g.connect(c.destination);
+  g.gain.setValueAtTime(v,now);g.gain.exponentialRampToValueAtTime(.001,now+.55);
+  o.start(now);o.stop(now+.6);
+}
+function rhythm(n){if(rhythmInt){clearInterval(rhythmInt);rhythmInt=null;}if(n<5)return;var bpm=n<15?50:n<30?70:n<50?90:120,pat=n<15?[1,0,0,0]:n<30?[1,0,1,0]:n<50?[1,0,1,1]:[1,1,1,1],ms=Math.round(60000/bpm/2);rhythmBeat=0;rhythmInt=setInterval(function(){if(pat[rhythmBeat%pat.length])mokuS();rhythmBeat++;},ms);}
 
-  <!-- 修行後プロンプト -->
-  <script src="/js/reflection.js"></script>
+// ══════════════════════════════════════════════════════════
+//  太鼓の達人スタイル カルーセル（安定版）
+// ══════════════════════════════════════════════════════════
+var _gcSX=0,_gcSY=0,rouletteRunning=false;
+var stageW=0; // キャッシュした幅
 
-  <!-- メインアプリロジック -->
-  <script src="/js/app.js"></script>
+function buildCarousel(){
+  var stage=document.getElementById('gcStage');
+  stage.innerHTML='';
+  // 幅を一度だけ計測してキャッシュ（ルーレット中に再計測しない）
+  stageW=stage.offsetWidth||document.getElementById('gcWrap').offsetWidth||300;
+  CARD_W=Math.min(Math.round(stageW*0.42),160);
+  STEP=Math.round(CARD_W*0.76);
 
-  <!-- UI 更新機能 -->
-  <script src="/js/ui.js"></script>
+  GG.forEach(function(g,i){
+    var card=document.createElement('div');
+    card.className='gc-card2';
+    card.id='gc'+i;
+    card.dataset.idx=i;
+    var hasText=g.lines&&g.lines.length>0;
+    card.innerHTML=
+      '<div class="gc-num">'+(i+1)+'/'+GG_N+'</div>'+
+      '<div class="gc-title">'+g.t+'</div>'+
+      '<div class="gc-sub">'+g.s+'</div>'+
+      (hasText?'<div class="gc-badge">📖 読める</div>':'')+
+      '<div class="gc-desc">'+g.d+'</div>';
+    // カード幅を固定セット（CSSのwidthより優先）
+    card.style.width=CARD_W+'px';
+    card.addEventListener('click',function(){
+      var idx=parseInt(card.dataset.idx);
+      if(idx===gcCurReal)return;
+      var n=GG_N;
+      var raw=idx-gcCurReal;while(raw>n/2)raw-=n;while(raw<-n/2)raw+=n;
+      if(raw>0)for(var k=0;k<raw;k++)gcStep(1);
+      else for(var k=0;k<-raw;k++)gcStep(-1);
+    });
+    stage.appendChild(card);
+  });
 
-  <!-- グラフ描画（Chart.js CDN） -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-  <script src="/js/charts.js"></script>
+  // タッチスワイプ
+  var wrap=document.getElementById('gcWrap');
+  // 既存リスナーが重複しないよう、HTMLにdata-initを使う
+  if(!wrap.dataset.init){
+    wrap.dataset.init='1';
+    wrap.addEventListener('touchstart',function(e){_gcSX=e.touches[0].clientX;_gcSY=e.touches[0].clientY;},{passive:true});
+    wrap.addEventListener('touchend',function(e){
+      var dx=e.changedTouches[0].clientX-_gcSX,dy=e.changedTouches[0].clientY-_gcSY;
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>30)gcStep(dx<0?1:-1);
+    },{passive:true});
+    var _mx=0;
+    wrap.addEventListener('mousedown',function(e){_mx=e.clientX;});
+    wrap.addEventListener('mouseup',function(e){var dx=e.clientX-_mx;if(Math.abs(dx)>30)gcStep(dx<0?1:-1);});
+  }
 
-  <!-- デバッグツール -->
-  <script src="/js/dev-tools.js"></script>
+  posCards(false);
+}
 
-  <!-- ========== Service Worker 登録 ========== -->
-  <script>
-    /**
-     * Service Worker の登録
-     */
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('[SW] Registered successfully:', registration);
-            
-            // 更新チェック（1時間ごと）
-            setInterval(() => {
-              registration.update();
-            }, 60 * 60 * 1000);
-          })
-          .catch(error => {
-            console.error('[SW] Registration failed:', error);
-          });
+function posCards(anim){
+  var n=GG_N;
+  var W=stageW; // キャッシュを使う（DOM読み取りなし）
+  var CW=CARD_W;
+  var centerX=W/2; // ステージ中央
 
-        // Service Worker からのメッセージを受信
-        navigator.serviceWorker.addEventListener('message', event => {
-          console.log('[APP] Message from SW:', event.data);
+  var cards=document.getElementById('gcStage').querySelectorAll('.gc-card2');
+  var TRANS_MOVE='left '+( anim?'.32s':'0s')+' cubic-bezier(.4,0,.2,1)';
+  var TRANS_SCALE='transform '+( anim?'.32s':'0s')+' cubic-bezier(.4,0,.2,1)';
+  var TRANS_OPAC='opacity '+( anim?'.28s':'0s');
 
-          // キャッシュクリア通知
-          if (event.data.type === 'cache-cleared') {
-            showInfo('キャッシュをクリアしました');
-          }
+  cards.forEach(function(card,i){
+    var raw=i-gcCurReal;
+    while(raw>n/2)raw-=n;
+    while(raw<-n/2)raw+=n;
+    var dist=Math.abs(raw);
+    var visible=dist<=2;
 
-          // 同期完了通知
-          if (event.data.type === 'sync-complete') {
-            showSuccess('データを同期しました');
-            if (typeof updateDashboard !== 'undefined') {
-              updateDashboard();
-            }
-          }
-        });
-      });
-    } else {
-      console.warn('[APP] Service Worker not supported');
+    var scale=dist===0?1:dist===1?0.82:0.65;
+    var opacity=dist===0?1:dist===1?0.66:0.33;
+    var cardCenterX=centerX+raw*STEP;
+    var leftPx=cardCenterX-CW/2;
+
+    card.style.transition=TRANS_MOVE+','+TRANS_SCALE+','+TRANS_OPAC+',border-color .15s,box-shadow .15s';
+    card.style.left=leftPx+'px';
+    // translateY(-50%) で常にステージ高さの50%に垂直中央
+    card.style.transform='translateY(-50%) scale('+scale+')';
+    card.style.opacity=visible?opacity:0;
+    card.style.pointerEvents=visible?'all':'none';
+    card.style.zIndex=10-dist;
+    card.classList.toggle('active',i===gcCurReal);
+    card.style.boxShadow=i===gcCurReal?'0 6px 24px var(--ag)':'none';
+    card.style.borderColor=i===gcCurReal?'var(--boa)':'var(--bo)';
+    // ステージの height は絶対に変更しない
+  });
+  updateGcUI();
+}
+
+function gcStep(dir){
+  if(gcAnimating)return;gcAnimating=true;
+  mokuS();
+  gcCurReal=(gcCurReal+dir+GG_N)%GG_N;
+  st.gIdx=gcCurReal;
+  posCards(true);lsS(UK,st);
+  setTimeout(function(){gcAnimating=false;},340);
+}
+function gotoIdx(ri){gcCurReal=ri;st.gIdx=ri;posCards(false);lsS(UK,st);}
+function updateGcUI(){
+  var g=GG[gcCurReal],cnt=st.gCounts[g.id]||0;
+  document.getElementById('gcCounter').textContent=(gcCurReal+1)+' / '+GG_N;
+  document.getElementById('gcProgress').textContent=cnt+'回 唱えました';
+  var rb=document.getElementById('gcReadBtn');
+  var hasText=g.lines&&g.lines.length>0;
+  rb.style.opacity=hasText?'1':'0.45';
+  rb.title=hasText?'経文を表示':'（テキスト準備中）';
+}
+
+// ══════════════════════════════════════════════════════════
+//  読経オーバーレイ
+// ══════════════════════════════════════════════════════════
+function openReading(){
+  var g=GG[gcCurReal];
+  if(!g.lines||!g.lines.length){
+    alert('📖 このお経のテキストは現在準備中です。\n「+1 唱えた」ボタンで回数を記録してください。');
+    return;
+  }
+  readLines=g.lines;readLineIdx=0;
+  document.getElementById('readTitle').textContent=g.t;
+
+  var W=window.innerWidth;
+  var fp=st.fontPref||'kanji';
+
+  // ページHTML
+  var pHTML='';
+  readLines.forEach(function(l){
+    var kanji=(l[0]||'').replace(/\n/g,'<br>');
+    var yomi =(l[1]||'').replace(/\n/g,'<br>');
+    var roma =(l[2]||'').replace(/\n/g,'<br>');
+    var imi  =(l[3]||'').replace(/\n/g,'<br>');
+    var main=fp==='kanji'?kanji:fp==='hira'?yomi:roma;
+    var sub =fp==='kanji'?yomi:fp==='hira'?kanji:kanji;
+    var sub2=fp==='kanji'?roma:fp==='hira'?roma:yomi;
+    pHTML+='<div class="read-page" style="width:'+W+'px;min-width:'+W+'px">';
+    if(main)pHTML+='<div class="rk">'+main+'</div>';
+    if(sub&&sub!==main)pHTML+='<div class="rh">'+sub+'</div>';
+    if(sub2&&sub2!==main&&sub2!==sub)pHTML+='<div class="rr">'+sub2+'</div>';
+    if(imi)pHTML+='<div class="rm2">'+imi+'</div>';
+    pHTML+='</div>';
+  });
+  document.getElementById('readPages').innerHTML=pHTML;
+  document.getElementById('readPages').style.display='flex';
+  document.getElementById('readPages').style.transition='transform .35s cubic-bezier(.4,0,.2,1)';
+
+  // ドット
+  var dots=document.getElementById('pageDots');
+  dots.innerHTML=readLines.map(function(_,i){return '<div class="page-dot'+(i===0?' on':'')+'"></div>';}).join('');
+
+  // ナビ
+  document.getElementById('readNav').innerHTML=
+    '<button class="btn-big" onclick="readPrev()" style="margin-bottom:0">← 前の節</button>'+
+    '<button class="btn-big" onclick="readNext()" style="margin-bottom:0">次の節 →</button>';
+
+  // スワイプ
+  var body=document.getElementById('readBody');var _bsx=0,_bsy=0;
+  body.addEventListener('touchstart',function(e){_bsx=e.touches[0].clientX;_bsy=e.touches[0].clientY;},{passive:true});
+  body.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-_bsx,dy=e.changedTouches[0].clientY-_bsy;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>35){if(dx<0)readNext();else readPrev();}
+  },{passive:true});
+
+  gotoPage(0);
+  document.getElementById('readingOverlay').classList.add('show');
+}
+
+function gotoPage(idx){
+  if(idx<0)idx=0;if(idx>=readLines.length)idx=readLines.length-1;
+  readLineIdx=idx;
+  var pages=document.getElementById('readPages');
+  if(pages)pages.style.transform='translateX('+(-(idx*window.innerWidth))+'px)';
+  document.getElementById('readProg').style.width=((idx+1)/readLines.length*100)+'%';
+  document.getElementById('readPgn').textContent=(idx+1)+'/'+readLines.length;
+  document.querySelectorAll('.page-dot').forEach(function(d,i){d.classList.toggle('on',i===idx);});
+}
+function readNext(){
+  if(readLineIdx>=readLines.length-1){
+    closeReading();
+    var g=GG[gcCurReal];st.gCounts[g.id]=(st.gCounts[g.id]||0)+1;
+    addChants(1);lsS(UK,st);updateGcUI();
+    spawnP();accentS();
+    setTimeout(function(){alert('🪷 読経完了！功徳 +1 が加算されました。\n南無妙法蓮華経');},200);
+    return;
+  }
+  gotoPage(readLineIdx+1);
+}
+function readPrev(){gotoPage(readLineIdx-1);}
+function closeReading(){document.getElementById('readingOverlay').classList.remove('show');}
+
+// ══════════════════════════════════════════════════════════
+//  ヒント
+// ══════════════════════════════════════════════════════════
+var HINTS={
+  chant:{icon:'🥁',title:'お題目カウンターの使い方',body:
+    '<p>「南無妙法蓮華経」と唱え、カウントしましょう。</p>'+
+    '<div class="info-formula">功徳 = お題目1回につき1 × 吉日倍率</div>'},
+  gongyou:{icon:'📖',title:'勤行カルーセルの使い方',body:
+    '<p><b>カルーセル：</b>左右スワイプ or 矢印ボタンでお経を選択。横に見えているカードはタップでジャンプできます。</p>'+
+    '<p><b>📖 読める バッジ：</b>経文テキスト付き。「読む」ボタンで全画面表示→節ごとにスワイプしながら読誦。最後まで読むと自動で +1。</p>'+
+    '<p><b>+1 唱えた：</b>テキストなしでもカウント可。</p>'+
+    '<p><b>基本順序：</b>三宝礼 → 懺悔文 → 開経偈 → 方便品第二 → 自我偈（壽量品第十六）→ 廻向文</p>'+
+    '<p>🎰 ルーレットでランダム選択も。</p>'},
+  cal:{icon:'📅',title:'読経カレンダーの見方',body:
+    '<p>ヒートマップ：過去16週の記録を色の濃さで確認。<br>月カレンダー：六曜・吉日バッジ付きで1日ごとの記録を表示。</p>'+
+    '<ul><li>🔴 天赦日：功徳×3（最強の吉日）</li>'+
+    '<li>🟢 一粒万倍日：功徳×2</li>'+
+    '<li>🔵 己巳の日：功徳×1.5</li>'+
+    '<li>🟠 寅の日：功徳×1.5</li></ul>'+
+    '<p>複数重なると掛け算で増幅します。</p>'},
+  rank:{icon:'🏆',title:'功徳ランキングについて',body:
+    '<p>この端末のローカルランキングです。功徳スコアが多い順に並びます。</p>'+
+    '<div class="info-formula">功徳 = 累計回数 × (１日の価値 ÷ 1000) × 吉日倍率</div>'+
+    '<p>１日の価値はハンバーガーメニューで設定。吉日に唱えることで功徳が増幅します。継続が最大の功徳です。🌸</p>'}
+};
+function showHint(tab){
+  var h=HINTS[tab];if(!h)return;
+  document.getElementById('hintIcon').textContent=h.icon;
+  document.getElementById('hintTitle').textContent=h.title;
+  document.getElementById('hintBody').innerHTML=h.body;
+  document.getElementById('hintOverlay').classList.add('show');
+}
+
+// ══════════════════════════════════════════════════════════
+//  カレンダー
+// ══════════════════════════════════════════════════════════
+function hClr(cnt,mx){var h=st.hue;if(!cnt)return{bg:'transparent',bd:'hsl('+h+',22%,'+(st.dark?'18':'84')+'%)'};var r=cnt/mx,L=st.dark?(20+r*45):(75-r*48),S=25+r*50;return{bg:'hsl('+h+','+S+'%,'+L+'%)',bd:'hsl('+h+','+(S+8)+'%,'+(L-8)+'%)'};}
+function buildHeatmap(){
+  var con=document.getElementById('heatmap');
+  var sd=new Date();sd.setDate(sd.getDate()-16*7+1);while(sd.getDay()!==0)sd.setDate(sd.getDate()-1);
+  var vals=Object.values(st.daily).filter(function(v){return v>0;});var mx=vals.length?Math.max.apply(null,vals):1;
+  var h=st.hue;function lg(id,s,dl,dl2){var e=document.getElementById(id);if(e)e.style.background='hsl('+h+','+s+'%,'+(st.dark?dl:dl2)+'%)';}
+  lg('lg1',30,55,72);lg('lg2',78,28,36);con.innerHTML='';var cur=new Date(sd);
+  for(var w=0;w<16;w++){var col=document.createElement('div');col.className='hc';for(var day=0;day<7;day++){var ds2=dss(cur),cnt=st.daily[ds2]||0,cl=hClr(cnt,mx),cell=document.createElement('div');cell.className='hcell';cell.style.background=cl.bg;cell.style.borderColor=cl.bd;cell.title=ds2+' '+cnt+'回';col.appendChild(cell);cur.setDate(cur.getDate()+1);}con.appendChild(col);}
+}
+function buildRecent(){
+  var el=document.getElementById('recList');
+  var entries=Object.entries(st.daily).sort(function(a,b){return b[0].localeCompare(a[0]);}).slice(0,14);
+  if(!entries.length){el.innerHTML='<p style="font-size:12px;color:var(--di)">まだ記録がありません</p>';return;}
+  el.innerHTML=entries.map(function(e){return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bo);font-size:12px"><span style="color:var(--mu)">'+e[0]+'</span><span>'+e[1]+'回 <span style="color:var(--a);font-size:10px">功徳 '+fmt(calcMerit(e[1],st.dailyValue,1))+'</span></span></div>';}).join('');
+}
+function buildMonthly(){
+  var y=st.calYear,m=st.calMonth,todDs=today();
+  document.getElementById('calTitle').textContent=y+'年 '+(m+1)+'月';
+  var grid=document.getElementById('calGrid');grid.innerHTML='';
+  DOW.forEach(function(d,i){var el=document.createElement('div');el.className='cdow';if(i===0)el.style.color='rgba(211,47,47,.8)';if(i===6)el.style.color='rgba(21,101,192,.8)';el.textContent=d;grid.appendChild(el);});
+  var firstDay=new Date(y,m,1).getDay(),daysIn=new Date(y,m+1,0).getDate();
+  for(var i=0;i<firstDay;i++){var em=document.createElement('div');em.className='cday cem';grid.appendChild(em);}
+  for(var d=1;d<=daysIn;d++){
+    var date=new Date(y,m,d),ds2=dss(date),dow=date.getDay(),info=dayI(date),cnt=st.daily[ds2]||0,bdg=dayBadges(info);
+    var cls='cday';if(dow===0)cls+=' csun';if(dow===6)cls+=' csat';if(ds2===todDs)cls+=' today';
+    var cell=document.createElement('div');cell.className=cls;
+    if(cnt>0){var op=Math.min(0.12+cnt/60*.5,.65),L=st.dark?45:55;cell.style.background='hsla('+st.hue+',55%,'+L+'%,'+op.toFixed(2)+')';cell.style.borderColor='hsla('+st.hue+',60%,'+L+'%,.4)';}
+    cell.innerHTML='<div class="cdn">'+d+'</div><div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div><div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>';
+    (function(ds3,c){cell.addEventListener('click',function(){if(!c&&ds3!==todDs)return;document.getElementById('popDate').textContent=ds3;document.getElementById('popCount').textContent=c;document.getElementById('dayPop').classList.add('show');});
+    })(ds2,cnt);
+    grid.appendChild(cell);
+  }
+}
+function renderCal(){
+  var h=st.calView==='heat';
+  document.getElementById('vHeat').style.display=h?'block':'none';
+  document.getElementById('vMon').style.display=h?'none':'block';
+  document.getElementById('btnHeat').classList.toggle('on',h);
+  document.getElementById('btnMon').classList.toggle('on',!h);
+  if(h){buildHeatmap();buildRecent();}else buildMonthly();
+}
+
+// ══════════════════════════════════════════════════════════
+//  ランキング（ローカル）
+// ══════════════════════════════════════════════════════════
+function buildLb(){
+  var lb=lsG(LBK)||[],el=document.getElementById('lbList'),med=['🥇','🥈','🥉'];
+  if(!lb.length){el.innerHTML='<p style="font-size:12px;color:var(--di)">データなし</p>';return;}
+  el.innerHTML=lb.map(function(e,i){var isMe=e.name===st.userName;return '<div class="re'+(isMe?' me':'')+'"><span style="min-width:22px;font-size:'+(i<3?'16':'11')+'px;color:'+(i<3?'var(--a)':'var(--di)')+'">'+( med[i]||i+1)+'</span><span style="flex:1">'+e.name+(isMe?' 👈':'')+'</span><div style="text-align:right"><div class="rm3">'+fmt(e.merit)+'</div><div style="font-size:10px;color:var(--di)">'+e.chants+'回</div></div></div>';}).join('');
+  var info=dayI(new Date()),merit=calcMerit(st.totalChants,st.dailyValue,getMult(info));
+  document.getElementById('myM').textContent=fmt(merit);
+  document.getElementById('myC').textContent=st.totalChants;
+}
+
+// ══════════════════════════════════════════════════════════
+//  タブ
+// ══════════════════════════════════════════════════════════
+function actTab(t){
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('.tc').forEach(function(c){c.classList.remove('on');});
+  var btn=document.querySelector('[data-t="'+t+'"]');if(btn)btn.classList.add('on');
+  var tc=document.getElementById('tc-'+t);if(tc)tc.classList.add('on');
+  st.tab=t;lsS(UK,st);
+}
+document.querySelectorAll('.tab').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var t=btn.getAttribute('data-t');actTab(t);
+    if(t==='chant'){updateChantUI();renderBanner();}
+    if(t==='gongyou'){buildCarousel();}
+    if(t==='cal')renderCal();
+    if(t==='rank')buildLb();
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+//  イベントリスナー
+// ══════════════════════════════════════════════════════════
+document.getElementById('manBtn').addEventListener('click',function(){addChants(1);});
+document.getElementById('gcPrev').addEventListener('click',function(){gcStep(-1);});
+document.getElementById('gcNext').addEventListener('click',function(){gcStep(1);});
+document.getElementById('gcReadBtn').addEventListener('click',openReading);
+document.getElementById('gcCount').addEventListener('click',function(){var g=GG[gcCurReal];st.gCounts[g.id]=(st.gCounts[g.id]||0)+1;addChants(1);lsS(UK,st);updateGcUI();});
+document.getElementById('gcReset').addEventListener('click',function(){var g=GG[gcCurReal];st.gCounts[g.id]=0;lsS(UK,st);document.getElementById('gcProgress').textContent='0回';});
+// ═══════════════════════════════════════════════════════
+//  ルーレット機能（シンプル版）
+// ═══════════════════════════════════════════════════════
+function startRoulette(){
+  if(st.isRoulette) return; // 実行中なら何もしない
+  st.isRoulette = true;
+  
+  var btn = document.getElementById('rouletteBtn');
+  btn.disabled = true;
+  
+  var duration = 2500; // 2.5秒間回る
+  var startTime = Date.now();
+  
+  var timer = setInterval(function(){
+    var elapsed = Date.now() - startTime;
+    // 0から項目の数（GG.length）の間でランダムに選ぶ
+    var randIdx = Math.floor(Math.random() * GG.length);
+    st.gIdx = randIdx;
+    gcCurReal = randIdx;
+    buildCarousel(); // 表示を更新
+    
+    if(elapsed >= duration){
+      clearInterval(timer);
+      st.isRoulette = false;
+      btn.disabled = false;
+      lsS(UK,st);
     }
-  </script>
+  }, 100); // 0.1秒ごとに項目を切り替え
+}
 
-  <!-- ========== スクリーン切り替え ========== -->
-  <script>
-    /**
-     * ナビゲーションクリック時にスクリーンを切り替え
-     */
-    document.querySelectorAll('[data-screen]').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
+document.getElementById('rouletteBtn').addEventListener('click',function(){
+  startRoulette();
+});
+document.getElementById('btnHeat').addEventListener('click',function(){st.calView='heat';renderCal();});
+document.getElementById('btnMon').addEventListener('click',function(){st.calView='monthly';renderCal();});
+document.getElementById('calPrev').addEventListener('click',function(){st.calMonth--;if(st.calMonth<0){st.calMonth=11;st.calYear--;}buildMonthly();});
+document.getElementById('calNext').addEventListener('click',function(){st.calMonth++;if(st.calMonth>11){st.calMonth=0;st.calYear++;}buildMonthly();});
+document.getElementById('refLb').addEventListener('click',buildLb);
+document.getElementById('hintOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
+document.getElementById('dayPop').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
+window.addEventListener('resize',function(){if(st.tab==='gongyou')buildCarousel();});
 
-        const screenName = link.getAttribute('data-screen');
-
-        // 前のスクリーンを非表示
-        document.querySelectorAll('.screen').forEach(screen => {
-          screen.classList.remove('active');
-        });
-
-        // ナビゲーション非アクティブ化
-        document.querySelectorAll('[data-screen]').forEach(nav => {
-          nav.classList.remove('active');
-        });
-
-        // 新しいスクリーンを表示
-        const newScreen = document.getElementById(`screen-${screenName}`);
-        if (newScreen) {
-          newScreen.classList.add('active');
-        }
-
-        // ナビゲーションをアクティブ化
-        link.classList.add('active');
-
-        console.log(`[APP] Screen switched to: ${screenName}`);
-      });
-    });
-  </script>
-
-  <!-- ========== Push 通知リクエスト ========== -->
-  <script>
-    /**
-     * Push 通知の許可をリクエスト
-     */
-    function requestNotificationPermission() {
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            console.log('[APP] Notification permission granted');
-            showSuccess('通知を有効にしました');
-          }
-        });
-      }
-    }
-
-    // ページ読み込み後に許可をリクエスト
-    window.addEventListener('load', () => {
-      setTimeout(requestNotificationPermission, 2000);
-    });
-  </script>
-
-  <!-- ========== PWA インストールプロンプト ========== -->
-  <script>
-    let deferredPrompt;
-
-    /**
-     * beforeinstallprompt イベント
-     * PWA インストールプロンプトをキャプチャ
-     */
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      console.log('[APP] Install prompt captured');
-
-      // ボタンをアクティブにする
-      const installBtn = document.getElementById('btn-install-pwa');
-      if (installBtn) {
-        installBtn.style.display = 'block';
-      }
-    });
-
-    /**
-     * PWA インストールボタンのクリックハンドラ
-     */
-    document.addEventListener('DOMContentLoaded', () => {
-      const installBtn = document.getElementById('btn-install-pwa');
-      if (installBtn) {
-        installBtn.addEventListener('click', async () => {
-          if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const choiceResult = await deferredPrompt.userChoice;
-            if (choiceResult.outcome === 'accepted') {
-              console.log('[APP] User accepted the install prompt');
-              showSuccess('アプリをホーム画面に追加しました');
-            }
-            deferredPrompt = null;
-          }
-        });
-      }
-    });
-  </script>
+// ══════════════════════════════════════════════════════════
+//  START
+// ══════════════════════════════════════════════════════════
+init();
+</script>
 </body>
 </html>
