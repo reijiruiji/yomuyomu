@@ -153,6 +153,7 @@
     showSuccess?.('修行を記録しました');
     if (notes) window.showReflectionPrompt?.(notes);
     else window.schedulePostPracticeReflection?.();
+    window.startEvening19Schedule?.();
     await refreshAll();
     e.target.reset();
     document.getElementById('practice-date').value = window.getTodayDateString?.() || new Date().toISOString().split('T')[0];
@@ -183,6 +184,7 @@
           await StorageManager.mergeChantingDelta(delta);
           showSuccess?.(`${delta} 回を記録しました`);
           window.schedulePostPracticeReflection?.();
+          window.startEvening19Schedule?.();
           await refreshAll();
         }
       }

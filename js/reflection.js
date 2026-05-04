@@ -384,6 +384,7 @@
   window.openDailySummaryModal = openDailySummaryModal;
   window.closeDailySummary = closeDailySummary;
   window.showReflectionPrompt = showReflectionPrompt;
+  window.startEvening19Schedule = startEvening19Schedule;
 
   window.open_daily_summary = openDailySummaryModal;
   window.dismiss_reflection = hideBanner;
@@ -448,6 +449,6 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     bindReflectionDom();
-    startEvening19Schedule();
+    // startEvening19Schedule(); // 修行後にのみ表示するよう、初期化時は呼ばない
   });
 })();
