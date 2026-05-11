@@ -983,20 +983,22 @@ function launchApp(){
 //  テーマ
 // ══════════════════════════════════════════════════════════
 function applyHue(h){st.hue=h;document.documentElement.style.setProperty('--h',h);}
-function applyMode(d){st.dark=d;document.body.classList.toggle('dark',d);document.getElementById('modeBtn').textContent=d?'☀️ ライト':'🌙 ダーク';}
+function applyMode(d){st.dark=d;document.body.classList.toggle('dark',d);var mb=document.getElementById('modeBtn');if(mb)mb.textContent=d?'☀️ ライト':'🌙 ダーク';}
 function togDark(){applyMode(!st.dark);lsS(UK,st);}
 function togMenu(){document.getElementById('mpanel').classList.toggle('open');document.getElementById('mover').classList.toggle('open');}
 function changeName(){var v=document.getElementById('nameChange').value.trim();if(!v)return;st.userName=v;lsS(UK,st);document.getElementById('menuName').textContent=v;togMenu();}
 function resetAll(){if(!confirm('全データを削除しますか？'))return;localStorage.removeItem(UK);localStorage.removeItem(LBK);location.reload();}
 function syncSliders(){
-  document.getElementById('hueSlider').value=st.hue;
-  document.getElementById('sensR').value=st.sensitivity;document.getElementById('sensV').textContent=st.sensitivity;
-  document.getElementById('dvR').value=st.dailyValue;document.getElementById('dvV').textContent='¥'+Math.round(st.dailyValue/1000)+'k';
+  var hs=document.getElementById('hueSlider');if(hs)hs.value=st.hue;
+  var sr=document.getElementById('sensR');if(sr){sr.value=st.sensitivity;}
+  var sv=document.getElementById('sensV');if(sv)sv.textContent=st.sensitivity;
+  var dr=document.getElementById('dvR');if(dr)dr.value=st.dailyValue;
+  var dv=document.getElementById('dvV');if(dv)dv.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
 }
-function syncSens(v){st.sensitivity=v;document.getElementById('sensR').value=v;document.getElementById('sensV').textContent=v;lsS(UK,st);}
-document.getElementById('hueSlider').addEventListener('input',function(e){applyHue(+e.target.value);lsS(UK,st);if(st.tab==='cal')renderCal();});
-document.getElementById('sensR').addEventListener('input',function(e){syncSens(+e.target.value);});
-document.getElementById('dvR').addEventListener('input',function(e){st.dailyValue=+e.target.value;document.getElementById('dvV').textContent='¥'+Math.round(st.dailyValue/1000)+'k';updateChantUI();lsS(UK,st);});
+function syncSens(v){st.sensitivity=v;var sr=document.getElementById('sensR');if(sr)sr.value=v;var sv=document.getElementById('sensV');if(sv)sv.textContent=v;lsS(UK,st);}
+(function(){var e=document.getElementById('hueSlider');if(e)e.addEventListener('input',function(ev){applyHue(+ev.target.value);lsS(UK,st);if(st.tab==='cal')renderCal();});})();
+(function(){var e=document.getElementById('sensR');if(e)e.addEventListener('input',function(ev){syncSens(+ev.target.value);});})();
+(function(){var e=document.getElementById('dvR');if(e)e.addEventListener('input',function(ev){st.dailyValue=+ev.target.value;var dv=document.getElementById('dvV');if(dv)dv.textContent='¥'+Math.round(st.dailyValue/1000)+'k';updateChantUI();lsS(UK,st);});})();
 
 // ══════════════════════════════════════════════════════════
 //  お題目カウント
@@ -1017,7 +1019,7 @@ function updateChantUI(){
   document.getElementById('cumul').textContent='累計: '+st.totalChants+'回';
   document.getElementById('meritV').textContent=fmt(merit);
   document.getElementById('dvDisp').textContent='¥'+fmt(st.dailyValue);
-  document.getElementById('dvV').textContent='¥'+Math.round(st.dailyValue/1000)+'k';
+  var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
   var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(merit);
 }
 function trigFlash(){var c=document.getElementById('countCard');c.classList.add('flashing');setTimeout(function(){c.classList.remove('flashing');},500);try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}}
