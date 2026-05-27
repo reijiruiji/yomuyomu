@@ -357,7 +357,7 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
   <div style="max-width:300px;text-align:center">
     <div class="worry-header" id="w0">こんなお悩みありませんか？</div>
     <div class="worry-li" id="w1">🔢 お題目を唱えた回数を忘れてしまう</div>
-    <div class="worry-li" id="w2">📖 法華経の勤行、何回唱えたか忘れる</div>
+    <div class="worry-li" id="w2">📖 お教本がないけど、僧侶みたいに唱えてみたい</div>
     <div class="worry-li" id="w3">👓 本だと文字が小さくて読みにくい</div>
     <div class="worry-solve" id="wS">そんなお悩みを解決します。</div>
   </div>
@@ -413,7 +413,7 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
     <button class="tab on" data-t="chant">🥁 お題目</button>
     <button class="tab" data-t="gongyou">📖 勤行</button>
     <button class="tab" data-t="cal">📅 暦</button>
-    <button class="tab" data-t="rank">🏆 累計功徳</button>
+    <button class="tab" data-t="rank">🏆 累計</button>
   </div>
 
   <!-- ── お題目 ── -->
@@ -537,8 +537,8 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
 <div class="tscr gone" id="readFontPickOverlay" style="z-index:520;display:none">
   <div class="font-pick-inner">
     <p id="rfpGreet" class="font-pick-greet"></p>
-    <p class="font-pick-lead">これからよろしくお願いいたします。🪷</p>
-    <p class="font-pick-q">見やすい文字はどれですか？</p>
+    <p class="font-pick-lead">これから勤行を読んできます。🪷</p>
+    <p class="font-pick-q">一番大きく表示してほしい文字はどれですか？</p>
     <div class="font-opt rfp-opt" data-f="kanji">漢字（南無妙法蓮華経）</div>
     <div class="font-opt rfp-opt" data-f="hira">ひらがな（なむみょうほうれんげきょう）</div>
     <div class="font-opt rfp-opt" data-f="roma">ローマ字（Namu Myoho Renge Kyo）</div>
@@ -590,7 +590,7 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
   <div class="popup">
     <div style="font-size:32px;margin-bottom:.75rem;">🙏</div>
     <h3>「ありがたい」気持ちを<br>届けませんか？</h3>
-    <p style="font-size:13px;color:var(--mu);margin-bottom:1rem;">見返りを求めない純粋な喜捨が、功徳をさらに高めます。</p>
+    <p style="font-size:13px;color:var(--mu);margin-bottom:1rem;">見返りを求めない純粋な気持ちが、功徳をさらに高めます。</p>
     <div style="background:var(--bi);padding:.75rem;border-radius:8px;margin-bottom:1rem;font-size:11px;color:var(--mu);text-align:center;">功徳 = 唱数 × (1 + ダーナ日換算 × 0.1) × 吉日倍率</div>
     <div class="trow" style="justify-content:center;margin-bottom:.75rem;">
       <button class="btn-s on" id="dfreqD">毎日</button>
@@ -977,8 +977,8 @@ document.getElementById('fontNext').addEventListener('click',function(){
 //  ヘルプシステム（軽量版・選択的ロード）
 // ══════════════════════════════════════════════════════════
 var HELP_CONTENT={
-  'chant':{title:'お題目について',body:'「南無妙法蓮華経」の読誦回数をカウントします。\nリズミカルに太鼓の合いの手を入れながらお題目を唱えましょう'},
-  'gongyou':{title:'勤行の操作方法',body:'← → ボタンまたはスワイプでお経を選びます。\nボタンで1回カウント。ルーレット機能も使えます。'},
+  'chant':{title:'お題目について',body:'「南無妙法蓮華経」を唱えた回数をカウントします。\nお題目は、正しく人生の道を進むチカラ💪になります。'},
+  'gongyou':{title:'勤行について',body:'「読む」ボタンを押すと、お経が表示されます。一文字一文字にご利益が詰まってますので、読み進めましょう\nもうその日は唱えたときには「唱えた」ボタンを押し、記録を残しましょう'},
   'kichijitsu':{title:'吉日の功徳倍率',body:'天赦日 功徳×3\n一粒万倍日 功徳×2\n大安 功徳×2\n寅の日・己巳の日 功徳×1.5'}
 };
 function showHelp(key){
@@ -993,10 +993,10 @@ document.getElementById('helpOverlay').addEventListener('click',function(e){if(e
 //  チュートリアルウォークスルー（軽量版）
 // ══════════════════════════════════════════════════════════
 var TUT_STEPS=[
-  {tab:'chant',title:'お題目タブ',body:'ここで「南無妙法蓮華経」を唱えた回数、読誦回数をカウントします。「南無妙法蓮華経」と唱えたらカウントを押しましょう。'},
-  {tab:'gongyou',title:'勤行',body:'法華経が読めます。'},
-  {tab:'cal',title:'カレンダータブ',body:'日別の読誦記録を確認できます。'},
-  {tab:'chant',title:'改めまして',body:'これからよろしくお願いいたします。🪷'}
+  {tab:'chant',title:'お題目タブ',body:'ここで「南無妙法蓮華経」を唱えた回数、読誦回数をカウントします。「南無妙法蓮華経」と唱えたらカウントを押しましょう。南無妙法蓮華経のお題目は、正しく人生の道を進むチカラになります。'},
+  {tab:'gongyou',title:'勤行',body:'法華経が読めます。声に出して唱えて功徳を積みましょう。'},
+  {tab:'cal',title:'カレンダータブ',body:'日々の記録が確認できます。毎日記録を重ねて功徳を高めましょう。'},
+  {tab:'chant',title:'毎日続けましょう',body:'祈り、唱えることによって正しい良い方向に導かれます。それが土台となり運命の基礎となりますから、続けられることをお勧め致します🪷'}
 ];
 var tutWalkStep=0;
 function startTutWalk(){
@@ -1155,7 +1155,7 @@ function streakMessage(s){
 }
 function streakMessageGentle(s){
   if(s>=7)return '無理のない範囲で、また明日お会いできると嬉しいです。';
-  if(s>=2)return '今日もお疲れさまでした。';
+  if(s>=2)return '良いご縁をキャッチ出来るように、明るく楽しく心豊かに過ごせるように、ご修行を行いましょう';
   return '今日もお越しいただき、ありがとうございます。';
 }
 function streakMilestone(s){

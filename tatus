@@ -1,0 +1,37 @@
+[33mcommit 30027a7d26d087d08858fe285bf03d765222b191[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/edit-preview[m[33m)[m
+Author: handamin <mizuki.handa@scopenext.jp>
+Date:   Wed May 27 13:52:04 2026 +0900
+
+    よむよむの編集データ　ログボとか
+
+[33mcommit 17ad7fe9caf9ab6779cd5bcdb1ad931387dbde0d[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/feature/edit-preview[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: handamin <mizuki.handa@scopenext.jp>
+Date:   Mon May 11 11:13:03 2026 +0900
+
+    fix: JSクラッシュ修正のみ - 元ファイルをそのまま動作可能な状態に
+    
+    存在しない要素への直接アクセスによるTypeErrorを全てnullガードで修正。
+    機能追加なし。
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+[33mcommit bd3c577083a4c9b65b026a8d8e9e0bb3598ac618[m[33m ([m[1;31morigin/1.0.0[m[33m)[m
+Author: handamin <mizuki.handa@scopenext.jp>
+Date:   Mon May 4 23:35:28 2026 +0900
+
+    Deploy yomuyomu v15 standalone: ウォークスルー・チュートリアルボタン追加
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+[33mcommit 55f4f2d991ca733cde79e10ec8351e8d538af970[m
+Author: handamin <mizuki.handa@scopenext.jp>
+Date:   Sat May 2 17:23:26 2026 +0900
+
+    Initial commit: よむよむお題目 with local css/js and preview setup.
+    
+    Add runnable app at repo root (index.html, css/, js/, images/, manifest).
+    Wire odaimoku UI/charts with StorageManager-backed app shell.
+    Configure Live Server (.vscode/settings.json), optional Python preview task,
+    and restore placeholder PWA icons. Archive copies remain under add/.
+    
+    Co-authored-by: Cursor <cursoragent@cursor.com>
