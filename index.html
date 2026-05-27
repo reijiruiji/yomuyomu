@@ -55,10 +55,15 @@ html,body{min-height:100dvh;background:var(--bg);color:var(--tx);
 .tut-inp:focus{border-color:var(--boa);}
 .btn-done{width:100%;padding:13px;margin-top:.75rem;font-size:15px;font-weight:600;
   border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;}
-.font-opt{padding:12px 16px;border-radius:11px;font-size:13px;font-weight:500;background:var(--bc);
-  border:1.5px solid var(--bo);color:var(--tx);cursor:pointer;margin-bottom:.5rem;text-align:center;
-  transition:all .18s;opacity:0;animation:rUp .4s ease-out both;}
+.font-opt{padding:10px 14px;border-radius:11px;font-size:12px;font-weight:500;background:var(--bc);
+  border:1.5px solid var(--bo);color:var(--tx);cursor:pointer;margin-bottom:.4rem;text-align:center;
+  transition:all .18s;line-height:1.35;}
+.tscr .font-opt{opacity:0;animation:rUp .4s ease-out both;}
 .font-opt:hover,.font-opt.sel{background:var(--a);border-color:var(--a);color:#fff;}
+.font-pick-inner{max-width:300px;width:100%;text-align:center;padding:0 .25rem;}
+.font-pick-greet{font-size:12px;color:var(--mu);line-height:1.45;margin-bottom:.35rem;}
+.font-pick-lead{font-size:.88rem;font-weight:600;color:var(--a);line-height:1.45;margin-bottom:.5rem;}
+.font-pick-q{font-size:.85rem;font-weight:600;color:var(--a);margin-bottom:.45rem;line-height:1.4;}
 .hint-bounce{font-size:12px;color:var(--mu);margin-top:1.25rem;animation:bnc 1.5s ease-in-out infinite;}
 @keyframes bnc{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 
@@ -209,29 +214,89 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
 .gc-arrow:hover{background:var(--bc2);}
 .gc-arrow:active{transform:scale(.9);}
 .gc-counter{font-size:11px;color:var(--mu);}
-
 /* ── READING OVERLAY ── */
-#readingOverlay{position:fixed;inset:0;z-index:500;background:var(--bg);display:none;flex-direction:column;}
+#readingOverlay{position:fixed;inset:0;z-index:500;background:var(--bg);display:none;flex-direction:column;height:100dvh;max-height:100dvh;
+  --read-fs-mul:1;--read-lh-mul:1;--read-gap-mul:1;}
 #readingOverlay.show{display:flex;}
+.read-typo-bar{display:flex;flex-direction:column;gap:6px;padding:.45rem .75rem;border-bottom:1px solid var(--bo);background:var(--bi);}
+.read-typo-ctrl{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--mu);}
+.read-typo-ctrl span:first-child{min-width:2.2rem;}
+.read-typo-ctrl input[type=range]{flex:1;min-width:0;}
+.read-typo-ctrl output{min-width:2.2rem;text-align:right;font-size:10px;color:var(--a);}
 .read-hd{display:flex;align-items:center;padding:.75rem 1rem;border-bottom:1px solid var(--bo);background:var(--bc);gap:.5rem;}
 .read-title{flex:1;text-align:center;font-size:13px;font-weight:600;color:var(--a);}
 .read-pgn{font-size:10px;color:var(--di);white-space:nowrap;}
 .read-prog-bar{height:3px;background:var(--bo);}
 .read-prog-fill{height:100%;background:var(--a);transition:width .3s;}
-.read-body{flex:1;overflow:hidden;position:relative;}
-#readPages{display:flex;transition:transform .35s cubic-bezier(.4,0,.2,1);}
+.read-body{flex:1;min-height:0;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+#readPages{display:flex;transition:transform .35s cubic-bezier(.4,0,.2,1);height:100%;align-items:stretch;}
 .read-page{flex-shrink:0;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;padding:1.5rem;min-height:50vh;}
+  justify-content:flex-start;padding:.65rem .55rem;box-sizing:border-box;
+  height:100%;max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .page-dots{display:flex;gap:5px;justify-content:center;padding:.625rem .5rem;flex-wrap:wrap;max-height:28px;overflow:hidden;}
 .page-dot{width:6px;height:6px;border-radius:50%;background:var(--di);transition:all .2s;flex-shrink:0;}
 .page-dot.on{background:var(--a);transform:scale(1.35);}
 .read-nav{display:flex;gap:.75rem;padding:.875rem 1rem;border-top:1px solid var(--bo);background:var(--bc);}
 .read-nav button{flex:1;margin-bottom:0;}
-/* 経文テキスト */
-.rk{font-size:clamp(18px,6vw,32px);font-weight:300;color:var(--a);letter-spacing:.1em;margin-bottom:.5rem;text-align:center;line-height:1.9;}
-.rh{font-size:clamp(12px,4vw,15px);color:var(--tx);letter-spacing:.04em;margin-bottom:.3rem;text-align:center;line-height:1.8;}
-.rr{font-size:clamp(10px,3vw,12px);color:var(--mu);font-style:italic;margin-bottom:.3rem;text-align:center;line-height:1.6;}
-.rm2{font-size:clamp(10px,3vw,11px);color:var(--mu);background:var(--bc2);border-radius:12px;padding:4px 12px;display:inline-block;margin-top:.3rem;text-align:center;line-height:1.6;}
+.read-font-bar{display:flex;gap:6px;padding:.5rem .75rem;border-bottom:1px solid var(--bo);background:var(--bc);flex-wrap:wrap;justify-content:center;}
+.read-font-btn{flex:1;min-width:4.2rem;padding:7px 6px;border-radius:9px;font-size:11px;font-weight:500;background:var(--bi);
+  border:1.5px solid var(--bo);color:var(--tx);cursor:pointer;transition:all .15s;}
+.read-font-btn.on{background:var(--a);border-color:var(--a);color:#fff;}
+/* 経文テキスト（.rk が選択中＝最大・スライダーで倍率変更） */
+.rk{font-size:calc(clamp(16px,4.8vw,30px)*var(--read-fs-mul));font-weight:300;color:var(--a);letter-spacing:.06em;
+  margin-bottom:calc(.3rem*var(--read-gap-mul));text-align:center;line-height:calc(1.5*var(--read-lh-mul));}
+.rh{font-size:calc(clamp(11px,3.2vw,14px)*var(--read-fs-mul));color:var(--tx);letter-spacing:.02em;
+  margin-bottom:calc(.2rem*var(--read-gap-mul));text-align:center;line-height:calc(1.4*var(--read-lh-mul));}
+.rr{font-size:calc(clamp(9px,2.8vw,11px)*var(--read-fs-mul));color:var(--mu);font-style:italic;
+  margin-bottom:calc(.15rem*var(--read-gap-mul));text-align:center;line-height:calc(1.35*var(--read-lh-mul));}
+.rm2{font-size:calc(clamp(9px,2.7vw,10px)*var(--read-fs-mul));color:var(--mu);background:var(--bc2);border-radius:10px;padding:3px 10px;
+  display:inline-block;margin-top:calc(.2rem*var(--read-gap-mul));text-align:center;line-height:calc(1.35*var(--read-lh-mul));}
+.rk.rm2{font-size:calc(clamp(15px,4.5vw,26px)*var(--read-fs-mul));font-weight:400;background:transparent;padding:0;}
+.read-page.dense .rk{font-size:calc(clamp(13px,3.6vw,22px)*var(--read-fs-mul));line-height:calc(1.38*var(--read-lh-mul));margin-bottom:calc(.22rem*var(--read-gap-mul));}
+.read-page.dense .rh{font-size:calc(clamp(10px,2.9vw,12px)*var(--read-fs-mul));line-height:calc(1.32*var(--read-lh-mul));margin-bottom:calc(.15rem*var(--read-gap-mul));}
+.read-page.dense .rr{font-size:calc(clamp(8px,2.5vw,10px)*var(--read-fs-mul));line-height:calc(1.28*var(--read-lh-mul));}
+.read-page.dense .rm2{font-size:calc(clamp(8px,2.5vw,9px)*var(--read-fs-mul));line-height:calc(1.3*var(--read-lh-mul));padding:2px 8px;}
+.read-page.dense .rk.rm2{font-size:calc(clamp(13px,3.5vw,20px)*var(--read-fs-mul));}
+.cstat.heat-merit{font-size:7px;color:#216e39;font-weight:600;text-align:center;margin-top:1px;}
+body.dark .cstat.heat-merit{color:#e6ffed;}
+.streak-card{display:flex;gap:.75rem;align-items:center;padding:1rem;margin-bottom:.75rem;
+  background:linear-gradient(135deg,hsla(var(--h),55%,92%,.9),hsla(var(--h),40%,97%,.5));
+  border:2px solid var(--boa);position:relative;overflow:hidden;}
+body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.95),hsla(var(--h),25%,12%,.6));}
+.streak-card.celebrate{animation:streakPop .55s cubic-bezier(.34,1.4,.64,1);}
+@keyframes streakPop{0%{transform:scale(.96)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
+.streak-face{font-size:2.4rem;line-height:1;animation:streakBob 2.2s ease-in-out infinite;}
+@keyframes streakBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.streak-body{flex:1;min-width:0;}
+.streak-days{font-size:1.15rem;font-weight:700;color:var(--a);line-height:1.2;}
+.streak-days span{font-size:1.5rem;}
+.streak-msg{font-size:12px;color:var(--tx);margin:.35rem 0;line-height:1.45;}
+.streak-bar{height:8px;background:var(--bo);border-radius:99px;overflow:hidden;margin:.4rem 0;}
+.streak-fill{height:100%;background:linear-gradient(90deg,#9be9a8,#216e39);border-radius:99px;transition:width .5s ease;}
+.streak-sub{font-size:10px;color:var(--mu);line-height:1.4;}
+.login-bonus-pop{text-align:center;max-width:300px;padding:1.25rem 1.1rem;}
+.lb-pop-gentle .lb-stamp{display:none!important;}
+.lb-gentle-icon{font-size:2.2rem;line-height:1;margin-bottom:.6rem;opacity:0;animation:gentleIn .7s ease-out .1s both;}
+@keyframes gentleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.lb-stamp{display:inline-block;font-size:.95rem;font-weight:600;color:var(--a);background:var(--bi);
+  padding:.35rem .85rem;border-radius:20px;border:1px solid var(--boa);margin-bottom:.65rem;
+  animation:gentleIn .5s ease-out both;}
+.lb-streak{font-size:1rem;font-weight:600;color:var(--a);margin-bottom:.35rem;}
+.lb-bonus{font-size:1.5rem;font-weight:600;color:var(--a);margin:.2rem 0;}
+.lb-pop-gentle .lb-bonus{display:none;}
+.lb-pop-gentle .lb-streak{display:none!important;}
+.lb-msg{font-size:13px;color:var(--tx);line-height:1.75;margin-bottom:1.1rem;font-weight:400;}
+.lb-pop-gentle .lb-msg{font-size:14px;line-height:1.85;}
+.lb-pop-gentle .btn-done{font-weight:500;letter-spacing:.04em;}
+@media (max-height:700px),(max-width:400px){
+  .tscr{padding:1rem .85rem;}
+  .read-hd{padding:.45rem .65rem;}
+  .read-font-bar{padding:.3rem .45rem;gap:4px;}
+  .read-font-btn{padding:5px 3px;font-size:10px;min-width:3.4rem;}
+  .read-nav{padding:.45rem .65rem;gap:.5rem;}
+  .read-page{padding:.45rem .4rem;}
+  .page-dots{padding:.35rem .4rem;max-height:22px;}
+}
 
 /* ── HEATMAP / CAL ── */
 .hw{display:flex;gap:3px;overflow-x:auto;padding-bottom:4px;}
@@ -250,6 +315,8 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
 .cdn{font-size:10px;font-weight:500;color:var(--tx);margin-bottom:1px;}
 .cday.csun .cdn{color:#d32f2f;}.cday.csat .cdn{color:#1565c0;}
 .crk{font-size:7px;color:var(--di);}.crk.ta{color:var(--ok);}
+.cstat{display:flex;justify-content:space-between;gap:2px;font-size:7px;line-height:1.2;margin:1px 0;color:var(--a);font-weight:600;}
+.cstat .cmerit{color:var(--mu);font-weight:500;}
 .cbs{display:flex;flex-wrap:wrap;gap:1px;margin-top:1px;}
 .cb{font-size:7px;padding:1px 2px;border-radius:2px;color:#fff;}
 
@@ -285,7 +352,6 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
 <div class="tscr" id="t1">
   <div class="tut-title-wrap" id="tutTitle" aria-label="よむよむお題目"></div>
   <div class="hint-bounce" id="t1hint" style="opacity:0">▼ タップして続ける</div>
-  <button id="tutWalkBtn" onclick="event.stopPropagation();startTutWalk();" class="btn-s" style="opacity:0;margin-top:1.5rem;padding:10px 28px;font-size:14px;transition:opacity .5s;">チュートリアル</button>
 </div>
 <div class="tscr hidden" id="t2">
   <div style="max-width:300px;text-align:center">
@@ -309,13 +375,10 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
   </div>
 </div>
 <div class="tscr hidden" id="t4">
-  <div style="max-width:310px;text-align:center;width:100%">
-    <p id="tutGreet" style="font-size:13px;color:var(--mu);margin-bottom:.4rem;animation:rUp .5s ease-out both"></p>
-    <p style="font-size:.95rem;font-weight:600;color:var(--a);margin-bottom:.875rem;animation:rUp .5s ease-out .2s both">見やすい文字はどれですか？</p>
-    <div class="font-opt" data-f="kanji" style="animation-delay:.15s">漢字（南無妙法蓮華経）</div>
-    <div class="font-opt" data-f="hira"  style="animation-delay:.27s">ひらがな（なむみょうほうれんげきょう）</div>
-    <div class="font-opt" data-f="roma"  style="animation-delay:.39s">ローマ字（Namu Myoho Renge Kyo）</div>
-    <button class="btn-done" id="fontNext" style="margin-top:.625rem">アプリを始める 🪷</button>
+  <div class="font-pick-inner">
+    <p id="tutGreet" class="font-pick-greet" style="animation:rUp .5s ease-out both"></p>
+    <p class="font-pick-lead" style="animation:rUp .5s ease-out .15s both">これからよろしくお願いいたします。🪷</p>
+    <button class="btn-done" id="fontNext" style="margin-top:.5rem">アプリを始める 🪷</button>
   </div>
 </div>
 
@@ -350,7 +413,7 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
     <button class="tab on" data-t="chant">🥁 お題目</button>
     <button class="tab" data-t="gongyou">📖 勤行</button>
     <button class="tab" data-t="cal">📅 暦</button>
-    <button class="tab" data-t="rank">🏆 功徳</button>
+    <button class="tab" data-t="rank">🏆 累計功徳</button>
   </div>
 
   <!-- ── お題目 ── -->
@@ -367,11 +430,6 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
         <div class="count-sub" id="cumul">累計: 0回</div>
       </div>
     </div>
-    <div class="merit-grid">
-      <div class="mc"><div class="mv" id="meritV">0</div><div class="ml">功徳スコア</div></div>
-      <div class="mc"><div class="mv" id="dvDisp">¥5,000</div><div class="ml">１日の価値</div></div>
-    </div>
-
     <div id="smsg" class="smsg"></div>
     <button class="btn-big" id="manBtn">カウント</button>
   </div>
@@ -397,11 +455,8 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
     </div>
 
     <button class="btn-big accent" id="gcReadBtn" style="margin-top:.25rem">📖 読む（経文を表示）</button>
-    <div style="display:flex;gap:7px;margin-bottom:.75rem">
-      <button class="btn-big" id="gcCount" style="flex:2;margin-bottom:0">唱えた</button>
-      <button class="btn-s" id="gcReset" style="padding:10px">リセット</button>
-    </div>
-    <div class="card" style="padding:.75rem">
+    <button class="btn-big" id="gcCount" style="width:100%;margin-bottom:.75rem">唱えた</button>
+    <div class="card" id="gcEnCard" style="padding:.75rem">
       <p style="font-size:11px;font-weight:500;color:var(--a);margin-bottom:5px">この勤行とのご縁</p>
       <div id="gcProgress" style="font-size:12px;color:var(--mu)">0回</div>
     </div>
@@ -413,53 +468,41 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
       <span class="tab-hd-title">📅 読経カレンダー</span>
       <button class="hint-btn" onclick="showHint('cal')">?</button>
     </div>
-    <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
-    <div id="vHeat">
-      <div class="card">
-        <p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">読経記録（過去16週）</p>
-        <div class="hw" id="heatmap"></div>
-        <div class="lgd">
-          <div class="li"><div class="ld" id="lg0" style="border:1px solid var(--bo)"></div>なし</div>
-          <div class="li"><div class="ld" id="lg1"></div>少</div>
-          <div class="li"><div class="ld" id="lg2"></div>多</div>
-        </div>
+    <div class="card streak-card" id="streakCard">
+      <div class="streak-face" aria-hidden="true">🧠</div>
+      <div class="streak-body">
+        <p class="streak-days"><span id="streakNum">0</span>日連続ログイン</p>
+        <p class="streak-msg" id="streakMsg">毎日続けると功徳がアップします</p>
+        <div class="streak-bar"><div class="streak-fill" id="streakFill" style="width:0%"></div></div>
+        <p class="streak-sub">功徳ブースト <b id="streakMultDisp">×1.00</b> · ログインボーナス累計 <b id="bonusMeritDisp">0</b></p>
       </div>
-      <div class="card"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
     </div>
-    <div id="vMon" style="display:none">
+    <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
+    <div id="vCal">
       <div class="card">
         <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
         <div class="cg" id="calGrid"></div>
-        <div class="lgd" style="margin-top:8px">
+        <div class="lgd" id="calLegMon" style="margin-top:8px">
           <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
           <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
           <div class="li"><span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px">己巳</span></div>
           <div class="li"><span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px">寅</span></div>
         </div>
       </div>
+      <div class="card"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
     </div>
   </div>
 
-  <!-- ── 功徳ランキング ── -->
+  <!-- ── 累計功徳 ── -->
   <div class="tc" id="tc-rank">
     <div class="tab-hd">
-      <span class="tab-hd-title">🏆 功徳ランキング</span>
+      <span class="tab-hd-title">🏆 累計功徳</span>
       <button class="hint-btn" onclick="showHint('rank')">?</button>
     </div>
-    <div class="srow">
-      <div class="stat"><div class="sv" id="myM">0</div><div class="sk">功徳スコア</div></div>
-      <div class="stat"><div class="sv" id="myC">0</div><div class="sk">累計回数</div></div>
-    </div>
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <p style="font-size:12px;font-weight:600;color:var(--a)">功徳ランキング</p>
-        <button class="btn-s" id="refLb">更新</button>
-      </div>
-      <div id="lbList"></div>
-    </div>
-    <div class="card" style="background:hsla(var(--h),40%,55%,.07);border-color:var(--boa)">
-      <p style="font-size:11px;font-weight:600;color:var(--a);margin-bottom:5px">功徳倍増デー</p>
-      <p style="font-size:10px;color:var(--mu)">大安×2・一粒万倍日×2・天赦日×3・寅の日×1.5・己巳の日×1.5</p>
+    <div class="card card-a" style="text-align:center;padding:1.5rem 1rem;margin-bottom:.75rem">
+      <div class="sv" id="myM" style="font-size:clamp(2rem,12vw,3rem);margin-bottom:.35rem">0</div>
+      <div class="sk" style="font-size:13px;color:var(--a);font-weight:600">累計功徳</div>
+      <p id="rankStreakNote" style="font-size:10px;color:var(--mu);margin-top:.5rem"></p>
     </div>
   </div>
 </div>
@@ -472,11 +515,35 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
     <div class="read-pgn" id="readPgn"></div>
   </div>
   <div class="read-prog-bar"><div class="read-prog-fill" id="readProg" style="width:0%"></div></div>
+  <div class="read-font-bar" id="readFontBar">
+    <button type="button" class="read-font-btn" data-rf="kanji">漢字</button>
+    <button type="button" class="read-font-btn" data-rf="hira">ひらがな</button>
+    <button type="button" class="read-font-btn" data-rf="roma">ローマ字</button>
+    <button type="button" class="read-font-btn" data-rf="imi">意味</button>
+  </div>
+  <div class="read-typo-bar" id="readTypoBar">
+    <label class="read-typo-ctrl"><span>文字</span><input type="range" id="readFsR" min="80" max="140" value="100"><output id="readFsV">100%</output></label>
+    <label class="read-typo-ctrl"><span>行間</span><input type="range" id="readLhR" min="80" max="160" value="100"><output id="readLhV">100%</output></label>
+    <label class="read-typo-ctrl"><span>行幅</span><input type="range" id="readGapR" min="70" max="150" value="100"><output id="readGapV">100%</output></label>
+  </div>
   <div class="read-body" id="readBody">
     <div id="readPages"></div>
   </div>
   <div class="page-dots" id="pageDots"></div>
   <div class="read-nav" id="readNav"></div>
+</div>
+
+<!-- 勤行・初回読経：見やすい文字の選択 -->
+<div class="tscr gone" id="readFontPickOverlay" style="z-index:520;display:none">
+  <div class="font-pick-inner">
+    <p id="rfpGreet" class="font-pick-greet"></p>
+    <p class="font-pick-lead">これからよろしくお願いいたします。🪷</p>
+    <p class="font-pick-q">見やすい文字はどれですか？</p>
+    <div class="font-opt rfp-opt" data-f="kanji">漢字（南無妙法蓮華経）</div>
+    <div class="font-opt rfp-opt" data-f="hira">ひらがな（なむみょうほうれんげきょう）</div>
+    <div class="font-opt rfp-opt" data-f="roma">ローマ字（Namu Myoho Renge Kyo）</div>
+    <button type="button" class="btn-done" id="rfpStart" style="margin-top:.45rem">読み始める 📖</button>
+  </div>
 </div>
 
 <!-- ════ OVERLAYS ════ -->
@@ -488,11 +555,23 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
     <button class="btn-s" onclick="document.getElementById('hintOverlay').classList.remove('show')" style="margin-top:.875rem;width:100%;padding:10px">閉じる</button>
   </div>
 </div>
+<div class="overlay" id="loginBonusOverlay">
+  <div class="popup login-bonus-pop" id="loginPopInner">
+    <div class="lb-stamp" id="lbStampRow">おかえりなさい</div>
+    <div class="lb-gentle-icon" id="lbGentleIcon" style="display:none" aria-hidden="true">🪷</div>
+    <p class="lb-streak" id="lbStreak"></p>
+    <p class="lb-bonus" id="lbBonus"></p>
+    <p class="lb-msg" id="lbMsg"></p>
+    <button type="button" class="btn-done" id="lbBtn" onclick="closeLoginBonus()" style="width:100%"></button>
+  </div>
+</div>
 <div class="overlay" id="dayPop">
   <div class="popup">
     <div id="popDate" style="font-size:12px;color:var(--mu);margin-bottom:7px"></div>
-    <div id="popCount" style="font-size:48px;font-weight:600;color:var(--a)"></div>
-    <div style="font-size:11px;color:var(--mu);margin-top:3px">回</div>
+    <div style="display:flex;justify-content:center;gap:1.5rem;margin-top:.25rem">
+      <div><div id="popCount" style="font-size:40px;font-weight:600;color:var(--a)">0</div><div style="font-size:11px;color:var(--mu)">お題目回数</div></div>
+      <div><div id="popMerit" style="font-size:40px;font-weight:600;color:var(--a)">0</div><div style="font-size:11px;color:var(--mu)">功徳</div></div>
+    </div>
     <button class="btn-s" onclick="document.getElementById('dayPop').classList.remove('show')" style="margin-top:.875rem;padding:7px 20px">閉じる</button>
   </div>
 </div>
@@ -531,10 +610,7 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
   <div style="position:fixed;bottom:0;left:0;right:0;background:var(--bc);border-radius:20px 20px 0 0;padding:2rem 1.5rem 1.5rem;max-height:60vh;overflow-y:auto;box-shadow:0 -4px 20px rgba(0,0,0,.2);">
     <div id="twTitle" style="font-size:1.1rem;font-weight:700;color:var(--a);margin-bottom:.5rem;"></div>
     <div id="twBody" style="font-size:13px;color:var(--mu);line-height:1.7;margin-bottom:1.5rem;"></div>
-    <div style="display:flex;gap:8px;">
-      <button id="twSkip" onclick="endTutWalk()" class="btn-s" style="flex:1;">スキップ</button>
-      <button class="btn-s" id="twNext" onclick="nextTutStep()" style="flex:1;color:#fff;background:var(--a);border-color:var(--a);">次へ →</button>
-    </div>
+    <button class="btn-s" id="twNext" onclick="nextTutStep()" style="width:100%;color:#fff;background:var(--a);border-color:var(--a);">次へ →</button>
   </div>
 </div>
 
@@ -815,7 +891,9 @@ var UK='yomy_v14',LBK='yomy_lb_v14';
 var st={
   userName:'',daily:{},totalChants:0,sessionCount:0,
   tab:'chant',calView:'heat',calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),
-  hue:35,dark:false,sensitivity:8,fontPref:'kanji',dailyValue:5000,gIdx:0,gCounts:{}
+  hue:35,dark:false,sensitivity:8,fontPref:'kanji',gongyouFontDone:false,
+  readFs:100,readLh:100,readGap:100,dailyValue:5000,gIdx:0,gCounts:{},
+  loginStreak:0,lastLoginDate:'',lastLoginBonusDate:'',bonusMerit:0,welcomeDone:false
 };
 var actx=null,rhythmInt=null,rhythmBeat=0;
 var gcAnimating=false,gcCurReal=0;
@@ -850,7 +928,6 @@ function animTitle(){
   var total=chars.length*200+500;
   setTimeout(function(){
     var h=document.getElementById('t1hint');h.style.opacity='1';h.style.transition='opacity .5s';
-    var b=document.getElementById('tutWalkBtn');if(b){b.style.opacity='1';}
   },total);
   setTimeout(function(){animWorries();},total+1600);
 }
@@ -877,16 +954,23 @@ document.getElementById('tutNameBtn').addEventListener('click',function(){
   setTimeout(function(){document.getElementById('tutGreet').textContent=n+'さんとお呼びしますね。';swTut(4);},480);
 });
 document.getElementById('tutName').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('tutNameBtn').click();});
-document.querySelectorAll('.font-opt').forEach(function(b){
+document.querySelectorAll('.rfp-opt').forEach(function(b){
   b.addEventListener('click',function(){
-    document.querySelectorAll('.font-opt').forEach(function(x){x.classList.remove('sel');});
+    document.querySelectorAll('.rfp-opt').forEach(function(x){x.classList.remove('sel');});
     b.classList.add('sel');st.fontPref=b.getAttribute('data-f');
   });
+});
+document.getElementById('rfpStart').addEventListener('click',function(){
+  st.gongyouFontDone=true;lsS(UK,st);
+  document.getElementById('readFontPickOverlay').classList.add('gone');
+  document.getElementById('readFontPickOverlay').style.display='none';
+  doOpenReading();
 });
 document.getElementById('fontNext').addEventListener('click',function(){
   lsS(UK,st);
   for(var i=1;i<=4;i++){var s=document.getElementById('t'+i);if(s)s.classList.add('gone');}
-  launchApp();
+  launchApp({skipLogin:true});
+  startTutWalk();
 });
 
 // ══════════════════════════════════════════════════════════
@@ -909,10 +993,10 @@ document.getElementById('helpOverlay').addEventListener('click',function(e){if(e
 //  チュートリアルウォークスルー（軽量版）
 // ══════════════════════════════════════════════════════════
 var TUT_STEPS=[
-  {title:'お題目タブ',body:'ここで「南無妙法蓮華経」の読誦回数をカウントします。'},
-  {title:'勤行タブ',body:'法華経が読めます。吉日には功徳が倍増します。'},
-  {title:'カレンダータブ',body:'日別の読誦記録を確認できます。'},
-  {title:'はじまりました',body:'これからよろしくお願いいたします。🪷'}
+  {tab:'chant',title:'お題目タブ',body:'ここで「南無妙法蓮華経」を唱えた回数、読誦回数をカウントします。「南無妙法蓮華経」と唱えたらカウントを押しましょう。'},
+  {tab:'gongyou',title:'勤行',body:'法華経が読めます。'},
+  {tab:'cal',title:'カレンダータブ',body:'日別の読誦記録を確認できます。'},
+  {tab:'chant',title:'改めまして',body:'これからよろしくお願いいたします。🪷'}
 ];
 var tutWalkStep=0;
 function startTutWalk(){
@@ -922,6 +1006,12 @@ function startTutWalk(){
 }
 function showTutStep(idx){
   var step=TUT_STEPS[idx];
+  if(step.tab){
+    actTab(step.tab);
+    if(step.tab==='chant'){updateChantUI();renderBanner();}
+    if(step.tab==='gongyou')buildCarousel();
+    if(step.tab==='cal')renderCal();
+  }
   document.getElementById('twTitle').textContent=step.title;
   document.getElementById('twBody').textContent=step.body;
   var nextBtn=document.getElementById('twNext');
@@ -934,6 +1024,13 @@ function nextTutStep(){
 }
 function endTutWalk(){
   document.getElementById('tutWalkOverlay').style.display='none';
+  if(!st.welcomeDone){
+    processDailyLogin();
+    st.welcomeDone=true;
+    lsS(UK,st);
+    updateCalStreakUI();
+    setTimeout(function(){showLoginPopup('first');},550);
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -965,17 +1062,36 @@ function init(){
   var saved=lsG(UK);
   if(saved&&saved.userName){
     Object.assign(st,saved);
+    if(st.gongyouFontDone===undefined){
+      var gc=st.gCounts||{},gk;
+      st.gongyouFontDone=false;
+      for(gk in gc){if(gc[gk]>0){st.gongyouFontDone=true;break;}}
+    }
+    if(st.readFs==null)st.readFs=100;
+    if(st.readLh==null)st.readLh=100;
+    if(st.readGap==null)st.readGap=100;
+    if(st.loginStreak==null)st.loginStreak=0;
+    if(st.bonusMerit==null)st.bonusMerit=0;
+    if(!st.lastLoginDate)st.lastLoginDate='';
+    if(!st.lastLoginBonusDate)st.lastLoginBonusDate='';
+    if(st.welcomeDone===undefined)st.welcomeDone=!!st.lastLoginBonusDate;
     for(var i=1;i<=4;i++){var s=document.getElementById('t'+i);if(s)s.classList.add('gone');}
     applyHue(st.hue);applyMode(st.dark);syncSliders();
-    launchApp();
+    launchApp({skipLogin:!st.welcomeDone});
+    if(!st.welcomeDone)startTutWalk();
   } else {
     animTitle();
   }
 }
-function launchApp(){
+function launchApp(opts){
+  opts=opts||{};
   var app=document.getElementById('app');app.style.display='block';app.classList.add('vis');
   document.getElementById('menuName').textContent=st.userName;
-  buildCarousel();updateChantUI();renderBanner();actTab(st.tab||'chant');
+  var newLogin=false;
+  if(st.welcomeDone&&!opts.skipLogin)newLogin=processDailyLogin();
+  buildCarousel();updateChantUI();renderBanner();buildLb();updateCalStreakUI();
+  actTab(st.tab||'chant');
+  if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
 }
 
 
@@ -1004,6 +1120,100 @@ function syncSens(v){st.sensitivity=v;var sr=document.getElementById('sensR');if
 //  お題目カウント
 // ══════════════════════════════════════════════════════════
 function calcMerit(c,dv,m){return Math.round(c*(dv/1000)*(m||1)*10)/10;}
+function streakMult(){
+  var s=st.loginStreak||0;
+  return 1+Math.min(Math.max(s-1,0),49)*0.02;
+}
+function dayDiff(dsA,dsB){
+  var a=new Date(dsA+'T12:00:00'),b=new Date(dsB+'T12:00:00');
+  return Math.round((b-a)/86400000);
+}
+function processDailyLogin(){
+  var t=today();
+  if(st.lastLoginBonusDate===t)return false;
+  var prev=st.lastLoginDate||'';
+  if(!prev)st.loginStreak=1;
+  else if(prev!==t){
+    var diff=dayDiff(prev,t);
+    st.loginStreak=diff===1?(st.loginStreak||0)+1:1;
+  }
+  st.lastLoginDate=t;
+  st.lastLoginBonusDate=t;
+  var bonus=Math.round((8+(st.loginStreak||1)*4)*10)/10;
+  st.todayLoginBonus=bonus;
+  st.bonusMerit=(st.bonusMerit||0)+bonus;
+  lsS(UK,st);
+  return true;
+}
+function streakMessage(s){
+  if(s>=30)return '長く続けてくださり、ありがとうございます。';
+  if(s>=14)return 'ゆっくりと、続いていますね。';
+  if(s>=7)return '1週間、お疲れさまでした。';
+  if(s>=3)return 'またお会いできて、嬉しいです。';
+  if(s>=2)return '続けてくださり、ありがとうございます。';
+  return '今日もお越しいただき、ありがとうございます。';
+}
+function streakMessageGentle(s){
+  if(s>=7)return '無理のない範囲で、また明日お会いできると嬉しいです。';
+  if(s>=2)return '今日もお疲れさまでした。';
+  return '今日もお越しいただき、ありがとうございます。';
+}
+function streakMilestone(s){
+  var t=[7,14,30,60,100],i;
+  for(i=0;i<t.length;i++)if(s<t[i])return t[i];
+  return 100;
+}
+function totalMerit(){
+  var info=dayI(new Date());
+  var chant=calcMerit(st.totalChants,st.dailyValue,getMult(info)*streakMult());
+  return Math.round((chant+(st.bonusMerit||0))*10)/10;
+}
+function updateCalStreakUI(animate){
+  var s=st.loginStreak||0,ms=streakMilestone(s),pct=Math.min(100,Math.round(s/ms*100));
+  var n=document.getElementById('streakNum');if(n)n.textContent=s;
+  var m=document.getElementById('streakMsg');if(m)m.textContent=streakMessage(s);
+  var f=document.getElementById('streakFill');if(f)f.style.width=pct+'%';
+  var md=document.getElementById('streakMultDisp');if(md)md.textContent='×'+streakMult().toFixed(2);
+  var bd=document.getElementById('bonusMeritDisp');if(bd)bd.textContent=fmt(st.bonusMerit||0);
+  var rn=document.getElementById('rankStreakNote');
+  if(rn)rn.textContent=s>0?('連続'+s+'日 · ブースト ×'+streakMult().toFixed(2)):'';
+  var card=document.getElementById('streakCard');
+  if(card&&animate){card.classList.remove('celebrate');void card.offsetWidth;card.classList.add('celebrate');}
+}
+function showLoginPopup(mode){
+  var gentle=mode==='first';
+  var inner=document.getElementById('loginPopInner');
+  var stamp=document.getElementById('lbStampRow');
+  var icon=document.getElementById('lbGentleIcon');
+  var streak=document.getElementById('lbStreak');
+  var bonus=document.getElementById('lbBonus');
+  var msg=document.getElementById('lbMsg');
+  var btn=document.getElementById('lbBtn');
+  if(inner)inner.classList.toggle('lb-pop-gentle',gentle);
+  if(stamp)stamp.style.display=gentle?'none':'inline-block';
+  if(icon)icon.style.display=gentle?'block':'none';
+  var b=st.todayLoginBonus||0;
+  var name=st.userName?st.userName+'さん、':'';
+  if(gentle){
+    if(streak)streak.textContent='';
+    if(bonus)bonus.textContent='';
+    if(msg)msg.innerHTML=name+'この世界に来てくれて、<br>ありがとうございます。<br><br>急ぐ必要はありません。<br>あなたのペースで、少しずつで大丈夫です。'+
+      (b>0?'<br><br><span style="color:var(--a);font-size:13px">ささやかな贈り物 … +'+fmt(b)+' 功徳</span>':'');
+    if(btn)btn.textContent='はじめます';
+  }else{
+    var s=st.loginStreak||1;
+    if(streak)streak.textContent=s+'日目のご訪問';
+    if(bonus)bonus.textContent='+'+fmt(b)+' 功徳';
+    if(msg)msg.textContent=streakMessageGentle(s)+' またいつでも、どうぞ。';
+    if(btn)btn.textContent='ありがとうございます';
+    updateCalStreakUI(true);
+  }
+  document.getElementById('loginBonusOverlay').classList.add('show');
+}
+function closeLoginBonus(){
+  document.getElementById('loginBonusOverlay').classList.remove('show');
+  st.todayLoginBonus=0;lsS(UK,st);
+}
 function renderBanner(){
   var info=dayI(new Date()),items=banItems(info);
   var el=document.getElementById('todayBanner');
@@ -1014,26 +1224,36 @@ function renderBanner(){
   else pill.style.display='none';
 }
 function updateChantUI(){
-  var info=dayI(new Date()),mult=getMult(info),merit=calcMerit(st.totalChants,st.dailyValue,mult);
   document.getElementById('sesNum').textContent=st.sessionCount;
   document.getElementById('cumul').textContent='累計: '+st.totalChants+'回';
-  document.getElementById('meritV').textContent=fmt(merit);
-  document.getElementById('dvDisp').textContent='¥'+fmt(st.dailyValue);
   var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
-  var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(merit);
+  var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(totalMerit());
+  buildLb();
 }
-function trigFlash(){var c=document.getElementById('countCard');c.classList.add('flashing');setTimeout(function(){c.classList.remove('flashing');},500);try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}}
+function dayMeritFor(ds2,cnt){
+  if(!cnt)return 0;
+  var p=ds2.split('-');var d=new Date(+p[0],+p[1]-1,+p[2]);
+  var m=getMult(dayI(d));
+  if(ds2===today())m*=streakMult();
+  return calcMerit(cnt,st.dailyValue,m);
+}
+function trigFlash(){var c=document.getElementById('countCard');if(!c)return;c.classList.add('flashing');setTimeout(function(){c.classList.remove('flashing');},500);try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}}
+function trigGcFlash(){
+  var btn=document.getElementById('gcCount');if(btn){btn.classList.add('flashing');setTimeout(function(){btn.classList.remove('flashing');},500);}
+  spawnP();try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}
+}
 function spawnP(){['🌸','✨','🪷'].forEach(function(e){var p=document.createElement('div');p.className='particle';p.textContent=e;p.style.left=(20+Math.random()*60)+'%';p.style.top=(20+Math.random()*40)+'%';document.body.appendChild(p);setTimeout(function(){p.remove();},1200);});}
 function addChants(n){
   if(n<=0)return;var t=today();
   st.daily[t]=(st.daily[t]||0)+n;st.totalChants+=n;st.sessionCount+=n;
-  trigFlash();mokuS();rhythm(st.sessionCount);
+  if(st.tab==='gongyou')trigGcFlash();else trigFlash();
+  mokuS();rhythm(st.sessionCount);
   if(st.sessionCount%10===0){spawnP();accentS();}
   updateChantUI();lsS(UK,st);persistLb();
   if(st.tab==='cal')renderCal();
 }
 function persistLb(){
-  var info=dayI(new Date()),merit=calcMerit(st.totalChants,st.dailyValue,getMult(info));
+  var merit=totalMerit();
   var lb=lsG(LBK)||[];var idx=lb.findIndex(function(e){return e.name===st.userName;});
   var entry={name:st.userName,merit:merit,chants:st.totalChants};
   if(idx>=0)lb[idx]=entry;else lb.push(entry);
@@ -1183,57 +1403,126 @@ function updateGcUI(){
 // ══════════════════════════════════════════════════════════
 //  読経オーバーレイ
 // ══════════════════════════════════════════════════════════
+var readViewMode='kanji';
+function brEsc(s){return (s||'').replace(/\n/g,'<br>');}
+function readPageDenseClass(l){
+  var n=0;
+  for(var i=0;i<4;i++){var s=l[i]||'';if(s)n+=s.split('\n').length+(s.length>22?1:0);}
+  return n>=4?' dense':'';
+}
+function buildReadLineHTML(l,mode){
+  var map={kanji:brEsc(l[0]),hira:brEsc(l[1]),roma:brEsc(l[2]),imi:brEsc(l[3])};
+  var order=['kanji','hira','roma','imi'].filter(function(k){return map[k];});
+  if(!order.length)return '';
+  if(order.indexOf(mode)<0)mode=order[0];
+  var subs=['rh','rr','rm2'],html='',si=0;
+  order.forEach(function(k){
+    var cls;
+    if(k===mode)cls=k==='imi'?'rk rm2':'rk';
+    else cls=subs[si++]||'rm2';
+    html+='<div class="'+cls+'">'+map[k]+'</div>';
+  });
+  return html;
+}
+function syncReadFontBar(){
+  document.querySelectorAll('.read-font-btn').forEach(function(b){
+    b.classList.toggle('on',b.getAttribute('data-rf')===readViewMode);
+  });
+}
+function applyReadTypo(){
+  var ov=document.getElementById('readingOverlay');
+  if(!ov)return;
+  var fs=(st.readFs||100)/100,lh=(st.readLh||100)/100,gap=(st.readGap||100)/100;
+  ov.style.setProperty('--read-fs-mul',fs);
+  ov.style.setProperty('--read-lh-mul',lh);
+  ov.style.setProperty('--read-gap-mul',gap);
+  var fsR=document.getElementById('readFsR'),lhR=document.getElementById('readLhR'),gapR=document.getElementById('readGapR');
+  if(fsR)fsR.value=st.readFs||100;
+  if(lhR)lhR.value=st.readLh||100;
+  if(gapR)gapR.value=st.readGap||100;
+  var fsV=document.getElementById('readFsV'),lhV=document.getElementById('readLhV'),gapV=document.getElementById('readGapV');
+  if(fsV)fsV.textContent=(st.readFs||100)+'%';
+  if(lhV)lhV.textContent=(st.readLh||100)+'%';
+  if(gapV)gapV.textContent=(st.readGap||100)+'%';
+}
+function syncReadTypo(key,val){
+  st[key]=val;lsS(UK,st);applyReadTypo();
+}
+function setReadFont(mode){
+  readViewMode=mode;st.fontPref=mode;lsS(UK,st);syncReadFontBar();renderReadPages();
+}
+function renderReadPages(){
+  var W=window.innerWidth,idx=readLineIdx;
+  var pHTML='';
+  readLines.forEach(function(l){
+    pHTML+='<div class="read-page'+readPageDenseClass(l)+'" style="width:'+W+'px;min-width:'+W+'px">'+buildReadLineHTML(l,readViewMode)+'</div>';
+  });
+  var pages=document.getElementById('readPages');
+  pages.innerHTML=pHTML;
+  pages.style.display='flex';
+  pages.style.transition='transform .35s cubic-bezier(.4,0,.2,1)';
+  gotoPage(idx);
+}
+function showReadFontPick(){
+  var ov=document.getElementById('readFontPickOverlay');
+  var g=document.getElementById('rfpGreet');
+  if(g)g.textContent=st.userName?(st.userName+'さん'):'';
+  var fp=st.fontPref||'kanji';
+  if(fp==='imi')fp='kanji';
+  var picked=false;
+  document.querySelectorAll('.rfp-opt').forEach(function(b){
+    var on=b.getAttribute('data-f')===fp;
+    b.classList.toggle('sel',on);if(on)picked=true;
+  });
+  if(!picked){var k=document.querySelector('.rfp-opt[data-f="kanji"]');if(k)k.classList.add('sel');st.fontPref='kanji';}
+  ov.classList.remove('gone');ov.style.display='flex';
+}
 function openReading(){
   var g=GG[gcCurReal];
   if(!g.lines||!g.lines.length){
-    alert('📖 このお経のテキストは現在準備中です。\n「+1 唱えた」ボタンで回数を記録してください。');
+    alert('📖 このお経のテキストは現在準備中です。\n「唱えた」ボタンで回数を記録してください。');
     return;
   }
+  if(!st.gongyouFontDone){showReadFontPick();return;}
+  doOpenReading();
+}
+function doOpenReading(){
+  var g=GG[gcCurReal];
   readLines=g.lines;readLineIdx=0;
+  readViewMode=st.fontPref||'kanji';
+  if(readViewMode==='imi')readViewMode='kanji';
+  else if(readViewMode!=='kanji'&&readViewMode!=='hira'&&readViewMode!=='roma')readViewMode='kanji';
   document.getElementById('readTitle').textContent=g.t;
+  syncReadFontBar();
+  applyReadTypo();
+  renderReadPages();
 
-  var W=window.innerWidth;
-  var fp=st.fontPref||'kanji';
-
-  // ページHTML
-  var pHTML='';
-  readLines.forEach(function(l){
-    var kanji=(l[0]||'').replace(/\n/g,'<br>');
-    var yomi =(l[1]||'').replace(/\n/g,'<br>');
-    var roma =(l[2]||'').replace(/\n/g,'<br>');
-    var imi  =(l[3]||'').replace(/\n/g,'<br>');
-    var main=fp==='kanji'?kanji:fp==='hira'?yomi:roma;
-    var sub =fp==='kanji'?yomi:fp==='hira'?kanji:kanji;
-    var sub2=fp==='kanji'?roma:fp==='hira'?roma:yomi;
-    pHTML+='<div class="read-page" style="width:'+W+'px;min-width:'+W+'px">';
-    if(main)pHTML+='<div class="rk">'+main+'</div>';
-    if(sub&&sub!==main)pHTML+='<div class="rh">'+sub+'</div>';
-    if(sub2&&sub2!==main&&sub2!==sub)pHTML+='<div class="rr">'+sub2+'</div>';
-    if(imi)pHTML+='<div class="rm2">'+imi+'</div>';
-    pHTML+='</div>';
-  });
-  document.getElementById('readPages').innerHTML=pHTML;
-  document.getElementById('readPages').style.display='flex';
-  document.getElementById('readPages').style.transition='transform .35s cubic-bezier(.4,0,.2,1)';
-
-  // ドット
   var dots=document.getElementById('pageDots');
   dots.innerHTML=readLines.map(function(_,i){return '<div class="page-dot'+(i===0?' on':'')+'"></div>';}).join('');
 
-  // ナビ
   document.getElementById('readNav').innerHTML=
     '<button class="btn-big" onclick="readPrev()" style="margin-bottom:0">← 前の節</button>'+
     '<button class="btn-big" onclick="readNext()" style="margin-bottom:0">次の節 →</button>';
 
-  // スワイプ
-  var body=document.getElementById('readBody');var _bsx=0,_bsy=0;
-  body.addEventListener('touchstart',function(e){_bsx=e.touches[0].clientX;_bsy=e.touches[0].clientY;},{passive:true});
-  body.addEventListener('touchend',function(e){
-    var dx=e.changedTouches[0].clientX-_bsx,dy=e.changedTouches[0].clientY-_bsy;
-    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>35){if(dx<0)readNext();else readPrev();}
-  },{passive:true});
+  var bar=document.getElementById('readFontBar');
+  if(!bar._wired){
+    bar._wired=true;
+    bar.addEventListener('click',function(e){
+      var btn=e.target.closest('.read-font-btn');if(!btn)return;
+      setReadFont(btn.getAttribute('data-rf'));
+    });
+  }
 
-  gotoPage(0);
+  var body=document.getElementById('readBody');
+  if(!body._swipeWired){
+    body._swipeWired=true;var _bsx=0,_bsy=0;
+    body.addEventListener('touchstart',function(e){_bsx=e.touches[0].clientX;_bsy=e.touches[0].clientY;},{passive:true});
+    body.addEventListener('touchend',function(e){
+      var dx=e.changedTouches[0].clientX-_bsx,dy=e.changedTouches[0].clientY-_bsy;
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>35){if(dx<0)readNext();else readPrev();}
+    },{passive:true});
+  }
+
   document.getElementById('readingOverlay').classList.add('show');
 }
 
@@ -1265,8 +1554,7 @@ function closeReading(){document.getElementById('readingOverlay').classList.remo
 // ══════════════════════════════════════════════════════════
 var HINTS={
   chant:{icon:'🥁',title:'お題目カウンターの使い方',body:
-    '<p>「南無妙法蓮華経」と唱え、カウントしましょう。</p>'+
-    '<div class="info-formula">功徳 = お題目1回につき1 × 吉日倍率</div>'},
+    '<p>「南無妙法蓮華経」と唱えたら、カウントボタンを押しましょう。リズミカルに太鼓の合いの手を入れながらお題目を唱えましょう。</p>'},
   gongyou:{icon:'📖',title:'勤行カルーセルの使い方',body:
     '<p><b>カルーセル：</b>左右スワイプ or 矢印ボタンでお経を選択。横に見えているカードはタップでジャンプできます。</p>'+
     '<p><b>📖 読める バッジ：</b>経文テキスト付き。「読む」ボタンで全画面表示→節ごとにスワイプしながら読誦。最後まで読むと自動で +1。</p>'+
@@ -1274,16 +1562,11 @@ var HINTS={
     '<p><b>基本順序：</b>三宝礼 → 懺悔文 → 開経偈 → 方便品第二 → 自我偈（壽量品第十六）→ 廻向文</p>'+
     '<p>🎰 ルーレットでランダム選択も。</p>'},
   cal:{icon:'📅',title:'読経カレンダーの見方',body:
-    '<p>ヒートマップ：過去16週の記録を色の濃さで確認。<br>月カレンダー：六曜・吉日バッジ付きで1日ごとの記録を表示。</p>'+
-    '<ul><li>🔴 天赦日：功徳×3（最強の吉日）</li>'+
-    '<li>🟢 一粒万倍日：功徳×2</li>'+
-    '<li>🔵 己巳の日：功徳×1.5</li>'+
-    '<li>🟠 寅の日：功徳×1.5</li></ul>'+
-    '<p>複数重なると掛け算で増幅します。</p>'},
-  rank:{icon:'🏆',title:'功徳ランキングについて',body:
-    '<p>この端末のローカルランキングです。功徳スコアが多い順に並びます。</p>'+
-    '<div class="info-formula">功徳 = 累計回数 × (１日の価値 ÷ 1000) × 吉日倍率</div>'+
-    '<p>１日の価値はハンバーガーメニューで設定。吉日に唱えることで功徳が増幅します。継続が最大の功徳です。🌸</p>'}
+    '<p>毎日アプリを開くとログインボーナスがもらえ、連続日数に応じて功徳ブーストが強くなります。</p>'+
+    '<p>ヒートマップ：功徳の多い日ほど緑が濃くなります。月カレンダー：回数と功徳を確認できます。</p>'},
+  rank:{icon:'🏆',title:'累計功徳について',body:
+    '<p>お題目の唱誦と、毎日のログインボーナスが合わさった功徳の合計です。</p>'+
+    '<p>連続ログインが続くほど、功徳ブーストが強くなります。カレンダーで記録を確認しましょう。🌸</p>'}
 };
 function showHint(tab){
   var h=HINTS[tab];if(!h)return;
@@ -1296,58 +1579,78 @@ function showHint(tab){
 // ══════════════════════════════════════════════════════════
 //  カレンダー
 // ══════════════════════════════════════════════════════════
-function hClr(cnt,mx){var h=st.hue;if(!cnt)return{bg:'transparent',bd:'hsl('+h+',22%,'+(st.dark?'18':'84')+'%)'};var r=cnt/mx,L=st.dark?(20+r*45):(75-r*48),S=25+r*50;return{bg:'hsl('+h+','+S+'%,'+L+'%)',bd:'hsl('+h+','+(S+8)+'%,'+(L-8)+'%)'};}
-function buildHeatmap(){
-  var con=document.getElementById('heatmap');
-  var sd=new Date();sd.setDate(sd.getDate()-16*7+1);while(sd.getDay()!==0)sd.setDate(sd.getDate()-1);
-  var vals=Object.values(st.daily).filter(function(v){return v>0;});var mx=vals.length?Math.max.apply(null,vals):1;
-  var h=st.hue;function lg(id,s,dl,dl2){var e=document.getElementById(id);if(e)e.style.background='hsl('+h+','+s+'%,'+(st.dark?dl:dl2)+'%)';}
-  lg('lg1',30,55,72);lg('lg2',78,28,36);con.innerHTML='';var cur=new Date(sd);
-  for(var w=0;w<16;w++){var col=document.createElement('div');col.className='hc';for(var day=0;day<7;day++){var ds2=dss(cur),cnt=st.daily[ds2]||0,cl=hClr(cnt,mx),cell=document.createElement('div');cell.className='hcell';cell.style.background=cl.bg;cell.style.borderColor=cl.bd;cell.title=ds2+' '+cnt+'回';col.appendChild(cell);cur.setDate(cur.getDate()+1);}con.appendChild(col);}
+function meritClr(merit,mx){
+  if(!merit||merit<=0)return{bg:'',bd:''};
+  var r=Math.min(merit/(mx||1),1),lv=1;
+  if(r>0.75)lv=4;else if(r>0.5)lv=3;else if(r>0.25)lv=2;
+  var gh=st.dark?['','#0e4429','#006d32','#26a641','#39d353']:['','#9be9a8','#40c463','#30a14e','#216e39'];
+  var bg=gh[lv];
+  return{bg:bg,bd:bg};
 }
 function buildRecent(){
   var el=document.getElementById('recList');
   var entries=Object.entries(st.daily).sort(function(a,b){return b[0].localeCompare(a[0]);}).slice(0,14);
   if(!entries.length){el.innerHTML='<p style="font-size:12px;color:var(--di)">まだ記録がありません</p>';return;}
-  el.innerHTML=entries.map(function(e){return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bo);font-size:12px"><span style="color:var(--mu)">'+e[0]+'</span><span>'+e[1]+'回 <span style="color:var(--a);font-size:10px">功徳 '+fmt(calcMerit(e[1],st.dailyValue,1))+'</span></span></div>';}).join('');
+  el.innerHTML=entries.map(function(e){
+    var m=dayMeritFor(e[0],e[1]);
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bo);font-size:12px">'+
+      '<span style="color:var(--mu)">'+e[0]+'</span>'+
+      '<span style="display:flex;gap:14px;text-align:right"><span>お題目 <b>'+e[1]+'</b>回</span><span style="color:var(--a)">功徳 <b>'+fmt(m)+'</b></span></span></div>';
+  }).join('');
 }
 function buildMonthly(){
+  var heat=st.calView==='heat';
   var y=st.calYear,m=st.calMonth,todDs=today();
   document.getElementById('calTitle').textContent=y+'年 '+(m+1)+'月';
   var grid=document.getElementById('calGrid');grid.innerHTML='';
   DOW.forEach(function(d,i){var el=document.createElement('div');el.className='cdow';if(i===0)el.style.color='rgba(211,47,47,.8)';if(i===6)el.style.color='rgba(21,101,192,.8)';el.textContent=d;grid.appendChild(el);});
   var firstDay=new Date(y,m,1).getDay(),daysIn=new Date(y,m+1,0).getDate();
+  var merits=[];
+  for(var di=1;di<=daysIn;di++){
+    var dsM=dss(new Date(y,m,di)),cM=st.daily[dsM]||0;
+    if(cM)merits.push(dayMeritFor(dsM,cM));
+  }
+  var mxM=merits.length?Math.max.apply(null,merits):1;
   for(var i=0;i<firstDay;i++){var em=document.createElement('div');em.className='cday cem';grid.appendChild(em);}
   for(var d=1;d<=daysIn;d++){
     var date=new Date(y,m,d),ds2=dss(date),dow=date.getDay(),info=dayI(date),cnt=st.daily[ds2]||0,bdg=dayBadges(info);
     var cls='cday';if(dow===0)cls+=' csun';if(dow===6)cls+=' csat';if(ds2===todDs)cls+=' today';
     var cell=document.createElement('div');cell.className=cls;
-    if(cnt>0){var op=Math.min(0.12+cnt/60*.5,.65),L=st.dark?45:55;cell.style.background='hsla('+st.hue+',55%,'+L+'%,'+op.toFixed(2)+')';cell.style.borderColor='hsla('+st.hue+',60%,'+L+'%,.4)';}
-    cell.innerHTML='<div class="cdn">'+d+'</div><div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div><div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>';
-    (function(ds3,c){cell.addEventListener('click',function(){if(!c&&ds3!==todDs)return;document.getElementById('popDate').textContent=ds3;document.getElementById('popCount').textContent=c;document.getElementById('dayPop').classList.add('show');});
-    })(ds2,cnt);
+    var dm=cnt?dayMeritFor(ds2,cnt):0;
+    if(heat){
+      if(dm>0){var cl=meritClr(dm,mxM);cell.style.background=cl.bg;cell.style.borderColor=cl.bd;}
+      cell.innerHTML='<div class="cdn">'+d+'</div>'+(dm>0?'<div class="cstat heat-merit">'+fmt(dm)+'</div>':'')+
+        '<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div>';
+    }else{
+      if(cnt>0){var op=Math.min(0.12+cnt/60*.5,.65),L=st.dark?45:55;cell.style.background='hsla('+st.hue+',55%,'+L+'%,'+op.toFixed(2)+')';cell.style.borderColor='hsla('+st.hue+',60%,'+L+'%,.4)';}
+      var stat=cnt?'<div class="cstat"><span>'+cnt+'回</span><span class="cmerit">'+fmt(dm)+'</span></div>':'';
+      cell.innerHTML='<div class="cdn">'+d+'</div>'+stat+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div><div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>';
+    }
+    (function(ds3,c,m){cell.addEventListener('click',function(){
+      if(!c&&!m&&ds3!==todDs)return;
+      document.getElementById('popDate').textContent=ds3;
+      document.getElementById('popCount').textContent=c;
+      document.getElementById('popMerit').textContent=fmt(m);
+      document.getElementById('dayPop').classList.add('show');
+    });})(ds2,cnt,dm);
     grid.appendChild(cell);
   }
 }
 function renderCal(){
   var h=st.calView==='heat';
-  document.getElementById('vHeat').style.display=h?'block':'none';
-  document.getElementById('vMon').style.display=h?'none':'block';
   document.getElementById('btnHeat').classList.toggle('on',h);
   document.getElementById('btnMon').classList.toggle('on',!h);
-  if(h){buildHeatmap();buildRecent();}else buildMonthly();
+  document.getElementById('calLegMon').style.display=h?'none':'flex';
+  updateCalStreakUI();
+  buildMonthly();
+  buildRecent();
 }
 
 // ══════════════════════════════════════════════════════════
 //  ランキング（ローカル）
 // ══════════════════════════════════════════════════════════
 function buildLb(){
-  var lb=lsG(LBK)||[],el=document.getElementById('lbList'),med=['🥇','🥈','🥉'];
-  if(!lb.length){el.innerHTML='<p style="font-size:12px;color:var(--di)">データなし</p>';return;}
-  el.innerHTML=lb.map(function(e,i){var isMe=e.name===st.userName;return '<div class="re'+(isMe?' me':'')+'"><span style="min-width:22px;font-size:'+(i<3?'16':'11')+'px;color:'+(i<3?'var(--a)':'var(--di)')+'">'+( med[i]||i+1)+'</span><span style="flex:1">'+e.name+(isMe?' 👈':'')+'</span><div style="text-align:right"><div class="rm3">'+fmt(e.merit)+'</div><div style="font-size:10px;color:var(--di)">'+e.chants+'回</div></div></div>';}).join('');
-  var info=dayI(new Date()),merit=calcMerit(st.totalChants,st.dailyValue,getMult(info));
-  document.getElementById('myM').textContent=fmt(merit);
-  document.getElementById('myC').textContent=st.totalChants;
+  var el=document.getElementById('myM');if(el)el.textContent=fmt(totalMerit());
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1365,7 +1668,7 @@ document.querySelectorAll('.tab').forEach(function(btn){
     var t=btn.getAttribute('data-t');actTab(t);
     if(t==='chant'){updateChantUI();renderBanner();}
     if(t==='gongyou'){buildCarousel();}
-    if(t==='cal')renderCal();
+    if(t==='cal'){updateCalStreakUI();renderCal();}
     if(t==='rank')buildLb();
   });
 });
@@ -1378,7 +1681,6 @@ document.getElementById('gcPrev').addEventListener('click',function(){gcStep(-1)
 document.getElementById('gcNext').addEventListener('click',function(){gcStep(1);});
 document.getElementById('gcReadBtn').addEventListener('click',openReading);
 document.getElementById('gcCount').addEventListener('click',function(){var g=GG[gcCurReal];st.gCounts[g.id]=(st.gCounts[g.id]||0)+1;addChants(1);lsS(UK,st);updateGcUI();});
-document.getElementById('gcReset').addEventListener('click',function(){var g=GG[gcCurReal];st.gCounts[g.id]=0;lsS(UK,st);document.getElementById('gcProgress').textContent='0回';});
 // ═══════════════════════════════════════════════════════
 //  ルーレット機能（シンプル版）
 // ═══════════════════════════════════════════════════════
@@ -1412,12 +1714,19 @@ function startRoulette(){
 document.getElementById('rouletteBtn').addEventListener('click',function(){
   startRoulette();
 });
-document.getElementById('btnHeat').addEventListener('click',function(){st.calView='heat';renderCal();});
-document.getElementById('btnMon').addEventListener('click',function(){st.calView='monthly';renderCal();});
-document.getElementById('calPrev').addEventListener('click',function(){st.calMonth--;if(st.calMonth<0){st.calMonth=11;st.calYear--;}buildMonthly();});
-document.getElementById('calNext').addEventListener('click',function(){st.calMonth++;if(st.calMonth>11){st.calMonth=0;st.calYear++;}buildMonthly();});
-document.getElementById('refLb').addEventListener('click',buildLb);
+document.getElementById('btnHeat').addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
+document.getElementById('btnMon').addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
+document.getElementById('calPrev').addEventListener('click',function(){st.calMonth--;if(st.calMonth<0){st.calMonth=11;st.calYear--;}lsS(UK,st);renderCal();});
+document.getElementById('calNext').addEventListener('click',function(){st.calMonth++;if(st.calMonth>11){st.calMonth=0;st.calYear++;}lsS(UK,st);renderCal();});
+(function(){
+  var map={readFsR:'readFs',readLhR:'readLh',readGapR:'readGap'};
+  Object.keys(map).forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    el.addEventListener('input',function(){syncReadTypo(map[id],+el.value);});
+  });
+})();
 document.getElementById('hintOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
+document.getElementById('loginBonusOverlay').addEventListener('click',function(e){if(e.target===this)closeLoginBonus();});
 document.getElementById('dayPop').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
 window.addEventListener('resize',function(){if(st.tab==='gongyou')buildCarousel();});
 
