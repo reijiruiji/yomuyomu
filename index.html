@@ -352,7 +352,7 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
 .particle{position:fixed;pointer-events:none;z-index:999;font-size:17px;animation:ptcl 1.2s ease-out forwards;}
 @keyframes ptcl{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(.35)}}
 @keyframes petalFall{0%{top:-70px;opacity:0;transform:translateX(0) rotate(-20deg)}8%{opacity:1}85%{opacity:.9}100%{top:calc(100vh - 90px);opacity:0;transform:translateX(30px) rotate(25deg)}}
-#joyPetal{position:fixed;font-size:42px;cursor:pointer;z-index:350;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.2));}
+#joyPetal{position:fixed;top:-70px;left:50%;font-size:42px;cursor:pointer;z-index:350;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.2));}
 </style>
 </head>
 <body>
@@ -1073,7 +1073,8 @@ function addChants(n){
   if(st.tab==='gongyou')trigGcFlash();else trigFlash();
   mokuS();
   if(st.sessionCount%10===0){spawnP();accentS();}
-  if(st.sessionCount===7||st.sessionCount===21||st.sessionCount===49)setTimeout(showJoyPetal,500);
+  _petalCount++;
+  if(_petalCount===7)setTimeout(showJoyPetal,500);
   updateChantUI();lsS(UK,st);persistLb();
   if(st.tab==='cal')renderCal();
 }
@@ -1495,19 +1496,18 @@ function addJoy(content,category){
 function todayJoys(){
   return getJoyLogs().filter(function(j){return j.date===today();});
 }
-var _joyPetalShown=false;
+var _joyPetalShown=false,_petalCount=0;
 function showJoyPetal(){
-  // 1日1回・未記録のときだけ花びらを落とす
-  if(_joyPetalShown||todayJoys().length>0)return;
+  if(_joyPetalShown)return;
   var el=document.getElementById('joyPetal');if(!el)return;
-  var leftPct=20+Math.random()*60;
-  el.style.left=leftPct+'%';
+  el.style.left=(20+Math.random()*60)+'%';
+  el.style.top='-70px';
   el.style.display='block';
   el.style.animation='none';
-  el.offsetHeight; // reflow
+  void el.offsetWidth; // force reflow
   el.style.animation='petalFall 6s ease-in forwards';
   _joyPetalShown=true;
-  setTimeout(function(){el.style.display='none';},6200);
+  setTimeout(function(){el.style.display='none';},6500);
 }
 function openJoyOverlay(){
   document.getElementById('joyPetal').style.display='none';
