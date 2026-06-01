@@ -172,7 +172,7 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
 }
 #gcStage{
   position:relative;
-  height:220px;   /* 固定！ JS でここを変更しない */
+  height:240px;   /* 固定！ JS でここを変更しない */
   width:100%;
   overflow:visible;
 }
@@ -1110,7 +1110,7 @@ function posCards(anim){
     var dist=Math.abs(raw);
     var visible=dist<=2;
 
-    var scale=dist===0?1.38:dist===1?0.76:0.56;
+    var scale=dist===0?1.25:dist===1?0.78:0.58;
     var opacity=dist===0?1:dist===1?0.66:0.33;
     var cardCenterX=centerX+raw*STEP;
     var leftPx=cardCenterX-CW/2;
