@@ -437,6 +437,67 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
     </div>
     <div id="smsg" class="smsg"></div>
     <button class="btn-big" id="manBtn">カウント</button>
+
+    <!-- 今日の喜び -->
+    <div id="joyBubble" style="display:none;margin:.75rem 0 .25rem">
+      <button id="joyBubbleBtn"
+        style="display:flex;align-items:center;gap:.5rem;width:100%;
+               background:var(--bi);border:1.5px dashed var(--boa);
+               border-radius:16px;padding:12px 16px;cursor:pointer;text-align:left;
+               color:var(--tx);font-size:13px;transition:background .15s">
+        <span style="font-size:20px">🌸</span>
+        <span style="flex:1;line-height:1.5">
+          本日はどんな良いことがありましたか？<br>
+          <span style="font-size:11px;color:var(--mu)">タップして記録する</span>
+        </span>
+        <span style="color:var(--mu);font-size:16px">›</span>
+      </button>
+    </div>
+
+    <div id="joyPanel" style="display:none;margin-bottom:.75rem">
+      <div class="card" style="border-color:var(--boa)">
+        <p style="font-size:11px;color:var(--mu);margin-bottom:.75rem;line-height:1.6">
+          功徳を積むとセレンディピティが増えると言われています。<br>
+          今日あった小さな奇跡・幸運・嬉しかったことを記録しましょう。
+        </p>
+        <textarea id="joyInput"
+          placeholder="今日の喜びを入力…（例：電車で席が空いていた、好きなものが安くなっていた）"
+          style="width:100%;background:var(--bi);border:1.5px solid var(--bo);border-radius:10px;
+                 padding:12px;color:var(--tx);font-size:14px;outline:none;resize:none;
+                 min-height:80px;line-height:1.6;font-family:inherit"></textarea>
+        <button onclick="submitJoy()"
+          style="width:100%;margin-top:.5rem;padding:13px;border-radius:12px;
+                 background:var(--a);color:#fff;border:none;cursor:pointer;
+                 font-size:15px;font-weight:600">
+          記録する
+        </button>
+        <button onclick="closeJoyPanel()"
+          style="width:100%;margin-top:.4rem;padding:8px;border-radius:10px;
+                 background:transparent;color:var(--mu);border:none;cursor:pointer;
+                 font-size:12px">
+          キャンセル
+        </button>
+      </div>
+    </div>
+
+    <div id="joyDone" style="display:none;margin-bottom:.75rem">
+      <div class="card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:24px;margin-bottom:.5rem">🌸</div>
+        <p style="font-size:14px;font-weight:600;color:var(--a);margin-bottom:.4rem">
+          また一つ、あなたのことが知れて嬉しいです。
+        </p>
+        <p style="font-size:12px;color:var(--mu);line-height:1.6">
+          あなたにとっての幸福が増えますように。
+        </p>
+        <div id="joyListInline" style="margin-top:.75rem;text-align:left"></div>
+        <button onclick="openJoyPanel()"
+          style="margin-top:.75rem;padding:8px 16px;border-radius:10px;
+                 background:var(--bi);color:var(--mu);border:1px solid var(--bo);
+                 cursor:pointer;font-size:12px">
+          もう一つ記録する
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- ── 勤行 ── -->
@@ -843,6 +904,7 @@ function launchApp(opts){
   if(st.welcomeDone&&!opts.skipLogin)newLogin=processDailyLogin();
   buildCarousel();updateChantUI();renderBanner();buildLb();updateCalStreakUI();
   actTab(st.tab||'chant');
+  initJoyBubble();
   if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
 }
 
@@ -1385,14 +1447,16 @@ function buildMonthly(){
     var cls='cday';if(dow===0)cls+=' csun';if(dow===6)cls+=' csat';if(ds2===todDs)cls+=' today';
     var cell=document.createElement('div');cell.className=cls;
     var dm=cnt?dayMeritFor(ds2,cnt):0;
+    var joyCount=getJoyLogs().filter(function(j){return j.date===ds2;}).length;
+    var joyMark=joyCount>0?'<div style="font-size:8px;text-align:center;line-height:1;margin-top:1px" title="喜び'+joyCount+'件">🌸</div>':'';
     if(heat){
       if(dm>0){var cl=meritClr(dm,mxM);cell.style.background=cl.bg;cell.style.borderColor=cl.bd;cell.style.boxShadow=cl.sh||'';}
       cell.innerHTML='<div class="cdn">'+d+'</div>'+(dm>0?'<div class="cstat heat-merit">'+fmt(dm)+'</div>':'')+
-        '<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div>';
+        joyMark+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div>';
     }else{
       if(cnt>0){var op=Math.min(0.12+cnt/60*.5,.65),L=st.dark?45:55;cell.style.background='hsla('+st.hue+',55%,'+L+'%,'+op.toFixed(2)+')';cell.style.borderColor='hsla('+st.hue+',60%,'+L+'%,.4)';}
       var stat=cnt?'<div class="cstat"><span>'+cnt+'回</span><span class="cmerit">'+fmt(dm)+'</span></div>':'';
-      cell.innerHTML='<div class="cdn">'+d+'</div>'+stat+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div><div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>';
+      cell.innerHTML='<div class="cdn">'+d+'</div>'+stat+joyMark+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div><div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>';
     }
     (function(ds3,c,m){cell.addEventListener('click',function(){
       if(!c&&!m&&ds3!==todDs)return;
@@ -1422,6 +1486,76 @@ function buildLb(){
 }
 
 // ══════════════════════════════════════════════════════════
+//  今日の喜び
+// ══════════════════════════════════════════════════════════
+var JOYK='yomuyomu_joy';
+function getJoyLogs(){return lsG(JOYK)||[];}
+function saveJoyLogs(logs){lsS(JOYK,logs);}
+function addJoy(content){
+  if(!content||!content.trim())return;
+  var logs=getJoyLogs();
+  // category は将来のAI分析レポート用（プレミアム機能）
+  logs.push({date:today(),content:content.trim(),ts:Date.now(),category:null});
+  saveJoyLogs(logs);
+}
+function todayJoys(){
+  return getJoyLogs().filter(function(j){return j.date===today();});
+}
+function initJoyBubble(){
+  var joys=todayJoys();
+  var bubble=document.getElementById('joyBubble');
+  var done=document.getElementById('joyDone');
+  if(!bubble||!done)return;
+  if(joys.length>0){
+    bubble.style.display='none';
+    document.getElementById('joyPanel').style.display='none';
+    showJoyDone();
+  }else{
+    bubble.style.display='block';
+    done.style.display='none';
+  }
+}
+function openJoyPanel(){
+  document.getElementById('joyBubble').style.display='none';
+  document.getElementById('joyDone').style.display='none';
+  document.getElementById('joyPanel').style.display='block';
+  setTimeout(function(){
+    var inp=document.getElementById('joyInput');if(inp)inp.focus();
+  },100);
+}
+function closeJoyPanel(){
+  document.getElementById('joyPanel').style.display='none';
+  var joys=todayJoys();
+  if(joys.length>0)showJoyDone();
+  else document.getElementById('joyBubble').style.display='block';
+}
+function submitJoy(){
+  var inp=document.getElementById('joyInput');
+  var v=inp?inp.value.trim():'';
+  if(!v)return;
+  addJoy(v);
+  if(inp)inp.value='';
+  document.getElementById('joyPanel').style.display='none';
+  showJoyDone();
+}
+function showJoyDone(){
+  var done=document.getElementById('joyDone');
+  if(!done)return;
+  done.style.display='block';
+  renderJoyListInline();
+}
+function renderJoyListInline(){
+  var el=document.getElementById('joyListInline');
+  if(!el)return;
+  var joys=todayJoys();
+  if(!joys.length){el.innerHTML='';return;}
+  el.innerHTML='<p style="font-size:10px;color:var(--mu);margin-bottom:.35rem">今日の記録</p>'+
+    joys.map(function(j){
+      return '<div style="font-size:12px;color:var(--tx);padding:.3rem 0;border-bottom:1px solid var(--bo)">🌸 '+j.content+'</div>';
+    }).join('');
+}
+
+// ══════════════════════════════════════════════════════════
 //  タブ
 // ══════════════════════════════════════════════════════════
 function actTab(t){
@@ -1445,6 +1579,7 @@ document.querySelectorAll('.tab').forEach(function(btn){
 //  イベントリスナー
 // ══════════════════════════════════════════════════════════
 document.getElementById('manBtn').addEventListener('click',function(){addChants(1);});
+document.getElementById('joyBubbleBtn').addEventListener('click',openJoyPanel);
 document.getElementById('gcPrev').addEventListener('click',function(){gcStep(-1);});
 document.getElementById('gcNext').addEventListener('click',function(){gcStep(1);});
 document.getElementById('gcReadBtn').addEventListener('click',openReading);
