@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>法的情報 — よむよむお題目</title>
+<style>
+:root{
+  --h:35;--s:68%;
+  --a:hsl(var(--h),var(--s),48%);
+  --bg:hsl(var(--h),28%,97%);--bc:hsl(var(--h),22%,100%);
+  --bo:hsl(var(--h),22%,84%);--boa:hsl(var(--h),38%,70%);
+  --tx:hsl(var(--h),24%,14%);--mu:hsl(var(--h),16%,50%);
+}
+body.dark{
+  --bg:hsl(var(--h),18%,7%);--bc:hsl(var(--h),18%,11%);
+  --bo:hsl(var(--h),18%,20%);
+  --tx:hsl(var(--h),18%,92%);--mu:hsl(var(--h),12%,55%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI',sans-serif;
+  background:var(--bg);color:var(--tx);line-height:1.8;font-size:14px;}
+.wrap{max-width:680px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.logo{font-size:13px;font-weight:700;color:var(--a);margin-bottom:2rem;display:flex;align-items:center;gap:.5rem;}
+.logo a{color:var(--a);text-decoration:none;}
+nav{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2.5rem;border-bottom:1px solid var(--bo);padding-bottom:1rem;}
+nav a{font-size:12px;color:var(--mu);text-decoration:none;padding:4px 12px;border-radius:999px;border:1px solid var(--bo);transition:all .15s;}
+nav a:hover,nav a.on{background:var(--a);color:#fff;border-color:var(--a);}
+section{display:none;}
+section.on{display:block;}
+h1{font-size:1.2rem;font-weight:700;color:var(--a);margin-bottom:.25rem;}
+.updated{font-size:11px;color:var(--mu);margin-bottom:2rem;}
+h2{font-size:.95rem;font-weight:700;color:var(--tx);margin:2rem 0 .75rem;padding-left:.75rem;border-left:3px solid var(--a);}
+h3{font-size:.88rem;font-weight:700;color:var(--tx);margin:1.25rem 0 .4rem;}
+p{margin-bottom:.875rem;color:var(--tx);}
+ul,ol{padding-left:1.4rem;margin-bottom:.875rem;}
+li{margin-bottom:.3rem;}
+table{width:100%;border-collapse:collapse;margin-bottom:1.25rem;font-size:13px;}
+th{text-align:left;padding:.5rem .75rem;background:var(--bg);color:var(--mu);font-weight:500;border-bottom:1px solid var(--bo);white-space:nowrap;width:9rem;}
+td{padding:.5rem .75rem;border-bottom:1px solid var(--bo);vertical-align:top;}
+tr:last-child th,tr:last-child td{border-bottom:none;}
+.card{background:var(--bc);border:1px solid var(--bo);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;}
+.note{background:hsl(var(--h),28%,94%);border-left:3px solid var(--a);padding:.75rem 1rem;border-radius:0 8px 8px 0;font-size:12px;color:var(--mu);margin-bottom:1rem;}
+body.dark .note{background:hsl(var(--h),18%,14%);}
+.request-box{border:1.5px dashed var(--boa);border-radius:10px;padding:1rem;font-size:12px;color:var(--mu);margin-top:1.5rem;text-align:center;}
+a{color:var(--a);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="logo">
+    <a href="index.html">🪷 よむよむお題目</a>
+    <span style="color:var(--mu);font-weight:400">— 法的情報</span>
+  </div>
+
+  <nav>
+    <a href="#" class="on" onclick="show('pp',this);return false">プライバシーポリシー</a>
+    <a href="#" onclick="show('sc',this);return false">特定商取引法に基づく表記</a>
+  </nav>
+
+  <!-- ══ プライバシーポリシー ══ -->
+  <section id="pp" class="on">
+    <h1>プライバシーポリシー</h1>
+    <p class="updated">制定日：2026年6月1日　／　最終更新：2026年6月1日</p>
+
+    <p>「よむよむお題目」（以下「本アプリ」）を運営する半田瑞季（以下「運営者」）は、利用者のプライバシーを尊重し、個人情報の保護に努めます。本ポリシーは本アプリにおける情報の収集・利用・管理方針を定めるものです。</p>
+
+    <h2>1. 収集する情報</h2>
+
+    <h3>1-1. 利用者が入力する情報</h3>
+    <table>
+      <tr><th>項目</th><td>ユーザー名（お名前・ニックネーム）</td></tr>
+      <tr><th>用途</th><td>アプリ内の表示にのみ使用します</td></tr>
+      <tr><th>保存場所</th><td>利用者の端末内（localStorage）のみ。外部サーバーへの送信は行いません</td></tr>
+      <tr><th>任意性</th><td>入力は任意です。入力しなくてもアプリの全機能を利用できます</td></tr>
+    </table>
+
+    <h3>1-2. 自動的に生成・保存される情報</h3>
+    <p>以下のデータはすべて利用者の端末内にのみ保存されます。外部サーバーへの送信・運営者による閲覧・第三者との共有は一切行いません。</p>
+    <ul>
+      <li>お題目カウント数・累計数・日別記録</li>
+      <li>勤行（経文）の読誦回数・進捗</li>
+      <li>連続ログイン日数・ログイン日時</li>
+      <li>功徳計算の関連データ（dailyValue、ダーナ設定等）</li>
+      <li>カレンダー表示設定・テーマ（ライト/ダーク）・文字色設定</li>
+      <li>今日の喜び記録（STEP 7実装後）</li>
+    </ul>
+
+    <div class="note">
+      本アプリは現在、Google Analytics・Firebase・その他アクセス解析ツールを一切使用していません。運営者はユーザーの行動データを収集・閲覧していません。
+    </div>
+
+    <h2>2. 情報の利用目的</h2>
+    <p>収集した情報は以下の目的にのみ使用します。</p>
+    <ul>
+      <li>アプリ内の表示・機能の提供</li>
+      <li>利用者のご要望・お問い合わせへの対応</li>
+      <li>不具合の調査・改善（バグレポート機能実装後）</li>
+      <li>課金機能実装後：決済処理・購入履歴の管理</li>
+    </ul>
+
+    <h2>3. 第三者への提供</h2>
+    <p>運営者は、以下の場合を除き、利用者の情報を第三者に提供しません。</p>
+    <ul>
+      <li>利用者の同意がある場合</li>
+      <li>法令に基づき開示が必要な場合</li>
+    </ul>
+
+    <h2>4. 外部サービスの利用</h2>
+
+    <h3>4-1. 決済サービス（Stripe）— 課金機能実装後に適用</h3>
+    <p>課金機能の実装後、決済処理にStripe, Inc.のサービスを利用する予定です。決済情報（クレジットカード番号等）は利用者とStripe間で直接処理され、運営者はカード番号等の機密情報を取得・保存しません。Stripeのプライバシーポリシーは<a href="https://stripe.com/jp/privacy" target="_blank" rel="noopener">こちら</a>をご参照ください。</p>
+
+    <h3>4-2. バグレポート機能（実装後に適用）</h3>
+    <p>不具合報告機能の実装後、報告内容はGoogle Formsを経由してGoogle スプレッドシートに記録される予定です。記録される情報は、報告テキスト・発生ページ・送信時刻です。</p>
+    <p>また、不正利用・権利侵害・その他法的トラブルが発生した場合に備え、送信者の特定に必要となりうる通信ログ（IPアドレスを含む）をサーバーサイドで取得・保存することがあります。取得した情報は、紛争解決・法的手続き・捜査機関からの正式な要請への対応という目的に限り使用し、それ以外の目的には使用しません。</p>
+
+    <h2>5. localStorage（端末内データ）について</h2>
+    <p>本アプリは利用者の修行記録を端末内のlocalStorageに保存しています。このデータは利用者自身がいつでも削除できます（アプリ内メニュー「リセット（全データ削除）」から実行可能）。ブラウザのデータ消去を行うと記録が失われますのでご注意ください。</p>
+
+    <h2>6. 未成年者の利用</h2>
+    <p>本アプリは年齢制限を設けていません。未成年者が利用する場合は、保護者の方がご確認ください。</p>
+
+    <h2>7. プライバシーポリシーの変更</h2>
+    <p>本ポリシーは必要に応じて更新することがあります。重要な変更を行う場合は、アプリ内またはGitHubリポジトリにてお知らせします。変更後も本アプリをご利用いただいた場合、変更後のポリシーに同意いただいたものとみなします。</p>
+
+    <h2>8. お問い合わせ</h2>
+    <p>本ポリシーに関するご質問・個人情報の開示請求・削除依頼は、下記よりお問い合わせください。</p>
+    <div class="request-box">
+      メールアドレス：<b>reijiruiji@gmail.com</b><br>
+      <span style="font-size:11px;margin-top:.35rem;display:block">お問い合わせから7営業日以内に返答いたします</span>
+    </div>
+  </section>
+
+  <!-- ══ 特定商取引法 ══ -->
+  <section id="sc">
+    <h1>特定商取引法に基づく表記</h1>
+    <p class="updated">制定日：2026年6月1日　／　最終更新：2026年6月1日</p>
+
+    <div class="note">
+      本アプリは現在、有料コンテンツの販売を行っていません。課金機能の実装に先立ち、法的義務として本表記を設置しています。
+    </div>
+
+    <div class="card">
+      <table>
+        <tr>
+          <th>販売業者</th>
+          <td>半田瑞季</td>
+        </tr>
+        <tr>
+          <th>所在地</th>
+          <td>
+            所在地および電話番号については、下記お問い合わせ先メールアドレスにてご請求をいただければ、遅滞なく開示いたします。<br>
+            <span style="font-size:11px;color:var(--mu)">（消費者庁「通信販売広告Q&A」Q17に基づく対応）</span>
+          </td>
+        </tr>
+        <tr>
+          <th>電話番号</th>
+          <td>
+            所在地と同様、メールにてご請求いただければ遅滞なく開示いたします。
+          </td>
+        </tr>
+        <tr>
+          <th>メールアドレス</th>
+          <td><b>reijiruiji@gmail.com</b></td>
+        </tr>
+        <tr>
+          <th>販売URL</th>
+          <td>https://reijiruiji.github.io/yomuyomu/</td>
+        </tr>
+        <tr>
+          <th>販売価格</th>
+          <td>
+            各コンテンツページに表示する価格（税込）<br>
+            <span style="font-size:12px;color:var(--mu)">※課金機能実装後に更新します</span>
+          </td>
+        </tr>
+        <tr>
+          <th>代金の支払時期</th>
+          <td>購入手続き完了時</td>
+        </tr>
+        <tr>
+          <th>支払方法</th>
+          <td>
+            クレジットカード（Visa / Mastercard / American Express / JCB）<br>
+            <span style="font-size:12px;color:var(--mu)">※Stripe決済を利用します。課金機能実装後に更新します</span>
+          </td>
+        </tr>
+        <tr>
+          <th>サービス提供時期</th>
+          <td>購入完了後、即時にコンテンツをご利用いただけます</td>
+        </tr>
+        <tr>
+          <th>返品・返金</th>
+          <td>
+            デジタルコンテンツの性質上、購入完了後の返品・返金はお受けできません。ただし、システム障害等により正常にコンテンツを提供できなかった場合はこの限りではありません。
+          </td>
+        </tr>
+        <tr>
+          <th>動作環境</th>
+          <td>
+            最新版のChrome・Safari・Firefox・Edgeに対応。インターネット接続環境が必要です（一部機能はオフラインでも動作します）。
+          </td>
+        </tr>
+        <tr>
+          <th>運営責任者</th>
+          <td>半田瑞季</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="request-box">
+      所在地・電話番号の開示請求はこちらまで<br>
+      <b>reijiruiji@gmail.com</b><br>
+      <span style="font-size:11px;margin-top:.35rem;display:block">ご請求から7営業日以内に開示いたします</span>
+    </div>
+  </section>
+
+</div>
+<script>
+function show(id,el){
+  document.querySelectorAll('section').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('nav a').forEach(function(a){a.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  el.classList.add('on');
+}
+// ダークモード同期
+if(localStorage.getItem('UK')){
+  try{var d=JSON.parse(localStorage.getItem('UK'));if(d&&d.dark)document.body.classList.add('dark');}catch(e){}
+}
+</script>
+</body>
+</html>
