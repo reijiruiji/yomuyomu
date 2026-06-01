@@ -264,8 +264,10 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
 .read-page.dense .rr{font-size:calc(clamp(8px,2.5vw,10px)*var(--read-fs-mul));line-height:calc(1.28*var(--read-lh-mul));}
 .read-page.dense .rm2{font-size:calc(clamp(8px,2.5vw,9px)*var(--read-fs-mul));line-height:calc(1.3*var(--read-lh-mul));padding:2px 8px;}
 .read-page.dense .rk.rm2{font-size:calc(clamp(13px,3.5vw,20px)*var(--read-fs-mul));}
-.cstat.heat-merit{font-size:7px;color:#c76b00;font-weight:600;text-align:center;margin-top:1px;}
-body.dark .cstat.heat-merit{color:#ffba00;}
+.cstat.heat-merit{font-size:7px;color:#880e4f;font-weight:600;text-align:center;margin-top:1px;}
+body.dark .cstat.heat-merit{color:#f48fb1;}
+.heat-legend{display:flex;align-items:center;gap:4px;margin-top:6px;font-size:10px;color:var(--mu);}
+.heat-legend span.sq{width:11px;height:11px;border-radius:2px;display:inline-block;}
 .streak-card{display:flex;gap:.75rem;align-items:center;padding:1rem;margin-bottom:.75rem;
   background:linear-gradient(135deg,hsla(var(--h),55%,92%,.9),hsla(var(--h),40%,97%,.5));
   border:2px solid var(--boa);position:relative;overflow:hidden;}
@@ -483,6 +485,15 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
       <div class="card">
         <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
         <div class="cg" id="calGrid"></div>
+        <div class="heat-legend" id="calLegHeat">
+          <span>Less</span>
+          <span class="sq" style="background:var(--bo)"></span>
+          <span class="sq" style="background:#fce4ec"></span>
+          <span class="sq" style="background:#f48fb1"></span>
+          <span class="sq" style="background:#e91e63"></span>
+          <span class="sq" style="background:#880e4f"></span>
+          <span>More</span>
+        </div>
         <div class="lgd" id="calLegMon" style="margin-top:8px">
           <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
           <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
@@ -525,6 +536,15 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
         </div>
         <div id="joyTopCat" style="margin-left:auto;font-size:12px;color:var(--mu);text-align:right;line-height:1.5"></div>
       </div>
+    </div>
+
+    <!-- 今日の一価値（デイリーコンテンツ） -->
+    <div class="card" id="dailyCard" style="margin-top:.75rem;padding:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+        <span style="font-size:12px;font-weight:700;color:var(--a)">📜 今日の一価値</span>
+        <span id="dailyDateLabel" style="font-size:10px;color:var(--mu)"></span>
+      </div>
+      <div id="dailyContent"><!-- JSで描画 --></div>
     </div>
   </div>
 </div>
@@ -872,7 +892,7 @@ function launchApp(opts){
   if(st.welcomeDone&&!opts.skipLogin)newLogin=processDailyLogin();
   buildCarousel();updateChantUI();renderBanner();buildLb();updateCalStreakUI();
   actTab(st.tab||'chant');
-  initJoyBubble();renderJoyAnalysis();
+  initJoyBubble();renderJoyAnalysis();renderDailyCard();
   if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
 }
 
@@ -1402,16 +1422,13 @@ function showHint(tab){
 // ══════════════════════════════════════════════════════════
 //  カレンダー
 // ══════════════════════════════════════════════════════════
+var HEAT_LIGHT=['','#fce4ec','#f48fb1','#e91e63','#880e4f'];
+var HEAT_DARK =['','#2d0018','#7b003a','#c2185b','#f06292'];
 function meritClr(merit,mx){
   if(!merit||merit<=0)return{bg:'',bd:'',sh:''};
-  var r=Math.min(merit/(mx||1),1),lv=1;
-  if(r>0.75)lv=4;else if(r>0.5)lv=3;else if(r>0.25)lv=2;
-  var gh=st.dark?['','#2a1a00','#5d3900','#9a5c00','#ffa000']:['','#fff8e1','#ffd54f','#ffb300','#e65100'];
-  var gs=st.dark?
-    ['','rgba(255,160,0,.2)','rgba(255,160,0,.4)','rgba(255,130,0,.55)','rgba(255,160,0,.75)']:
-    ['','rgba(255,200,0,.2)','rgba(255,180,0,.4)','rgba(255,130,0,.5)','rgba(230,81,0,.6)'];
-  var bg=gh[lv];
-  return{bg:bg,bd:bg,sh:'0 0 7px '+gs[lv]};
+  var r=Math.min(merit/(mx||1),1),lv=r>0.75?4:r>0.5?3:r>0.25?2:1;
+  var c=st.dark?HEAT_DARK[lv]:HEAT_LIGHT[lv];
+  return{bg:c,bd:c,sh:'0 0 6px '+c+'88'};
 }
 function buildRecent(){
   var el=document.getElementById('recList');
@@ -1469,6 +1486,7 @@ function renderCal(){
   document.getElementById('btnHeat').classList.toggle('on',h);
   document.getElementById('btnMon').classList.toggle('on',!h);
   document.getElementById('calLegMon').style.display=h?'none':'flex';
+  document.getElementById('calLegHeat').style.display=h?'flex':'none';
   updateCalStreakUI();
   buildMonthly();
   buildRecent();
@@ -1480,6 +1498,133 @@ function renderCal(){
 function buildLb(){
   var el=document.getElementById('myM');if(el)el.textContent=fmt(totalMerit());
 }
+
+// ══════════════════════════════════════════════════════════
+//  デイリーコンテンツ（1日1価値）
+// ══════════════════════════════════════════════════════════
+var DAILY_KEY='yomy_daily_purchases';
+// 購入済みの日付一覧をlocalStorageで管理
+function getDailyPurchases(){return lsG(DAILY_KEY)||[];}
+function isDailyPurchased(ds){return getDailyPurchases().indexOf(ds)>=0;}
+function recordDailyPurchase(ds){
+  var p=getDailyPurchases();if(p.indexOf(ds)<0){p.push(ds);lsS(DAILY_KEY,p);}
+}
+
+// コンテンツデータ（30日分ローテーション）
+var DAILY_CONTENT=[
+  {title:'一念三千',preview:'一つの心の中に、三千の世界が...',
+   body:'一念三千とは、一瞬の心のはたらきの中に、宇宙のすべての存在（三千世界）が凝縮されているという日蓮の教えです。あなたが今この瞬間に唱えるお題目の一声に、全宇宙の功徳が宿ります。',
+   practice:'今日は唱えながら「この一声が宇宙に響いている」と感じてみてください。'},
+  {title:'桜梅桃李',preview:'それぞれの花は、それぞれの...',
+   body:'桜は桜、梅は梅、桃は桃、李は李として、それぞれが自分らしく咲く。人もまた同じです。他人と比べる必要はありません。あなたがあなたとして咲くことが、最も美しい功徳となります。',
+   practice:'今日は「自分であること」を肯定する言葉を一つ、自分に言ってあげましょう。'},
+  {title:'煩悩即菩提',preview:'悩みや苦しみは、そのままで...',
+   body:'煩悩（欲望や怒りなど）を捨てるのではなく、その煩悩のエネルギーを仏の智慧に変えること。失敗や悩みは修行の素材です。苦しみの中にも、覚りへの種があります。',
+   practice:'今日抱えている悩みを一つ紙に書き、「これが成長の糧になる」と宣言してみましょう。'},
+  {title:'十界互具',preview:'地獄から仏まで、すべての世界は...',
+   body:'地獄・餓鬼・畜生・修羅・人・天・声聞・縁覚・菩薩・仏という十の境涯は、誰の心にも備わっています。今この瞬間、仏の境涯を選ぶのはあなた自身です。お題目はその選択の力を与えます。',
+   practice:'怒りや不安を感じたとき、南無妙法蓮華経を三唱して、心の境涯を観察してみましょう。'},
+  {title:'依正不二',preview:'自分の内側と外側の世界は、実は...',
+   body:'「依」は環境、「正」は自分自身。この二つは切り離せません。心が変われば環境が変わる。環境に心が影響される。功徳を積むことで、自分の周りの縁が変化していきます。',
+   practice:'今日、身の回りの「良い縁」を一つ見つけて記録しましょう。'},
+  {title:'変毒為薬',preview:'毒をも薬に変える力が、お題目には...',
+   body:'どんな苦難も、お題目によって「善縁」に変えることができます。失業、病気、対人関係の困難――これらは修行の機会であり、功徳を積む素材です。毒（苦しみ）が薬（成長）に変わる瞬間を体感してください。',
+   practice:'今日の困難を一つ選んで「これが功徳の種だ」と唱えながらカウントしてみましょう。'},
+  {title:'冬は必ず春となる',preview:'どんな冬も、必ず春が来る。これは...',
+   body:'日蓮は「冬は必ず春となる」と記しました。今どれだけ辛くても、必ず好転する時が来ます。功徳を積み続けることは、その「春」を引き寄せる行為です。やめないことが最大の修行です。',
+   practice:'今日は「継続すること」を自分に誓い、一回だけでもお題目を唱えましょう。'},
+  {title:'三世の諸仏',preview:'過去・現在・未来のすべての仏が...',
+   body:'過去・現在・未来を貫く法（妙法蓮華経）を唱えることで、時空を超えた仏の慈悲と繋がります。あなたのお題目は、時間を超えて響きます。先祖も、子孫も、その響きの中にいます。',
+   practice:'今日のお題目を、先祖と未来の子孫への贈り物として捧げてみましょう。'},
+  {title:'信心の目覚め',preview:'信じることから、すべてが始まる...',
+   body:'「信」は仏教の根本です。信じることで心が開き、功徳が流れ込みます。疑いは心の扉を閉ざします。今日は純粋に、妙法の力を信じて唱えてみてください。疑わず、ただ唱える。それだけでいい。',
+   practice:'「南無妙法蓮華経」を21回、すべての思考を手放して唱えましょう。'},
+  {title:'自他共の幸福',preview:'自分だけが幸せになるのではなく...',
+   body:'日蓮仏法の目指す幸福は「自他共の幸福」です。自分が変わることで、周囲の人も変わります。あなたの功徳は、あなた一人のものではありません。家族、友人、地域、世界に波紋のように広がります。',
+   practice:'今日は誰か一人のために心を込めてお題目を唱えましょう。'},
+  {title:'現世安穏',preview:'今この世で、安穏に生きるための...',
+   body:'法華経は「現世安穏、後生善処」を約束します。今この世で心が安穏であること。それが功徳の現れです。不安を手放し、今この瞬間に集中することが、現世安穏への道です。',
+   practice:'今日は「今、ここ」にいることを意識してお題目を唱えましょう。'},
+  {title:'開目抄の精神',preview:'目を開くとは、どういうことか...',
+   body:'日蓮の「開目抄」は、真の自己に目覚めることを説きます。私たちは本来、仏の命を持っています。お題目はその仏の命を呼び覚ます鍵です。今日も、眠っている自分の仏性を呼び起こしましょう。',
+   practice:'鏡の前で自分の目を見て、「ここに仏がいる」と一度だけ言ってみましょう。'},
+  {title:'随縁真如',preview:'縁によって形を変えながら、真実は変わらない...',
+   body:'真如（真実の法）は、どんな形をとっても本質は変わりません。あなたの境遇がどう変わっても、妙法の功徳は変わりません。縁に随いながら、しかし法は変わらず。この安定が修行の基盤です。',
+   practice:'今日変えられないことを一つ受け入れ、それと共に生きることを選びましょう。'},
+  {title:'勇猛精進',preview:'勇気を持って、精進し続ける...',
+   body:'「勇猛精進」とは、臆せず力強く修行を続けることです。毎日お題目を唱えることは、小さいようで偉大な勇猛精進です。特に辛い日に唱えることの功徳は、順調な日の何倍もあります。',
+   practice:'今日、唱えたくない気持ちがあってもあえて唱えましょう。その一声が最大の功徳です。'},
+  {title:'妙法の光',preview:'闇の中でも、妙法の光は消えない...',
+   body:'どんなに暗い状況でも、南無妙法蓮華経の光は消えません。あなたが唱えるとき、その光が周囲を照らします。自分が明かりになること。それが修行者としての使命です。',
+   practice:'今日は誰かに「ありがとう」を伝えましょう。それも妙法の光です。'},
+];
+
+function getTodayContent(){
+  var epoch=new Date(2024,0,1);
+  var days=Math.floor((new Date()-epoch)/86400000);
+  return DAILY_CONTENT[days%DAILY_CONTENT.length];
+}
+function renderDailyCard(){
+  var el=document.getElementById('dailyContent');
+  var label=document.getElementById('dailyDateLabel');
+  if(!el)return;
+  var ds=today();
+  var content=getTodayContent();
+  var purchased=isDailyPurchased(ds)||hasPremiumPass();
+  if(label)label.textContent=ds;
+  if(purchased){
+    el.innerHTML=
+      '<div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:.5rem">'+content.title+'</div>'+
+      '<p style="font-size:13px;color:var(--tx);line-height:1.8;margin-bottom:.75rem">'+content.body+'</p>'+
+      '<div style="background:var(--bg);border-radius:8px;padding:.6rem .75rem;font-size:12px;color:var(--mu);line-height:1.6">'+
+        '🪷 今日の実践ヒント<br>'+content.practice+
+      '</div>';
+  }else{
+    el.innerHTML=
+      '<div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:.4rem">'+content.title+'</div>'+
+      '<p style="font-size:13px;color:var(--mu);line-height:1.7;margin-bottom:.5rem">'+content.preview+'</p>'+
+      '<div style="filter:blur(3px);user-select:none;font-size:12px;color:var(--mu);margin-bottom:.75rem;line-height:1.6">'+content.body.substring(0,60)+'……</div>'+
+      '<button onclick="openDailyPurchase()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:600">'+
+        '📜 今日の全文を読む — ¥200'+
+      '</button>'+
+      '<button onclick="openPassPurchase()" style="width:100%;margin-top:.4rem;padding:8px;border-radius:10px;background:transparent;color:var(--mu);border:1px solid var(--bo);cursor:pointer;font-size:12px">✨ 月額パス ¥500 で毎日読み放題</button>';
+  }
+}
+// Stripe Payment Link（ダッシュボードで作成後にURLを差し替え）
+// ▼ Stripeダッシュボード → Products → Payment Links で作成したURLを貼る
+var STRIPE_DAILY_URL='https://buy.stripe.com/REPLACE_WITH_DAILY_LINK'; // ¥200 単日
+var STRIPE_PASS_URL='https://buy.stripe.com/REPLACE_WITH_PASS_LINK';   // ¥500 月額パス
+
+var PASS_KEY='yomy_premium_pass';
+function hasPremiumPass(){
+  var p=lsG(PASS_KEY);if(!p)return false;
+  return new Date(p.expires)>new Date();
+}
+function recordPremiumPass(months){
+  var exp=new Date();exp.setMonth(exp.getMonth()+months);
+  lsS(PASS_KEY,{expires:exp.toISOString()});
+}
+function openDailyPurchase(){
+  var ds=today();
+  var ret=encodeURIComponent(location.origin+location.pathname+'?paid=daily&ref='+ds);
+  window.open(STRIPE_DAILY_URL+'?success_url='+ret,'_blank');
+}
+function openPassPurchase(){
+  var ret=encodeURIComponent(location.origin+location.pathname+'?paid=pass&months=1');
+  window.open(STRIPE_PASS_URL+'?success_url='+ret,'_blank');
+}
+// 決済成功リダイレクト処理
+(function(){
+  var params=new URLSearchParams(location.search);
+  var paid=params.get('paid');
+  if(paid==='daily'){
+    var ref=params.get('ref');
+    if(ref)recordDailyPurchase(ref);
+  }else if(paid==='pass'){
+    recordPremiumPass(parseInt(params.get('months')||1));
+  }
+  if(paid)history.replaceState({},'',location.pathname);
+})();
 
 // ══════════════════════════════════════════════════════════
 //  今日の喜び
@@ -1608,7 +1753,7 @@ document.querySelectorAll('.tab').forEach(function(btn){
     if(t==='chant'){updateChantUI();renderBanner();}
     if(t==='gongyou'){buildCarousel();}
     if(t==='cal'){updateCalStreakUI();renderCal();}
-    if(t==='rank'){buildLb();renderJoyAnalysis();}
+    if(t==='rank'){buildLb();renderJoyAnalysis();renderDailyCard();}
   });
 });
 
