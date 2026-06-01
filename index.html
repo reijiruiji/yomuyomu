@@ -112,6 +112,7 @@ html,body{min-height:100dvh;background:var(--bg);color:var(--tx);
 .btn-big.stop{background:linear-gradient(135deg,#c62828,#ef5350);color:#fff;}
 .btn-big.accent{background:var(--a);color:#fff;}
 .btn-big:disabled{opacity:.45;}
+.joy-cat-btn.on{background:var(--a)!important;color:#fff!important;border-color:var(--a)!important;}
 .btn-out{display:block;width:100%;padding:11px;font-size:13px;font-weight:500;border-radius:12px;
   cursor:pointer;background:transparent;color:var(--tx);border:1px solid var(--di);margin-bottom:.75rem;transition:border-color .15s;}
 .btn-out:hover{border-color:var(--a);}
@@ -447,8 +448,8 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
                color:var(--tx);font-size:13px;transition:background .15s">
         <span style="font-size:20px">🌸</span>
         <span style="flex:1;line-height:1.5">
-          本日はどんな良いことがありましたか？<br>
-          <span style="font-size:11px;color:var(--mu)">タップして記録する</span>
+          あなたにとって嬉しい、偶然の出来事はありましたか？<br>
+          <span style="font-size:11px;color:var(--mu)">タップして記録する（セレンディピティ）</span>
         </span>
         <span style="color:var(--mu);font-size:16px">›</span>
       </button>
@@ -457,11 +458,21 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
     <div id="joyPanel" style="display:none;margin-bottom:.75rem">
       <div class="card" style="border-color:var(--boa)">
         <p style="font-size:11px;color:var(--mu);margin-bottom:.75rem;line-height:1.6">
-          功徳を積むとセレンディピティが増えると言われています。<br>
+          功徳を積むと、あなたにとって嬉しい偶然の出来事（セレンディピティ）が増えると言われています。<br>
           今日あった小さな奇跡・幸運・嬉しかったことを記録しましょう。
         </p>
+        <div id="joyCatList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.75rem">
+          <button class="joy-cat-btn" data-cat="偶然の出来事" style="font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer">🌸 偶然の出来事</button>
+          <button class="joy-cat-btn" data-cat="人間関係・ご縁" style="font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer">🤝 人間関係・ご縁</button>
+          <button class="joy-cat-btn" data-cat="食事・グルメ" style="font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer">🍜 食事・グルメ</button>
+          <button class="joy-cat-btn" data-cat="仕事・学び" style="font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer">💼 仕事・学び</button>
+          <button class="joy-cat-btn" data-cat="天気・自然" style="font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer">🌤 天気・自然</button>
+          <button class="joy-cat-btn" data-cat="買い物・お得" style="font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer">🛍 買い物・お得</button>
+          <button class="joy-cat-btn" data-cat="健康・運動" style="font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer">🏃 健康・運動</button>
+          <button class="joy-cat-btn" data-cat="その他" style="font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer">✨ その他</button>
+        </div>
         <textarea id="joyInput"
-          placeholder="今日の喜びを入力…（例：電車で席が空いていた、好きなものが安くなっていた）"
+          placeholder="あなたにとって嬉しい、偶然の出来事を記録…（例：電車で席が空いていた、好きなものが安くなっていた）"
           style="width:100%;background:var(--bi);border:1.5px solid var(--bo);border-radius:10px;
                  padding:12px;color:var(--tx);font-size:14px;outline:none;resize:none;
                  min-height:80px;line-height:1.6;font-family:inherit"></textarea>
@@ -568,6 +579,17 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
         <p class="streak-msg" id="streakMsg">毎日続けると功徳がアップします</p>
         <div class="streak-bar"><div class="streak-fill" id="streakFill" style="width:0%"></div></div>
         <p class="streak-sub">功徳ブースト <b id="streakMultDisp">×1.00</b> · ログインボーナス累計 <b id="bonusMeritDisp">0</b></p>
+      </div>
+    </div>
+
+    <!-- 喜び分析 -->
+    <div id="joyAnalysis" style="display:none;margin-top:.75rem">
+      <div class="card" style="padding:1rem">
+        <div style="font-size:13px;font-weight:700;color:var(--a);margin-bottom:.75rem">🌸 あなたの喜び分析</div>
+        <div id="joySummary"></div>
+        <div id="joyPieChart" style="text-align:center;margin:.5rem 0"></div>
+        <div id="joyLegend" style="margin-bottom:.5rem"></div>
+        <div id="joyMeritCorr" style="padding:.65rem;background:var(--bg);border-radius:8px;font-size:12px;color:var(--mu);line-height:1.7"></div>
       </div>
     </div>
   </div>
@@ -904,7 +926,7 @@ function launchApp(opts){
   if(st.welcomeDone&&!opts.skipLogin)newLogin=processDailyLogin();
   buildCarousel();updateChantUI();renderBanner();buildLb();updateCalStreakUI();
   actTab(st.tab||'chant');
-  initJoyBubble();
+  initJoyBubble();renderJoyAnalysis();
   if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
 }
 
@@ -1491,11 +1513,10 @@ function buildLb(){
 var JOYK='yomuyomu_joy';
 function getJoyLogs(){return lsG(JOYK)||[];}
 function saveJoyLogs(logs){lsS(JOYK,logs);}
-function addJoy(content){
+function addJoy(content,category){
   if(!content||!content.trim())return;
   var logs=getJoyLogs();
-  // category は将来のAI分析レポート用（プレミアム機能）
-  logs.push({date:today(),content:content.trim(),ts:Date.now(),category:null});
+  logs.push({date:today(),content:content.trim(),ts:Date.now(),category:category||null});
   saveJoyLogs(logs);
 }
 function todayJoys(){
@@ -1533,10 +1554,15 @@ function submitJoy(){
   var inp=document.getElementById('joyInput');
   var v=inp?inp.value.trim():'';
   if(!v)return;
-  addJoy(v);
+  var cat=document.querySelector('#joyCatList .joy-cat-btn.on');
+  var catVal=cat?cat.dataset.cat:null;
+  addJoy(v,catVal);
   if(inp)inp.value='';
+  document.querySelectorAll('.joy-cat-btn').forEach(function(b){b.classList.remove('on');});
   document.getElementById('joyPanel').style.display='none';
   showJoyDone();
+  if(st.tab==='cal')renderCal();
+  renderJoyAnalysis();
 }
 function showJoyDone(){
   var done=document.getElementById('joyDone');
@@ -1555,6 +1581,86 @@ function renderJoyListInline(){
     }).join('');
 }
 
+// ── 喜び分析 ─────────────────────────────────────────
+var JOY_CAT_COLORS={
+  '偶然の出来事':'#f48fb1','人間関係・ご縁':'#a5d6a7','食事・グルメ':'#ffcc80',
+  '仕事・学び':'#90caf9','天気・自然':'#80deea','買い物・お得':'#ce93d8',
+  '健康・運動':'#80cbc4','その他':'#b0bec5'
+};
+function makePieSvg(data,total){
+  if(!total)return'';
+  var cx=80,cy=80,r=65,inn=32,sa=-Math.PI/2,paths='';
+  data.forEach(function(d){
+    var ang=(d.count/total)*2*Math.PI;if(ang<0.001)return;
+    var ea=sa+ang;
+    var x1=cx+r*Math.cos(sa),y1=cy+r*Math.sin(sa);
+    var x2=cx+r*Math.cos(ea),y2=cy+r*Math.sin(ea);
+    var xi1=cx+inn*Math.cos(sa),yi1=cy+inn*Math.sin(sa);
+    var xi2=cx+inn*Math.cos(ea),yi2=cy+inn*Math.sin(ea);
+    var la=ang>Math.PI?1:0;
+    paths+='<path d="M'+xi1+' '+yi1+' L'+x1+' '+y1+' A'+r+' '+r+' 0 '+la+' 1 '+x2+' '+y2+' L'+xi2+' '+yi2+' A'+inn+' '+inn+' 0 '+la+' 0 '+xi1+' '+yi1+' Z" fill="'+d.color+'" stroke="var(--bc)" stroke-width="2"/>';
+    sa=ea;
+  });
+  return'<svg width="160" height="160" viewBox="0 0 160 160">'+paths+
+    '<text x="80" y="76" text-anchor="middle" font-size="11" fill="var(--mu)">合計</text>'+
+    '<text x="80" y="94" text-anchor="middle" font-size="20" font-weight="700" fill="var(--a)">'+total+'</text></svg>';
+}
+function renderJoyAnalysis(){
+  var logs=getJoyLogs();
+  var el=document.getElementById('joyAnalysis');
+  if(!el)return;
+  if(logs.length<1){el.style.display='none';return;}
+  el.style.display='block';
+  // カテゴリ集計
+  var catCount={};
+  logs.forEach(function(j){var c=j.category||'その他';catCount[c]=(catCount[c]||0)+1;});
+  var cats=Object.keys(catCount).map(function(k){return{label:k,count:catCount[k],color:JOY_CAT_COLORS[k]||'#cfd8dc'};});
+  cats.sort(function(a,b){return b.count-a.count;});
+  var topCat=cats[0];
+  // サマリー
+  var summary=document.getElementById('joySummary');
+  if(summary)summary.innerHTML=
+    '<div style="display:flex;justify-content:space-around;text-align:center;margin-bottom:.5rem">'+
+      '<div><div style="font-size:1.6rem;font-weight:700;color:var(--a)">'+logs.length+'</div><div style="font-size:10px;color:var(--mu)">記録した喜び</div></div>'+
+      (topCat?'<div><div style="font-size:13px;font-weight:700;color:var(--a)">'+topCat.label+'</div><div style="font-size:10px;color:var(--mu)">一番多い喜び</div></div>':'')+
+    '</div>';
+  // パイチャート
+  var pieEl=document.getElementById('joyPieChart');
+  if(pieEl)pieEl.innerHTML=makePieSvg(cats,logs.length);
+  // 凡例
+  var legend=document.getElementById('joyLegend');
+  if(legend)legend.innerHTML=cats.map(function(c){
+    var pct=Math.round(c.count/logs.length*100);
+    return'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:11px">'+
+      '<span style="width:10px;height:10px;border-radius:50%;background:'+c.color+';flex-shrink:0"></span>'+
+      '<span style="color:var(--tx)">'+c.label+'</span>'+
+      '<span style="color:var(--mu);margin-left:auto">'+c.count+'件（'+pct+'%）</span></div>';
+  }).join('');
+  // 功徳×喜び相関
+  var corrEl=document.getElementById('joyMeritCorr');
+  if(!corrEl)return;
+  var joyByDate={};
+  logs.forEach(function(j){joyByDate[j.date]=(joyByDate[j.date]||0)+1;});
+  var pDays=0,pJoy=0,nDays=0,nJoy=0;
+  Object.keys(joyByDate).forEach(function(d){
+    if((st.daily[d]||0)>0){pDays++;pJoy+=joyByDate[d];}
+    else{nDays++;nJoy+=joyByDate[d];}
+  });
+  var avg1=pDays?(pJoy/pDays).toFixed(1):0;
+  var avg2=nDays?(nJoy/nDays).toFixed(1):null;
+  var txt='';
+  if(topCat)txt+='あなたが一番嬉しいのは <b style="color:var(--a)">'+topCat.label+'</b> のとき（'+topCat.count+'件）。<br>';
+  if(avg2!==null&&parseFloat(avg1)>parseFloat(avg2)){
+    var ratio=(parseFloat(avg1)/parseFloat(avg2)).toFixed(1);
+    txt+='修行した日は、そうでない日より <b style="color:var(--a)">'+ratio+'倍</b> 多くの嬉しい偶然の出来事に気付いています。';
+  }else if(pDays>0){
+    txt+='修行した日の喜び平均: <b style="color:var(--a)">'+avg1+'件</b>。<br>功徳を積むほど、嬉しい偶然の出来事が増えていきます。';
+  }else{
+    txt+='喜びを記録し続けると、あなただけの傾向が見えてきます。';
+  }
+  corrEl.innerHTML=txt;
+}
+
 // ══════════════════════════════════════════════════════════
 //  タブ
 // ══════════════════════════════════════════════════════════
@@ -1571,7 +1677,7 @@ document.querySelectorAll('.tab').forEach(function(btn){
     if(t==='chant'){updateChantUI();renderBanner();}
     if(t==='gongyou'){buildCarousel();}
     if(t==='cal'){updateCalStreakUI();renderCal();}
-    if(t==='rank')buildLb();
+    if(t==='rank'){buildLb();renderJoyAnalysis();}
   });
 });
 
@@ -1580,6 +1686,12 @@ document.querySelectorAll('.tab').forEach(function(btn){
 // ══════════════════════════════════════════════════════════
 document.getElementById('manBtn').addEventListener('click',function(){addChants(1);});
 document.getElementById('joyBubbleBtn').addEventListener('click',openJoyPanel);
+document.querySelectorAll('.joy-cat-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.joy-cat-btn').forEach(function(b){b.classList.remove('on');});
+    this.classList.add('on');
+  });
+});
 document.getElementById('gcPrev').addEventListener('click',function(){gcStep(-1);});
 document.getElementById('gcNext').addEventListener('click',function(){gcStep(1);});
 document.getElementById('gcReadBtn').addEventListener('click',openReading);
