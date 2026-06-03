@@ -647,25 +647,26 @@ body.rich .tap-drum-img{position:relative;z-index:1;
       <span class="tab-hd-title">📅 読経カレンダー</span>
       <button class="hint-btn" onclick="showHint('cal')">?</button>
     </div>
-    <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
     <div id="vCal">
       <div class="card">
         <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
         <div class="cg" id="calGrid"></div>
-        <div class="heat-legend" id="calLegHeat">
-          <span>Less</span>
-          <span class="sq" style="background:var(--bo)"></span>
-          <span class="sq" style="background:#fffef0"></span>
-          <span class="sq" style="background:#fffacd"></span>
-          <span class="sq" style="background:#fff59d"></span>
-          <span class="sq" style="background:#ffd600"></span>
-          <span>More</span>
-        </div>
-        <div class="lgd" id="calLegMon" style="margin-top:8px">
-          <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
-          <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
-          <div class="li"><span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px">己巳</span></div>
-          <div class="li"><span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px">寅</span></div>
+        <div class="heat-legend" id="calLegHeat" style="justify-content:space-between;flex-wrap:wrap;gap:6px">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span>Less</span>
+            <span class="sq" style="background:var(--bo)"></span>
+            <span class="sq" style="background:#fffef0"></span>
+            <span class="sq" style="background:#fffacd"></span>
+            <span class="sq" style="background:#fff59d"></span>
+            <span class="sq" style="background:#ffd600"></span>
+            <span>More</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px;font-size:9px;color:#fff">天赦</span>
+            <span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px;font-size:9px;color:#fff">一粒</span>
+            <span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px;font-size:9px;color:#fff">己巳</span>
+            <span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px;font-size:9px;color:#fff">寅</span>
+          </div>
         </div>
       </div>
       <div class="card"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
@@ -1818,7 +1819,6 @@ function buildRecent(){
   }).join('');
 }
 function buildMonthly(){
-  var heat=st.calView==='heat';
   var y=st.calYear,m=st.calMonth,todDs=today();
   document.getElementById('calTitle').textContent=y+'年 '+(m+1)+'月';
   var grid=document.getElementById('calGrid');grid.innerHTML='';
@@ -1838,16 +1838,13 @@ function buildMonthly(){
     var dm=cnt?dayMeritFor(ds2,cnt):0;
     var joyLogs=getJoyLogs().filter(function(j){return j.date===ds2;});
     var joyCount=joyLogs.length;
-    var joyMark=joyCount>0?'<div style="font-size:16px;text-align:center;line-height:1;margin-top:1px" title="喜び'+joyCount+'件">🌸</div>':'';
-    if(heat){
-      if(dm>0){var cl=meritClr(dm,mxM);cell.style.background=cl.bg;cell.style.borderColor=cl.bd;cell.style.boxShadow=cl.sh||'';}
-      cell.innerHTML='<div class="cdn">'+d+'</div>'+(dm>0?'<div class="cstat heat-merit">'+fmt(dm)+'</div>':'')+
-        joyMark+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div>';
-    }else{
-      if(cnt>0){var op=Math.min(0.12+cnt/60*.5,.65),L=st.dark?45:55;cell.style.background='hsla('+st.hue+',55%,'+L+'%,'+op.toFixed(2)+')';cell.style.borderColor='hsla('+st.hue+',60%,'+L+'%,.4)';}
-      var stat=cnt?'<div class="cstat"><span>'+cnt+'回</span><span class="cmerit">'+fmt(dm)+'</span></div>':'';
-      cell.innerHTML='<div class="cdn">'+d+'</div>'+stat+joyMark+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div><div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>';
-    }
+    var joyMark=joyCount>0?'<div style="font-size:16px;text-align:center;line-height:1;margin-top:1px">🌸</div>':'';
+    // ヒートマップ色 + 吉日バッジ + カウント 統合表示
+    if(dm>0){var cl=meritClr(dm,mxM);cell.style.background=cl.bg;cell.style.borderColor=cl.bd;cell.style.boxShadow=cl.sh||'';}
+    var stat=cnt?'<div class="cstat"><span>'+cnt+'回</span></div>':'';
+    var badges=bdg.length?'<div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>':'';
+    cell.innerHTML='<div class="cdn">'+d+'</div>'+stat+joyMark
+      +'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div>'+badges;
     (function(ds3,c,m,joys){cell.addEventListener('click',function(){
       if(!c&&!m&&ds3!==todDs&&!joys.length)return;
       document.getElementById('popDate').textContent=ds3;
@@ -1870,11 +1867,6 @@ function buildMonthly(){
   }
 }
 function renderCal(){
-  var h=st.calView==='heat';
-  document.getElementById('btnHeat').classList.toggle('on',h);
-  document.getElementById('btnMon').classList.toggle('on',!h);
-  document.getElementById('calLegMon').style.display=h?'none':'flex';
-  document.getElementById('calLegHeat').style.display=h?'flex':'none';
   updateCalStreakUI();
   buildMonthly();
   buildRecent();
@@ -2894,8 +2886,6 @@ document.getElementById('rouletteBtn').addEventListener('click',function(){
 document.querySelectorAll('.dq-snb').forEach(function(b){
   b.addEventListener('click',function(){dqNavTo(b.getAttribute('data-dqv'));});
 });
-document.getElementById('btnHeat').addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
-document.getElementById('btnMon').addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
 document.getElementById('calPrev').addEventListener('click',function(){st.calMonth--;if(st.calMonth<0){st.calMonth=11;st.calYear--;}lsS(UK,st);renderCal();});
 document.getElementById('calNext').addEventListener('click',function(){st.calMonth++;if(st.calMonth>11){st.calMonth=0;st.calYear++;}lsS(UK,st);renderCal();});
 (function(){
