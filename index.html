@@ -387,7 +387,7 @@ body.dark .crk.ta{color:#ef9a9a;text-shadow:-1px -1px 0 rgba(0,0,0,.9),1px -1px 
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;}
 /* ── 太鼓ボタン ── */
 .tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
-.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;filter:drop-shadow(0 6px 18px rgba(0,0,0,.35));}
+.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));}
 @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
 .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
 .tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
@@ -2415,7 +2415,7 @@ function checkUnlockThreshold(){
     wrap.classList.add('pressing');
     setTimeout(function(){wrap.classList.remove('pressing');},220);
     spawnRipples(wrap,combo);
-    playDrum(combo);
+    mokuS();
     addChants(1);
   }
   wrap.addEventListener('click',onTap);
