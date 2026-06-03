@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>よむよむお題目</title>
+<script src="dq-data.js"></script>
 <style>
 :root{
   --h:35;--s:68%;
@@ -407,7 +408,87 @@ body.dark.rich .app-hd{
 body.dark.rich .tabs{
   background:rgba(10,6,2,.80);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-top-color:rgba(255,255,255,.1);}
-
+/* お題目ボタン：リッチ時に黄金グロー */
+body.rich .tap-drum-wrap::before{
+  content:'';position:absolute;border-radius:50%;
+  width:calc(clamp(150px,48vw,210px) + 48px);height:calc(clamp(150px,48vw,210px) + 48px);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(212,168,67,.35) 0%,transparent 70%);
+  animation:rich-glow 2.8s ease-in-out infinite;pointer-events:none;z-index:0;}
+body.rich .tap-drum-img{position:relative;z-index:1;
+  box-shadow:0 0 32px rgba(212,168,67,.5),0 6px 24px rgba(0,0,0,.28);}
+@keyframes rich-glow{
+  0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(1);}
+  50%{opacity:.9;transform:translate(-50%,-50%) scale(1.08);}}
+/* ── DQ ネイティブUI ── */
+/* ── DQ Duolingo パス ── */
+.dq-path{padding:1rem .875rem 3rem;position:relative;}
+.dq-path-track{position:relative;}
+.dq-path-node{display:flex;margin-bottom:0;position:relative;z-index:1;}
+.dq-path-node:nth-child(odd){justify-content:flex-start;padding-left:calc(50% - 36px);}
+.dq-path-node:nth-child(even){justify-content:flex-end;padding-right:calc(50% - 36px);}
+.dq-node-btn{width:72px;height:72px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.6rem;border:3px solid var(--bo);background:var(--bc);cursor:pointer;transition:all .2s;flex-shrink:0;position:relative;}
+.dq-node-btn.done{border-color:var(--a);background:var(--ag);box-shadow:0 4px 16px var(--ag);}
+.dq-node-btn.current{border-color:var(--a);animation:dq-pulse 1.8s ease-in-out infinite;}
+.dq-node-btn.locked{opacity:.35;cursor:default;filter:grayscale(.6);}
+@keyframes dq-pulse{0%,100%{box-shadow:0 0 0 0 var(--ag)}60%{box-shadow:0 0 0 10px rgba(0,0,0,0)}}
+.dq-node-label{position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;font-weight:600;color:var(--a);text-align:center;}
+.dq-node-label.locked{color:var(--di);}
+.dq-node-check{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:var(--a);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;}
+.dq-connector{height:52px;position:relative;z-index:0;}
+.dq-connector-line{position:absolute;left:50%;width:3px;height:100%;background:var(--bo);transform:translateX(-50%);border-radius:2px;}
+.dq-connector-line.done{background:var(--a);}
+.dq-node-detail{background:var(--bc);border:1.5px solid var(--a);border-radius:14px;padding:1rem;margin:.5rem .25rem 0;}
+.dq-node-detail .dq-row{gap:6px;margin-top:.625rem;}
+.dq-subnav{display:flex;gap:5px;padding:.625rem .875rem .25rem;background:var(--bg);}
+.dq-snb{flex:1;padding:7px 4px;font-size:11px;font-weight:500;border:1px solid var(--bo);border-radius:8px;background:var(--bi);color:var(--mu);cursor:pointer;transition:all .15s;}
+.dq-snb.on{background:var(--a);border-color:var(--a);color:#fff;font-weight:700;}
+.dq-view{display:none;padding:.5rem .875rem .875rem;}
+.dq-view.on{display:block;}
+.dq-stage-card{background:var(--bc);border:1.5px solid var(--bo);border-radius:13px;padding:.875rem;margin-bottom:.625rem;}
+.dq-stage-card.done{border-color:var(--a);}
+.dq-stage-card.locked{opacity:.4;}
+.dq-stage-hd{display:flex;align-items:center;gap:.625rem;margin-bottom:.5rem;}
+.dq-stage-icon{font-size:1.6rem;line-height:1;flex-shrink:0;}
+.dq-sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:.5rem;}
+.dq-sc-card{background:var(--bc);border:1px solid var(--bo);border-radius:10px;padding:.625rem;cursor:pointer;transition:all .18s;}
+.dq-sc-card.read{border-color:var(--a);background:var(--ag);}
+.dq-badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.dq-badge{background:var(--bc);border:1px solid var(--bo);border-radius:10px;padding:.625rem;text-align:center;}
+.dq-badge.earned{border-color:var(--a);background:var(--ag);}
+.dq-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:450;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.dq-overlay.show{display:flex;align-items:flex-start;}
+.dq-panel{background:var(--bc);border-radius:18px 18px 0 0;margin-top:auto;padding:1.25rem;width:100%;max-height:88vh;overflow-y:auto;}
+.dq-reader-pali{font-family:Georgia,serif;font-size:1rem;color:var(--a);line-height:1.9;margin:.4rem 0;letter-spacing:.02em;}
+.dq-iyaku{font-size:12px;color:var(--tx);line-height:1.8;background:var(--bi);border-radius:8px;padding:.75rem;white-space:pre-line;margin:.5rem 0;}
+.dq-ctx{font-size:11px;color:var(--mu);line-height:1.7;margin-top:.5rem;}
+.dq-quiz-q{font-size:13px;font-weight:600;color:var(--tx);line-height:1.6;margin-bottom:.75rem;}
+.dq-quiz-ch{width:100%;text-align:left;padding:.75rem;margin-bottom:.5rem;border-radius:10px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);font-size:13px;cursor:pointer;transition:all .15s;}
+.dq-quiz-ch:hover{border-color:var(--boa);}
+.dq-quiz-ch.correct{border-color:#2e7d32;background:rgba(46,125,50,.1);color:var(--ok);}
+.dq-quiz-ch.wrong{border-color:#c0392b;background:rgba(192,57,43,.07);color:var(--err);}
+.dq-exp{font-size:11px;color:var(--mu);background:var(--bi);border-radius:8px;padding:.625rem;line-height:1.6;margin-top:.5rem;display:none;}
+.dq-xp-toast{display:inline-flex;align-items:center;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.4);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:700;color:#c8860a;margin-left:.4rem;}
+.coll-hd{font-size:11px;font-weight:700;color:var(--a);margin:.75rem 0 .35rem;letter-spacing:.03em;padding-left:.1rem;}
+/* ── 蓮池タブ ── */
+.stage-row{display:flex;align-items:center;gap:.75rem;}
+.stage-icon{font-size:2rem;line-height:1;flex-shrink:0;}
+.stage-bar{height:6px;background:var(--bc2);border-radius:3px;overflow:hidden;margin-top:.625rem;}
+.stage-fill{height:100%;background:linear-gradient(90deg,var(--a),hsl(calc(var(--h) + 30),70%,55%));border-radius:3px;transition:width .7s ease;}
+.wisdom-pill{display:inline-flex;align-items:center;font-size:10px;font-weight:600;color:var(--a);background:var(--ag);border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0;}
+.klesha-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:.625rem;}
+.klesha-btn{padding:8px 2px;border-radius:10px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);font-size:10px;cursor:pointer;text-align:center;transition:all .18s;line-height:1.4;}
+.klesha-btn .ke{display:block;font-size:1.25rem;margin-bottom:2px;}
+.klesha-btn.on{border-color:var(--a);background:var(--ag);color:var(--a);}
+.rx-card{background:var(--bi);border-radius:10px;padding:.875rem;animation:rUp .3s ease-out;}
+.rx-pali{font-size:1.15rem;font-weight:700;color:var(--a);margin-bottom:.2rem;letter-spacing:.04em;}
+.rx-meaning{font-size:11px;color:var(--mu);margin-bottom:.5rem;}
+.rx-body{font-size:12px;color:var(--tx);line-height:1.7;margin-bottom:.5rem;}
+.rx-sutra{font-size:10px;color:var(--di);font-style:italic;border-top:1px solid var(--bo);padding-top:.4rem;}
+.tomoshibi-wrap{text-align:center;padding:1.1rem 1rem .875rem;}
+.tomoshibi-count{font-size:clamp(2rem,10vw,2.8rem);font-weight:300;color:var(--a);line-height:1;}
+.tomoshibi-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-top:.75rem;max-height:34px;overflow:hidden;}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--a);opacity:.4;animation:blink calc(.8s + var(--dl,0s)) ease-in-out var(--dl,0s) infinite;}
 </style>
 </head>
 <body>
@@ -443,7 +524,18 @@ body.dark.rich .tabs{
   <div class="font-pick-inner">
     <p id="tutGreet" class="font-pick-greet" style="animation:rUp .5s ease-out both"></p>
     <p class="font-pick-lead" style="animation:rUp .5s ease-out .15s both">これからよろしくお願いいたします。🪷</p>
-    <button class="btn-done" id="fontNext" style="margin-top:.5rem">アプリを始める 🪷</button>
+    <p class="font-pick-q" style="animation:rUp .5s ease-out .3s both;margin-top:.75rem">背景の表示スタイルを選んでください</p>
+    <button class="font-opt tut-bg-opt" id="bgOptRich" data-rich="1"
+      style="animation:rUp .4s ease-out .4s both;margin-bottom:.5rem;width:100%">
+      🖼️ リッチ（時間帯で背景が変わる）<br>
+      <span style="font-size:10px;font-weight:400;color:var(--mu)">朝・昼・夜で空の景色が切り替わります</span>
+    </button>
+    <button class="font-opt tut-bg-opt" id="bgOptSimple" data-rich="0"
+      style="animation:rUp .4s ease-out .55s both;width:100%">
+      ✨ シンプル（すっきり）<br>
+      <span style="font-size:10px;font-weight:400;color:var(--mu)">背景なし。あとでメニューから変更できます</span>
+    </button>
+    <button class="btn-done" id="fontNext" style="margin-top:.875rem;opacity:.4;pointer-events:none" disabled>アプリを始める 🪷</button>
   </div>
 </div>
 
@@ -490,6 +582,10 @@ body.dark.rich .tabs{
     <button class="tab" data-t="gongyou"><span class="tab-icon">📖</span>勤行</button>
     <button class="tab" data-t="cal"><span class="tab-icon">📅</span>暦</button>
     <button class="tab" data-t="rank"><span class="tab-icon">🏆</span>累計</button>
+    <!-- 蓮池・探求はv2.0で解放予定
+    <button class="tab" data-t="lotus"><span class="tab-icon">🪷</span>蓮池</button>
+    <button class="tab" data-t="quest"><span class="tab-icon">📿</span>探求</button>
+    -->
   </div>
 
   <!-- ── お題目 ── -->
@@ -612,6 +708,99 @@ body.dark.rich .tabs{
     <!-- <div class="card" id="dailyCard" style="margin-top:.75rem;padding:1rem">
       <div id="dailyContent"></div>
     </div> -->
+  </div>
+
+  <!-- ── 蓮池 ── -->
+  <div class="tc" id="tc-lotus">
+    <!-- 灯火カウンター -->
+    <div class="card tomoshibi-wrap">
+      <div class="tomoshibi-count" id="tomoshibiCount">—</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:.2rem">今、世界中で共修している仲間</div>
+      <div class="tomoshibi-dots" id="tomoshibiDots"></div>
+    </div>
+
+    <!-- 四向四果ステージ -->
+    <div class="card card-a">
+      <div class="stage-row">
+        <div class="stage-icon" id="stageIcon">🌱</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;color:var(--a)" id="stageName">凡夫</div>
+          <div style="font-size:10px;color:var(--mu)" id="stageEn">Puthujjana</div>
+        </div>
+        <div class="wisdom-pill" id="wisdomPill">智慧 Lv.0 · ×1.0</div>
+      </div>
+      <div class="stage-bar">
+        <div class="stage-fill" id="stageFill" style="width:0%"></div>
+      </div>
+      <div style="font-size:10px;color:var(--mu);margin-top:.35rem" id="stageProgress"></div>
+    </div>
+
+    <!-- 今日の煩悩チェックイン -->
+    <div class="card">
+      <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.625rem">今日の心の状態（煩悩チェックイン）</div>
+      <div class="klesha-grid" id="kleshaGrid"></div>
+      <div class="rx-card" id="rxCard" style="display:none">
+        <div class="rx-pali" id="rxPali"></div>
+        <div class="rx-meaning" id="rxMeaning"></div>
+        <div class="rx-body" id="rxBody"></div>
+        <div class="rx-sutra" id="rxSutra"></div>
+      </div>
+    </div>
+
+    <!-- 回向 -->
+    <div class="card">
+      <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.4rem">🕯 回向（えこう）</div>
+      <p style="font-size:11px;color:var(--mu);line-height:1.65;margin-bottom:.75rem">今日積んだ功徳を、この瞬間に苦しんでいる見知らぬ誰かに回向します</p>
+      <button class="btn-big accent" id="ekoBtn" onclick="sendEko()">今日の功徳を回向する 🪷</button>
+      <div id="ekoMsg" style="font-size:11px;color:var(--mu);text-align:center;margin-top:.5rem;line-height:1.6"></div>
+    </div>
+  </div>
+
+  <!-- ── 探求 ── -->
+  <div class="tc" id="tc-quest">
+    <!-- DQ ヘッダー / 進捗 -->
+    <div style="padding:.875rem .875rem 0">
+      <div class="card" style="margin-bottom:.5rem">
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div style="font-size:2rem" id="dqLvIcon">📿</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:700;color:var(--a)" id="dqLvLabel">Lv.1</div>
+            <div style="font-size:10px;color:var(--mu)" id="dqReadLabel">経典 0冊 読破</div>
+          </div>
+          <div class="wisdom-pill" id="dqWisdomPill">智慧 Lv.0 · ×1.0</div>
+        </div>
+        <div class="stage-bar" style="margin-top:.5rem"><div class="stage-fill" id="dqXpFill" style="width:0%"></div></div>
+        <div style="font-size:10px;color:var(--mu);margin-top:.3rem" id="dqXpLabel"></div>
+      </div>
+    </div>
+    <!-- サブナビ -->
+    <div class="dq-subnav">
+      <button class="dq-snb on" data-dqv="map">🗺 マップ</button>
+      <button class="dq-snb" data-dqv="texts">📜 原典</button>
+      <button class="dq-snb" data-dqv="badges">🏅 バッジ</button>
+    </div>
+    <!-- マップ（ステージ） -->
+    <div class="dq-view on" id="dqview-map"></div>
+    <!-- 原典一覧 -->
+    <div class="dq-view" id="dqview-texts"></div>
+    <!-- バッジ -->
+    <div class="dq-view" id="dqview-badges"></div>
+  </div>
+</div>
+
+<!-- ════ DQ オーバーレイ ════ -->
+<!-- 原典リーダー -->
+<div class="dq-overlay" id="dqReaderOv" onclick="if(event.target===this)closeDQReader()">
+  <div class="dq-panel" style="margin-top:3rem">
+    <button class="btn-s" style="margin-bottom:.75rem" onclick="closeDQReader()">✕ 閉じる</button>
+    <div id="dqReaderBody"></div>
+  </div>
+</div>
+<!-- クイズ -->
+<div class="dq-overlay" id="dqQuizOv" onclick="if(event.target===this)closeDQQuiz()">
+  <div class="dq-panel" style="margin-top:3rem">
+    <button class="btn-s" style="margin-bottom:.75rem" onclick="closeDQQuiz()">✕ 閉じる</button>
+    <div id="dqQuizBody"></div>
   </div>
 </div>
 
@@ -859,6 +1048,16 @@ document.getElementById('rfpStart').addEventListener('click',function(){
   document.getElementById('readFontPickOverlay').style.display='none';
   doOpenReading();
 });
+document.querySelectorAll('.tut-bg-opt').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tut-bg-opt').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel');
+    var rich=b.getAttribute('data-rich')==='1';
+    applyRichUI(rich);
+    var fn=document.getElementById('fontNext');
+    if(fn){fn.style.opacity='1';fn.style.pointerEvents='';fn.disabled=false;}
+  });
+});
 document.getElementById('fontNext').addEventListener('click',function(){
   lsS(UK,st);
   for(var i=1;i<=4;i++){var s=document.getElementById('t'+i);if(s)s.classList.add('gone');}
@@ -983,8 +1182,11 @@ function launchApp(opts){
   document.getElementById('menuName').textContent=st.userName;
   var newLogin=false;
   if(st.welcomeDone&&!opts.skipLogin)newLogin=processDailyLogin();
+  loadDQNative();
   buildCarousel();renderGongyouUnlockCard();updateChantUI();renderBanner();buildLb();updateCalStreakUI();
   actTab(st.tab||'chant');
+  if(st.tab==='lotus')renderLotusTab();
+  if(st.tab==='quest'){renderDQSummary();renderDQMap();}
   initJoyBubble();renderJoyAnalysis();renderDailyCard();
   if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
 }
@@ -2095,6 +2297,8 @@ document.querySelectorAll('.tab').forEach(function(btn){
     if(t==='gongyou'){buildCarousel();renderGongyouUnlockCard();}
     if(t==='cal'){updateCalStreakUI();renderCal();}
     if(t==='rank'){buildLb();renderJoyAnalysis();renderDailyCard();}
+    if(t==='lotus'){renderLotusTab();}
+    if(t==='quest'){renderDQSummary();renderDQMap();}
   });
 });
 
@@ -2241,9 +2445,417 @@ document.getElementById('gcPrev').addEventListener('click',function(){gcStep(-1)
 document.getElementById('gcNext').addEventListener('click',function(){gcStep(1);});
 document.getElementById('gcReadBtn').addEventListener('click',openReading);
 document.getElementById('gcCount').addEventListener('click',function(){addGongyoReading();});
+// ══════════════════════════════════════════════════════════
+//  DQ ネイティブ — 状態管理
+// ══════════════════════════════════════════════════════════
+var dqS={xp:0,lv:1,read:new Set(),stagesDone:new Set(),earnedBadges:new Set(),quizResults:{}};
+// ══════════════════════════════════════════════════════════
+//  DQ Bridge — yomy_dq ←→ index.html
+// ══════════════════════════════════════════════════════════
+var DQ_KEY='yomy_dq';
+function saveDQNative(){
+  try{localStorage.setItem(DQ_KEY,JSON.stringify({
+    xp:dqS.xp,lv:dqS.lv,
+    read:Array.from(dqS.read),
+    stagesDone:Array.from(dqS.stagesDone),
+    earnedBadges:Array.from(dqS.earnedBadges),
+    quizResults:dqS.quizResults
+  }));}catch(e){}
 }
-// ── wisdomMult stub（develop で本実装）──
-function wisdomMult(){return 1.0;}
+function loadDQNative(){
+  try{
+    var raw=localStorage.getItem(DQ_KEY);if(!raw)return;
+    var d=JSON.parse(raw);
+    dqS.xp=d.xp||0;dqS.lv=d.lv||1;
+    dqS.read=new Set(d.read||[]);
+    dqS.stagesDone=new Set(d.stagesDone||[]);
+    dqS.earnedBadges=new Set(d.earnedBadges||[]);
+    dqS.quizResults=d.quizResults||{};
+  }catch(e){}
+}
+function dqAddXP(n){
+  if(typeof XP_LV==='undefined')return;
+  dqS.xp+=n;
+  while(dqS.lv<XP_LV.length-1&&dqS.xp>=XP_LV[dqS.lv])dqS.lv++;
+  saveDQNative();renderDQSummary();
+  if(st.tab==='lotus')renderLotusTab();
+}
+function dqCheckBadges(){
+  if(typeof BADGES==='undefined')return;
+  BADGES.forEach(function(b){if(!dqS.earnedBadges.has(b.id)&&b.cond(dqS))dqS.earnedBadges.add(b.id);});
+}
+function getWisdomLevel(){return Math.min(10,Math.floor(dqS.read.size/4));}
+function wisdomMult(){
+  var lv=getWisdomLevel();
+  if(lv>=10)return 2.0;if(lv>=7)return 1.8;if(lv>=4)return 1.5;if(lv>=1)return 1.2;
+  return 1.0;
+}
+
+// ── 探求タブ サマリー ──
+function renderDQSummary(){
+  var xp=dqS.xp,lv=dqS.lv,readN=dqS.read.size;
+  var xlv=typeof XP_LV!=='undefined'?XP_LV:[0,80,200,380,600,900,1300];
+  var prv=xlv[Math.max(0,lv-1)]||0;
+  var nxt=xlv[Math.min(lv,xlv.length-1)]||xlv[xlv.length-1];
+  var pct=nxt>prv?Math.min(100,Math.round((xp-prv)/(nxt-prv)*100)):100;
+  var icons=['📿','🌱','🕯️','🌊','🌿','🌸','🪷','💎','🔱','☀️','🌌'];
+  var el=document.getElementById('dqLvIcon');if(el)el.textContent=icons[Math.min(lv,icons.length-1)];
+  var ll=document.getElementById('dqLvLabel');if(ll)ll.textContent='Lv.'+lv+' · XP '+xp;
+  var rl=document.getElementById('dqReadLabel');if(rl)rl.textContent='経典 '+readN+'冊 読破';
+  var wl=getWisdomLevel();
+  var wp=document.getElementById('dqWisdomPill');if(wp)wp.textContent='智慧 Lv.'+wl+' · ×'+wisdomMult().toFixed(1);
+  var xf=document.getElementById('dqXpFill');if(xf)xf.style.width=pct+'%';
+  var xl=document.getElementById('dqXpLabel');if(xl)xl.textContent='次のLvまで '+(nxt-xp)+' XP';
+}
+// ── DQネイティブ レンダリング ──
+function dqNavTo(v){
+  document.querySelectorAll('.dq-snb').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-dqv')===v);});
+  document.querySelectorAll('.dq-view').forEach(function(d){d.classList.toggle('on',d.id==='dqview-'+v);});
+  if(v==='map')renderDQMap();
+  else if(v==='texts')renderDQTexts();
+  else if(v==='badges')renderDQBadges();
+}
+var _dqOpenNode=null;
+function renderDQMap(){
+  var el=document.getElementById('dqview-map');if(!el||typeof STAGES==='undefined')return;
+  var html='<div class="dq-path"><div class="dq-path-track">';
+  STAGES.forEach(function(sg,i){
+    var unlocked=i===0||dqS.stagesDone.has(STAGES[i-1].id);
+    var done=dqS.stagesDone.has(sg.id);
+    var isCurrent=unlocked&&!done;
+    var scIds=sg.scriptures||[];
+    var readCount=scIds.filter(function(id){return dqS.read.has(id);}).length;
+    var qr=dqS.quizResults[sg.quiz_id]||{};
+    var stateClass=done?'done':(isCurrent?'current':'locked');
+    var openDetail=_dqOpenNode===sg.id;
+    // ノード
+    html+='<div class="dq-path-node">'
+      +'<div style="display:flex;flex-direction:column;align-items:center">'
+      +'<div class="dq-node-btn '+stateClass+'" onclick="dqToggleNode(\''+sg.id+'\')">'
+      +sg.icon
+      +(done?'<div class="dq-node-check">✓</div>':'')
+      +'</div>'
+      +'<div class="dq-node-label'+((!unlocked)?' locked':'')+'">'+sg.rank_ja+'</div>'
+      +'</div>'
+      +'</div>';
+    // 詳細パネル（展開中のみ）
+    if(openDetail&&unlocked){
+      html+='<div class="dq-node-detail">'
+        +'<div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:.25rem">'+sg.icon+' '+sg.rank_ja+' <span style="font-size:10px;font-weight:400;color:var(--mu)">'+sg.pali+'</span></div>'
+        +'<div style="font-size:11px;color:var(--tx);line-height:1.6;margin-bottom:.5rem">'+sg.desc_ja+'</div>'
+        +'<div style="font-size:10px;color:var(--mu);background:var(--bi);border-radius:7px;padding:.375rem .625rem;margin-bottom:.5rem;white-space:pre-line;line-height:1.5">'+sg.freed_ja+'</div>'
+        +'<div style="font-size:10px;color:var(--mu);margin-bottom:.5rem">📜 原典 '+readCount+'/'+scIds.length+' 読了</div>'
+        +'<div class="dq-row">'
+        +'<button class="btn-s" onclick="openDQStageTexts('+JSON.stringify(scIds)+')">📜 原典を読む</button>'
+        +'<button class="btn-s'+(qr.passed?' btn-done-mark':'')+'" onclick="openDQQuiz(\''+sg.id+'\')" style="'+(qr.passed?'color:var(--a)':'')+'">'
+        +(qr.passed?'📝 クイズ ✓':'📝 クイズに挑戦')+'</button>'
+        +'</div>'
+        +'</div>';
+    }else if(openDetail&&!unlocked){
+      html+='<div class="dq-node-detail" style="text-align:center">'
+        +'<div style="font-size:1.5rem;margin-bottom:.25rem">🔒</div>'
+        +'<div style="font-size:11px;color:var(--mu)">前のステージをクリアすると解放されます</div>'
+        +'</div>';
+    }
+    // コネクター
+    if(i<STAGES.length-1){
+      html+='<div class="dq-connector"><div class="dq-connector-line'+(done?' done':'')+'"></div></div>';
+    }
+  });
+  html+='</div></div>';
+  el.innerHTML=html;
+}
+function dqToggleNode(id){
+  _dqOpenNode=(_dqOpenNode===id)?null:id;
+  renderDQMap();
+}
+function renderDQTexts(){
+  var el=document.getElementById('dqview-texts');if(!el||typeof SCRIPTURES==='undefined')return;
+  el.innerHTML='';
+  var groups={};
+  SCRIPTURES.forEach(function(s){if(!groups[s.collection])groups[s.collection]=[];groups[s.collection].push(s);});
+  Object.keys(groups).forEach(function(coll){
+    var hd=document.createElement('div');hd.className='coll-hd';hd.textContent=coll;el.appendChild(hd);
+    var grid=document.createElement('div');grid.className='dq-sc-grid';
+    groups[coll].forEach(function(s){
+      var c=document.createElement('div');
+      c.className='dq-sc-card'+(dqS.read.has(s.id)?' read':'');
+      c.innerHTML='<div style="font-size:1.1rem;margin-bottom:.2rem">'+s.icon+'</div>'
+        +'<div style="font-size:11px;font-weight:600;color:var(--a);line-height:1.35">'+s.title_ja+'</div>'
+        +'<div style="font-size:9px;color:var(--mu);margin-top:.15rem">'+s.ref+'</div>'
+        +(dqS.read.has(s.id)?'<div style="font-size:9px;color:var(--a);margin-top:.2rem">✓ 読了</div>':'<div style="font-size:9px;color:var(--di)">+25 XP</div>');
+      c.onclick=function(){openDQReader(s.id);};
+      grid.appendChild(c);
+    });
+    el.appendChild(grid);
+  });
+}
+function renderDQBadges(){
+  var el=document.getElementById('dqview-badges');if(!el||typeof BADGES==='undefined')return;
+  el.innerHTML='<div class="dq-badge-grid">';
+  var html='<div class="dq-badge-grid">';
+  BADGES.forEach(function(b){
+    var earned=dqS.earnedBadges.has(b.id);
+    html+='<div class="dq-badge'+(earned?' earned':'')+(earned?'':' locked')+'">'
+      +'<div style="font-size:1.5rem;'+(earned?'':'filter:grayscale(1);opacity:.4')+'">'+b.icon+'</div>'
+      +'<div style="font-size:10px;font-weight:600;color:var(--a);line-height:1.3;margin-top:.2rem">'+b.name_ja+'</div>'
+      +'<div style="font-size:9px;color:var(--mu)">'+b.desc_ja+'</div>'
+      +'</div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+// ── 原典リーダー ──
+function openDQStageTexts(ids){
+  if(!ids||!ids.length)return;
+  openDQReader(ids[0]);
+}
+function openDQReader(id){
+  if(typeof SCRIPTURES==='undefined')return;
+  var s=null;
+  for(var i=0;i<SCRIPTURES.length;i++){if(SCRIPTURES[i].id===id){s=SCRIPTURES[i];break;}}
+  if(!s)return;
+  var body=document.getElementById('dqReaderBody');if(!body)return;
+  // XP付与
+  var firstRead=!dqS.read.has(id);
+  if(firstRead){dqS.read.add(id);dqCheckBadges();dqAddXP(25);}
+  // 内容レンダリング
+  var html='<div style="font-size:10px;color:var(--mu);margin-bottom:.25rem">'+s.collection+' · '+s.ref+'</div>'
+    +'<div style="font-size:15px;font-weight:700;color:var(--a);margin-bottom:.35rem">'+s.title_ja+'</div>'
+    +(firstRead?'<div style="font-size:11px;color:var(--ok);margin-bottom:.5rem">✨ +25 XP 初読了！</div>':'')
+    +'<div style="font-size:11px;font-weight:600;color:var(--mu);margin-bottom:.25rem">意訳</div>'
+    +'<div class="dq-iyaku">'+s.iyaku_ja+'</div>'
+    +'<div style="font-size:11px;font-weight:600;color:var(--mu);margin:.625rem 0 .2rem">パーリ語原文</div>';
+  (s.lines||[]).forEach(function(line){
+    html+='<div class="dq-reader-pali">'+line.pali+'</div>';
+  });
+  html+='<div style="font-size:11px;font-weight:600;color:var(--mu);margin:.625rem 0 .2rem">解説</div>'
+    +'<div class="dq-ctx">'+s.ctx_ja+'</div>';
+  if(s.summary_ja){
+    html+='<div style="font-size:11px;font-weight:600;color:var(--mu);margin:.625rem 0 .2rem">まとめ</div>'
+      +'<div style="font-size:11px;color:var(--tx);line-height:1.7;background:var(--bi);border-radius:8px;padding:.625rem">'+s.summary_ja+'</div>';
+  }
+  body.innerHTML=html;
+  document.getElementById('dqReaderOv').classList.add('show');
+  if(st.tab==='texts')renderDQTexts();
+}
+function closeDQReader(){document.getElementById('dqReaderOv').classList.remove('show');}
+// ── クイズ ──
+var _dqQuizStageId=null,_dqQuizIdx=0,_dqQuizScore=0,_dqQuizAnswered=false;
+function openDQQuiz(stageId){
+  if(typeof STAGES==='undefined'||typeof QUIZZES==='undefined')return;
+  var sg=null;for(var i=0;i<STAGES.length;i++){if(STAGES[i].id===stageId){sg=STAGES[i];break;}}
+  if(!sg)return;
+  var quiz=QUIZZES[sg.quiz_id];if(!quiz)return;
+  _dqQuizStageId=stageId;_dqQuizIdx=0;_dqQuizScore=0;_dqQuizAnswered=false;
+  renderDQQuizQ(quiz);
+  document.getElementById('dqQuizOv').classList.add('show');
+}
+function renderDQQuizQ(quiz){
+  var body=document.getElementById('dqQuizBody');if(!body)return;
+  var q=quiz.questions[_dqQuizIdx];if(!q){finishDQQuiz(quiz);return;}
+  var total=quiz.questions.length;
+  var html='<div style="font-size:10px;color:var(--mu);margin-bottom:.5rem">'+quiz.title_ja+' ('+(_dqQuizIdx+1)+'/'+total+')</div>'
+    +'<div class="dq-quiz-q">'+q.q_ja+'</div>';
+  q.choices_ja.forEach(function(c,i){
+    html+='<button class="dq-quiz-ch" onclick="answerDQQuiz('+i+')">'+c+'</button>';
+  });
+  html+='<div class="dq-exp" id="dqExp">'+q.exp_ja+'</div>';
+  if(_dqQuizIdx>0){
+    html='<div style="font-size:11px;color:var(--mu);margin-bottom:.5rem">'+_dqQuizScore+'/'+_dqQuizIdx+' 正解</div>'+html;
+  }
+  body.innerHTML=html;
+}
+function answerDQQuiz(choiceIdx){
+  if(_dqQuizAnswered)return;
+  _dqQuizAnswered=true;
+  if(typeof STAGES==='undefined'||typeof QUIZZES==='undefined')return;
+  var sg=null;for(var i=0;i<STAGES.length;i++){if(STAGES[i].id===_dqQuizStageId){sg=STAGES[i];break;}}
+  var quiz=QUIZZES[sg.quiz_id];
+  var q=quiz.questions[_dqQuizIdx];
+  var correct=choiceIdx===q.ans;
+  if(correct)_dqQuizScore++;
+  // ボタン色付け
+  var btns=document.querySelectorAll('.dq-quiz-ch');
+  btns.forEach(function(b,i){
+    b.disabled=true;
+    if(i===q.ans)b.classList.add('correct');
+    else if(i===choiceIdx&&!correct)b.classList.add('wrong');
+  });
+  var expEl=document.getElementById('dqExp');if(expEl)expEl.style.display='block';
+  // 次の問へ
+  setTimeout(function(){
+    _dqQuizIdx++;_dqQuizAnswered=false;
+    var quiz2=QUIZZES[sg.quiz_id];
+    if(_dqQuizIdx>=quiz2.questions.length){finishDQQuiz(quiz2);}
+    else{renderDQQuizQ(quiz2);}
+  },1600);
+}
+function finishDQQuiz(quiz){
+  var body=document.getElementById('dqQuizBody');if(!body)return;
+  var total=quiz.questions.length;
+  var pct=Math.round(_dqQuizScore/total*100);
+  var passed=pct>=75;
+  // 結果保存
+  var sg=null;for(var i=0;i<STAGES.length;i++){if(STAGES[i].id===_dqQuizStageId){sg=STAGES[i];break;}}
+  var prev=dqS.quizResults[sg.quiz_id]||{};
+  dqS.quizResults[sg.quiz_id]={passed:passed||prev.passed,bestScore:Math.max(_dqQuizScore,prev.bestScore||0)};
+  if(passed&&!dqS.stagesDone.has(_dqQuizStageId)){
+    dqS.stagesDone.add(_dqQuizStageId);
+    dqCheckBadges();
+    dqAddXP(80);
+  }else{saveDQNative();}
+  body.innerHTML='<div style="text-align:center;padding:1rem 0">'
+    +'<div style="font-size:3rem;margin-bottom:.625rem">'+(passed?'🌟':'🙏')+'</div>'
+    +'<div style="font-size:1.4rem;font-weight:700;color:'+(passed?'var(--a)':'var(--mu)')+'">'+_dqQuizScore+'/'+total+'</div>'
+    +'<div style="font-size:12px;color:var(--mu);margin:.4rem 0 .75rem">'+(passed?'合格！ステージクリア 🎊':'もう一度チャレンジしましょう（75%以上で合格）')+'</div>'
+    +(passed?'<div style="font-size:11px;color:var(--a)">+80 XP 獲得</div>':'')
+    +'<button class="btn-big accent" style="margin-top:.875rem" onclick="closeDQQuiz();renderDQMap()">マップに戻る</button>'
+    +'</div>';
+}
+function closeDQQuiz(){document.getElementById('dqQuizOv').classList.remove('show');}
+
+// ══════════════════════════════════════════════════════════
+//  蓮池タブ
+// ══════════════════════════════════════════════════════════
+var KLESHA_DATA={
+  tan:{name:'貪',reading:'tanha',emoji:'🔥',desc:'執着・欲しいのに得られない',
+    pali:'Anicca',meaning:'諸行無常',
+    rx:'すべては移ろいます。執着を少し緩めるだけで、呼吸が楽になります。',
+    sutra:'Dhp.277: Sabbe saṅkhārā aniccā — すべての形成されたものは無常である',
+    dq_id:'anicca'},
+  shin:{name:'瞋',reading:'dosa',emoji:'⚡',desc:'怒り・傷・対人の苦しみ',
+    pali:'Mettā',meaning:'慈悲（メッター）',
+    rx:'怒りの奥に、傷ついた自分がいます。その自分に「安らいでほしい」と祈りましょう。',
+    sutra:'Dhp.5: Na hi verena verāni — 憎しみは憎しみによって止まない',
+    dq_id:'metta'},
+  chi:{name:'痴',reading:'moha',emoji:'🌫',desc:'迷い・空虚・消えてしまいたい',
+    pali:'Paññā',meaning:'般若（智慧）',
+    rx:'迷いは、まだ答えを探している証拠です。今日一回のお題目が、一つの光になります。',
+    sutra:'Dhp.372: Paññā natthi jhānaṃ natthi — 智慧なければ禅定なし',
+    dq_id:'panna'},
+  man:{name:'慢',reading:'māna',emoji:'🪞',desc:'自己否定・恥・劣等感',
+    pali:'Anattā',meaning:'無我（アナッター）',
+    rx:'「自分」という固い枠が苦しみの源です。あなたは海そのものです。',
+    sutra:'SN 22.59: Rūpaṃ anattā — 形あるものに固定した「自己」はない',
+    dq_id:'anatta'},
+  gi:{name:'疑',reading:'vicikicchā',emoji:'🌀',desc:'不安・将来への恐れ',
+    pali:'Saddhā',meaning:'信（サッダー）',
+    rx:'疑いは知性の証。まず今日一歩だけ踏み出しましょう。',
+    sutra:'Dhp.21: Appamādo amatapadaṃ — 怠らないことが不死の道',
+    dq_id:'tisarana'}
+};
+var LOTUS_STAGES=[
+  {min:0,     name:'凡夫',  en:'Puthujjana',icon:'🌱',next:1000},
+  {min:1000,  name:'三帰依',en:'Ti-saraṇa', icon:'🕯️',next:5000},
+  {min:5000,  name:'預流果',en:'Sotāpanna', icon:'🌊',next:20000},
+  {min:20000, name:'一来果',en:'Sakadāgāmi',icon:'🌿',next:80000},
+  {min:80000, name:'不還果',en:'Anāgāmi',  icon:'🌸',next:300000},
+  {min:300000,name:'阿羅漢',en:'Arahant',   icon:'🪷',next:null}
+];
+function getCurrentStage(){
+  var dq=getDQState();
+  var dqBonus=dq&&dq.stagesDone?dq.stagesDone.length*2000:0;
+  var score=(st.totalChants||0)+dqBonus;
+  for(var i=LOTUS_STAGES.length-1;i>=0;i--)
+    if(score>=LOTUS_STAGES[i].min)return{sg:LOTUS_STAGES[i],score:score};
+  return{sg:LOTUS_STAGES[0],score:0};
+}
+function tomoshibiEstimate(){
+  var h=new Date().getHours(),m=new Date().getMinutes();
+  var b=[8,5,4,4,5,8,18,40,32,25,20,22,28,24,20,18,20,25,38,60,80,85,70,48];
+  var base=b[h]||10;
+  return Math.max(3,base+Math.round(Math.sin(m*0.31)*base*0.18));
+}
+function buildTomoshibiDots(n){
+  var d=document.getElementById('tomoshibiDots');if(!d)return;
+  d.innerHTML='';
+  for(var i=0;i<Math.min(n,24);i++){
+    var dot=document.createElement('span');dot.className='tdot';
+    dot.style.setProperty('--dl',(Math.random()*1.5).toFixed(2)+'s');
+    d.appendChild(dot);
+  }
+}
+function renderLotusTab(){
+  var n=tomoshibiEstimate();
+  var tc=document.getElementById('tomoshibiCount');if(tc)tc.textContent=n+'人';
+  buildTomoshibiDots(n);
+  var res=getCurrentStage(),sg=res.sg,score=res.score;
+  var ni=document.getElementById('stageIcon');if(ni)ni.textContent=sg.icon;
+  var sn=document.getElementById('stageName');if(sn)sn.textContent=sg.name;
+  var se=document.getElementById('stageEn');if(se)se.textContent=sg.en;
+  var lv=getWisdomLevel();
+  var wp=document.getElementById('wisdomPill');if(wp)wp.textContent='智慧 Lv.'+lv+' · ×'+wisdomMult().toFixed(1);
+  var fill=document.getElementById('stageFill'),prog=document.getElementById('stageProgress');
+  if(sg.next){
+    var pct=Math.min(100,Math.round((score-sg.min)/(sg.next-sg.min)*100));
+    if(fill)fill.style.width=pct+'%';
+    if(prog)prog.textContent=score.toLocaleString()+' / 次の階位まで '+(sg.next-score).toLocaleString();
+  }else{
+    if(fill)fill.style.width='100%';
+    if(prog)prog.textContent='最高位 阿羅漢に到達 🪷';
+  }
+  buildKleshaGrid();
+  renderEkoMsg();
+}
+function buildKleshaGrid(){
+  var g=document.getElementById('kleshaGrid');if(!g)return;
+  g.innerHTML='';
+  Object.keys(KLESHA_DATA).forEach(function(k){
+    var d=KLESHA_DATA[k];
+    var b=document.createElement('button');
+    b.className='klesha-btn'+(st.kleshaToday===k?' on':'');
+    b.innerHTML='<span class="ke">'+d.emoji+'</span>'+d.name+'<br><span style="font-size:9px;color:var(--mu)">'+d.reading+'</span>';
+    b.onclick=function(){selectKlesha(k);};
+    g.appendChild(b);
+  });
+  if(st.kleshaToday)showRxCard(st.kleshaToday);
+}
+function selectKlesha(k){
+  st.kleshaToday=k;lsS(UK,st);
+  buildKleshaGrid();showRxCard(k);
+}
+function showRxCard(k){
+  var d=KLESHA_DATA[k];if(!d)return;
+  var card=document.getElementById('rxCard');if(!card)return;
+  card.style.display='block';
+  document.getElementById('rxPali').textContent=d.pali;
+  document.getElementById('rxMeaning').textContent=d.meaning;
+  document.getElementById('rxBody').textContent=d.rx;
+  document.getElementById('rxSutra').textContent=d.sutra;
+  var old=card.querySelector('.rx-dq-link');if(old)old.remove();
+  var btn=document.createElement('button');
+  btn.className='btn-s rx-dq-link';btn.style.marginTop='.625rem';
+  btn.textContent='📿 探求で「'+d.pali+'」を学ぶ →';
+  btn.onclick=function(){actTab('quest');};
+  card.appendChild(btn);
+}
+function sendEko(){
+  var t=today();
+  if(st.ekoDate===t){
+    var m=document.getElementById('ekoMsg');
+    if(m)m.innerHTML='今日はすでに回向済みです 🪷<br><span style="color:var(--mu)">明日もまた、誰かのために祈りましょう</span>';
+    return;
+  }
+  st.ekoDate=t;st.ekoCount=(st.ekoCount||0)+1;lsS(UK,st);
+  var btn=document.getElementById('ekoBtn');
+  if(btn){btn.disabled=true;btn.textContent='回向しました 🪷';}
+  renderEkoMsg();
+  var p=document.getElementById('joyPetal');
+  if(p){p.style.display='block';setTimeout(function(){p.style.display='none';},2500);}
+}
+function renderEkoMsg(){
+  var m=document.getElementById('ekoMsg');if(!m)return;
+  var btn=document.getElementById('ekoBtn'),done=st.ekoDate===today(),c=st.ekoCount||0;
+  if(done){
+    if(btn){btn.disabled=true;btn.textContent='回向しました 🪷';}
+    m.innerHTML='累計 '+c+'日 回向しました<br><span style="color:var(--a)">今日も誰かのために祈りが届きました</span>';
+  }else{
+    if(btn){btn.disabled=false;btn.textContent='今日の功徳を回向する 🪷';}
+    m.textContent=c>0?'累計 '+c+'日 回向しています':'';
+  }
+}
+
 // ═══════════════════════════════════════════════════════
 //  ルーレット機能（シンプル版）
 // ═══════════════════════════════════════════════════════
@@ -2277,6 +2889,8 @@ function startRoulette(){
 document.getElementById('rouletteBtn').addEventListener('click',function(){
   startRoulette();
 });
+document.querySelectorAll('.dq-snb').forEach(function(b){
+  b.addEventListener('click',function(){dqNavTo(b.getAttribute('data-dqv'));});
 });
 document.getElementById('btnHeat').addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
 document.getElementById('btnMon').addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
