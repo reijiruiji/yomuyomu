@@ -387,7 +387,7 @@ body.dark .crk.ta{color:#ef9a9a;text-shadow:-1px -1px 0 rgba(0,0,0,.9),1px -1px 
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;}
 /* ── 太鼓ボタン ── */
 .tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
-.tap-drum-img{width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px);object-fit:cover;border-radius:50%;display:block;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.28);border:3px solid rgba(255,255,255,.25);}
+.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;filter:drop-shadow(0 6px 18px rgba(0,0,0,.35));}
 @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
 .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
 .tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
@@ -598,8 +598,10 @@ body.rich .tap-drum-img{position:relative;z-index:1;
     <div id="multPill" style="display:none"></div>
     <div class="card card-a" id="countCard">
       <div class="count-wrap">
+        <div style="font-size:11px;color:var(--mu);letter-spacing:.06em;margin-bottom:2px">本日のお題目</div>
         <div class="count-num" id="sesNum">0</div>
-        <div class="count-sub" id="cumul">累計: 0回</div>
+        <div class="count-sub">回</div>
+        <div style="margin-top:10px;font-size:12px;color:var(--mu)">累計 <span id="cumul" style="color:var(--a);font-weight:700">0</span> 回</div>
       </div>
     </div>
     <div id="smsg" class="smsg"></div>
@@ -653,10 +655,10 @@ body.rich .tap-drum-img{position:relative;z-index:1;
         <div class="heat-legend" id="calLegHeat">
           <span>Less</span>
           <span class="sq" style="background:var(--bo)"></span>
-          <span class="sq" style="background:#fffde7"></span>
+          <span class="sq" style="background:#fffef0"></span>
+          <span class="sq" style="background:#fffacd"></span>
+          <span class="sq" style="background:#fff59d"></span>
           <span class="sq" style="background:#ffd600"></span>
-          <span class="sq" style="background:#ffa000"></span>
-          <span class="sq" style="background:#e65100"></span>
           <span>More</span>
         </div>
         <div class="lgd" id="calLegMon" style="margin-top:8px">
@@ -1419,8 +1421,9 @@ function renderBanner(){
   else pill.style.display='none';
 }
 function updateChantUI(){
-  document.getElementById('sesNum').textContent=st.sessionCount;
-  document.getElementById('cumul').textContent='累計: '+st.totalChants+'回';
+  var todayCount=st.daily[today()]||0;
+  var sn=document.getElementById('sesNum');if(sn)sn.textContent=todayCount;
+  var cu=document.getElementById('cumul');if(cu)cu.textContent=fmt(st.totalChants);
   var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
   var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(totalMerit());
   buildLb();
@@ -1454,7 +1457,6 @@ function addChants(n){
   if(n<=0)return;var t=today();
   st.daily[t]=(st.daily[t]||0)+n;st.totalChants+=n;st.sessionCount+=n;
   if(st.tab==='gongyou')trigGcFlash();else trigFlash();
-  mokuS();
   if(st.sessionCount%10===0){spawnP();accentS();}
   _petalCount++;
   if(_petalCount%7===0)setTimeout(showJoyPetal,500);
@@ -1794,9 +1796,9 @@ function showHint(tab){
 // ══════════════════════════════════════════════════════════
 //  カレンダー
 // ══════════════════════════════════════════════════════════
-var HEAT_LIGHT=['','#fffde7','#ffd600','#ffa000','#e65100'];
-var HEAT_DARK =['','#2a1f00','#6b4f00','#c68a00','#ffc107'];
-var HEAT_GLOW =['','rgba(255,220,0,.2)','rgba(255,180,0,.45)','rgba(255,140,0,.6)','rgba(255,100,0,.75)'];
+var HEAT_LIGHT=['','#fffef0','#fffacd','#fff59d','#ffd600'];
+var HEAT_DARK =['','#1a1500','#3a2d00','#6b5200','#c8a000'];
+var HEAT_GLOW =['','rgba(255,240,0,.1)','rgba(255,235,0,.25)','rgba(255,225,0,.45)','rgba(255,210,0,.65)'];
 function meritClr(merit,mx){
   if(!merit||merit<=0)return{bg:'',bd:'',sh:''};
   var r=Math.min(merit/(mx||1),1),lv=r>0.75?4:r>0.5?3:r>0.25?2:1;
