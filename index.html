@@ -88,11 +88,17 @@ html,body{min-height:100dvh;background:var(--bg);color:var(--tx);
   border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;}
 .app-logo{font-size:14px;font-weight:700;color:var(--a);}
 .app-sub{font-size:10px;color:var(--mu);margin-top:1px;}
-.tabs{display:flex;background:var(--bi);border-bottom:1px solid var(--bo);position:sticky;top:52px;z-index:90;}
-.tab{flex:1;padding:9px 2px;font-size:11px;border:none;background:transparent;color:var(--mu);
-  cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
-.tab.on{color:var(--a);border-bottom-color:var(--a);font-weight:600;}
-.tc{display:none;padding:.875rem;}
+/* ── ボトムナビ ── */
+.tabs{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--bc);border-top:1px solid var(--bo);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  height:calc(56px + env(safe-area-inset-bottom,0px));}
+.tab{flex:1;padding:6px 1px 4px;font-size:9px;border:none;background:transparent;color:var(--mu);
+  cursor:pointer;border-top:2px solid transparent;transition:all .15s;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1.2;}
+.tab-icon{font-size:1.25rem;line-height:1;display:block;}
+.tab.on{color:var(--a);border-top-color:var(--a);font-weight:600;}
+.tc{display:none;padding:.875rem;padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
 .tc.on{display:block;}
 .card{background:var(--bc);border:1px solid var(--bo);border-radius:13px;padding:1rem;margin-bottom:.75rem;}
 .card-a{border-color:var(--boa);}
@@ -112,6 +118,8 @@ html,body{min-height:100dvh;background:var(--bg);color:var(--tx);
 .btn-big.stop{background:linear-gradient(135deg,#c62828,#ef5350);color:#fff;}
 .btn-big.accent{background:var(--a);color:#fff;}
 .btn-big:disabled{opacity:.45;}
+.joy-cat-btn{font-size:11px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);cursor:pointer;}
+.joy-cat-btn.on{background:var(--a)!important;color:#fff!important;border-color:var(--a)!important;}
 .btn-out{display:block;width:100%;padding:11px;font-size:13px;font-weight:500;border-radius:12px;
   cursor:pointer;background:transparent;color:var(--tx);border:1px solid var(--di);margin-bottom:.75rem;transition:border-color .15s;}
 .btn-out:hover{border-color:var(--a);}
@@ -262,8 +270,10 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
 .read-page.dense .rr{font-size:calc(clamp(8px,2.5vw,10px)*var(--read-fs-mul));line-height:calc(1.28*var(--read-lh-mul));}
 .read-page.dense .rm2{font-size:calc(clamp(8px,2.5vw,9px)*var(--read-fs-mul));line-height:calc(1.3*var(--read-lh-mul));padding:2px 8px;}
 .read-page.dense .rk.rm2{font-size:calc(clamp(13px,3.5vw,20px)*var(--read-fs-mul));}
-.cstat.heat-merit{font-size:7px;color:#c76b00;font-weight:600;text-align:center;margin-top:1px;}
-body.dark .cstat.heat-merit{color:#ffba00;}
+.cstat.heat-merit{font-size:7px;color:#e65100;font-weight:600;text-align:center;margin-top:1px;}
+body.dark .cstat.heat-merit{color:#ffc107;}
+.heat-legend{display:flex;align-items:center;gap:4px;margin-top:6px;font-size:10px;color:var(--mu);}
+.heat-legend span.sq{width:11px;height:11px;border-radius:2px;display:inline-block;}
 .streak-card{display:flex;gap:.75rem;align-items:center;padding:1rem;margin-bottom:.75rem;
   background:linear-gradient(135deg,hsla(var(--h),55%,92%,.9),hsla(var(--h),40%,97%,.5));
   border:2px solid var(--boa);position:relative;overflow:hidden;}
@@ -287,12 +297,28 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
   padding:.35rem .85rem;border-radius:20px;border:1px solid var(--boa);margin-bottom:.65rem;
   animation:gentleIn .5s ease-out both;}
 .lb-streak{font-size:1rem;font-weight:600;color:var(--a);margin-bottom:.35rem;}
-.lb-bonus{font-size:1.5rem;font-weight:600;color:var(--a);margin:.2rem 0;}
+.lb-bonus{font-size:2rem;font-weight:700;color:#c8860a;margin:.2rem 0;
+  animation:bonusShine 2.2s ease-in-out infinite alternate;
+  text-shadow:0 0 10px rgba(255,200,0,.45),0 1px 3px rgba(0,0,0,.18);}
+@keyframes bonusShine{from{text-shadow:0 0 6px rgba(255,200,0,.35),0 1px 2px rgba(0,0,0,.15)}to{text-shadow:0 0 22px rgba(255,200,0,.8),0 0 40px rgba(255,180,0,.35),0 1px 4px rgba(0,0,0,.2)}}
+body.dark .lb-bonus{color:#ffd060;}
 .lb-pop-gentle .lb-bonus{display:none;}
 .lb-pop-gentle .lb-streak{display:none!important;}
-.lb-msg{font-size:13px;color:var(--tx);line-height:1.75;margin-bottom:1.1rem;font-weight:400;}
+.lb-msg{font-size:13px;color:var(--tx);line-height:1.75;margin-bottom:.65rem;font-weight:400;}
 .lb-pop-gentle .lb-msg{font-size:14px;line-height:1.85;}
 .lb-pop-gentle .btn-done{font-weight:500;letter-spacing:.04em;}
+.lb-next-lucky{font-size:11px;color:var(--mu);background:var(--bi);border:1px solid var(--bo);
+  border-radius:10px;padding:.45rem .75rem;margin-bottom:.9rem;line-height:1.6;display:none;}
+.lb-kichi-badge{display:inline-block;font-size:11px;font-weight:600;color:#b8860b;
+  background:linear-gradient(135deg,#fffde7,#fff9c4);border:1px solid #f9a825;
+  border-radius:8px;padding:.25rem .65rem;margin-bottom:.5rem;
+  animation:gentleIn .5s ease-out .2s both;}
+body.dark .lb-kichi-badge{color:#ffd060;background:linear-gradient(135deg,#3d3000,#2a2000);border-color:#f9a825;}
+#loginBonusOverlay.show .popup{box-shadow:0 0 0 2px rgba(255,200,0,.35),0 8px 40px rgba(0,0,0,.28);}
+.lb-spark{position:fixed;pointer-events:none;font-size:1.5rem;z-index:700;
+  animation:sparkBurst var(--dur,.9s) ease-out forwards;}
+@keyframes sparkBurst{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx,0),var(--ty,-90px)) scale(.25)}}
+.streak-next-lucky{font-size:10px;color:var(--mu);margin-top:.35rem;line-height:1.45;display:none;}
 @media (max-height:700px),(max-width:400px){
   .tscr{padding:1rem .85rem;}
   .read-hd{padding:.45rem .65rem;}
@@ -319,7 +345,10 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
 .cday.cem{background:transparent;border-color:transparent;cursor:default;}
 .cdn{font-size:10px;font-weight:500;color:var(--tx);margin-bottom:1px;}
 .cday.csun .cdn{color:#d32f2f;}.cday.csat .cdn{color:#1565c0;}
-.crk{font-size:7px;color:var(--di);}.crk.ta{color:var(--ok);}
+.crk{font-size:7px;color:#444;text-shadow:-1px -1px 0 rgba(255,255,255,.9),1px -1px 0 rgba(255,255,255,.9),-1px 1px 0 rgba(255,255,255,.9),1px 1px 0 rgba(255,255,255,.9);}
+body.dark .crk{color:#ddd;text-shadow:-1px -1px 0 rgba(0,0,0,.9),1px -1px 0 rgba(0,0,0,.9),-1px 1px 0 rgba(0,0,0,.9),1px 1px 0 rgba(0,0,0,.9);}
+.crk.ta{color:#c62828;text-shadow:-1px -1px 0 rgba(255,255,255,.9),1px -1px 0 rgba(255,255,255,.9),-1px 1px 0 rgba(255,255,255,.9),1px 1px 0 rgba(255,255,255,.9);}
+body.dark .crk.ta{color:#ef9a9a;text-shadow:-1px -1px 0 rgba(0,0,0,.9),1px -1px 0 rgba(0,0,0,.9),-1px 1px 0 rgba(0,0,0,.9),1px 1px 0 rgba(0,0,0,.9);}
 .cstat{display:flex;justify-content:space-between;gap:2px;font-size:7px;line-height:1.2;margin:1px 0;color:var(--a);font-weight:600;}
 .cstat .cmerit{color:var(--mu);font-weight:500;}
 .cbs{display:flex;flex-wrap:wrap;gap:1px;margin-top:1px;}
@@ -349,9 +378,60 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
 .flashing{animation:flash .5s ease-out;}
 .particle{position:fixed;pointer-events:none;z-index:999;font-size:17px;animation:ptcl 1.2s ease-out forwards;}
 @keyframes ptcl{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(.35)}}
+@keyframes petalFall{0%{top:-70px;opacity:0;transform:translateX(0) rotate(-20deg)}8%{opacity:1}85%{opacity:.9}100%{top:calc(100vh - 90px);opacity:0;transform:translateX(30px) rotate(25deg)}}
+#joyPetal{position:fixed;top:-70px;left:50%;font-size:42px;cursor:pointer;z-index:350;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.2));}
+/* ── 勤行ロックカード ── */
+.gc-locked{opacity:.5;filter:grayscale(.6);cursor:not-allowed;}
+/* ── 時間帯別背景 ── */
+#bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;}
+/* ── 太鼓ボタン ── */
+.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
+.tap-drum-img{width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px);object-fit:cover;border-radius:50%;display:block;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.28);border:3px solid rgba(255,255,255,.25);}
+@keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
+.tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
+.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
+@keyframes drum-ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(3);opacity:0}}
+/* ── リッチモード（背景画像時）── レイアウト参照UIのみ ── */
+body.rich .card,body.rich .card-a{
+  background:rgba(255,255,255,.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+body.rich .app-hd{
+  background:rgba(255,255,255,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+body.rich .tabs{
+  background:rgba(255,255,255,.80);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top-color:rgba(0,0,0,.08);}
+/* 暗モード × リッチ */
+body.dark.rich .card,body.dark.rich .card-a{
+  background:rgba(10,6,2,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+body.dark.rich .app-hd{
+  background:rgba(10,6,2,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+body.dark.rich .tabs{
+  background:rgba(10,6,2,.80);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top-color:rgba(255,255,255,.1);}
+
+/* ── DQ ネイティブUI ── */
+/* ── 蓮池タブ ── */
+.stage-row{display:flex;align-items:center;gap:.75rem;}
+.stage-icon{font-size:2rem;line-height:1;flex-shrink:0;}
+.stage-bar{height:6px;background:var(--bc2);border-radius:3px;overflow:hidden;margin-top:.625rem;}
+.stage-fill{height:100%;background:linear-gradient(90deg,var(--a),hsl(calc(var(--h) + 30),70%,55%));border-radius:3px;transition:width .7s ease;}
+.wisdom-pill{display:inline-flex;align-items:center;font-size:10px;font-weight:600;color:var(--a);background:var(--ag);border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0;}
+.klesha-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:.625rem;}
+.klesha-btn{padding:8px 2px;border-radius:10px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);font-size:10px;cursor:pointer;text-align:center;transition:all .18s;line-height:1.4;}
+.klesha-btn .ke{display:block;font-size:1.25rem;margin-bottom:2px;}
+.klesha-btn.on{border-color:var(--a);background:var(--ag);color:var(--a);}
+.rx-card{background:var(--bi);border-radius:10px;padding:.875rem;animation:rUp .3s ease-out;}
+.rx-pali{font-size:1.15rem;font-weight:700;color:var(--a);margin-bottom:.2rem;letter-spacing:.04em;}
+.rx-meaning{font-size:11px;color:var(--mu);margin-bottom:.5rem;}
+.rx-body{font-size:12px;color:var(--tx);line-height:1.7;margin-bottom:.5rem;}
+.rx-sutra{font-size:10px;color:var(--di);font-style:italic;border-top:1px solid var(--bo);padding-top:.4rem;}
+.tomoshibi-wrap{text-align:center;padding:1.1rem 1rem .875rem;}
+.tomoshibi-count{font-size:clamp(2rem,10vw,2.8rem);font-weight:300;color:var(--a);line-height:1;}
+.tomoshibi-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-top:.75rem;max-height:34px;overflow:hidden;}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--a);opacity:.4;animation:blink calc(.8s + var(--dl,0s)) ease-in-out var(--dl,0s) infinite;}
 </style>
 </head>
 <body>
+<div id="bgLayer"></div>
 
 <!-- ════ TUTORIAL ════ -->
 <div class="tscr" id="t1">
@@ -398,6 +478,17 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
     <p style="font-size:11px;color:var(--mu);margin-bottom:.4rem">お名前変更</p>
     <div class="rpair"><input type="text" id="nameChange" placeholder="新しいお名前"><button class="btn-s" onclick="changeName()">変更</button></div>
     <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
+    <p style="font-size:11px;color:var(--mu);margin-bottom:.5rem">表示設定</p>
+    <div style="display:flex;gap:6px;margin-bottom:.5rem">
+      <button class="btn-s" id="modeBtn" onclick="togDark()" style="flex:1;padding:7px">🌙 ダーク</button>
+      <button class="btn-s" id="richBtn" onclick="togRichUI()" style="flex:1;padding:7px">🖼️ 背景ON</button>
+    </div>
+    <div class="sl-row" style="margin-bottom:.75rem">
+      <label>色調</label>
+      <input type="range" id="hueSlider" min="0" max="360" value="35" style="accent-color:var(--a)">
+      <span id="hueVal" style="font-size:11px;color:var(--a);min-width:28px;text-align:right">35°</span>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
     <button class="btn-s" id="danaPromptBtn" onclick="openDana()" style="width:100%;padding:8px;background:linear-gradient(135deg,#c2185b,#e91e63);color:#fff;border-color:#c2185b">🙏 ダーナ（布施）</button>
     <hr style="border:none;border-top:1px solid var(--bo);margin:.75rem 0">
     <button class="btn-s" onclick="startTutWalk();togMenu();" style="width:100%;padding:8px">チュートリアル</button>
@@ -415,10 +506,10 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
   </div>
 
   <div class="tabs">
-    <button class="tab on" data-t="chant">🥁 お題目</button>
-    <button class="tab" data-t="gongyou">📖 勤行</button>
-    <button class="tab" data-t="cal">📅 暦</button>
-    <button class="tab" data-t="rank">🏆 累計</button>
+    <button class="tab on" data-t="chant"><span class="tab-icon">🥁</span>お題目</button>
+    <button class="tab" data-t="gongyou"><span class="tab-icon">📖</span>勤行</button>
+    <button class="tab" data-t="cal"><span class="tab-icon">📅</span>暦</button>
+    <button class="tab" data-t="rank"><span class="tab-icon">🏆</span>累計</button>
   </div>
 
   <!-- ── お題目 ── -->
@@ -436,7 +527,9 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
       </div>
     </div>
     <div id="smsg" class="smsg"></div>
-    <button class="btn-big" id="manBtn">カウント</button>
+    <div class="tap-drum-wrap" id="manBtn" role="button" tabindex="0" aria-label="お題目カウント">
+      <img src="images/CountButton.jpg" class="tap-drum-img" alt="カウント">
+    </div>
   </div>
 
   <!-- ── 勤行 ── -->
@@ -448,6 +541,9 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
         <button class="hint-btn" onclick="showHint('gongyou')">?</button>
       </div>
     </div>
+
+    <!-- 解放進捗カード -->
+    <div id="gongyouUnlockCard" style="display:none;margin-bottom:.75rem"></div>
 
     <!-- 太鼓の達人スタイルカルーセル -->
     <div class="gc-stage-wrap" id="gcWrap">
@@ -478,6 +574,15 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
       <div class="card">
         <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
         <div class="cg" id="calGrid"></div>
+        <div class="heat-legend" id="calLegHeat">
+          <span>Less</span>
+          <span class="sq" style="background:var(--bo)"></span>
+          <span class="sq" style="background:#fffde7"></span>
+          <span class="sq" style="background:#ffd600"></span>
+          <span class="sq" style="background:#ffa000"></span>
+          <span class="sq" style="background:#e65100"></span>
+          <span>More</span>
+        </div>
         <div class="lgd" id="calLegMon" style="margin-top:8px">
           <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
           <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
@@ -507,9 +612,97 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
         <p class="streak-msg" id="streakMsg">毎日続けると功徳がアップします</p>
         <div class="streak-bar"><div class="streak-fill" id="streakFill" style="width:0%"></div></div>
         <p class="streak-sub">功徳ブースト <b id="streakMultDisp">×1.00</b> · ログインボーナス累計 <b id="bonusMeritDisp">0</b></p>
+        <p class="streak-next-lucky" id="streakNextLucky"></p>
       </div>
     </div>
+
+    <!-- 喜び件数サマリー（件数のみ。グラフなし） -->
+    <div id="joyCountCard" style="display:none;margin-top:.75rem">
+      <div class="card" onclick="showJoyDetail()" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;cursor:pointer;transition:background .15s">
+        <span style="font-size:24px">🌸</span>
+        <div>
+          <div id="joyCountNum" style="font-size:1.4rem;font-weight:700;color:var(--a)">0</div>
+          <div style="font-size:11px;color:var(--mu)">記録した喜び　<span style="font-size:10px;color:var(--di)">タップで詳細</span></div>
+        </div>
+        <div id="joyTopCat" style="margin-left:auto;font-size:12px;color:var(--mu);text-align:right;line-height:1.5"></div>
+      </div>
+    </div>
+
+    <!-- 今日のお言葉（非表示中） -->
+    <!-- <div class="card" id="dailyCard" style="margin-top:.75rem;padding:1rem">
+      <div id="dailyContent"></div>
+    </div> -->
   </div>
+
+
+    <!-- 四向四果ステージ -->
+    <div class="card card-a">
+      <div class="stage-row">
+        <div class="stage-icon" id="stageIcon">🌱</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;color:var(--a)" id="stageName">凡夫</div>
+          <div style="font-size:10px;color:var(--mu)" id="stageEn">Puthujjana</div>
+        </div>
+        <div class="wisdom-pill" id="wisdomPill">智慧 Lv.0 · ×1.0</div>
+      </div>
+      <div class="stage-bar">
+        <div class="stage-fill" id="stageFill" style="width:0%"></div>
+      </div>
+      <div style="font-size:10px;color:var(--mu);margin-top:.35rem" id="stageProgress"></div>
+    </div>
+
+    <!-- 今日の煩悩チェックイン -->
+    <div class="card">
+      <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.625rem">今日の心の状態（煩悩チェックイン）</div>
+      <div class="klesha-grid" id="kleshaGrid"></div>
+      <div class="rx-card" id="rxCard" style="display:none">
+        <div class="rx-pali" id="rxPali"></div>
+        <div class="rx-meaning" id="rxMeaning"></div>
+        <div class="rx-body" id="rxBody"></div>
+        <div class="rx-sutra" id="rxSutra"></div>
+      </div>
+    </div>
+
+    <!-- 回向 -->
+    <div class="card">
+      <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.4rem">🕯 回向（えこう）</div>
+      <p style="font-size:11px;color:var(--mu);line-height:1.65;margin-bottom:.75rem">今日積んだ功徳を、この瞬間に苦しんでいる見知らぬ誰かに回向します</p>
+      <button class="btn-big accent" id="ekoBtn" onclick="sendEko()">今日の功徳を回向する 🪷</button>
+      <div id="ekoMsg" style="font-size:11px;color:var(--mu);text-align:center;margin-top:.5rem;line-height:1.6"></div>
+    </div>
+  </div>
+
+          <div class="wisdom-pill" id="dqWisdomPill">智慧 Lv.0 · ×1.0</div>
+        </div>
+        <div class="stage-bar" style="margin-top:.5rem"><div class="stage-fill" id="dqXpFill" style="width:0%"></div></div>
+        <div style="font-size:10px;color:var(--mu);margin-top:.3rem" id="dqXpLabel"></div>
+      </div>
+    </div>
+    <!-- サブナビ -->
+    <div class="dq-subnav">
+      <button class="dq-snb on" data-dqv="map">🗺 マップ</button>
+      <button class="dq-snb" data-dqv="texts">📜 原典</button>
+      <button class="dq-snb" data-dqv="badges">🏅 バッジ</button>
+    </div>
+    <!-- マップ（ステージ） -->
+    <div class="dq-view on" id="dqview-map"></div>
+    <!-- 原典一覧 -->
+    <div class="dq-view" id="dqview-texts"></div>
+    <!-- バッジ -->
+    <div class="dq-view" id="dqview-badges"></div>
+  </div>
+</div>
+
+<!-- ════ 喜び記録 ════ -->
+<!-- 花びら（カウント後・勤行後に落ちてくる） -->
+<div id="joyPetal" onclick="openJoyOverlay()">🌸</div>
+
+<!-- 入力オーバーレイ -->
+<div id="joyBg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:399" onclick="closeJoyOverlay()"></div>
+<div id="joyOverlay" style="display:none;position:fixed;bottom:0;left:0;right:0;
+  background:var(--bc);border-radius:20px 20px 0 0;padding:1.5rem 1rem 2.5rem;
+  max-height:80vh;overflow-y:auto;box-shadow:0 -4px 20px rgba(0,0,0,.2);z-index:400">
+  <div id="joyOverlayBody"><!-- 入力 or 完了 --></div>
 </div>
 
 <!-- ════ 読経オーバーレイ ════ -->
@@ -538,6 +731,17 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
   <div class="read-nav" id="readNav"></div>
 </div>
 
+<!-- 解放確認オーバーレイ -->
+<div class="overlay" id="unlockOverlay" style="display:none">
+  <div class="popup" style="max-width:300px;text-align:center">
+    <div style="font-size:2.5rem;margin-bottom:.5rem">🔓</div>
+    <div id="unlockTitle" style="font-size:16px;font-weight:700;color:var(--a);margin-bottom:.5rem"></div>
+    <div id="unlockDesc" style="font-size:12px;color:var(--mu);margin-bottom:1.25rem;line-height:1.7"></div>
+    <button onclick="confirmUnlock()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;margin-bottom:.5rem">解放する 🎊</button>
+    <button onclick="closeUnlockOverlay()" style="width:100%;padding:9px;border-radius:10px;background:transparent;color:var(--mu);border:1px solid var(--bo);cursor:pointer;font-size:12px">あとで</button>
+  </div>
+</div>
+
 <!-- 勤行・初回読経：見やすい文字の選択 -->
 <div class="tscr gone" id="readFontPickOverlay" style="z-index:520;display:none">
   <div class="font-pick-inner">
@@ -564,20 +768,34 @@ body.dark .streak-card{background:linear-gradient(135deg,hsla(var(--h),35%,18%,.
   <div class="popup login-bonus-pop" id="loginPopInner">
     <div class="lb-stamp" id="lbStampRow">おかえりなさい</div>
     <div class="lb-gentle-icon" id="lbGentleIcon" style="display:none" aria-hidden="true">🪷</div>
+    <div class="lb-kichi-badge" id="lbKichiBadge" style="display:none"></div>
     <p class="lb-streak" id="lbStreak"></p>
     <p class="lb-bonus" id="lbBonus"></p>
     <p class="lb-msg" id="lbMsg"></p>
+    <p class="lb-next-lucky" id="lbNextLucky"></p>
     <button type="button" class="btn-done" id="lbBtn" onclick="closeLoginBonus()" style="width:100%"></button>
   </div>
 </div>
 <div class="overlay" id="dayPop">
-  <div class="popup">
+  <div class="popup" style="max-width:320px;width:100%">
     <div id="popDate" style="font-size:12px;color:var(--mu);margin-bottom:7px"></div>
     <div style="display:flex;justify-content:center;gap:1.5rem;margin-top:.25rem">
-      <div><div id="popCount" style="font-size:40px;font-weight:600;color:var(--a)">0</div><div style="font-size:11px;color:var(--mu)">お題目回数</div></div>
-      <div><div id="popMerit" style="font-size:40px;font-weight:600;color:var(--a)">0</div><div style="font-size:11px;color:var(--mu)">功徳</div></div>
+      <div><div id="popCount" style="font-size:36px;font-weight:600;color:var(--a)">0</div><div style="font-size:11px;color:var(--mu)">お題目回数</div></div>
+      <div><div id="popMerit" style="font-size:36px;font-weight:600;color:var(--a)">0</div><div style="font-size:11px;color:var(--mu)">功徳</div></div>
     </div>
-    <button class="btn-s" onclick="document.getElementById('dayPop').classList.remove('show')" style="margin-top:.875rem;padding:7px 20px">閉じる</button>
+    <div id="popJoys" style="display:none;margin-top:.875rem;text-align:left"></div>
+    <button class="btn-s" onclick="document.getElementById('dayPop').classList.remove('show')" style="margin-top:.875rem;padding:7px 20px;width:100%">閉じる</button>
+  </div>
+</div>
+
+<!-- 喜び詳細ポップアップ -->
+<div class="overlay" id="joyDetailOverlay">
+  <div class="popup" style="max-width:340px;width:100%;max-height:80vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+      <h3 style="color:var(--a);font-size:15px">🌸 記録した喜び</h3>
+      <button class="btn-s" onclick="document.getElementById('joyDetailOverlay').classList.remove('show')" style="padding:4px 10px">✕</button>
+    </div>
+    <div id="joyDetailBody" style="font-size:13px;color:var(--tx);line-height:1.7"></div>
   </div>
 </div>
 
@@ -651,9 +869,11 @@ var UK='yomy_v14',LBK='yomy_lb_v14';
 var st={
   userName:'',daily:{},totalChants:0,sessionCount:0,
   tab:'chant',calView:'heat',calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),
-  hue:35,dark:false,sensitivity:8,fontPref:'kanji',gongyouFontDone:false,
+  hue:35,dark:false,richUI:false,sensitivity:8,fontPref:'kanji',gongyouFontDone:false,
   readFs:100,readLh:100,readGap:100,dailyValue:5000,gIdx:0,gCounts:{},
-  loginStreak:0,lastLoginDate:'',lastLoginBonusDate:'',bonusMerit:0,welcomeDone:false
+  loginStreak:0,lastLoginDate:'',lastLoginBonusDate:'',bonusMerit:0,welcomeDone:false,
+  unlockedLevel:0,
+  kleshaToday:'',ekoDate:'',ekoCount:0
 };
 var actx=null;
 var gcAnimating=false,gcCurReal=0;
@@ -823,11 +1043,12 @@ function init(){
     if(st.readGap==null)st.readGap=100;
     if(st.loginStreak==null)st.loginStreak=0;
     if(st.bonusMerit==null)st.bonusMerit=0;
+    if(st.gongyoMerit==null)st.gongyoMerit=0;
     if(!st.lastLoginDate)st.lastLoginDate='';
     if(!st.lastLoginBonusDate)st.lastLoginBonusDate='';
     if(st.welcomeDone===undefined)st.welcomeDone=!!st.lastLoginBonusDate;
     for(var i=1;i<=4;i++){var s=document.getElementById('t'+i);if(s)s.classList.add('gone');}
-    applyHue(st.hue);applyMode(st.dark);syncSliders();
+    applyHue(st.hue);applyMode(st.dark);applyRichUI(!!st.richUI);syncSliders();
     launchApp({skipLogin:!st.welcomeDone});
     if(!st.welcomeDone)startTutWalk();
   } else {
@@ -840,8 +1061,9 @@ function launchApp(opts){
   document.getElementById('menuName').textContent=st.userName;
   var newLogin=false;
   if(st.welcomeDone&&!opts.skipLogin)newLogin=processDailyLogin();
-  buildCarousel();updateChantUI();renderBanner();buildLb();updateCalStreakUI();
+  buildCarousel();renderGongyouUnlockCard();updateChantUI();renderBanner();buildLb();updateCalStreakUI();
   actTab(st.tab||'chant');
+  initJoyBubble();renderJoyAnalysis();renderDailyCard();
   if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
 }
 
@@ -852,25 +1074,48 @@ function launchApp(opts){
 function applyHue(h){st.hue=h;document.documentElement.style.setProperty('--h',h);}
 function applyMode(d){st.dark=d;document.body.classList.toggle('dark',d);var mb=document.getElementById('modeBtn');if(mb)mb.textContent=d?'☀️ ライト':'🌙 ダーク';}
 function togDark(){applyMode(!st.dark);lsS(UK,st);}
+function applyRichUI(on){
+  st.richUI=on;
+  if(on){
+    applyBg();
+    document.body.classList.add('rich');
+  }else{
+    document.body.style.backgroundImage='';
+    document.body.style.backgroundSize='';
+    document.body.style.backgroundPosition='';
+    document.body.style.backgroundAttachment='';
+    document.body.classList.remove('rich');
+  }
+  var rb=document.getElementById('richBtn');
+  if(rb)rb.textContent=on?'🖼️ 背景ON':'🖼️ 背景OFF';
+}
+function togRichUI(){applyRichUI(!st.richUI);lsS(UK,st);}
 function togMenu(){document.getElementById('mpanel').classList.toggle('open');document.getElementById('mover').classList.toggle('open');}
 function changeName(){var v=document.getElementById('nameChange').value.trim();if(!v)return;st.userName=v;lsS(UK,st);document.getElementById('menuName').textContent=v;togMenu();}
 function resetAll(){if(!confirm('全データを削除しますか？'))return;localStorage.removeItem(UK);localStorage.removeItem(LBK);location.reload();}
 function syncSliders(){
   var hs=document.getElementById('hueSlider');if(hs)hs.value=st.hue;
+  var hv=document.getElementById('hueVal');if(hv)hv.textContent=st.hue+'°';
   var sr=document.getElementById('sensR');if(sr){sr.value=st.sensitivity;}
   var sv=document.getElementById('sensV');if(sv)sv.textContent=st.sensitivity;
   var dr=document.getElementById('dvR');if(dr)dr.value=st.dailyValue;
   var dv=document.getElementById('dvV');if(dv)dv.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
 }
 function syncSens(v){st.sensitivity=v;var sr=document.getElementById('sensR');if(sr)sr.value=v;var sv=document.getElementById('sensV');if(sv)sv.textContent=v;lsS(UK,st);}
-(function(){var e=document.getElementById('hueSlider');if(e)e.addEventListener('input',function(ev){applyHue(+ev.target.value);lsS(UK,st);if(st.tab==='cal')renderCal();});})();
+(function(){var e=document.getElementById('hueSlider');if(e)e.addEventListener('input',function(ev){applyHue(+ev.target.value);var hv=document.getElementById('hueVal');if(hv)hv.textContent=ev.target.value+'°';lsS(UK,st);if(st.tab==='cal')renderCal();});})();
 (function(){var e=document.getElementById('sensR');if(e)e.addEventListener('input',function(ev){syncSens(+ev.target.value);});})();
 (function(){var e=document.getElementById('dvR');if(e)e.addEventListener('input',function(ev){st.dailyValue=+ev.target.value;var dv=document.getElementById('dvV');if(dv)dv.textContent='¥'+Math.round(st.dailyValue/1000)+'k';updateChantUI();lsS(UK,st);});})();
 
 // ══════════════════════════════════════════════════════════
 //  お題目カウント
 // ══════════════════════════════════════════════════════════
-function calcMerit(c,dv,m){return Math.round(c*(dv/1000)*(m||1)*10)/10;}
+// 1文字=1功徳。南無妙法蓮華経=7文字、勤行は経文の文字数
+var NAMU_CHARS=7;
+function calcMerit(chars,m){return Math.round(chars*(m||1)*10)/10;}
+function gongyoCharCount(g){
+  if(!g||!g.lines)return 0;
+  return g.lines.reduce(function(s,l){return s+(l[0]||'').replace(/[\s\n\r]/g,'').length;},0);
+}
 function streakMult(){
   var s=st.loginStreak||0;
   return 1+Math.min(Math.max(s-1,0),49)*0.02;
@@ -916,8 +1161,8 @@ function streakMilestone(s){
 }
 function totalMerit(){
   var info=dayI(new Date());
-  var chant=calcMerit(st.totalChants,st.dailyValue,getMult(info)*streakMult());
-  return Math.round((chant+(st.bonusMerit||0))*10)/10;
+  var chant=calcMerit(st.totalChants*NAMU_CHARS,getMult(info)*streakMult()*wisdomMult());
+  return Math.round((chant+(st.gongyoMerit||0)+(st.bonusMerit||0))*10)/10;
 }
 function updateCalStreakUI(animate){
   var s=st.loginStreak||0,ms=streakMilestone(s),pct=Math.min(100,Math.round(s/ms*100));
@@ -928,8 +1173,42 @@ function updateCalStreakUI(animate){
   var bd=document.getElementById('bonusMeritDisp');if(bd)bd.textContent=fmt(st.bonusMerit||0);
   var rn=document.getElementById('rankStreakNote');
   if(rn)rn.textContent=s>0?('連続'+s+'日 · ブースト ×'+streakMult().toFixed(2)):'';
+  var snl=document.getElementById('streakNextLucky');
+  if(snl){
+    var todayItems=banItems(dayI(new Date()));
+    if(todayItems.length){
+      var label=todayItems.map(function(i){return i.t.replace(/\s*功徳×[\d.]+/,'');}).join('・');
+      snl.innerHTML='🌟 今日は <b style="color:var(--a)">'+label+'</b> ✨';
+      snl.style.display='block';
+    }else{
+      var next=getNextAuspicious();
+      if(next){
+        var nl=next.items[0].t.replace(/\s*功徳×[\d.]+/,'');
+        snl.innerHTML='📅 次の <b style="color:var(--a)">'+nl+'</b> まで <b style="color:var(--a)">'+next.diff+'日</b>（功徳×'+next.mult+'）';
+        snl.style.display='block';
+      }else{snl.style.display='none';}
+    }
+  }
   var card=document.getElementById('streakCard');
   if(card&&animate){card.classList.remove('celebrate');void card.offsetWidth;card.classList.add('celebrate');}
+}
+function spawnLoginSparks(){
+  var emojis=['✨','🌸','🪷','⭐','💫','🎊','🌟'];
+  var cx=window.innerWidth/2,cy=window.innerHeight*0.42;
+  for(var i=0;i<18;i++){
+    (function(idx){
+      var delay=idx*55;
+      setTimeout(function(){
+        var p=document.createElement('div');p.className='lb-spark';
+        var ang=Math.random()*Math.PI*2,dist=60+Math.random()*120;
+        var tx=Math.round(Math.cos(ang)*dist),ty=Math.round(-Math.abs(Math.sin(ang))*dist-40);
+        p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+        p.style.cssText='left:'+(cx-12+tx)+'px;top:'+(cy-12)+'px;--tx:'+tx+'px;--ty:'+ty+'px;--dur:'+(0.7+Math.random()*.5)+'s;font-size:'+(1+Math.random()*.8)+'rem;';
+        document.body.appendChild(p);
+        setTimeout(function(){p.remove();},1200);
+      },delay);
+    })(i);
+  }
 }
 function showLoginPopup(mode){
   var gentle=mode==='first';
@@ -940,11 +1219,40 @@ function showLoginPopup(mode){
   var bonus=document.getElementById('lbBonus');
   var msg=document.getElementById('lbMsg');
   var btn=document.getElementById('lbBtn');
+  var nld=document.getElementById('lbNextLucky');
+  var badge=document.getElementById('lbKichiBadge');
   if(inner)inner.classList.toggle('lb-pop-gentle',gentle);
   if(stamp)stamp.style.display=gentle?'none':'inline-block';
   if(icon)icon.style.display=gentle?'block':'none';
   var b=st.todayLoginBonus||0;
   var name=st.userName?st.userName+'さん、':'';
+  // 吉日情報
+  var todayInfo=dayI(new Date()),todayItems=banItems(todayInfo),todayMult=getMult(todayInfo);
+  if(!gentle){
+    // 今日が吉日なら金バッジ表示
+    if(badge){
+      if(todayItems.length){
+        badge.textContent='🌟 今日は '+todayItems.map(function(i){return i.t.replace(/\s*功徳×[\d.]+/,'');}).join('・')+' ✨';
+        badge.style.display='inline-block';
+      }else{badge.style.display='none';}
+    }
+    // 次の吉日カウントダウン
+    if(nld){
+      if(!todayItems.length){
+        var next=getNextAuspicious();
+        if(next){
+          var label=next.items[0].t.replace(/\s*功徳×[\d.]+/,'');
+          var extra=next.items.length>1?' ＋'+(next.items.length-1)+'種重なる 🎊':'';
+          var hint=next.mult>=4?'<b style="color:#c8860a">特大チャンス！功徳×'+next.mult+'</b>':'功徳×'+next.mult;
+          nld.innerHTML='📅 次の <b>'+label+'</b>'+extra+' まであと <b style="color:var(--a)">'+next.diff+'日</b> — '+hint;
+          nld.style.display='block';
+        }else{nld.style.display='none';}
+      }else{nld.style.display='none';}
+    }
+  }else{
+    if(badge)badge.style.display='none';
+    if(nld)nld.style.display='none';
+  }
   if(gentle){
     if(streak)streak.textContent='';
     if(bonus)bonus.textContent='';
@@ -958,12 +1266,24 @@ function showLoginPopup(mode){
     if(msg)msg.textContent=streakMessageGentle(s)+' またいつでも、どうぞ。';
     if(btn)btn.textContent='ありがとうございます';
     updateCalStreakUI(true);
+    setTimeout(spawnLoginSparks,200);
   }
   document.getElementById('loginBonusOverlay').classList.add('show');
 }
 function closeLoginBonus(){
   document.getElementById('loginBonusOverlay').classList.remove('show');
   st.todayLoginBonus=0;lsS(UK,st);
+}
+function getNextAuspicious(){
+  var t=new Date();
+  for(var i=1;i<=62;i++){
+    var d=new Date(t);d.setDate(d.getDate()+i);
+    var info=dayI(d);
+    if(info.tensha||info.ich||info.tora||info.tsuchi){
+      return{diff:i,ds:dss(d),items:banItems(info),mult:getMult(info)};
+    }
+  }
+  return null;
 }
 function renderBanner(){
   var info=dayI(new Date()),items=banItems(info);
@@ -986,7 +1306,7 @@ function dayMeritFor(ds2,cnt){
   var p=ds2.split('-');var d=new Date(+p[0],+p[1]-1,+p[2]);
   var m=getMult(dayI(d));
   if(ds2===today())m*=streakMult();
-  return calcMerit(cnt,st.dailyValue,m);
+  return calcMerit(cnt*NAMU_CHARS,m);
 }
 function trigFlash(){var c=document.getElementById('countCard');if(!c)return;c.classList.add('flashing');setTimeout(function(){c.classList.remove('flashing');},500);try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}}
 function trigGcFlash(){
@@ -994,14 +1314,29 @@ function trigGcFlash(){
   spawnP();try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}
 }
 function spawnP(){['🌸','✨','🪷'].forEach(function(e){var p=document.createElement('div');p.className='particle';p.textContent=e;p.style.left=(20+Math.random()*60)+'%';p.style.top=(20+Math.random()*40)+'%';document.body.appendChild(p);setTimeout(function(){p.remove();},1200);});}
+function addGongyoReading(g){
+  var chars=gongyoCharCount(g||GG[gcCurReal]);
+  var m=getMult(dayI(new Date()))*streakMult();
+  var merit=calcMerit(chars,m);
+  st.gongyoMerit=(st.gongyoMerit||0)+merit;
+  st.gCounts[(g||GG[gcCurReal]).id]=(st.gCounts[(g||GG[gcCurReal]).id]||0)+1;
+  trigGcFlash();
+  if(st.sessionCount%10===0){spawnP();}
+  updateChantUI();lsS(UK,st);persistLb();updateGcUI();
+  setTimeout(showJoyPetal,800);
+  checkUnlockThreshold();
+}
 function addChants(n){
   if(n<=0)return;var t=today();
   st.daily[t]=(st.daily[t]||0)+n;st.totalChants+=n;st.sessionCount+=n;
   if(st.tab==='gongyou')trigGcFlash();else trigFlash();
   mokuS();
   if(st.sessionCount%10===0){spawnP();accentS();}
+  _petalCount++;
+  if(_petalCount%7===0)setTimeout(showJoyPetal,500);
   updateChantUI();lsS(UK,st);persistLb();
   if(st.tab==='cal')renderCal();
+  checkUnlockThreshold();
 }
 function persistLb(){
   var merit=totalMerit();
@@ -1051,11 +1386,17 @@ function buildCarousel(){
 
   GG.forEach(function(g,i){
     var card=document.createElement('div');
-    card.className='gc-card2';
+    var lv=GG_LEVELS&&GG_LEVELS[g.id]!==undefined?GG_LEVELS[g.id]:0;
+    var locked=lv>(st.unlockedLevel||0);
+    card.className='gc-card2'+(locked?' gc-locked':'');
     card.id='gc'+i;
     card.dataset.idx=i;
     var hasText=g.lines&&g.lines.length>0;
-    card.innerHTML=
+    card.innerHTML= locked?
+      '<div class="gc-num">'+(i+1)+'/'+GG_N+'</div>'+
+      '<div style="font-size:1.8rem;margin:.5rem 0">🔒</div>'+
+      '<div class="gc-title">'+g.t+'</div>'+
+      '<div style="font-size:10px;color:var(--mu);margin-top:.3rem">'+(lv===1?'かんたんモード解放後':'難しいモード解放後')+'</div>':
       '<div class="gc-num">'+(i+1)+'/'+GG_N+'</div>'+
       '<div class="gc-title">'+g.t+'</div>'+
       '<div class="gc-sub">'+g.s+'</div>'+
@@ -1063,14 +1404,16 @@ function buildCarousel(){
       '<div class="gc-desc">'+g.d+'</div>';
     // カード幅を固定セット（CSSのwidthより優先）
     card.style.width=CARD_W+'px';
-    card.addEventListener('click',function(){
-      var idx=parseInt(card.dataset.idx);
-      if(idx===gcCurReal)return;
-      var n=GG_N;
-      var raw=idx-gcCurReal;while(raw>n/2)raw-=n;while(raw<-n/2)raw+=n;
-      if(raw>0)for(var k=0;k<raw;k++)gcStep(1);
-      else for(var k=0;k<-raw;k++)gcStep(-1);
-    });
+    if(!locked){
+      card.addEventListener('click',function(){
+        var idx=parseInt(card.dataset.idx);
+        if(idx===gcCurReal)return;
+        var n=GG_N;
+        var raw=idx-gcCurReal;while(raw>n/2)raw-=n;while(raw<-n/2)raw+=n;
+        if(raw>0)for(var k=0;k<raw;k++)gcStep(1);
+        else for(var k=0;k<-raw;k++)gcStep(-1);
+      });
+    }
     stage.appendChild(card);
   });
 
@@ -1287,8 +1630,7 @@ function gotoPage(idx){
 function readNext(){
   if(readLineIdx>=readLines.length-1){
     closeReading();
-    var g=GG[gcCurReal];st.gCounts[g.id]=(st.gCounts[g.id]||0)+1;
-    addChants(1);lsS(UK,st);updateGcUI();
+    addGongyoReading(GG[gcCurReal]);lsS(UK,st);
     spawnP();accentS();
     setTimeout(function(){alert('🪷 読経完了！功徳が得られました。\n南無妙法蓮華経');},200);
     return;
@@ -1328,16 +1670,15 @@ function showHint(tab){
 // ══════════════════════════════════════════════════════════
 //  カレンダー
 // ══════════════════════════════════════════════════════════
+var HEAT_LIGHT=['','#fffde7','#ffd600','#ffa000','#e65100'];
+var HEAT_DARK =['','#2a1f00','#6b4f00','#c68a00','#ffc107'];
+var HEAT_GLOW =['','rgba(255,220,0,.2)','rgba(255,180,0,.45)','rgba(255,140,0,.6)','rgba(255,100,0,.75)'];
 function meritClr(merit,mx){
   if(!merit||merit<=0)return{bg:'',bd:'',sh:''};
-  var r=Math.min(merit/(mx||1),1),lv=1;
-  if(r>0.75)lv=4;else if(r>0.5)lv=3;else if(r>0.25)lv=2;
-  var gh=st.dark?['','#2a1a00','#5d3900','#9a5c00','#ffa000']:['','#fff8e1','#ffd54f','#ffb300','#e65100'];
-  var gs=st.dark?
-    ['','rgba(255,160,0,.2)','rgba(255,160,0,.4)','rgba(255,130,0,.55)','rgba(255,160,0,.75)']:
-    ['','rgba(255,200,0,.2)','rgba(255,180,0,.4)','rgba(255,130,0,.5)','rgba(230,81,0,.6)'];
-  var bg=gh[lv];
-  return{bg:bg,bd:bg,sh:'0 0 7px '+gs[lv]};
+  var r=Math.min(merit/(mx||1),1),lv=r>0.75?4:r>0.5?3:r>0.25?2:1;
+  var c=st.dark?HEAT_DARK[lv]:HEAT_LIGHT[lv];
+  var g=HEAT_GLOW[lv];
+  return{bg:c,bd:c,sh:'0 0 '+(lv*3)+'px '+g+', 0 0 '+(lv*6)+'px '+g};
 }
 function buildRecent(){
   var el=document.getElementById('recList');
@@ -1369,22 +1710,36 @@ function buildMonthly(){
     var cls='cday';if(dow===0)cls+=' csun';if(dow===6)cls+=' csat';if(ds2===todDs)cls+=' today';
     var cell=document.createElement('div');cell.className=cls;
     var dm=cnt?dayMeritFor(ds2,cnt):0;
+    var joyLogs=getJoyLogs().filter(function(j){return j.date===ds2;});
+    var joyCount=joyLogs.length;
+    var joyMark=joyCount>0?'<div style="font-size:16px;text-align:center;line-height:1;margin-top:1px" title="喜び'+joyCount+'件">🌸</div>':'';
     if(heat){
       if(dm>0){var cl=meritClr(dm,mxM);cell.style.background=cl.bg;cell.style.borderColor=cl.bd;cell.style.boxShadow=cl.sh||'';}
       cell.innerHTML='<div class="cdn">'+d+'</div>'+(dm>0?'<div class="cstat heat-merit">'+fmt(dm)+'</div>':'')+
-        '<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div>';
+        joyMark+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div>';
     }else{
       if(cnt>0){var op=Math.min(0.12+cnt/60*.5,.65),L=st.dark?45:55;cell.style.background='hsla('+st.hue+',55%,'+L+'%,'+op.toFixed(2)+')';cell.style.borderColor='hsla('+st.hue+',60%,'+L+'%,.4)';}
       var stat=cnt?'<div class="cstat"><span>'+cnt+'回</span><span class="cmerit">'+fmt(dm)+'</span></div>':'';
-      cell.innerHTML='<div class="cdn">'+d+'</div>'+stat+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div><div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>';
+      cell.innerHTML='<div class="cdn">'+d+'</div>'+stat+joyMark+'<div class="crk'+(info.taian?' ta':'')+'">'+info.rky+'</div><div class="cbs">'+bdg.map(function(b){return '<span class="cb" style="background:'+b.bg+'">'+b.t+'</span>';}).join('')+'</div>';
     }
-    (function(ds3,c,m){cell.addEventListener('click',function(){
-      if(!c&&!m&&ds3!==todDs)return;
+    (function(ds3,c,m,joys){cell.addEventListener('click',function(){
+      if(!c&&!m&&ds3!==todDs&&!joys.length)return;
       document.getElementById('popDate').textContent=ds3;
       document.getElementById('popCount').textContent=c;
       document.getElementById('popMerit').textContent=fmt(m);
+      var pj=document.getElementById('popJoys');
+      if(pj){
+        if(joys.length){
+          pj.innerHTML='<div style="font-size:11px;font-weight:600;color:var(--a);margin-bottom:.4rem">🌸 今日の喜び（'+joys.length+'件）</div>'+
+            joys.map(function(j){
+              return'<div style="font-size:12px;color:var(--tx);padding:.35rem 0;border-bottom:1px solid var(--bo);line-height:1.5">'+
+                (j.category?'<span style="font-size:10px;background:var(--bi);border-radius:4px;padding:1px 5px;color:var(--mu);margin-right:5px">'+j.category+'</span>':'')+j.content+'</div>';
+            }).join('');
+          pj.style.display='block';
+        }else{pj.style.display='none';}
+      }
       document.getElementById('dayPop').classList.add('show');
-    });})(ds2,cnt,dm);
+    });})(ds2,cnt,dm,joyLogs);
     grid.appendChild(cell);
   }
 }
@@ -1393,6 +1748,7 @@ function renderCal(){
   document.getElementById('btnHeat').classList.toggle('on',h);
   document.getElementById('btnMon').classList.toggle('on',!h);
   document.getElementById('calLegMon').style.display=h?'none':'flex';
+  document.getElementById('calLegHeat').style.display=h?'flex':'none';
   updateCalStreakUI();
   buildMonthly();
   buildRecent();
@@ -1403,6 +1759,398 @@ function renderCal(){
 // ══════════════════════════════════════════════════════════
 function buildLb(){
   var el=document.getElementById('myM');if(el)el.textContent=fmt(totalMerit());
+}
+
+// ══════════════════════════════════════════════════════════
+//  デイリーコンテンツ（1日1価値）
+// ══════════════════════════════════════════════════════════
+var DAILY_KEY='yomy_daily_purchases';
+// 購入済みの日付一覧をlocalStorageで管理
+function getDailyPurchases(){return lsG(DAILY_KEY)||[];}
+function isDailyPurchased(ds){return getDailyPurchases().indexOf(ds)>=0;}
+function recordDailyPurchase(ds){
+  var p=getDailyPurchases();if(p.indexOf(ds)<0){p.push(ds);lsS(DAILY_KEY,p);}
+}
+
+// ダルマクエストの単語データ（dharma_quest_v2.htmlと共有）
+var DHARMA_WORDS=[
+  {w:'Buddho',r:'buddho / buddha',m:'仏陀 — 目覚めた者',chunk:'三帰依',lang:'Pāli',
+   desc:'悟りを開いたゴータマ・シッダッタのこと。語源はskt. buddha「目覚める」。三宝（仏・法・僧）の第一。帰依することで心に揺るぎない拠り所が生まれる。',
+   pali:'"Buddhaṃ saraṇaṃ gacchāmi"',jp:'仏に帰依します',src:'三帰依文',
+   effects:['迷いが晴れる','心の安定','拠り所を得る']},
+  {w:'Dhammo',r:'dhammo / dharma',m:'法 — 真理・宇宙の法則',chunk:'三帰依',lang:'Pāli',
+   desc:'仏陀が説いた真理の全体。宇宙の根本法則でもある。「法にしたがって生きる」ことで苦から離れられる。サンスクリット語ではdharma。',
+   pali:'"Dhammaṃ saraṇaṃ gacchāmi"',jp:'法に帰依します',src:'三帰依文',
+   effects:['苦しみの減少','正しい理解','智慧の増長']},
+  {w:'Saṅgho',r:'saṅgho / sangha',m:'僧伽 — 修行者の共同体',chunk:'三帰依',lang:'Pāli',
+   desc:'共に修行する仲間の集まり。ひとりで悟るのでなく、共に歩む道。現代では仏教コミュニティ全体を指す。孤独の解毒剤とも言われる。',
+   pali:'"Saṅghaṃ saraṇaṃ gacchāmi"',jp:'僧伽に帰依します',src:'三帰依文',
+   effects:['孤独の解消','共同体の力','修行の継続']},
+  {w:'Anicca',r:'anicca',m:'無常 — すべては移ろう',chunk:'三法印',lang:'Pāli',
+   desc:'「かたちあるものはすべて変わる」。この洞察だけで執着が緩み、苦しみが軽くなる。変化を恐れず受け入れることが安心の鍵。',
+   pali:'"Sabbe saṅkhārā aniccā"',jp:'一切の形成されたものは無常である',src:'Dhp.277',
+   effects:['執着からの解放','変化への適応','今この瞬間へ']},
+  {w:'Dukkha',r:'dukkha',m:'苦 — 思い通りにならない',chunk:'三法印',lang:'Pāli',
+   desc:'「思い通りにならない」という生の根本的な不満足感。苦を直視することが解決の第一歩。回避ではなく認識が悟りへの道。',
+   pali:'"Sabbe saṅkhārā dukkhā"',jp:'一切の形成されたものは苦である',src:'Dhp.278',
+   effects:['現実直視の力','原因の理解','解脱への第一歩']},
+  {w:'Anattā',r:'anattā',m:'無我 — 固定した自己はない',chunk:'三法印',lang:'Pāli',
+   desc:'「固定した私」という実体は存在しない。最も難解で、最も解放的な真理。エゴへの執着を手放すことで本当の自由になる。',
+   pali:'"Sabbe dhammā anattā"',jp:'一切の存在は無我である',src:'Dhp.279',
+   effects:['エゴの解放','深い自由','涅槃への直通路']},
+  {w:'Mettā',r:'mettā',m:'慈しみ — 無条件の愛',chunk:'慈悲',lang:'Pāli',
+   desc:'敵も味方も区別せず、すべての存在の幸福を願う心。慈悲瞑想の核心語。怒りの解毒剤とされ、眠りが深くなるとも言われる。',
+   pali:'"Mettaṃ ca sabbalokasmiṃ"',jp:'全世界に対して慈しみを広げよ',src:'Sn.150 慈経',
+   effects:['怒りの消滅','良い眠り','人間関係の改善']},
+  {w:'Karuṇā',r:'karuṇā',m:'悲 — 苦しむ者への共感',chunk:'慈悲',lang:'Pāli',
+   desc:'他者の苦しみを自分のこととして感じる心。mettāが幸福を願うのに対し、karuṇāは苦しみを取り除きたいという衝動。現代語の「compassion」に最も近い。',
+   pali:'"Karuṇā hitesitā"',jp:'悲は（他者の）幸益を求める',src:'パーリ論書 定義',
+   effects:['共感力の向上','利他行動の動機','慈悲の深化']},
+  {w:'Yoga',r:'yoga',m:'結合・修行・技術',chunk:'ヨーガ語',lang:'Sanskrit',
+   desc:'語源は「くびき（繋ぐ）」。自己を真理に繋ぎ止める実践。仏教の禅定と対応する概念。カルマ・ヨーガは結果への執着なき行為。',
+   pali:'"Yogaḥ karmasu kauśalam"',jp:'行動における熟練がヨーガである',src:'バガヴァッドギーター 2.50',
+   effects:['集中力の向上','行為の浄化','自己超越']},
+  {w:'Mokṣa',r:'mokṣa',m:'解脱 — 輪廻からの解放',chunk:'ヨーガ語',lang:'Sanskrit',
+   desc:'業と輪廻のサイクルから完全に自由になること。仏教のnibbāna（涅槃）に相当。動詞muc-「解放する」から。すべての苦の終わり。',
+   pali:'"Mokṣasya mūlam ārjavam"',jp:'解脱の根本は誠実さである',src:'ヴェーダーンタ哲学',
+   effects:['完全な自由','苦の終滅','永遠の安楽']},
+  {w:'Ahiṃsā',r:'ahiṃsā',m:'非暴力 — 傷つけないこと',chunk:'ヨーガ語',lang:'Sanskrit',
+   desc:'「a（否定）＋hiṃsā（暴力）」。ガンジーが独立運動に採用した思想の核。仏教の不殺生戒と対応。「最高の法は非暴力」とマハーバーラタも説く。',
+   pali:'"Ahiṃsā paramo dharmaḥ"',jp:'非暴力こそ最高の法である',src:'マハーバーラタ',
+   effects:['業の浄化','内的強さ','平和な関係']},
+  {w:'Nibbāna',r:'nibbāna / nirvāṇa',m:'涅槃 — 炎が吹き消された状態',chunk:'涅槃・解脱',lang:'Pāli',
+   desc:'語源は「吹き消す（nir-vā）」。貪り・怒り・迷い（三毒）の炎が消えた状態。死後の世界ではなく、今この生で達成できるとブッダは説いた。',
+   pali:'"Nibbānaṃ paramaṃ sukhaṃ"',jp:'涅槃は最上の楽である',src:'Dhp.203',
+   effects:['三毒の消滅','完全な平和','最上の幸福']},
+  {w:'Paññā',r:'paññā / prajñā',m:'般若 — 智慧・洞察',chunk:'涅槃・解脱',lang:'Pāli',
+   desc:'三学（戒・定・慧）の完成形。単なる知識ではなく、存在の本質を直接見る力。サンスクリット語ではprajñā（般若）。般若心経の「般若」がこれ。',
+   pali:'"Paññā natthi jhānaṃ natthi"',jp:'智慧なければ禅定なし',src:'Dhp.372',
+   effects:['無明の解消','直接の洞察','解脱の完成']},
+  {w:'नमस्ते',r:'namaste',m:'あなたの神性に礼拝します',chunk:'ヒンディー語',lang:'Hindi',
+   desc:'「namas（お辞儀）＋te（あなたに）」。単なる挨拶ではなく、「あなたの中の神性に礼拝する」という深い意味。インド哲学では人の内に神が宿るとされる。',
+   pali:'"Namas te"',jp:'あなたの中の神性に敬礼します',src:'ヴェーダ時代から続く挨拶',
+   effects:['相互尊重','神性の認識','場の浄化']},
+  {w:'सत्य',r:'satya',m:'真実 — あるもの',chunk:'ヒンディー語',lang:'Hindi',
+   desc:'語源はsat「存在するもの・真実」。ガンジーの「サティヤーグラハ（真実の力）」の核心語。サtyameva jayate（真実のみが勝利する）はインドの国是。',
+   pali:'"Satyameva jayate"',jp:'真実のみが勝利する',src:'ムンダカ・ウパニシャッド 3.1.6',
+   effects:['内的強さ','信頼の構築','業の浄化']},
+];
+
+// 後方互換：以前のコード向けダミー
+var DAILY_CONTENT=[
+  {title:'一念三千',preview:'一つの心の中に、三千の世界が...',
+   body:'一念三千とは、一瞬の心のはたらきの中に、宇宙のすべての存在（三千世界）が凝縮されているという日蓮の教えです。あなたが今この瞬間に唱えるお題目の一声に、全宇宙の功徳が宿ります。',
+   practice:'今日は唱えながら「この一声が宇宙に響いている」と感じてみてください。'},
+  {title:'桜梅桃李',preview:'それぞれの花は、それぞれの...',
+   body:'桜は桜、梅は梅、桃は桃、李は李として、それぞれが自分らしく咲く。人もまた同じです。他人と比べる必要はありません。あなたがあなたとして咲くことが、最も美しい功徳となります。',
+   practice:'今日は「自分であること」を肯定する言葉を一つ、自分に言ってあげましょう。'},
+  {title:'煩悩即菩提',preview:'悩みや苦しみは、そのままで...',
+   body:'煩悩（欲望や怒りなど）を捨てるのではなく、その煩悩のエネルギーを仏の智慧に変えること。失敗や悩みは修行の素材です。苦しみの中にも、覚りへの種があります。',
+   practice:'今日抱えている悩みを一つ紙に書き、「これが成長の糧になる」と宣言してみましょう。'},
+  {title:'十界互具',preview:'地獄から仏まで、すべての世界は...',
+   body:'地獄・餓鬼・畜生・修羅・人・天・声聞・縁覚・菩薩・仏という十の境涯は、誰の心にも備わっています。今この瞬間、仏の境涯を選ぶのはあなた自身です。お題目はその選択の力を与えます。',
+   practice:'怒りや不安を感じたとき、南無妙法蓮華経を三唱して、心の境涯を観察してみましょう。'},
+  {title:'依正不二',preview:'自分の内側と外側の世界は、実は...',
+   body:'「依」は環境、「正」は自分自身。この二つは切り離せません。心が変われば環境が変わる。環境に心が影響される。功徳を積むことで、自分の周りの縁が変化していきます。',
+   practice:'今日、身の回りの「良い縁」を一つ見つけて記録しましょう。'},
+  {title:'変毒為薬',preview:'毒をも薬に変える力が、お題目には...',
+   body:'どんな苦難も、お題目によって「善縁」に変えることができます。失業、病気、対人関係の困難――これらは修行の機会であり、功徳を積む素材です。毒（苦しみ）が薬（成長）に変わる瞬間を体感してください。',
+   practice:'今日の困難を一つ選んで「これが功徳の種だ」と唱えながらカウントしてみましょう。'},
+  {title:'冬は必ず春となる',preview:'どんな冬も、必ず春が来る。これは...',
+   body:'日蓮は「冬は必ず春となる」と記しました。今どれだけ辛くても、必ず好転する時が来ます。功徳を積み続けることは、その「春」を引き寄せる行為です。やめないことが最大の修行です。',
+   practice:'今日は「継続すること」を自分に誓い、一回だけでもお題目を唱えましょう。'},
+  {title:'三世の諸仏',preview:'過去・現在・未来のすべての仏が...',
+   body:'過去・現在・未来を貫く法（妙法蓮華経）を唱えることで、時空を超えた仏の慈悲と繋がります。あなたのお題目は、時間を超えて響きます。先祖も、子孫も、その響きの中にいます。',
+   practice:'今日のお題目を、先祖と未来の子孫への贈り物として捧げてみましょう。'},
+  {title:'信心の目覚め',preview:'信じることから、すべてが始まる...',
+   body:'「信」は仏教の根本です。信じることで心が開き、功徳が流れ込みます。疑いは心の扉を閉ざします。今日は純粋に、妙法の力を信じて唱えてみてください。疑わず、ただ唱える。それだけでいい。',
+   practice:'「南無妙法蓮華経」を21回、すべての思考を手放して唱えましょう。'},
+  {title:'自他共の幸福',preview:'自分だけが幸せになるのではなく...',
+   body:'日蓮仏法の目指す幸福は「自他共の幸福」です。自分が変わることで、周囲の人も変わります。あなたの功徳は、あなた一人のものではありません。家族、友人、地域、世界に波紋のように広がります。',
+   practice:'今日は誰か一人のために心を込めてお題目を唱えましょう。'},
+  {title:'現世安穏',preview:'今この世で、安穏に生きるための...',
+   body:'法華経は「現世安穏、後生善処」を約束します。今この世で心が安穏であること。それが功徳の現れです。不安を手放し、今この瞬間に集中することが、現世安穏への道です。',
+   practice:'今日は「今、ここ」にいることを意識してお題目を唱えましょう。'},
+  {title:'開目抄の精神',preview:'目を開くとは、どういうことか...',
+   body:'日蓮の「開目抄」は、真の自己に目覚めることを説きます。私たちは本来、仏の命を持っています。お題目はその仏の命を呼び覚ます鍵です。今日も、眠っている自分の仏性を呼び起こしましょう。',
+   practice:'鏡の前で自分の目を見て、「ここに仏がいる」と一度だけ言ってみましょう。'},
+  {title:'随縁真如',preview:'縁によって形を変えながら、真実は変わらない...',
+   body:'真如（真実の法）は、どんな形をとっても本質は変わりません。あなたの境遇がどう変わっても、妙法の功徳は変わりません。縁に随いながら、しかし法は変わらず。この安定が修行の基盤です。',
+   practice:'今日変えられないことを一つ受け入れ、それと共に生きることを選びましょう。'},
+  {title:'勇猛精進',preview:'勇気を持って、精進し続ける...',
+   body:'「勇猛精進」とは、臆せず力強く修行を続けることです。毎日お題目を唱えることは、小さいようで偉大な勇猛精進です。特に辛い日に唱えることの功徳は、順調な日の何倍もあります。',
+   practice:'今日、唱えたくない気持ちがあってもあえて唱えましょう。その一声が最大の功徳です。'},
+  {title:'妙法の光',preview:'闇の中でも、妙法の光は消えない...',
+   body:'どんなに暗い状況でも、南無妙法蓮華経の光は消えません。あなたが唱えるとき、その光が周囲を照らします。自分が明かりになること。それが修行者としての使命です。',
+   practice:'今日は誰かに「ありがとう」を伝えましょう。それも妙法の光です。'},
+];
+
+function getTodayContent(){
+  var epoch=new Date(2024,0,1);
+  var days=Math.floor((new Date()-epoch)/86400000);
+  return DAILY_CONTENT[days%DAILY_CONTENT.length];
+}
+function renderDailyCard(){
+  var el=document.getElementById('dailyContent');
+  var label=document.getElementById('dailyDateLabel');
+  if(!el)return;
+  // トライアルヒント更新
+  var hint=document.getElementById('questTrialHint');
+  if(hint){
+    var qs=questTrialStatus();
+    if(qs.ok&&qs.reason==='pass')hint.textContent='パス有効中 ✨';
+    else if(qs.ok&&qs.reason==='new')hint.textContent='7日間無料 →';
+    else if(qs.ok&&qs.reason==='trial')hint.textContent='残り'+qs.daysLeft+'日 →';
+    else hint.textContent='パスで解放 →';
+  }
+  var ds=today();
+  var content=getTodayContent();
+  var purchased=isDailyPurchased(ds)||hasPremiumPass();
+  if(label)label.textContent=ds;
+  if(purchased){
+    el.innerHTML=
+      '<div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:.5rem">'+content.title+'</div>'+
+      '<p style="font-size:13px;color:var(--tx);line-height:1.8;margin-bottom:.75rem">'+content.body+'</p>'+
+      '<div style="background:var(--bg);border-radius:8px;padding:.6rem .75rem;font-size:12px;color:var(--mu);line-height:1.6">'+
+        '🪷 今日の実践ヒント<br>'+content.practice+
+      '</div>';
+  }else{
+    el.innerHTML=
+      '<div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:.4rem">'+content.title+'</div>'+
+      '<p style="font-size:13px;color:var(--mu);line-height:1.7;margin-bottom:.5rem">'+content.preview+'</p>'+
+      '<div style="filter:blur(3px);user-select:none;font-size:12px;color:var(--mu);margin-bottom:.75rem;line-height:1.6">'+content.body.substring(0,60)+'……</div>'+
+      '<button onclick="openDailyPurchase()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:600">'+
+        '📜 今日の全文を読む — ¥200'+
+      '</button>'+
+      '<button onclick="openPassPurchase()" style="width:100%;margin-top:.4rem;padding:8px;border-radius:10px;background:transparent;color:var(--mu);border:1px solid var(--bo);cursor:pointer;font-size:12px">✨ 月額パス ¥500 で毎日読み放題</button>';
+  }
+}
+// Stripe Payment Link（ダッシュボードで作成後にURLを差し替え）
+// ▼ Stripeダッシュボード → Products → Payment Links で作成したURLを貼る
+var STRIPE_DAILY_URL='https://buy.stripe.com/REPLACE_WITH_DAILY_LINK'; // ¥200 単日
+var STRIPE_PASS_URL='https://buy.stripe.com/REPLACE_WITH_PASS_LINK';   // ¥500 月額パス
+
+var PASS_KEY='yomy_premium_pass';
+function hasPremiumPass(){
+  var p=lsG(PASS_KEY);if(!p)return false;
+  return new Date(p.expires)>new Date();
+}
+function recordPremiumPass(months){
+  var exp=new Date();exp.setMonth(exp.getMonth()+months);
+  lsS(PASS_KEY,{expires:exp.toISOString()});
+}
+function openDailyPurchase(){
+  var ds=today();
+  var ret=encodeURIComponent(location.origin+location.pathname+'?paid=daily&ref='+ds);
+  window.open(STRIPE_DAILY_URL+'?success_url='+ret,'_blank');
+}
+function openPassPurchase(){
+  var ret=encodeURIComponent(location.origin+location.pathname+'?paid=pass&months=1');
+  window.open(STRIPE_PASS_URL+'?success_url='+ret,'_blank');
+}
+// ══════════════════════════════════════════════════════════
+//  ダルマクエスト トライアル管理
+// ══════════════════════════════════════════════════════════
+var QUEST_TRIAL_KEY='yomy_quest_trial';
+function questTrialStatus(){
+  if(hasPremiumPass())return{ok:true,reason:'pass'};
+  var trial=lsG(QUEST_TRIAL_KEY);
+  if(!trial)return{ok:true,reason:'new'};
+  var diff=Math.floor((new Date()-new Date(trial.start))/86400000);
+  var left=7-diff;
+  if(left>0)return{ok:true,reason:'trial',daysLeft:left};
+  return{ok:false,reason:'expired'};
+}
+function renderQuestCard(){
+  var el=document.getElementById('questCard');if(!el)return;
+  var s=questTrialStatus();
+  var html;
+  if(s.ok&&s.reason==='pass'){
+    html='<div style="text-align:center;padding:.5rem 0">'+
+      '<div style="font-size:2.2rem;margin-bottom:.5rem">🎮</div>'+
+      '<div style="font-size:14px;font-weight:700;color:var(--a);margin-bottom:.25rem">月額パス有効中 ✨</div>'+
+      '<button onclick="openQuest()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:600">▶ 遊ぶ</button>'+
+      '</div>';
+  }else if(s.ok&&s.reason==='new'){
+    html='<div style="text-align:center;padding:.5rem 0">'+
+      '<div style="font-size:2.2rem;margin-bottom:.5rem">🎮</div>'+
+      '<div style="font-size:13px;color:var(--mu);margin-bottom:.875rem"><b style="color:var(--a)">7日間無料</b>でお試しできます</div>'+
+      '<button onclick="openQuest()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:600">▶ 無料で始める</button>'+
+      '</div>';
+  }else if(s.ok&&s.reason==='trial'){
+    html='<div style="text-align:center;padding:.5rem 0">'+
+      '<div style="font-size:2.2rem;margin-bottom:.5rem">🎮</div>'+
+      '<div style="font-size:13px;color:var(--mu);margin-bottom:.875rem">無料トライアル — 残り<b style="color:var(--a)">'+s.daysLeft+'日</b></div>'+
+      '<button onclick="openQuest()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:600">▶ 遊ぶ</button>'+
+      '</div>';
+  }else{
+    html='<div style="text-align:center;padding:.5rem 0">'+
+      '<div style="font-size:2.2rem;margin-bottom:.5rem">🔒</div>'+
+      '<div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:.25rem">7日間のお試しが終了しました</div>'+
+      '<div style="font-size:11px;color:var(--mu);margin-bottom:.875rem">続きは月額パスで遊び放題</div>'+
+      '<button onclick="openPassPurchase()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:600">✨ 月額パス ¥1,000 で解放</button>'+
+      '</div>';
+  }
+  el.innerHTML=html;
+}
+function openQuest(){
+  var s=questTrialStatus();
+  if(!s.ok){renderQuestCard();return;}
+  if(s.reason==='new')lsS(QUEST_TRIAL_KEY,{start:today()});
+  window.open('dharma_quest_v2.html','_blank');
+}
+
+// 決済成功リダイレクト処理
+(function(){
+  var params=new URLSearchParams(location.search);
+  var paid=params.get('paid');
+  if(paid==='daily'){
+    var ref=params.get('ref');
+    if(ref)recordDailyPurchase(ref);
+  }else if(paid==='pass'){
+    recordPremiumPass(parseInt(params.get('months')||1));
+  }
+  if(paid)history.replaceState({},'',location.pathname);
+})();
+
+// ══════════════════════════════════════════════════════════
+//  今日の喜び
+// ══════════════════════════════════════════════════════════
+var JOYK='yomuyomu_joy';
+function getJoyLogs(){return lsG(JOYK)||[];}
+function saveJoyLogs(logs){lsS(JOYK,logs);}
+function addJoy(content,category){
+  if(!content||!content.trim())return;
+  var logs=getJoyLogs();
+  logs.push({date:today(),content:content.trim(),ts:Date.now(),category:category||null});
+  saveJoyLogs(logs);
+}
+function todayJoys(){
+  return getJoyLogs().filter(function(j){return j.date===today();});
+}
+var _petalCount=0,_petalLastShown=0;
+function showJoyPetal(){
+  var now=Date.now();
+  if(now-_petalLastShown<3000)return; // 3秒間隔で連続防止
+  var el=document.getElementById('joyPetal');if(!el)return;
+  el.style.left=(15+Math.random()*70)+'%';
+  el.style.top='-70px';
+  el.style.display='block';
+  el.style.animation='none';
+  void el.offsetWidth;
+  el.style.animation='petalFall 6s ease-in forwards';
+  _petalLastShown=now;
+  setTimeout(function(){if(el.style.display!=='none')el.style.display='none';},6500);
+}
+function openJoyOverlay(){
+  document.getElementById('joyPetal').style.display='none';
+  document.getElementById('joyBg').style.display='block';
+  var ov=document.getElementById('joyOverlay');ov.style.display='block';
+  renderJoyOverlayInput();
+}
+function closeJoyOverlay(){
+  document.getElementById('joyBg').style.display='none';
+  document.getElementById('joyOverlay').style.display='none';
+  if(st.tab==='cal')renderCal();
+}
+function renderJoyOverlayInput(){
+  var cats=[['🌸','偶然の出来事'],['🤝','人間関係・ご縁'],['🍜','食事・グルメ'],
+            ['💼','仕事・学び'],['🌤','天気・自然'],['🛍','買い物・お得'],
+            ['🏃','健康・運動'],['✨','その他']];
+  var body=document.getElementById('joyOverlayBody');
+  body.innerHTML=
+    '<p style="font-size:15px;font-weight:700;text-align:center;color:var(--tx);margin-bottom:1rem">本日はどんな良いことがありましたか？</p>'+
+    '<textarea id="joyInput" placeholder="今日の喜びを入力…" style="width:100%;background:var(--bi);border:1.5px solid var(--bo);border-radius:10px;padding:12px;color:var(--tx);font-size:14px;outline:none;resize:none;min-height:72px;line-height:1.6;font-family:inherit;margin-bottom:.75rem"></textarea>'+
+    '<p style="font-size:11px;color:var(--mu);margin-bottom:.5rem">どんな喜びでしたか？（任意）</p>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.75rem">'+
+      cats.map(function(c){return'<button class="joy-cat-btn" data-cat="'+c[1]+'">'+c[0]+' '+c[1]+'</button>';}).join('')+
+    '</div>'+
+    '<button onclick="submitJoy()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:600">記録する</button>'+
+    '<button onclick="closeJoyOverlay()" style="width:100%;margin-top:.4rem;padding:8px;border-radius:10px;background:transparent;color:var(--mu);border:none;cursor:pointer;font-size:12px">キャンセル</button>';
+  setTimeout(function(){var i=document.getElementById('joyInput');if(i)i.focus();},80);
+  body.querySelectorAll('.joy-cat-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      body.querySelectorAll('.joy-cat-btn').forEach(function(b){b.classList.remove('on');});
+      this.classList.add('on');
+    });
+  });
+}
+function submitJoy(){
+  var inp=document.getElementById('joyInput');
+  var v=inp?inp.value.trim():'';if(!v)return;
+  var catBtn=document.querySelector('#joyOverlayBody .joy-cat-btn.on');
+  addJoy(v,catBtn?catBtn.dataset.cat:null);
+  // 完了画面（少し遅らせて確実に表示）
+  var joys=todayJoys();
+  var body=document.getElementById('joyOverlayBody');
+  if(!body)return;
+  body.innerHTML=
+    '<div style="text-align:center;padding:.5rem 0">'+
+    '<div style="font-size:28px;margin-bottom:.5rem">🌸</div>'+
+    '<p style="font-size:14px;font-weight:600;color:var(--a);margin-bottom:.3rem">また一つ、あなたのことが知れて嬉しいです。</p>'+
+    '<p style="font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:.75rem">あなたにとっての幸福が増えますように。</p>'+
+    '<div style="text-align:left;margin-bottom:.75rem">'+
+      joys.map(function(j){
+        return'<div style="font-size:12px;color:var(--tx);padding:.3rem 0;border-bottom:1px solid var(--bo)">🌸 '+j.content+(j.category?'<span style="font-size:10px;color:var(--mu);margin-left:6px">'+j.category+'</span>':'')+'</div>';
+      }).join('')+
+    '</div>'+
+    '<button onclick="renderJoyOverlayInput()" style="padding:8px 18px;border-radius:10px;background:var(--bi);color:var(--mu);border:1px solid var(--bo);cursor:pointer;font-size:12px">もう一つ記録する</button><br>'+
+    '<button onclick="closeJoyOverlay()" style="margin-top:.5rem;padding:8px 18px;border-radius:10px;background:transparent;color:var(--mu);border:none;cursor:pointer;font-size:12px">閉じる</button>'+
+    '</div>';
+  renderJoyAnalysis();
+  if(st.tab==='cal')renderCal();
+}
+function initJoyBubble(){
+  _petalCount=0;_petalLastShown=0;
+}
+
+// ── 喜び分析 ─────────────────────────────────────────
+function renderJoyAnalysis(){
+  var logs=getJoyLogs();
+  var card=document.getElementById('joyCountCard');
+  if(!card)return;
+  if(!logs.length){card.style.display='none';return;}
+  card.style.display='block';
+  var num=document.getElementById('joyCountNum');
+  if(num)num.textContent=logs.length;
+  var catCount={};
+  logs.forEach(function(j){if(j.category){catCount[j.category]=(catCount[j.category]||0)+1;}});
+  var cats=Object.keys(catCount).sort(function(a,b){return catCount[b]-catCount[a];});
+  var top=document.getElementById('joyTopCat');
+  if(top){
+    if(cats.length){top.innerHTML='一番多い喜び<br><b style="color:var(--a)">'+cats[0]+'</b><br><span style="font-size:9px;color:var(--di)">'+catCount[cats[0]]+'件</span>';}
+    else{top.innerHTML='';}
+  }
+}
+function showJoyDetail(){
+  var logs=getJoyLogs();
+  var ov=document.getElementById('joyDetailOverlay');
+  var body=document.getElementById('joyDetailBody');
+  if(!ov||!body)return;
+  if(!logs.length){body.innerHTML='<p style="color:var(--mu);text-align:center;padding:1rem">まだ記録がありません</p>';ov.classList.add('show');return;}
+  // カテゴリ別に集計
+  var catCount={},catLogs={};
+  logs.forEach(function(j){
+    var c=j.category||'カテゴリなし';
+    catCount[c]=(catCount[c]||0)+1;
+    if(!catLogs[c])catLogs[c]=[];
+    catLogs[c].push(j);
+  });
+  var cats=Object.keys(catCount).sort(function(a,b){return catCount[b]-catCount[a];});
+  var html='<div style="margin-bottom:.75rem;font-size:11px;color:var(--mu)">全'+logs.length+'件　最近'+Math.min(logs.length,30)+'件を表示</div>';
+  // カテゴリ別グループ表示
+  cats.forEach(function(cat){
+    html+='<div style="margin-bottom:.75rem">';
+    html+='<div style="font-size:11px;font-weight:700;color:var(--a);background:var(--bi);border-radius:6px;padding:.25rem .6rem;margin-bottom:.3rem;display:inline-block">'+cat+'（'+catCount[cat]+'件）</div>';
+    catLogs[cat].slice().reverse().slice(0,5).forEach(function(j){
+      html+='<div style="font-size:12px;color:var(--tx);padding:.3rem .4rem;border-bottom:1px solid var(--bo);line-height:1.5">'+
+        '<span style="font-size:10px;color:var(--di);margin-right:4px">'+j.date+'</span>'+j.content+'</div>';
+    });
+    if(catLogs[cat].length>5)html+='<div style="font-size:10px;color:var(--mu);padding:.2rem .4rem">…他'+( catLogs[cat].length-5)+'件</div>';
+    html+='</div>';
+  });
+  body.innerHTML=html;
+  ov.classList.add('show');
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1418,21 +2166,162 @@ function actTab(t){
 document.querySelectorAll('.tab').forEach(function(btn){
   btn.addEventListener('click',function(){
     var t=btn.getAttribute('data-t');actTab(t);
+    // タブ切替で花びら・オーバーレイを閉じる
+    var p=document.getElementById('joyPetal');if(p)p.style.display='none';
+    closeJoyOverlay();
     if(t==='chant'){updateChantUI();renderBanner();}
-    if(t==='gongyou'){buildCarousel();}
+    if(t==='gongyou'){buildCarousel();renderGongyouUnlockCard();}
     if(t==='cal'){updateCalStreakUI();renderCal();}
-    if(t==='rank')buildLb();
+    if(t==='rank'){buildLb();renderJoyAnalysis();renderDailyCard();}
   });
 });
 
 // ══════════════════════════════════════════════════════════
 //  イベントリスナー
 // ══════════════════════════════════════════════════════════
-document.getElementById('manBtn').addEventListener('click',function(){addChants(1);});
+// ══════════════════════════════════════════════════════════
+//  勤行 解放システム
+// ══════════════════════════════════════════════════════════
+var UNLOCK_NAMES=['','かんたんモード（方便品・自我偈など）','難しいモード（法華経全品）'];
+var _pendingUnlockLevel=0;
+
+function renderGongyouUnlockCard(){
+  var el=document.getElementById('gongyouUnlockCard');if(!el)return;
+  var cur=st.unlockedLevel||0;
+  var next=cur+1;
+  if(next>2){el.style.display='none';return;}
+  var need=UNLOCK_MERIT[next];
+  var have=Math.min(totalMerit(),need);
+  var pct=Math.round(have/need*100);
+  var canUnlock=have>=need;
+  el.style.display='block';
+  el.innerHTML=
+    '<div class="card" style="padding:.85rem">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem">'+
+    '<span style="font-size:11px;font-weight:700;color:var(--a)">🔓 次の解放：'+UNLOCK_NAMES[next]+'</span>'+
+    '<span style="font-size:10px;color:var(--mu)">'+Math.round(have)+' / '+need+' 功徳</span>'+
+    '</div>'+
+    '<div style="height:6px;background:var(--bo);border-radius:99px;overflow:hidden;margin-bottom:.6rem">'+
+    '<div style="height:100%;width:'+pct+'%;background:var(--a);border-radius:99px;transition:width .4s"></div>'+
+    '</div>'+
+    (canUnlock?
+      '<button onclick="openUnlockOverlay('+next+')" style="width:100%;padding:9px;border-radius:10px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:600">✨ 解放しますか？</button>':
+      '<div style="font-size:11px;color:var(--mu);text-align:center">あと '+(need-Math.round(have))+' 功徳で解放できます</div>')+
+    '</div>';
+}
+function openUnlockOverlay(lv){
+  _pendingUnlockLevel=lv;
+  var names=['','かんたんモード','難しいモード'];
+  var descs=['','方便品第二・自我偈・懺悔文など7つの勤行が解放されます。','法華経全28品＋結経が解放されます。'];
+  document.getElementById('unlockTitle').textContent=names[lv]+' 解放';
+  document.getElementById('unlockDesc').textContent=descs[lv];
+  var ov=document.getElementById('unlockOverlay');
+  if(ov){ov.style.display='flex';}
+}
+function closeUnlockOverlay(){
+  var ov=document.getElementById('unlockOverlay');if(ov)ov.style.display='none';
+}
+function confirmUnlock(){
+  if(_pendingUnlockLevel>(st.unlockedLevel||0)){
+    st.unlockedLevel=_pendingUnlockLevel;
+    lsS(UK,st);
+    buildCarousel();
+    renderGongyouUnlockCard();
+  }
+  closeUnlockOverlay();
+  setTimeout(function(){spawnP();accentS();},100);
+}
+function checkUnlockThreshold(){
+  var cur=st.unlockedLevel||0;
+  var next=cur+1;
+  if(next>2)return;
+  if(totalMerit()>=UNLOCK_MERIT[next]){
+    renderGongyouUnlockCard();
+  }
+}
+
+// 太鼓ボタン：クリック → エフェクト ＋ カウント
+(function(){
+  var combo=0,comboTimer=null,audioCtx=null;
+  var RIPPLE_COLORS=['rgba(180,100,50,.55)','rgba(220,150,50,.65)','rgba(255,200,60,.8)'];
+  function getACtx(){
+    if(!audioCtx)try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}
+    return audioCtx;
+  }
+  function playDrum(c){
+    try{
+      var ctx=getACtx();if(!ctx)return;
+      if(ctx.state==='suspended')ctx.resume();
+      var sr=ctx.sampleRate,len=Math.floor(sr*.28);
+      var buf=ctx.createBuffer(1,len,sr);
+      var d=buf.getChannelData(0);
+      var dec=sr*.06+c*sr*.012;
+      for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/dec);
+      var g=ctx.createGain();
+      g.gain.value=Math.min(.22+c*.07,.72);
+      var n=ctx.createBufferSource();
+      n.buffer=buf;n.connect(g);g.connect(ctx.destination);n.start();
+    }catch(e){}
+  }
+  function spawnRipples(wrap,c){
+    var cnt=Math.min(c,3);
+    var col=RIPPLE_COLORS[Math.min(c-1,2)];
+    for(var i=0;i<cnt;i++){
+      (function(delay){
+        setTimeout(function(){
+          var r=document.createElement('div');
+          r.className='tap-ripple';r.style.borderColor=col;
+          wrap.appendChild(r);
+          setTimeout(function(){if(r.parentNode)r.parentNode.removeChild(r);},750);
+        },delay);
+      })(i*130);
+    }
+  }
+  var wrap=document.getElementById('manBtn');if(!wrap)return;
+  function onTap(){
+    combo++;
+    clearTimeout(comboTimer);
+    comboTimer=setTimeout(function(){combo=0;},1600);
+    wrap.classList.remove('pressing');
+    void wrap.offsetWidth;
+    wrap.classList.add('pressing');
+    setTimeout(function(){wrap.classList.remove('pressing');},220);
+    spawnRipples(wrap,combo);
+    playDrum(combo);
+    addChants(1);
+  }
+  wrap.addEventListener('click',onTap);
+  wrap.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();onTap();}});
+})();
+
+// 時間帯別背景画像（グローバル化 — applyRichUI から参照）
+function getBgImg(h){
+  if(h>=6&&h<16)return 'images/background_1.jpg';
+  if((h>=4&&h<6)||(h>=16&&h<18))return 'images/background_2.jpg';
+  return 'images/background_3.png';
+}
+function applyBg(){
+  if(!st.richUI)return;
+  var img=getBgImg(new Date().getHours());
+  document.body.style.backgroundImage="url('"+img+"')";
+  document.body.style.backgroundSize='cover';
+  document.body.style.backgroundPosition='center';
+  document.body.style.backgroundAttachment='fixed';
+}
+(function(){
+  applyBg();
+  var now=new Date();
+  var msToNext=(60-now.getMinutes())*60000-(now.getSeconds()*1000+now.getMilliseconds());
+  setTimeout(function(){applyBg();setInterval(applyBg,3600000);},msToNext);
+})();
+document.getElementById('joyPetal').addEventListener('click',openJoyOverlay);
 document.getElementById('gcPrev').addEventListener('click',function(){gcStep(-1);});
 document.getElementById('gcNext').addEventListener('click',function(){gcStep(1);});
 document.getElementById('gcReadBtn').addEventListener('click',openReading);
-document.getElementById('gcCount').addEventListener('click',function(){var g=GG[gcCurReal];st.gCounts[g.id]=(st.gCounts[g.id]||0)+1;addChants(1);lsS(UK,st);updateGcUI();});
+document.getElementById('gcCount').addEventListener('click',function(){addGongyoReading();});
+}
+// ── wisdomMult stub（develop で本実装）──
+function wisdomMult(){return 1.0;}
 // ═══════════════════════════════════════════════════════
 //  ルーレット機能（シンプル版）
 // ═══════════════════════════════════════════════════════
@@ -1465,6 +2354,7 @@ function startRoulette(){
 
 document.getElementById('rouletteBtn').addEventListener('click',function(){
   startRoulette();
+});
 });
 document.getElementById('btnHeat').addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
 document.getElementById('btnMon').addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
