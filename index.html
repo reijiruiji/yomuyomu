@@ -408,26 +408,6 @@ body.dark.rich .tabs{
   background:rgba(10,6,2,.80);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-top-color:rgba(255,255,255,.1);}
 
-/* ── DQ ネイティブUI ── */
-/* ── 蓮池タブ ── */
-.stage-row{display:flex;align-items:center;gap:.75rem;}
-.stage-icon{font-size:2rem;line-height:1;flex-shrink:0;}
-.stage-bar{height:6px;background:var(--bc2);border-radius:3px;overflow:hidden;margin-top:.625rem;}
-.stage-fill{height:100%;background:linear-gradient(90deg,var(--a),hsl(calc(var(--h) + 30),70%,55%));border-radius:3px;transition:width .7s ease;}
-.wisdom-pill{display:inline-flex;align-items:center;font-size:10px;font-weight:600;color:var(--a);background:var(--ag);border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0;}
-.klesha-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:.625rem;}
-.klesha-btn{padding:8px 2px;border-radius:10px;border:1.5px solid var(--bo);background:var(--bi);color:var(--tx);font-size:10px;cursor:pointer;text-align:center;transition:all .18s;line-height:1.4;}
-.klesha-btn .ke{display:block;font-size:1.25rem;margin-bottom:2px;}
-.klesha-btn.on{border-color:var(--a);background:var(--ag);color:var(--a);}
-.rx-card{background:var(--bi);border-radius:10px;padding:.875rem;animation:rUp .3s ease-out;}
-.rx-pali{font-size:1.15rem;font-weight:700;color:var(--a);margin-bottom:.2rem;letter-spacing:.04em;}
-.rx-meaning{font-size:11px;color:var(--mu);margin-bottom:.5rem;}
-.rx-body{font-size:12px;color:var(--tx);line-height:1.7;margin-bottom:.5rem;}
-.rx-sutra{font-size:10px;color:var(--di);font-style:italic;border-top:1px solid var(--bo);padding-top:.4rem;}
-.tomoshibi-wrap{text-align:center;padding:1.1rem 1rem .875rem;}
-.tomoshibi-count{font-size:clamp(2rem,10vw,2.8rem);font-weight:300;color:var(--a);line-height:1;}
-.tomoshibi-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-top:.75rem;max-height:34px;overflow:hidden;}
-.tdot{width:5px;height:5px;border-radius:50%;background:var(--a);opacity:.4;animation:blink calc(.8s + var(--dl,0s)) ease-in-out var(--dl,0s) infinite;}
 </style>
 </head>
 <body>
@@ -632,64 +612,6 @@ body.dark.rich .tabs{
     <!-- <div class="card" id="dailyCard" style="margin-top:.75rem;padding:1rem">
       <div id="dailyContent"></div>
     </div> -->
-  </div>
-
-
-    <!-- 四向四果ステージ -->
-    <div class="card card-a">
-      <div class="stage-row">
-        <div class="stage-icon" id="stageIcon">🌱</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:700;color:var(--a)" id="stageName">凡夫</div>
-          <div style="font-size:10px;color:var(--mu)" id="stageEn">Puthujjana</div>
-        </div>
-        <div class="wisdom-pill" id="wisdomPill">智慧 Lv.0 · ×1.0</div>
-      </div>
-      <div class="stage-bar">
-        <div class="stage-fill" id="stageFill" style="width:0%"></div>
-      </div>
-      <div style="font-size:10px;color:var(--mu);margin-top:.35rem" id="stageProgress"></div>
-    </div>
-
-    <!-- 今日の煩悩チェックイン -->
-    <div class="card">
-      <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.625rem">今日の心の状態（煩悩チェックイン）</div>
-      <div class="klesha-grid" id="kleshaGrid"></div>
-      <div class="rx-card" id="rxCard" style="display:none">
-        <div class="rx-pali" id="rxPali"></div>
-        <div class="rx-meaning" id="rxMeaning"></div>
-        <div class="rx-body" id="rxBody"></div>
-        <div class="rx-sutra" id="rxSutra"></div>
-      </div>
-    </div>
-
-    <!-- 回向 -->
-    <div class="card">
-      <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.4rem">🕯 回向（えこう）</div>
-      <p style="font-size:11px;color:var(--mu);line-height:1.65;margin-bottom:.75rem">今日積んだ功徳を、この瞬間に苦しんでいる見知らぬ誰かに回向します</p>
-      <button class="btn-big accent" id="ekoBtn" onclick="sendEko()">今日の功徳を回向する 🪷</button>
-      <div id="ekoMsg" style="font-size:11px;color:var(--mu);text-align:center;margin-top:.5rem;line-height:1.6"></div>
-    </div>
-  </div>
-
-          <div class="wisdom-pill" id="dqWisdomPill">智慧 Lv.0 · ×1.0</div>
-        </div>
-        <div class="stage-bar" style="margin-top:.5rem"><div class="stage-fill" id="dqXpFill" style="width:0%"></div></div>
-        <div style="font-size:10px;color:var(--mu);margin-top:.3rem" id="dqXpLabel"></div>
-      </div>
-    </div>
-    <!-- サブナビ -->
-    <div class="dq-subnav">
-      <button class="dq-snb on" data-dqv="map">🗺 マップ</button>
-      <button class="dq-snb" data-dqv="texts">📜 原典</button>
-      <button class="dq-snb" data-dqv="badges">🏅 バッジ</button>
-    </div>
-    <!-- マップ（ステージ） -->
-    <div class="dq-view on" id="dqview-map"></div>
-    <!-- 原典一覧 -->
-    <div class="dq-view" id="dqview-texts"></div>
-    <!-- バッジ -->
-    <div class="dq-view" id="dqview-badges"></div>
   </div>
 </div>
 
