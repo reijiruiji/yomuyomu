@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>🪷 The Lotus Pond — 蓮池のサンガ</title>
+<style>
+/* ══ BASE ══ */
+:root{
+  --pink:#e879a0;--pink-d:#c2185b;--pink-l:#f8bbd0;
+  --gold:#d4a843;--gold-l:rgba(212,168,67,.25);
+  --teal:#0d7377;
+  --bg1:#080d1a;--bg2:#0f1428;--bg3:#1a0a2e;
+  --g-bg:rgba(255,255,255,.11);
+  --g-bg-d:rgba(255,255,255,.07);
+  --g-border:rgba(255,255,255,.22);
+  --g-border-s:rgba(255,255,255,.12);
+  --g-hi:rgba(255,255,255,.35);
+  --g-sh:rgba(0,0,0,.35);
+  --tx:rgba(255,255,255,.93);
+  --tx-m:rgba(255,255,255,.55);
+  --tx-d:rgba(255,255,255,.32);
+  --accent:var(--pink);
+  --r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI',sans-serif;color:var(--tx);}
+
+/* ══ BACKGROUND ══ */
+#bg{position:fixed;inset:0;z-index:0;overflow:hidden;
+  background:radial-gradient(ellipse at 30% 60%,#1a0a2e 0%,#080d1a 55%,#0d1a2e 100%);}
+.star{position:absolute;border-radius:50%;background:#fff;opacity:0;animation:twinkle var(--d,3s) var(--delay,0s) ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(1)}50%{opacity:var(--op,.7);transform:scale(1.3)}}
+#pond{position:absolute;bottom:0;left:0;right:0;height:42%;
+  background:linear-gradient(to bottom,rgba(13,115,119,.18),rgba(13,115,119,.32));
+  overflow:hidden;}
+.ripple{position:absolute;border-radius:50%;border:1px solid rgba(212,168,67,.15);transform:scale(0);
+  animation:ripple var(--rd,4s) var(--delay,0s) ease-out infinite;}
+@keyframes ripple{0%{transform:scale(0);opacity:.7}100%{transform:scale(1);opacity:0}}
+.lotus-float{position:absolute;font-size:var(--sz,1.2rem);opacity:0;
+  animation:floatUp var(--fd,8s) var(--delay,0s) ease-in-out infinite;}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0) rotate(0deg)}20%{opacity:.6}80%{opacity:.4}100%{opacity:0;transform:translateY(-60px) rotate(20deg)}}
+
+/* ══ GLASS ══ */
+.glass{
+  background:var(--g-bg);
+  backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);
+  border:1px solid var(--g-border);
+  border-radius:var(--r);
+  box-shadow:0 8px 32px var(--g-sh),inset 0 1px 0 var(--g-hi),inset 0 -1px 0 rgba(0,0,0,.15);
+}
+.glass-d{background:var(--g-bg-d);}
+.glass-sm{border-radius:14px;}
+.glass-btn{
+  background:rgba(255,255,255,.14);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--g-border);
+  border-radius:50px;
+  color:var(--tx);
+  cursor:pointer;
+  font-size:14px;font-weight:600;
+  padding:13px 28px;
+  transition:all .18s;
+  box-shadow:0 4px 16px rgba(0,0,0,.25),inset 0 1px 0 var(--g-hi);
+}
+.glass-btn:active{transform:scale(.96);background:rgba(255,255,255,.2);}
+.glass-btn.primary{background:linear-gradient(135deg,rgba(232,121,160,.75),rgba(194,24,91,.75));border-color:rgba(232,121,160,.4);}
+.glass-btn.gold{background:linear-gradient(135deg,rgba(212,168,67,.6),rgba(180,130,30,.6));border-color:rgba(212,168,67,.4);}
+
+/* ══ LAYOUT ══ */
+#app{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;}
+#content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:.875rem .875rem calc(.875rem + 68px + env(safe-area-inset-bottom,0px));}
+/* scrollbar hide */
+#content::-webkit-scrollbar{display:none;}
+
+/* ══ BOTTOM NAV ══ */
+#nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(8,13,26,.65);
+  backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);
+  border-top:1px solid var(--g-border);
+  display:flex;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  height:calc(60px + env(safe-area-inset-bottom,0px));
+}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;border:none;background:transparent;color:var(--tx-m);cursor:pointer;
+  font-size:9px;font-weight:500;letter-spacing:.03em;transition:all .2s;padding:6px 0;}
+.nav-btn .ni{font-size:1.3rem;line-height:1;transition:transform .2s;}
+.nav-btn.on{color:var(--pink);}
+.nav-btn.on .ni{transform:scale(1.15);}
+.tc{display:none;}
+.tc.on{display:block;}
+
+/* ══ HEADER ══ */
+.pg-hd{text-align:center;padding:.75rem 0 1rem;position:relative;}
+.pg-title{font-size:1.05rem;font-weight:700;letter-spacing:.06em;
+  background:linear-gradient(135deg,#fff 20%,var(--pink-l) 60%,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.pg-sub{font-size:10px;color:var(--tx-m);margin-top:3px;}
+.world-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--pink);
+  box-shadow:0 0 8px var(--pink);animation:pulse 1.8s ease-in-out infinite;margin-right:4px;vertical-align:middle;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
+
+/* ══ TIMER (TAB 1) ══ */
+.timer-ring-wrap{display:flex;justify-content:center;margin:1rem 0 .875rem;}
+#timerSvg{transform:rotate(-90deg);filter:drop-shadow(0 0 18px rgba(232,121,160,.45));}
+.timer-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.timer-ring-wrap{position:relative;}
+.timer-val{font-size:clamp(2.8rem,14vw,4.2rem);font-weight:200;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#fff,var(--pink-l));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.timer-label{font-size:10px;color:var(--tx-m);margin-top:2px;}
+.timer-btns{display:flex;gap:.625rem;justify-content:center;margin:.625rem 0 .5rem;}
+.text-scroll-wrap{height:56px;overflow:hidden;position:relative;margin:.5rem 0;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent);
+  mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent);}
+#textScroll{transition:transform .6s cubic-bezier(.4,0,.2,1);}
+.scroll-line{text-align:center;height:28px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:500;color:var(--tx);letter-spacing:.12em;line-height:1;}
+.scroll-line.sub{font-size:11px;color:var(--tx-m);letter-spacing:.04em;}
+.silent-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--tx-m);
+  background:rgba(255,255,255,.08);border:1px solid var(--g-border-s);border-radius:20px;padding:3px 10px;cursor:pointer;}
+.flower-rain{position:fixed;inset:0;pointer-events:none;z-index:500;}
+.petal{position:absolute;top:-30px;font-size:1.5rem;animation:petalFall var(--pd,3s) var(--pp,0s) ease-in forwards;}
+@keyframes petalFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+#completeBtn{width:100%;padding:16px;font-size:15px;font-weight:700;letter-spacing:.08em;display:none;}
+#completeBtn.show{display:block;}
+
+/* ══ SILENT OVERLAY ══ */
+#silentOv{position:fixed;inset:0;z-index:900;background:rgba(4,6,14,.94);
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;
+  backdrop-filter:blur(10px);}
+#silentOv.show{display:flex;}
+.silent-lotus{font-size:5rem;animation:silentBob 3s ease-in-out infinite;}
+@keyframes silentBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.04)}}
+.silent-time{font-size:clamp(3rem,16vw,5rem);font-weight:100;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#fff,var(--pink-l));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.silent-hint{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.04em;animation:bnc 2s ease-in-out infinite;}
+@keyframes bnc{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* ══ STREAK CARD ══ */
+.streak-num{font-size:clamp(3rem,16vw,5rem);font-weight:200;line-height:1;
+  background:linear-gradient(135deg,var(--gold),#fff 50%,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.streak-fire{font-size:1.5rem;vertical-align:middle;}
+
+/* ══ HEATMAP ══ */
+.hm-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:2.5px;margin:.5rem 0;}
+.hm-cell{aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.07);transition:all .2s;cursor:default;}
+.hm-cell.lv1{background:rgba(232,121,160,.25);}
+.hm-cell.lv2{background:rgba(232,121,160,.5);}
+.hm-cell.lv3{background:rgba(232,121,160,.75);}
+.hm-cell.lv4{background:rgba(212,168,67,.9);box-shadow:0 0 6px rgba(212,168,67,.4);}
+
+/* ══ WISDOM RANK ══ */
+.rank-badge{display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,rgba(212,168,67,.2),rgba(212,168,67,.08));
+  border:1px solid rgba(212,168,67,.35);border-radius:50px;padding:6px 16px;
+  font-size:12px;font-weight:600;color:var(--gold);}
+.rank-bar{height:8px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:.5rem 0;}
+.rank-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));border-radius:99px;transition:width .8s ease;}
+
+/* ══ SANGA (TAB 4) ══ */
+.pond-canvas-wrap{position:relative;width:100%;padding-bottom:56%;border-radius:var(--r);overflow:hidden;margin-bottom:.75rem;}
+#pondCanvas{position:absolute;inset:0;width:100%;height:100%;}
+.klesha-orb{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;cursor:default;transition:transform .3s;
+  box-shadow:0 0 24px rgba(100,0,180,.6),inset 0 0 12px rgba(200,0,255,.3);}
+.boss-hp-bar{height:10px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:.4rem 0;}
+.boss-hp-fill{height:100%;border-radius:99px;transition:width .8s ease;
+  background:linear-gradient(90deg,#7b1fa2,#e91e63);}
+.purify-ripple{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;
+  border:2px solid rgba(212,168,67,.6);width:20px;height:20px;
+  animation:purifyRing .8s ease-out forwards;}
+@keyframes purifyRing{0%{width:20px;height:20px;opacity:1}100%{width:200px;height:200px;margin:-90px;opacity:0}}
+.emoji-btn{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:8px 14px;
+  border-radius:50px;cursor:pointer;border:1px solid var(--g-border);
+  background:rgba(255,255,255,.1);color:var(--tx);transition:all .18s;white-space:nowrap;}
+.emoji-btn:active{transform:scale(.94);}
+.room-card{padding:.875rem;margin-bottom:.5rem;position:relative;overflow:hidden;}
+.room-card::before{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(114,0,180,.15),rgba(232,121,160,.1));pointer-events:none;}
+.msg-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:.5rem;}
+.msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;flex-shrink:0;background:rgba(255,255,255,.1);border:1px solid var(--g-border-s);}
+.msg-bubble{background:rgba(255,255,255,.09);border:1px solid var(--g-border-s);border-radius:0 12px 12px 12px;
+  padding:.5rem .625rem;font-size:11px;line-height:1.55;flex:1;min-width:0;}
+.prayer-sent{background:linear-gradient(135deg,rgba(212,168,67,.15),rgba(232,121,160,.1));
+  border-color:rgba(212,168,67,.25);}
+.prayer-sent .msg-bubble{border-radius:12px 0 12px 12px;background:rgba(212,168,67,.1);}
+
+/* ══ COMMON ══ */
+.section{margin-bottom:.75rem;}
+.section-title{font-size:11px;font-weight:600;color:var(--tx-m);letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
+.section-title::before{content:'';display:block;width:3px;height:12px;background:var(--pink);border-radius:2px;}
+.pill{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.1);
+  border:1px solid var(--g-border-s);border-radius:20px;padding:3px 10px;font-size:10px;color:var(--tx-m);}
+.pill.accent{background:rgba(232,121,160,.15);border-color:rgba(232,121,160,.3);color:var(--pink);}
+.pill.gold{background:rgba(212,168,67,.12);border-color:rgba(212,168,67,.3);color:var(--gold);}
+.divider{border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0;}
+.xp-toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:600;
+  background:rgba(212,168,67,.9);color:#000;font-weight:700;font-size:14px;
+  border-radius:50px;padding:8px 20px;opacity:0;transition:opacity .3s;pointer-events:none;
+  box-shadow:0 4px 20px rgba(212,168,67,.4);}
+.xp-toast.show{opacity:1;}
+textarea,input[type=text]{width:100%;background:rgba(255,255,255,.08);
+  border:1px solid var(--g-border-s);border-radius:12px;padding:10px 12px;
+  color:var(--tx);font-size:14px;outline:none;resize:none;font-family:inherit;}
+textarea:focus,input[type=text]:focus{border-color:rgba(232,121,160,.5);background:rgba(255,255,255,.11);}
+textarea::placeholder,input::placeholder{color:var(--tx-d);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+</style>
+</head>
+<body>
+
+<!-- ══ BACKGROUND ══ -->
+<div id="bg">
+  <div id="stars"></div>
+  <div id="pond">
+    <div id="ripples"></div>
+    <div id="lotusFloats"></div>
+  </div>
+</div>
+
+<!-- ══ XP TOAST ══ -->
+<div class="xp-toast" id="xpToast"></div>
+
+<!-- ══ SILENT OVERLAY ══ -->
+<div id="silentOv" onclick="exitSilent()">
+  <div class="silent-lotus">🪷</div>
+  <div class="silent-time" id="silentTime">3:00</div>
+  <div class="silent-hint">画面をタップして完了</div>
+</div>
+
+<!-- ══ FLOWER RAIN ══ -->
+<div class="flower-rain" id="flowerRain"></div>
+
+<!-- ══ MAIN APP ══ -->
+<div id="app">
+  <div id="content">
+
+    <!-- ══ TAB 1: ホーム ══ -->
+    <div class="tc on" id="tc-home">
+      <div class="pg-hd">
+        <div class="pg-title">🪷 The Lotus Pond</div>
+        <div class="pg-sub"><span class="world-dot"></span><span id="worldCount">—</span>人が今、共に修行中</div>
+      </div>
+
+      <!-- Timer card -->
+      <div class="glass section" style="padding:1.25rem 1rem">
+        <div class="timer-ring-wrap">
+          <svg id="timerSvg" width="180" height="180" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="6"/>
+            <circle id="timerArc" cx="90" cy="90" r="78" fill="none" stroke="url(#timerGrad)" stroke-width="6"
+              stroke-linecap="round" stroke-dasharray="490" stroke-dashoffset="0"/>
+            <defs>
+              <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#e879a0"/>
+                <stop offset="100%" stop-color="#d4a843"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="timer-center">
+            <div class="timer-val" id="timerVal">3:00</div>
+            <div class="timer-label" id="timerLabel">TOTAL CIRCUMFERENCE</div>
+          </div>
+        </div>
+
+        <!-- Text scroll -->
+        <div class="text-scroll-wrap">
+          <div id="textScroll">
+            <div class="scroll-line">南無妙法蓮華経</div>
+            <div class="scroll-line sub">Namu Myōhō Renge Kyō</div>
+            <div class="scroll-line">Sabbe sattā sukhitā hontu</div>
+            <div class="scroll-line sub">すべての生きとし生けるものが幸せでありますように</div>
+            <div class="scroll-line">諸行無常 ／ Anicca</div>
+            <div class="scroll-line sub">すべての形成されたものは移ろいゆく</div>
+            <div class="scroll-line">慈悲 ／ Mettā</div>
+            <div class="scroll-line sub">すべての存在への限りない優しさ</div>
+            <div class="scroll-line">南無妙法蓮華経</div>
+            <div class="scroll-line sub">Namu Myōhō Renge Kyō</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="timer-btns">
+          <button class="glass-btn" id="timerStartBtn" onclick="timerToggle()">▶ 始める</button>
+          <button class="silent-badge" onclick="toggleSilent()" id="silentToggle">🤫 サイレント</button>
+        </div>
+
+        <button class="glass-btn primary" id="completeBtn" onclick="completeSession()">
+          🪷 完了 — 功徳を積む
+        </button>
+      </div>
+
+      <!-- Today's state -->
+      <div class="glass section glass-sm" style="padding:.875rem 1rem">
+        <div class="section-title">今日の状態</div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+          <span class="pill gold" id="todayXP">🌸 0 功徳</span>
+          <span class="pill accent" id="todayStreak">🔥 0日連続</span>
+          <span class="pill" id="todayRank">🌱 凡夫</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TAB 2: ならい ══ -->
+    <div class="tc" id="tc-narai">
+      <div class="pg-hd">
+        <div class="pg-title">ならい — 継続の記録</div>
+        <div class="pg-sub">毎日の修行が蓮の花を咲かせる</div>
+      </div>
+
+      <!-- Streak card -->
+      <div class="glass section" style="padding:1.25rem 1rem;text-align:center">
+        <div style="font-size:11px;color:var(--tx-m);margin-bottom:.4rem">連続修行日数</div>
+        <div><span class="streak-fire">🔥</span> <span class="streak-num" id="streakNum">0</span></div>
+        <div style="font-size:12px;color:var(--tx-m);margin-top:.4rem" id="streakMsg">今日も修行しましょう</div>
+        <div class="rank-bar" style="margin-top:.875rem">
+          <div class="rank-fill" id="streakFill" style="width:0%"></div>
+        </div>
+        <div style="font-size:10px;color:var(--tx-d);text-align:left" id="streakNext"></div>
+      </div>
+
+      <!-- Calendar heatmap -->
+      <div class="glass section glass-sm" style="padding:.875rem 1rem">
+        <div class="section-title">修行カレンダー（91日）</div>
+        <div class="hm-grid" id="hmGrid"></div>
+        <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem;font-size:10px;color:var(--tx-d)">
+          <span>少ない</span>
+          <span style="display:flex;gap:3px">
+            <span style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.07);display:inline-block"></span>
+            <span style="width:10px;height:10px;border-radius:2px;background:rgba(232,121,160,.25);display:inline-block"></span>
+            <span style="width:10px;height:10px;border-radius:2px;background:rgba(232,121,160,.5);display:inline-block"></span>
+            <span style="width:10px;height:10px;border-radius:2px;background:rgba(212,168,67,.9);display:inline-block"></span>
+          </span>
+          <span>多い</span>
+        </div>
+      </div>
+
+      <!-- Monthly summary -->
+      <div class="glass glass-sm section" style="padding:.875rem 1rem">
+        <div class="section-title">今月の功徳</div>
+        <div class="two-col">
+          <div style="text-align:center;padding:.5rem 0">
+            <div style="font-size:1.8rem;font-weight:200;color:var(--gold)" id="monthSessions">0</div>
+            <div style="font-size:10px;color:var(--tx-m)">修行回数</div>
+          </div>
+          <div style="text-align:center;padding:.5rem 0">
+            <div style="font-size:1.8rem;font-weight:200;color:var(--pink)" id="monthXP">0</div>
+            <div style="font-size:10px;color:var(--tx-m)">累計功徳 🌸</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TAB 3: 探求 ══ -->
+    <div class="tc" id="tc-quest">
+      <div class="pg-hd">
+        <div class="pg-title">探求 — 智慧の道</div>
+        <div class="pg-sub">Dharma Quest — 学ぶほど、祈りが深まる</div>
+      </div>
+
+      <!-- Rank card -->
+      <div class="glass section" style="padding:1.25rem 1rem">
+        <div style="display:flex;align-items:center;gap:.875rem">
+          <div style="font-size:3rem;line-height:1" id="rankIcon">🌱</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:16px;font-weight:700;margin-bottom:2px" id="rankName">凡夫</div>
+            <div style="font-size:10px;color:var(--tx-m)" id="rankEn">Puthujjana</div>
+            <div class="rank-badge" style="margin-top:.5rem" id="wisdomBadge">智慧 Lv.0 · ×1.0</div>
+          </div>
+        </div>
+        <div class="rank-bar" style="margin-top:.875rem">
+          <div class="rank-fill" id="rankFill" style="width:0%"></div>
+        </div>
+        <div style="font-size:10px;color:var(--tx-d);margin-top:.25rem" id="rankProg"></div>
+      </div>
+
+      <!-- Stages -->
+      <div class="glass glass-sm section" style="padding:.875rem 1rem">
+        <div class="section-title">四向四果の道</div>
+        <div id="stageList"></div>
+      </div>
+
+      <!-- DQ link -->
+      <div class="glass glass-sm section" style="padding:.875rem 1rem;text-align:center">
+        <div style="font-size:2rem;margin-bottom:.5rem">📿</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:.35rem">Dharma Quest</div>
+        <div style="font-size:11px;color:var(--tx-m);line-height:1.65;margin-bottom:.875rem">
+          パーリ語・サンスクリットの智慧を学ぶRPG。<br>
+          学ぶほど功徳倍率が上がり、祈りの力が強まります。
+        </div>
+        <button class="glass-btn" onclick="openDQ()" style="margin:0 auto">📿 Dharma Questを開く →</button>
+      </div>
+
+      <!-- Klesha dictionary -->
+      <div class="glass glass-sm section" style="padding:.875rem 1rem">
+        <div class="section-title">煩悩辞典（Klesha）</div>
+        <div id="kleshaDict"></div>
+      </div>
+    </div>
+
+    <!-- ══ TAB 4: サンガ ══ -->
+    <div class="tc" id="tc-sanga">
+      <div class="pg-hd">
+        <div class="pg-title">サンガ — つながり</div>
+        <div class="pg-sub">言葉を使わない静かな連帯</div>
+      </div>
+
+      <!-- Active room (if any) -->
+      <div id="activeRoomWrap" style="display:none" class="section">
+        <div class="glass room-card glass-sm">
+          <div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.625rem">
+            <div style="font-size:1.5rem" id="arKleshaEmoji">⚡</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12px;font-weight:600" id="arTitle">—</div>
+              <div style="font-size:10px;color:var(--tx-m)" id="arKleshaName">—</div>
+            </div>
+            <span class="pill" id="arWeight">—</span>
+          </div>
+          <!-- Boss HP -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.25rem">
+            <span style="font-size:10px;color:var(--tx-m)">Klesha HP</span>
+            <span style="font-size:10px;color:var(--pink)" id="arHpText">— / —</span>
+          </div>
+          <div class="boss-hp-bar">
+            <div class="boss-hp-fill" id="arHpFill" style="width:100%"></div>
+          </div>
+          <!-- Pond -->
+          <div class="pond-canvas-wrap" id="pondWrap">
+            <canvas id="pondCanvas"></canvas>
+          </div>
+          <!-- Prayer buttons -->
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center">
+            <button class="emoji-btn" onclick="sendPrayer('lotus')">🪷 蓮 — 清らかな心</button>
+            <button class="emoji-btn" onclick="sendPrayer('light')">🕯 灯 — あなたの光を消さない</button>
+            <button class="emoji-btn" onclick="sendPrayer('sun')">✨ 功徳 — 功徳を分け合う</button>
+            <button class="emoji-btn" onclick="sendPrayer('heart')">🌸 共感 — 一緒にいる</button>
+          </div>
+          <!-- Prayer log -->
+          <div class="divider"></div>
+          <div id="prayerLog" style="max-height:160px;overflow-y:auto"></div>
+        </div>
+      </div>
+
+      <!-- No active room -->
+      <div id="noRoomMsg" class="glass glass-sm section" style="padding:1.1rem;text-align:center">
+        <div style="font-size:2rem;margin-bottom:.5rem">🌊</div>
+        <div style="font-size:12px;font-weight:600;margin-bottom:.35rem">今は静かな蓮池です</div>
+        <div style="font-size:11px;color:var(--tx-m);line-height:1.65">
+          煩悩を抱えているとき、<br>ルームを作って仲間に知らせましょう
+        </div>
+      </div>
+
+      <!-- Create room -->
+      <div class="glass glass-sm section" style="padding:.875rem 1rem">
+        <div class="section-title">煩悩ルームを作る</div>
+        <div style="margin-bottom:.5rem">
+          <div style="font-size:11px;color:var(--tx-m);margin-bottom:.4rem">今日の煩悩（Klesha）</div>
+          <div style="display:flex;gap:.35rem;flex-wrap:wrap" id="kleshaSelect"></div>
+        </div>
+        <div style="margin-bottom:.5rem">
+          <div style="font-size:11px;color:var(--tx-m);margin-bottom:.4rem">重さ</div>
+          <div style="display:flex;gap:.35rem">
+            <button class="emoji-btn" id="wBtnLight" onclick="selWeight('light')">軽め</button>
+            <button class="emoji-btn" id="wBtnMedium" onclick="selWeight('medium')">普通</button>
+            <button class="emoji-btn" id="wBtnHeavy" onclick="selWeight('heavy')">重め</button>
+          </div>
+        </div>
+        <div style="margin-bottom:.625rem">
+          <textarea id="roomTitle" rows="2" placeholder="一言（例：明日の大事な試験が怖い）" maxlength="80"
+            style="font-size:13px"></textarea>
+        </div>
+        <button class="glass-btn primary" style="width:100%;padding:12px" onclick="createRoom()">
+          蓮池に悩みを流す 🌊
+        </button>
+      </div>
+
+      <!-- Eko section -->
+      <div class="glass glass-sm section" style="padding:.875rem 1rem">
+        <div class="section-title">回向（えこう）</div>
+        <p style="font-size:11px;color:var(--tx-m);line-height:1.65;margin-bottom:.75rem">
+          今日積んだ功徳を、苦しんでいる見知らぬ誰かへ回向します
+        </p>
+        <button class="glass-btn gold" id="ekoBtn" style="width:100%;padding:13px" onclick="sendEko()">
+          今日の功徳を回向する 🪷
+        </button>
+        <div id="ekoMsg" style="font-size:11px;color:var(--tx-m);text-align:center;margin-top:.5rem;line-height:1.65"></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- ══ BOTTOM NAV ══ -->
+  <nav id="nav">
+    <button class="nav-btn on" data-tab="home"><span class="ni">🏠</span>ホーム</button>
+    <button class="nav-btn" data-tab="narai"><span class="ni">📅</span>ならい</button>
+    <button class="nav-btn" data-tab="quest"><span class="ni">📿</span>探求</button>
+    <button class="nav-btn" data-tab="sanga"><span class="ni">🪷</span>サンガ</button>
+  </nav>
+</div><!-- /app -->
+
+<script>
+// ══ STATE ══
+var UK='lp_v1';
+var DEFST={
+  totalXP:0,streak:0,lastDate:'',
+  sessions:{},   // date→count
+  kleshaToday:'',
+  ekoDate:'',ekoCount:0,
+  room:null,     // {klesha,weight,title,hpMax,hp,prayers:[],createdAt}
+  silentMode:false,
+  dqXP:0        // synced from dharma_quest
+};
+var st=JSON.parse(localStorage.getItem(UK)||'null')||Object.assign({},DEFST);
+
+function save(){localStorage.setItem(UK,JSON.stringify(st));}
+function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function toISODate(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+
+// ══ BACKGROUND ══
+(function initBg(){
+  // Stars
+  var sf=document.getElementById('stars');
+  for(var i=0;i<90;i++){
+    var s=document.createElement('div');
+    s.className='star';
+    var sz=Math.random()<0.15?2.5:Math.random()<0.4?1.8:1;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*70+'%;left:'+Math.random()*100+'%;'
+      +'--d:'+(2+Math.random()*4)+'s;--delay:'+(Math.random()*4)+'s;--op:'+(0.4+Math.random()*0.6)+';';
+    sf.appendChild(s);
+  }
+  // Ripples
+  var rw=document.getElementById('ripples');
+  for(var j=0;j<5;j++){
+    var r=document.createElement('div');
+    r.className='ripple';
+    var pw=80+Math.random()*120;
+    r.style.cssText='width:'+pw+'px;height:'+(pw*0.35)+'px;'
+      +'left:'+(5+Math.random()*80)+'%;bottom:'+(10+Math.random()*50)+'%;'
+      +'--rd:'+(4+Math.random()*4)+'s;--delay:'+(Math.random()*5)+'s;';
+    rw.appendChild(r);
+  }
+  // Floating lotus
+  var lf=document.getElementById('lotusFloats');
+  var emojis=['🪷','🌸','✨'];
+  for(var k=0;k<8;k++){
+    var lp=document.createElement('div');
+    lp.className='lotus-float';
+    lp.textContent=emojis[k%emojis.length];
+    lp.style.cssText='left:'+(5+Math.random()*90)+'%;bottom:'+(5+Math.random()*80)+'%;'
+      +'--sz:'+(0.7+Math.random()*0.8)+'rem;--fd:'+(6+Math.random()*8)+'s;--delay:'+(Math.random()*8)+'s;';
+    lf.appendChild(lp);
+  }
+})();
+
+// ══ KLESHA DATA ══
+var KLESHA={
+  tan:{name:'貪',reading:'tanha',emoji:'🔥',desc:'執着・欲しいのに得られない',
+    pali:'Anicca — 諸行無常',rx:'すべては移ろいます。執着を少し緩めるだけで、呼吸が楽になります。',
+    color:'rgba(255,87,34,.6)'},
+  shin:{name:'瞋',reading:'dosa',emoji:'⚡',desc:'怒り・傷・対人の苦しみ',
+    pali:'Mettā — 慈悲',rx:'怒りの奥に、傷ついた自分がいます。その自分に「安らいでほしい」と祈りましょう。',
+    color:'rgba(63,81,181,.6)'},
+  chi:{name:'痴',reading:'moha',emoji:'🌫',desc:'迷い・空虚・消えてしまいたい',
+    pali:'Paññā — 般若（智慧）',rx:'迷いは、まだ答えを探している証拠。今日一回の修行が、一つの光になります。',
+    color:'rgba(96,125,139,.6)'},
+  man:{name:'慢',reading:'māna',emoji:'🪞',desc:'自己否定・恥・劣等感',
+    pali:'Anattā — 無我',rx:'「自分」という固い枠が苦しみの源。あなたは海そのものです。',
+    color:'rgba(156,39,176,.6)'},
+  gi:{name:'疑',reading:'vicikicchā',emoji:'🌀',desc:'不安・将来への恐れ',
+    pali:'Saddhā — 信',rx:'疑いは知性の証。まず今日一歩だけ踏み出しましょう。',
+    color:'rgba(0,150,136,.6)'}
+};
+
+var STAGES=[
+  {min:0,    name:'凡夫',  en:'Puthujjana',icon:'🌱',next:1000,  mult:1.0},
+  {min:1000, name:'三帰依',en:'Ti-saraṇa', icon:'🕯️',next:5000,  mult:1.1},
+  {min:5000, name:'預流果',en:'Sotāpanna', icon:'🌊',next:20000, mult:1.3},
+  {min:20000,name:'一来果',en:'Sakadāgāmi',icon:'🌿',next:80000, mult:1.5},
+  {min:80000,name:'不還果',en:'Anāgāmi',  icon:'🌸',next:300000,mult:1.8},
+  {min:300000,name:'阿羅漢',en:'Arahant',  icon:'🪷',next:null,  mult:2.0}
+];
+
+function getStage(){
+  var xp=st.totalXP||0;
+  for(var i=STAGES.length-1;i>=0;i--)if(xp>=STAGES[i].min)return{sg:STAGES[i],xp:xp};
+  return{sg:STAGES[0],xp:0};
+}
+
+// ══ WORLD COUNT SIMULATION ══
+function worldCount(){
+  var h=new Date().getHours(),m=new Date().getMinutes();
+  var b=[8,5,4,4,5,8,18,40,32,25,20,22,28,24,20,18,20,25,38,60,80,85,70,48];
+  return Math.max(3,(b[h]||10)+Math.round(Math.sin(m*0.31)*(b[h]||10)*0.18));
+}
+
+// ══ TIMER ══
+var TIMER_SEC=180;
+var timerRemain=TIMER_SEC,timerActive=false,timerDone=false;
+var timerRAF=null,timerLast=null;
+var silentActive=false;
+var scrollIdx=0,scrollTimer=null;
+var ARC_LEN=490;
+
+function timerToggle(){
+  if(timerDone)return;
+  if(timerActive){
+    timerActive=false;
+    if(timerRAF){cancelAnimationFrame(timerRAF);timerRAF=null;}
+    clearInterval(scrollTimer);
+    document.getElementById('timerStartBtn').textContent='▶ 再開';
+  }else{
+    timerActive=true;
+    timerLast=performance.now();
+    document.getElementById('timerStartBtn').textContent='⏸ 一時停止';
+    startTextScroll();
+    timerRAF=requestAnimationFrame(timerTick);
+    if(silentActive)document.getElementById('silentOv').classList.add('show');
+  }
+}
+
+function timerTick(ts){
+  if(!timerActive)return;
+  var dt=(ts-timerLast)/1000;
+  timerLast=ts;
+  timerRemain=Math.max(0,timerRemain-dt);
+  renderTimer();
+  if(timerRemain<=0){
+    timerDone=true;timerActive=false;
+    clearInterval(scrollTimer);
+    document.getElementById('timerStartBtn').disabled=true;
+    document.getElementById('timerStartBtn').textContent='修行完了';
+    document.getElementById('completeBtn').classList.add('show');
+    if(silentActive)document.getElementById('silentOv').classList.remove('show');
+    vibrateEnd();
+    return;
+  }
+  timerRAF=requestAnimationFrame(timerTick);
+}
+
+function renderTimer(){
+  var m=Math.floor(timerRemain/60),s=Math.floor(timerRemain%60);
+  var disp=m+':'+(s<10?'0':'')+s;
+  document.getElementById('timerVal').textContent=disp;
+  document.getElementById('silentTime').textContent=disp;
+  var pct=timerRemain/TIMER_SEC;
+  document.getElementById('timerArc').setAttribute('stroke-dashoffset',(ARC_LEN*(1-pct)).toFixed(1));
+  document.getElementById('timerLabel').textContent=timerActive?'修行中…':'準備ができたら始める';
+}
+
+function startTextScroll(){
+  clearInterval(scrollTimer);
+  var lines=document.querySelectorAll('#textScroll .scroll-line');
+  var total=lines.length;
+  scrollIdx=0;
+  scrollTimer=setInterval(function(){
+    scrollIdx=(scrollIdx+1)%total;
+    var h=lines[0].offsetHeight||28;
+    document.getElementById('textScroll').style.transform='translateY(-'+(scrollIdx*h)+'px)';
+  },2800);
+}
+
+function toggleSilent(){
+  silentActive=!silentActive;
+  var btn=document.getElementById('silentToggle');
+  btn.textContent=silentActive?'🤫 サイレントON':'🤫 サイレント';
+  btn.style.borderColor=silentActive?'rgba(232,121,160,.5)':'';
+  btn.style.color=silentActive?'var(--pink)':'';
+  if(silentActive&&timerActive){document.getElementById('silentOv').classList.add('show');}
+  else{document.getElementById('silentOv').classList.remove('show');}
+}
+
+function exitSilent(){
+  if(timerDone){
+    silentActive=false;
+    document.getElementById('silentOv').classList.remove('show');
+    return;
+  }
+  // complete session on tap when done
+  if(timerRemain<=0){completeSession();return;}
+}
+
+function vibrateEnd(){
+  if(navigator.vibrate)navigator.vibrate([200,100,200,100,400]);
+}
+
+function completeSession(){
+  if(document.getElementById('completeBtn').style.display==='none'&&
+     !document.getElementById('completeBtn').classList.contains('show'))return;
+  var res=getStage();
+  var base=10;
+  var mult=res.sg.mult;
+  var earned=Math.round(base*mult);
+  st.totalXP=(st.totalXP||0)+earned;
+  // streak
+  var t=today();
+  if(st.lastDate!==t){
+    var prev=st.lastDate;
+    var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+    if(st.lastDate===toISODate(yesterday)){st.streak=(st.streak||0)+1;}
+    else{st.streak=1;}
+    st.lastDate=t;
+  }
+  // session count
+  st.sessions=st.sessions||{};
+  st.sessions[t]=(st.sessions[t]||0)+1;
+  save();
+  showXPToast('+'+earned+' 🌸 功徳');
+  rainFlowers();
+  updateUI();
+  // reset timer
+  timerRemain=TIMER_SEC;timerDone=false;
+  document.getElementById('timerStartBtn').disabled=false;
+  document.getElementById('timerStartBtn').textContent='▶ 始める';
+  document.getElementById('completeBtn').classList.remove('show');
+  document.getElementById('silentOv').classList.remove('show');
+  renderTimer();
+  // purify boss if room exists
+  if(st.room&&st.room.hp>0){
+    st.room.hp=Math.max(0,st.room.hp-earned);
+    var msg={type:'lotus',text:'🪷 修行完了 — '+earned+'の功徳で浄化',self:true,ts:Date.now()};
+    st.room.prayers=st.room.prayers||[];
+    st.room.prayers.push(msg);
+    if(st.room.hp<=0){
+      var bloom={type:'bloom',text:'🌺 Klesha が浄化されました！大輪の蓮が咲きました',ts:Date.now()};
+      st.room.prayers.push(bloom);
+      st.room=null;
+    }
+    save();
+    renderSangaTab();
+  }
+}
+
+function showXPToast(msg){
+  var t=document.getElementById('xpToast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+
+function rainFlowers(){
+  var r=document.getElementById('flowerRain');
+  r.innerHTML='';
+  var emojis=['🪷','🌸','✨','🌺'];
+  for(var i=0;i<18;i++){
+    var p=document.createElement('div');
+    p.className='petal';
+    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.cssText='left:'+(Math.random()*100)+'%;--pd:'+(2+Math.random()*2)+'s;--pp:'+(Math.random()*.8)+'s;';
+    r.appendChild(p);
+  }
+  setTimeout(function(){r.innerHTML='';},4000);
+}
+
+// ══ TABS ══
+function switchTab(id){
+  document.querySelectorAll('.tc').forEach(function(el){el.classList.remove('on');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('on');});
+  var el=document.getElementById('tc-'+id);
+  if(el)el.classList.add('on');
+  var nb=document.querySelector('[data-tab="'+id+'"]');
+  if(nb)nb.classList.add('on');
+  if(id==='narai')renderNarai();
+  if(id==='quest')renderQuest();
+  if(id==='sanga')renderSangaTab();
+  if(id==='home')updateHomeState();
+  document.getElementById('content').scrollTop=0;
+}
+document.querySelectorAll('.nav-btn').forEach(function(b){
+  b.addEventListener('click',function(){switchTab(b.getAttribute('data-tab'));});
+});
+
+// ══ HOME STATE ══
+function updateHomeState(){
+  var res=getStage();
+  document.getElementById('todayXP').textContent='🌸 '+(st.totalXP||0)+' 功徳';
+  document.getElementById('todayStreak').textContent='🔥 '+(st.streak||0)+'日連続';
+  document.getElementById('todayRank').textContent=res.sg.icon+' '+res.sg.name;
+  document.getElementById('worldCount').textContent=worldCount();
+}
+
+// ══ NARAI ══
+function renderNarai(){
+  var res=getStage();
+  // Streak
+  document.getElementById('streakNum').textContent=st.streak||0;
+  var msgs=['今日も修行しましょう','素晴らしい継続です 🙏','修行の炎が燃えています 🔥',
+            '継続は力なり 🌊','あなたは道を歩んでいます 🌿'];
+  var idx=Math.min(Math.floor((st.streak||0)/7),msgs.length-1);
+  document.getElementById('streakMsg').textContent=msgs[idx];
+  // Streak goal (next 7-day milestone)
+  var goal=Math.ceil(((st.streak||0)+1)/7)*7;
+  var rem=goal-(st.streak||0);
+  document.getElementById('streakFill').style.width=(((st.streak||0)%7)/7*100)+'%';
+  document.getElementById('streakNext').textContent=rem+'日で'+goal+'日達成 →';
+  // Heatmap
+  var grid=document.getElementById('hmGrid');
+  grid.innerHTML='';
+  var now=new Date();
+  for(var i=90;i>=0;i--){
+    var d=new Date(now);d.setDate(d.getDate()-i);
+    var key=toISODate(d);
+    var cnt=(st.sessions&&st.sessions[key])||0;
+    var cell=document.createElement('div');
+    var lv=cnt===0?'':cnt===1?'lv1':cnt===2?'lv2':cnt===3?'lv3':'lv4';
+    cell.className='hm-cell'+(lv?' '+lv:'');
+    cell.title=key+': '+cnt+'回';
+    grid.appendChild(cell);
+  }
+  // Month summary
+  var monthKey=now.getFullYear()+'-'+(now.getMonth()+1);
+  var mSess=0,mXP=0;
+  if(st.sessions){
+    Object.keys(st.sessions).forEach(function(k){
+      if(k.startsWith(monthKey)){mSess+=st.sessions[k];}
+    });
+  }
+  mXP=Math.round(mSess*10*res.sg.mult);
+  document.getElementById('monthSessions').textContent=mSess;
+  document.getElementById('monthXP').textContent=mXP;
+}
+
+// ══ QUEST ══
+function renderQuest(){
+  var res=getStage(),sg=res.sg,xp=res.xp;
+  document.getElementById('rankIcon').textContent=sg.icon;
+  document.getElementById('rankName').textContent=sg.name;
+  document.getElementById('rankEn').textContent=sg.en;
+  document.getElementById('wisdomBadge').textContent='智慧 Lv.'+STAGES.indexOf(sg)+' · ×'+sg.mult.toFixed(1);
+  if(sg.next){
+    var pct=Math.min(100,Math.round((xp-sg.min)/(sg.next-sg.min)*100));
+    document.getElementById('rankFill').style.width=pct+'%';
+    document.getElementById('rankProg').textContent=xp.toLocaleString()+' / 次の階位まで '+(sg.next-xp).toLocaleString()+' 🌸';
+  }else{
+    document.getElementById('rankFill').style.width='100%';
+    document.getElementById('rankProg').textContent='最高位 阿羅漢 — すべての煩悩を超えた';
+  }
+  // Stage list
+  var sl=document.getElementById('stageList');
+  sl.innerHTML='';
+  STAGES.forEach(function(s,i){
+    var done=xp>=s.min;
+    var cur=(sg===s);
+    var div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:.625rem;padding:.5rem 0;'
+      +(i<STAGES.length-1?'border-bottom:1px solid rgba(255,255,255,.06)':'');
+    var icon=document.createElement('div');
+    icon.style.cssText='font-size:1.4rem;opacity:'+(done?1:.35)+';';
+    icon.textContent=s.icon;
+    var info=document.createElement('div');
+    info.style.flex='1';
+    info.innerHTML='<div style="font-size:12px;font-weight:'+(cur?700:500)+';color:'+(cur?'var(--pink)':'var(--tx)')
+      +'">'+s.name+'</div>'
+      +'<div style="font-size:10px;color:var(--tx-m)">'+s.en+' · 功徳×'+s.mult.toFixed(1)+'</div>';
+    var badge=document.createElement('div');
+    badge.style.cssText='font-size:10px;color:'+(done?'var(--gold)':'var(--tx-d)')+';';
+    badge.textContent=done?'✓ 到達':'Lv.'+i;
+    div.appendChild(icon);div.appendChild(info);div.appendChild(badge);
+    sl.appendChild(div);
+  });
+  // Klesha dict
+  var kd=document.getElementById('kleshaDict');
+  kd.innerHTML='';
+  Object.keys(KLESHA).forEach(function(k,i,arr){
+    var d=KLESHA[k];
+    var row=document.createElement('div');
+    row.style.cssText='padding:.6rem 0;'+(i<arr.length-1?'border-bottom:1px solid rgba(255,255,255,.06)':'');
+    row.innerHTML='<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">'
+      +'<span style="font-size:1.15rem">'+d.emoji+'</span>'
+      +'<span style="font-size:12px;font-weight:600">'+d.name+'（'+d.reading+'）</span>'
+      +'</div>'
+      +'<div style="font-size:11px;color:var(--pink);margin-bottom:.2rem">'+d.pali+'</div>'
+      +'<div style="font-size:11px;color:var(--tx-m);line-height:1.6">'+d.rx+'</div>';
+    kd.appendChild(row);
+  });
+}
+
+function openDQ(){
+  // Link to the DQ page if it exists, otherwise open yomuyomu DQ tab
+  if(window.parent&&window.parent!==window){
+    // inside iframe
+    window.parent.postMessage({type:'openTab',tab:'quest'},'*');
+  }else{
+    window.open('index.html#quest','_blank');
+  }
+}
+
+// ══ SANGA ══
+var selKlesha='',selWeight_='medium';
+
+function renderSangaTab(){
+  // Klesha select buttons
+  var ks=document.getElementById('kleshaSelect');
+  ks.innerHTML='';
+  Object.keys(KLESHA).forEach(function(k){
+    var d=KLESHA[k];
+    var b=document.createElement('button');
+    b.className='emoji-btn';
+    b.innerHTML=d.emoji+' '+d.name;
+    b.style.background=selKlesha===k?d.color:'rgba(255,255,255,.1)';
+    b.style.borderColor=selKlesha===k?'rgba(255,255,255,.4)':'';
+    b.onclick=function(){selKlesha=k;renderSangaTab();};
+    ks.appendChild(b);
+  });
+  // Weight buttons
+  ['light','medium','heavy'].forEach(function(w){
+    var id='wBtn'+w.charAt(0).toUpperCase()+w.slice(1);
+    var btn=document.getElementById(id);
+    if(btn){
+      var on=(selWeight_===w);
+      btn.style.background=on?'rgba(232,121,160,.3)':'rgba(255,255,255,.1)';
+      btn.style.borderColor=on?'rgba(232,121,160,.4)':'';
+    }
+  });
+  // Active room
+  if(st.room){
+    document.getElementById('activeRoomWrap').style.display='block';
+    document.getElementById('noRoomMsg').style.display='none';
+    var r=st.room,k=KLESHA[r.klesha]||{emoji:'🌀',name:'—'};
+    document.getElementById('arKleshaEmoji').textContent=k.emoji;
+    document.getElementById('arTitle').textContent=r.title||'—';
+    document.getElementById('arKleshaName').textContent=k.name+'（'+r.klesha+'）';
+    document.getElementById('arWeight').textContent={light:'軽め',medium:'普通',heavy:'重め',critical:'深刻'}[r.weight]||r.weight;
+    document.getElementById('arHpText').textContent=r.hp+' / '+r.hpMax;
+    var hpPct=r.hpMax>0?Math.max(0,r.hp/r.hpMax*100):0;
+    document.getElementById('arHpFill').style.width=hpPct+'%';
+    renderPrayerLog(r.prayers||[]);
+    initPondCanvas();
+  }else{
+    document.getElementById('activeRoomWrap').style.display='none';
+    document.getElementById('noRoomMsg').style.display='block';
+  }
+  // Eko
+  renderEko();
+}
+
+function selWeight(w){selWeight_=w;renderSangaTab();}
+
+function createRoom(){
+  if(!selKlesha){alert('煩悩（Klesha）を選んでください');return;}
+  var title=document.getElementById('roomTitle').value.trim();
+  if(!title){alert('一言を入力してください');return;}
+  var hpMap={light:300,medium:1000,heavy:3000,critical:10000};
+  var hp=hpMap[selWeight_]||1000;
+  st.room={klesha:selKlesha,weight:selWeight_,title:title,hpMax:hp,hp:hp,prayers:[],createdAt:Date.now()};
+  document.getElementById('roomTitle').value='';
+  selKlesha='';selWeight_='medium';
+  save();
+  renderSangaTab();
+  showXPToast('蓮池に悩みを流しました 🌊');
+}
+
+var PRAYER_MSGS={
+  lotus:['🪷 その苦しみが浄化されますように','🪷 蓮の光が届きますように','🪷 泥が深いほど、蓮は大きく咲く'],
+  light:['🕯 あなたの光を消さない','🕯 一緒にいます','🕯 暗闇の中でも、灯は消えない'],
+  sun:  ['✨ 功徳を分け合います','✨ この功徳があなたに届きますように','✨ 共に修行しています'],
+  heart:['🌸 一人じゃない','🌸 共に感じています','🌸 この瞬間、一緒にいます']
+};
+
+function sendPrayer(type){
+  if(!st.room)return;
+  var msgs=PRAYER_MSGS[type]||[];
+  var text=msgs[Math.floor(Math.random()*msgs.length)]||'🙏';
+  var dmg=Math.max(5,Math.round((st.totalXP||0)*0.05+5));
+  st.room.hp=Math.max(0,st.room.hp-dmg);
+  var msg={type:type,text:text,self:false,ts:Date.now()};
+  st.room.prayers=st.room.prayers||[];
+  st.room.prayers.push(msg);
+  if(st.room.hp<=0){
+    st.room.prayers.push({type:'bloom',text:'🌺 Klesha が浄化されました！大輪の蓮が咲きました',ts:Date.now()});
+    st.room=null;
+  }
+  save();
+  renderSangaTab();
+  triggerPurifyEffect();
+}
+
+function renderPrayerLog(prayers){
+  var log=document.getElementById('prayerLog');
+  log.innerHTML='';
+  var icons={lotus:'🪷',light:'🕯',sun:'✨',heart:'🌸',bloom:'🌺'};
+  prayers.slice(-12).forEach(function(p){
+    var row=document.createElement('div');
+    row.className='msg-row'+(p.self?' prayer-sent':'');
+    var t=new Date(p.ts);
+    var timeStr=(t.getHours()<10?'0':'')+t.getHours()+':'+(t.getMinutes()<10?'0':'')+t.getMinutes();
+    row.innerHTML='<div class="msg-avatar">'+(icons[p.type]||'🙏')+'</div>'
+      +'<div class="msg-bubble">'+p.text+'<div style="font-size:9px;color:var(--tx-d);margin-top:2px">'+timeStr+'</div></div>';
+    log.appendChild(row);
+  });
+  log.scrollTop=log.scrollHeight;
+}
+
+// ══ POND CANVAS ══
+var pondAF=null;
+function initPondCanvas(){
+  var canvas=document.getElementById('pondCanvas');
+  if(!canvas)return;
+  var wrap=document.getElementById('pondWrap');
+  canvas.width=wrap.offsetWidth||300;
+  canvas.height=wrap.offsetHeight||(wrap.offsetWidth*0.56)||168;
+  var ctx=canvas.getContext('2d');
+  var W=canvas.width,H=canvas.height;
+  var particles=[];
+  for(var i=0;i<6;i++){
+    particles.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2,
+      vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.15,op:Math.random()});
+  }
+  if(pondAF)cancelAnimationFrame(pondAF);
+  var t=0;
+  function draw(){
+    t+=0.015;
+    ctx.clearRect(0,0,W,H);
+    // Water gradient
+    var grd=ctx.createLinearGradient(0,0,0,H);
+    grd.addColorStop(0,'rgba(13,35,60,.7)');
+    grd.addColorStop(1,'rgba(13,115,119,.4)');
+    ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
+    // Ripples
+    for(var i=0;i<3;i++){
+      var ri=t*0.5+i*2.1;
+      var rx=W*(0.3+i*0.2),ry=H*0.6;
+      var rr=20+Math.sin(ri)*10;
+      ctx.beginPath();
+      ctx.ellipse(rx,ry,rr*2,rr*0.4,0,0,Math.PI*2);
+      ctx.strokeStyle='rgba(212,168,67,'+(0.06+0.04*Math.sin(ri))+')';
+      ctx.lineWidth=1;ctx.stroke();
+    }
+    // Klesha boss
+    var r=st.room;
+    if(r&&r.hp>0){
+      var hpRatio=r.hp/r.hpMax;
+      var bx=W/2,by=H*0.45;
+      var br=Math.min(W,H)*0.18*(0.6+hpRatio*0.4);
+      var grad=ctx.createRadialGradient(bx,by,0,bx,by,br);
+      grad.addColorStop(0,'rgba(150,0,220,'+(0.4+hpRatio*0.4)+')');
+      grad.addColorStop(1,'rgba(100,0,180,0)');
+      ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);
+      ctx.fillStyle=grad;ctx.fill();
+      // Smoke wisps
+      for(var w=0;w<4;w++){
+        var wa=t*1.2+w*1.57;
+        var wx=bx+Math.cos(wa)*(br*0.5),wy=by+Math.sin(wa*0.7)*(br*0.35);
+        ctx.beginPath();ctx.arc(wx,wy,4+Math.sin(t+w)*2,0,Math.PI*2);
+        ctx.fillStyle='rgba(180,50,255,'+(0.15+hpRatio*0.1)+')';ctx.fill();
+      }
+      // Emoji
+      ctx.font=(br*0.8)+'px serif';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.globalAlpha=0.8;
+      var kd=KLESHA[r.klesha]||{emoji:'🌀'};
+      ctx.fillText(kd.emoji,bx,by);
+      ctx.globalAlpha=1;
+    }else{
+      // Bloomed lotus
+      ctx.font=(Math.min(W,H)*0.25)+'px serif';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.globalAlpha=0.6+0.2*Math.sin(t);
+      ctx.fillText('🪷',W/2,H/2);
+      ctx.globalAlpha=1;
+    }
+    // Particles (light motes)
+    particles.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      p.op=0.3+0.5*Math.abs(Math.sin(t+p.x));
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(212,168,67,'+p.op.toFixed(2)+')';ctx.fill();
+    });
+    pondAF=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function triggerPurifyEffect(){
+  var wrap=document.getElementById('pondWrap');
+  if(!wrap)return;
+  var div=document.createElement('div');
+  div.className='purify-ripple';
+  wrap.appendChild(div);
+  setTimeout(function(){div.remove();},900);
+}
+
+// ══ EKO ══
+function renderEko(){
+  var btn=document.getElementById('ekoBtn');
+  var msg=document.getElementById('ekoMsg');
+  var done=(st.ekoDate===today());
+  if(done){
+    if(btn){btn.disabled=true;btn.textContent='回向しました 🪷';}
+    if(msg)msg.innerHTML='累計 '+(st.ekoCount||0)+'日 回向しました<br><span style="color:var(--pink)">今日も誰かのために祈りが届きました</span>';
+  }else{
+    if(btn){btn.disabled=false;btn.textContent='今日の功徳を回向する 🪷';}
+    if(msg)msg.textContent=(st.ekoCount||0)>0?'累計 '+(st.ekoCount||0)+'日 回向しています':'';
+  }
+}
+
+function sendEko(){
+  var t=today();
+  if(st.ekoDate===t){renderEko();return;}
+  st.ekoDate=t;st.ekoCount=(st.ekoCount||0)+1;save();
+  showXPToast('回向しました 🪷');
+  rainFlowers();
+  renderEko();
+}
+
+// ══ INIT ══
+(function init(){
+  renderTimer();
+  updateHomeState();
+  // Check if we should update streak
+  var t=today();
+  if(st.lastDate&&st.lastDate!==t){
+    var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+    if(st.lastDate!==toISODate(yesterday)){st.streak=0;}
+  }
+  save();
+  // Auto-refresh world count every 30s
+  setInterval(function(){
+    var wc=document.getElementById('worldCount');
+    if(wc)wc.textContent=worldCount();
+  },30000);
+})();
+</script>
+</body>
+</html>
