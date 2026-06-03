@@ -387,7 +387,7 @@ body.dark .crk.ta{color:#ef9a9a;text-shadow:-1px -1px 0 rgba(0,0,0,.9),1px -1px 
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;}
 /* ── 太鼓ボタン ── */
 .tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
-.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));}
+.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;}
 @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
 .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
 .tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
@@ -416,7 +416,7 @@ body.rich .tap-drum-wrap::before{
   background:radial-gradient(circle,rgba(212,168,67,.35) 0%,transparent 70%);
   animation:rich-glow 2.8s ease-in-out infinite;pointer-events:none;z-index:0;}
 body.rich .tap-drum-img{position:relative;z-index:1;
-  box-shadow:0 0 32px rgba(212,168,67,.5),0 6px 24px rgba(0,0,0,.28);}
+  filter:drop-shadow(0 0 14px rgba(212,168,67,.6)) drop-shadow(0 6px 12px rgba(0,0,0,.3));}
 @keyframes rich-glow{
   0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(1);}
   50%{opacity:.9;transform:translate(-50%,-50%) scale(1.08);}}
