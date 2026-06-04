@@ -487,12 +487,10 @@ body.dark .crk.ta{color:#ef9a9a;}
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;opacity:.7;}
 /* ── 太鼓ボタン ── */
 .tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
-.tap-drum-img{width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px);object-fit:cover;border-radius:50%;display:block;pointer-events:none;
-  box-shadow:0 8px 32px rgba(0,0,0,.45),0 0 0 2px rgba(255,255,255,.15);
-  border:3px solid rgba(255,255,255,.2);}
+.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;}
 @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
 .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
-.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
+.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,52vw,220px);height:clamp(150px,52vw,220px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
 @keyframes drum-ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(3);opacity:0}}
 /* ── リッチモード（背景画像時）── dark glass ベースで透明度を調整 ── */
 body.rich .card,body.rich .card-a{
@@ -721,7 +719,7 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
     </div>
     <div id="smsg" class="smsg"></div>
     <div class="tap-drum-wrap" id="manBtn" role="button" tabindex="0" aria-label="お題目カウント">
-      <img src="images/CountButton.jpg" class="tap-drum-img" alt="カウント">
+      <img src="images/CountButton.png" class="tap-drum-img" alt="カウント">
     </div>
   </div>
 
