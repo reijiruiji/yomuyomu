@@ -602,6 +602,114 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 .tdot{width:5px;height:5px;border-radius:50%;background:var(--a);opacity:.5;
   box-shadow:0 0 4px var(--a);
   animation:blink calc(.8s + var(--dl,0s)) ease-in-out var(--dl,0s) infinite;}
+
+/* ══ HOME: モード選択 ══ */
+.home-mode-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1.25rem 0;}
+.home-mode-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;
+  padding:1.25rem .5rem;border-radius:20px;cursor:pointer;border:1.5px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  color:var(--tx);transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.15);}
+.home-mode-btn .mi{font-size:2.2rem;line-height:1;}
+.home-mode-btn .ml{font-size:13px;font-weight:600;letter-spacing:.04em;}
+.home-mode-btn .ms{font-size:10px;color:var(--mu);text-align:center;line-height:1.4;margin-top:2px;}
+.home-mode-btn.on{border-color:rgba(232,121,160,.6);background:linear-gradient(135deg,rgba(232,121,160,.18),rgba(212,168,67,.1));
+  box-shadow:0 4px 24px rgba(232,121,160,.25),inset 0 1px 0 rgba(255,255,255,.2);}
+.home-mode-btn:active{transform:scale(.97);}
+
+/* ══ HOME: 目標リング ══ */
+.goal-ring-wrap{display:flex;justify-content:center;margin:.75rem 0 .5rem;position:relative;}
+.goal-ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;}
+.goal-ring-num{font-size:clamp(2.6rem,13vw,3.8rem);font-weight:200;line-height:1;
+  background:linear-gradient(135deg,#fff 20%,rgba(232,121,160,.9));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.goal-ring-label{font-size:10px;color:var(--mu);margin-top:2px;letter-spacing:.04em;}
+#goalRingSvg{filter:drop-shadow(0 0 16px rgba(232,121,160,.4));}
+
+/* ══ HOME: 浮かぶ経文演出 ══ */
+.float-mantra{position:fixed;pointer-events:none;z-index:55;
+  font-size:clamp(11px,3vw,13px);font-weight:600;letter-spacing:.14em;
+  color:rgba(255,255,255,.85);text-shadow:0 0 14px rgba(232,121,160,.7);
+  animation:mantrafloat 2.2s ease-out forwards;}
+@keyframes mantrafloat{
+  0%{opacity:.95;transform:translateY(0) scale(1);}
+  30%{opacity:.9;}
+  100%{opacity:0;transform:translateY(-130px) scale(.8);}}
+
+/* ══ ならい タブ ══ */
+.lp-glass{background:rgba(255,255,255,.1);backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(0,0,0,.1);}
+.lp-glass-sm{border-radius:14px;}
+.narai-streak-num{font-size:clamp(3rem,16vw,5rem);font-weight:200;line-height:1;
+  background:linear-gradient(135deg,#d4a843,#fff 50%,#d4a843);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.narai-hm-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:2.5px;margin:.5rem 0;}
+.narai-hm-cell{aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.07);transition:all .2s;}
+.narai-hm-cell.lv1{background:rgba(232,121,160,.25);}
+.narai-hm-cell.lv2{background:rgba(232,121,160,.5);}
+.narai-hm-cell.lv3{background:rgba(232,121,160,.75);}
+.narai-hm-cell.lv4{background:rgba(212,168,67,.9);box-shadow:0 0 6px rgba(212,168,67,.4);}
+.narai-rank-bar{height:8px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:.5rem 0;}
+.narai-rank-fill{height:100%;background:linear-gradient(90deg,#e879a0,#d4a843);border-radius:99px;transition:width .8s ease;}
+.narai-paywall{text-align:center;padding:1rem;border-radius:14px;
+  background:linear-gradient(135deg,rgba(212,168,67,.12),rgba(232,121,160,.08));
+  border:1px solid rgba(212,168,67,.28);}
+.narai-section-title{font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.07em;
+  text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
+.narai-section-title::before{content:'';display:block;width:3px;height:12px;background:#e879a0;border-radius:2px;}
+
+/* ══ 蓮池: 浮かぶ蓮の花 ══ */
+.lp-pond-area{position:relative;width:100%;height:140px;overflow:hidden;margin-bottom:.75rem;border-radius:20px;
+  background:linear-gradient(to bottom,rgba(13,115,119,.12),rgba(13,115,119,.28));
+  border:1px solid rgba(13,115,119,.3);}
+.lp-lotus-floater{position:absolute;bottom:-20px;cursor:pointer;user-select:none;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  animation:lotusRise var(--dur,12s) var(--del,0s) ease-in-out forwards;}
+@keyframes lotusRise{
+  0%{transform:translateX(0) translateY(0);opacity:0;}
+  10%{opacity:1;}
+  85%{opacity:.9;}
+  100%{transform:translateX(var(--drift,0px)) translateY(-160px);opacity:0;}}
+.lp-lotus-emoji{font-size:var(--sz,1.4rem);filter:drop-shadow(0 0 8px var(--glow,rgba(232,121,160,.6)));
+  transition:transform .15s;}
+.lp-lotus-floater:active .lp-lotus-emoji{transform:scale(1.3);}
+.lp-lotus-bubble{font-size:9px;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);
+  border-radius:8px;padding:2px 6px;max-width:80px;text-align:center;line-height:1.3;
+  backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);}
+
+/* ══ サンガ: チャットルーム ══ */
+.sanga-overlay{position:fixed;inset:0;z-index:480;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  display:none;flex-direction:column;}
+.sanga-overlay.show{display:flex;}
+.sanga-panel{background:rgba(8,13,26,.92);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);
+  border:1px solid rgba(255,255,255,.18);border-radius:24px 24px 0 0;margin-top:auto;
+  padding:1.25rem 1rem 0;width:100%;max-height:88vh;display:flex;flex-direction:column;
+  box-shadow:0 -8px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.2);}
+.sanga-hd{display:flex;align-items:center;gap:.625rem;margin-bottom:.875rem;}
+.sanga-hd-klesha{font-size:1.8rem;line-height:1;}
+.sanga-hd-info{flex:1;min-width:0;}
+.sanga-hd-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.93);}
+.sanga-hd-sub{font-size:10px;color:rgba(255,255,255,.45);margin-top:1px;}
+.sanga-hp-bar{height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:.4rem 0;}
+.sanga-hp-fill{height:100%;border-radius:99px;transition:width .6s ease;
+  background:linear-gradient(90deg,#7b1fa2,#e91e63);}
+.sanga-msgs{flex:1;overflow-y:auto;padding:.5rem 0;min-height:80px;max-height:240px;}
+.sanga-msgs::-webkit-scrollbar{display:none;}
+.sanga-msg-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:.5rem;}
+.sanga-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;flex-shrink:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);}
+.sanga-bubble{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:0 12px 12px 12px;padding:.45rem .625rem;font-size:11px;line-height:1.55;
+  flex:1;min-width:0;color:rgba(255,255,255,.85);}
+.sanga-bubble.mine{border-radius:12px 0 12px 12px;background:rgba(212,168,67,.12);border-color:rgba(212,168,67,.25);}
+.sanga-pray-btns{display:flex;gap:.4rem;flex-wrap:wrap;padding:.625rem 0;}
+.sanga-pray-btn{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:7px 12px;
+  border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.09);color:rgba(255,255,255,.85);transition:all .18s;white-space:nowrap;}
+.sanga-pray-btn:active{transform:scale(.94);background:rgba(255,255,255,.16);}
+.sanga-close-btn{width:100%;padding:12px;margin-top:.5rem;
+  border:none;background:transparent;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -676,9 +784,6 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
     <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
     <button class="btn-s" id="danaPromptBtn" onclick="openDana()" style="width:100%;padding:8px;background:linear-gradient(135deg,rgba(194,24,91,.65),rgba(233,30,99,.65));color:#fff;border-color:rgba(233,30,99,.4)">🙏 ダーナ（布施）</button>
     <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
-    <a href="lotus_pond.html" style="display:block;text-decoration:none">
-      <button class="btn-s" style="width:100%;padding:8px;background:linear-gradient(135deg,rgba(232,121,160,.2),rgba(212,168,67,.1));border-color:rgba(232,121,160,.3);color:rgba(232,121,160,.9)">🪷 The Lotus Pond</button>
-    </a>
     <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
     <button class="btn-s" onclick="startTutWalk();togMenu();" style="width:100%;padding:8px">チュートリアル</button>
     <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
@@ -697,29 +802,128 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
   <div class="tabs">
     <button class="tab on" data-t="chant"><span class="tab-icon">🥁</span>お題目</button>
     <button class="tab" data-t="gongyou"><span class="tab-icon">📖</span>勤行</button>
-    <button class="tab" data-t="cal"><span class="tab-icon">📅</span>暦</button>
-    <button class="tab" data-t="rank"><span class="tab-icon">🏆</span>累計</button>
+    <button class="tab" data-t="narai"><span class="tab-icon">📅</span>ならい</button>
     <button class="tab" data-t="lotus"><span class="tab-icon">🪷</span>蓮池</button>
     <button class="tab" data-t="quest"><span class="tab-icon">📿</span>探求</button>
   </div>
 
   <!-- ── お題目 ── -->
   <div class="tc on" id="tc-chant">
-    <div class="tab-hd">
-      <span class="tab-hd-title">🥁 お題目カウンター</span>
-      <button class="hint-btn" onclick="showHint('chant')">?</button>
-    </div>
     <div id="todayBanner"></div>
     <div id="multPill" style="display:none"></div>
-    <div class="card card-a" id="countCard">
-      <div class="count-wrap">
-        <div class="count-num" id="sesNum">0</div>
-        <div class="count-sub" id="cumul">累計: 0回</div>
+
+    <!-- モード未選択時 -->
+    <div id="homeModeSelect" style="display:none;padding:.5rem 0">
+      <div style="text-align:center;margin-bottom:.875rem">
+        <div style="font-size:1.1rem;font-weight:700;color:var(--tx);margin-bottom:.25rem">今日の修行を選んでください</div>
+        <div style="font-size:11px;color:var(--mu)">いつでも切り替えられます</div>
+      </div>
+      <div class="home-mode-wrap">
+        <div class="home-mode-btn" onclick="selectHomeMode('chant')">
+          <span class="mi">🥁</span>
+          <span class="ml">お題目</span>
+          <span class="ms">南無妙法蓮華経を唱える</span>
+        </div>
+        <div class="home-mode-btn" onclick="selectHomeMode('zen')">
+          <span class="mi">🧘</span>
+          <span class="ml">瞑想</span>
+          <span class="ms">静かに心を整える<br>1分 = 1功徳</span>
+        </div>
       </div>
     </div>
-    <div id="smsg" class="smsg"></div>
-    <div class="tap-drum-wrap" id="manBtn" role="button" tabindex="0" aria-label="お題目カウント">
-      <img src="images/CountButton.png" class="tap-drum-img" alt="カウント">
+
+    <!-- お題目モード -->
+    <div id="homeChantArea" style="display:none">
+      <!-- 目標リング（目標あり時のみ表示） -->
+      <div id="goalRingArea" style="display:none">
+        <div class="goal-ring-wrap">
+          <svg id="goalRingSvg" width="200" height="200" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="7"/>
+            <circle id="goalRingArc" cx="100" cy="100" r="85" fill="none" stroke="url(#ringGrad)" stroke-width="7"
+              stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="0"
+              style="transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .5s ease"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#e879a0"/>
+                <stop offset="100%" stop-color="#d4a843"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="goal-ring-center">
+            <div class="goal-ring-num" id="ringRemain">0</div>
+            <div class="goal-ring-label">残り回数</div>
+          </div>
+        </div>
+      </div>
+      <!-- 目標なし時のカウント表示 -->
+      <div id="noGoalCount" style="display:none">
+        <div class="card card-a" id="countCard">
+          <div class="count-wrap">
+            <div class="count-num" id="sesNum">0</div>
+            <div class="count-sub" id="cumul">累計: 0回</div>
+          </div>
+        </div>
+      </div>
+      <!-- リングあり時のカウント小表示 -->
+      <div id="ringCountSmall" style="display:none;text-align:center;margin:.25rem 0 .5rem">
+        <span style="font-size:clamp(28px,10vw,42px);font-weight:300;color:var(--tx)" id="sesNum2">0</span>
+        <span style="font-size:11px;color:var(--mu);margin-left:4px">回 / 今日</span>
+        <div style="font-size:10px;color:var(--mu);margin-top:2px" id="cumul2">累計: 0回</div>
+      </div>
+      <div id="smsg" class="smsg"></div>
+      <div class="tap-drum-wrap" id="manBtn" role="button" tabindex="0" aria-label="お題目カウント">
+        <img src="images/CountButton.png" class="tap-drum-img" alt="カウント">
+      </div>
+      <!-- モード切替リンク -->
+      <div style="text-align:center;margin-top:.5rem">
+        <button class="btn-s" onclick="showModeSelect()" style="font-size:10px;padding:4px 10px">⇄ モード切替</button>
+      </div>
+    </div>
+
+    <!-- 瞑想モード -->
+    <div id="homeZenArea" style="display:none">
+      <div class="card" style="padding:1.25rem 1rem;text-align:center">
+        <!-- 瞑想タイマーリング -->
+        <div class="goal-ring-wrap">
+          <svg id="zenRingSvg" width="200" height="200" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="7"/>
+            <circle id="zenRingArc" cx="100" cy="100" r="85" fill="none" stroke="url(#zenGrad)" stroke-width="7"
+              stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534"
+              style="transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .5s ease"/>
+            <defs>
+              <linearGradient id="zenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="rgba(100,180,255,.8)"/>
+                <stop offset="100%" stop-color="rgba(180,130,255,.8)"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="goal-ring-center">
+            <div class="goal-ring-num" id="zenTimerVal" style="font-size:clamp(2rem,11vw,3rem)">0:00</div>
+            <div class="goal-ring-label">経過時間</div>
+          </div>
+        </div>
+        <!-- テキストスクロール -->
+        <div class="text-scroll-wrap" style="height:52px;overflow:hidden;position:relative;margin:.5rem 0;
+          -webkit-mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent);
+          mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent)">
+          <div id="zenTextScroll">
+            <div class="scroll-line" style="text-align:center;height:26px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;letter-spacing:.12em">南無妙法蓮華経</div>
+            <div class="scroll-line" style="text-align:center;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mu);letter-spacing:.04em">Namu Myōhō Renge Kyō</div>
+            <div class="scroll-line" style="text-align:center;height:26px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;letter-spacing:.08em">諸行無常</div>
+            <div class="scroll-line" style="text-align:center;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mu)">すべての形成されたものは移ろいゆく</div>
+            <div class="scroll-line" style="text-align:center;height:26px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;letter-spacing:.08em">慈悲 / Mettā</div>
+            <div class="scroll-line" style="text-align:center;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mu)">すべての存在への限りない優しさ</div>
+            <div class="scroll-line" style="text-align:center;height:26px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;letter-spacing:.12em">南無妙法蓮華経</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.625rem;justify-content:center;margin:.625rem 0 .5rem">
+          <button class="btn-big accent" id="zenStartBtn" onclick="zenToggle()" style="max-width:160px;margin:0">▶ 始める</button>
+        </div>
+        <div id="zenMerit" style="font-size:11px;color:var(--mu);margin-top:.35rem">今日の功徳: 0</div>
+      </div>
+      <div style="text-align:center;margin-top:.5rem">
+        <button class="btn-s" onclick="showModeSelect()" style="font-size:10px;padding:4px 10px">⇄ モード切替</button>
+      </div>
     </div>
   </div>
 
@@ -754,88 +958,127 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
     </div>
   </div>
 
-  <!-- ── カレンダー ── -->
-  <div class="tc" id="tc-cal">
-    <div class="tab-hd">
-      <span class="tab-hd-title">📅 読経カレンダー</span>
-      <button class="hint-btn" onclick="showHint('cal')">?</button>
-    </div>
-    <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
-    <div id="vCal">
-      <div class="card">
-        <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
-        <div class="cg" id="calGrid"></div>
-        <div class="heat-legend" id="calLegHeat">
-          <span>Less</span>
-          <span class="sq" style="background:var(--bo)"></span>
-          <span class="sq" style="background:#fffde7"></span>
-          <span class="sq" style="background:#ffd600"></span>
-          <span class="sq" style="background:#ffa000"></span>
-          <span class="sq" style="background:#e65100"></span>
-          <span>More</span>
+  <!-- ── ならい ── -->
+  <div class="tc" id="tc-narai">
+    <div style="padding:0">
+
+      <!-- ストリークカード -->
+      <div class="lp-glass section" style="padding:1.25rem 1rem;text-align:center;margin-bottom:.75rem">
+        <div class="narai-section-title" style="justify-content:center">連続修行日数</div>
+        <div style="margin:.25rem 0">
+          <span style="font-size:1.5rem;vertical-align:middle">🔥</span>
+          <span class="narai-streak-num" id="naraiStreakNum">0</span>
         </div>
-        <div class="lgd" id="calLegMon" style="margin-top:8px">
-          <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
-          <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
-          <div class="li"><span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px">己巳</span></div>
-          <div class="li"><span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px">寅</span></div>
+        <div style="font-size:12px;color:var(--mu);margin-top:.35rem" id="naraiStreakMsg">今日も修行しましょう</div>
+        <div class="narai-rank-bar" style="margin-top:.875rem">
+          <div class="narai-rank-fill" id="naraiStreakFill" style="width:0%"></div>
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:left" id="naraiStreakNext"></div>
+        <div style="margin-top:.75rem;display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--mu)">功徳ブースト</span>
+          <span style="font-size:13px;font-weight:700;color:#d4a843" id="naraiBoostDisp">×1.00</span>
+          <span style="font-size:10px;color:var(--mu)">累計功徳</span>
+          <span style="font-size:13px;font-weight:700;color:#e879a0" id="naraiTotalMerit">0</span>
         </div>
       </div>
-      <div class="card"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
-    </div>
-  </div>
 
-  <!-- ── 累計功徳 ── -->
-  <div class="tc" id="tc-rank">
-    <div class="tab-hd">
-      <span class="tab-hd-title">🏆 累計功徳</span>
-      <button class="hint-btn" onclick="showHint('rank')">?</button>
-    </div>
-    <div class="card card-a" style="text-align:center;padding:1.5rem 1rem;margin-bottom:.75rem">
-      <div class="sv" id="myM" style="font-size:clamp(2rem,12vw,3rem);margin-bottom:.35rem">0</div>
-      <div class="sk" style="font-size:13px;color:var(--a);font-weight:600">累計功徳</div>
-      <p id="rankStreakNote" style="font-size:10px;color:var(--mu);margin-top:.5rem"></p>
-    </div>
-    <div class="card streak-card" id="streakCard">
-      <div class="streak-face" aria-hidden="true">🧠</div>
-      <div class="streak-body">
-        <p class="streak-days"><span id="streakNum">0</span>日連続ログイン</p>
-        <p class="streak-msg" id="streakMsg">毎日続けると功徳がアップします</p>
-        <div class="streak-bar"><div class="streak-fill" id="streakFill" style="width:0%"></div></div>
-        <p class="streak-sub">功徳ブースト <b id="streakMultDisp">×1.00</b> · ログインボーナス累計 <b id="bonusMeritDisp">0</b></p>
-        <p class="streak-next-lucky" id="streakNextLucky"></p>
-      </div>
-    </div>
-
-    <!-- 喜び件数サマリー（件数のみ。グラフなし） -->
-    <div id="joyCountCard" style="display:none;margin-top:.75rem">
-      <div class="card" onclick="showJoyDetail()" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;cursor:pointer;transition:background .15s">
-        <span style="font-size:24px">🌸</span>
-        <div>
-          <div id="joyCountNum" style="font-size:1.4rem;font-weight:700;color:var(--a)">0</div>
-          <div style="font-size:11px;color:var(--mu)">記録した喜び　<span style="font-size:10px;color:var(--di)">タップで詳細</span></div>
+      <!-- 91日ヒートマップ -->
+      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
+        <div class="narai-section-title">修行カレンダー（91日）</div>
+        <div class="narai-hm-grid" id="naraiHmGrid"></div>
+        <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem;font-size:10px;color:rgba(255,255,255,.35)">
+          <span>少ない</span>
+          <span style="display:flex;gap:3px">
+            <span style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.07);display:inline-block"></span>
+            <span style="width:10px;height:10px;border-radius:2px;background:rgba(232,121,160,.25);display:inline-block"></span>
+            <span style="width:10px;height:10px;border-radius:2px;background:rgba(232,121,160,.5);display:inline-block"></span>
+            <span style="width:10px;height:10px;border-radius:2px;background:rgba(212,168,67,.9);display:inline-block"></span>
+          </span>
+          <span>多い</span>
         </div>
-        <div id="joyTopCat" style="margin-left:auto;font-size:12px;color:var(--mu);text-align:right;line-height:1.5"></div>
       </div>
-    </div>
 
-    <!-- 今日のお言葉（非表示中） -->
-    <!-- <div class="card" id="dailyCard" style="margin-top:.75rem;padding:1rem">
-      <div id="dailyContent"></div>
-    </div> -->
+      <!-- 今月サマリー -->
+      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
+        <div class="narai-section-title">今月の功徳</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+          <div style="text-align:center;padding:.5rem 0">
+            <div style="font-size:1.8rem;font-weight:200;color:#d4a843" id="naraiMonthSessions">0</div>
+            <div style="font-size:10px;color:var(--mu)">修行回数</div>
+          </div>
+          <div style="text-align:center;padding:.5rem 0">
+            <div style="font-size:1.8rem;font-weight:200;color:#e879a0" id="naraiMonthMerit">0</div>
+            <div style="font-size:10px;color:var(--mu)">累計功徳 🌸</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 読経カレンダー（課金） -->
+      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem" id="naraiCalSection">
+        <div class="narai-section-title">📅 読経カレンダー</div>
+        <!-- 未購入時 -->
+        <div id="naraiCalLocked" class="narai-paywall">
+          <div style="font-size:1.8rem;margin-bottom:.5rem">🔒</div>
+          <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:.35rem">読経カレンダー</div>
+          <div style="font-size:11px;color:var(--mu);line-height:1.7;margin-bottom:.875rem">
+            月カレンダー表示＋<br>
+            <span style="color:#d4a843;font-weight:600">吉日に功徳倍率UP</span>（購入者限定）
+          </div>
+          <button class="btn-big accent" onclick="openCalPaywall()" style="max-width:200px;margin:0 auto;font-size:13px;padding:11px">✨ 解放する — ¥300</button>
+        </div>
+        <!-- 購入済み時 -->
+        <div id="naraiCalUnlocked" style="display:none">
+          <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
+          <div id="vCal">
+            <div class="card" style="background:rgba(255,255,255,.05)">
+              <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
+              <div class="cg" id="calGrid"></div>
+              <div class="heat-legend" id="calLegHeat"><span>Less</span>
+                <span class="sq" style="background:var(--bo)"></span>
+                <span class="sq" style="background:#fffde7"></span>
+                <span class="sq" style="background:#ffd600"></span>
+                <span class="sq" style="background:#ffa000"></span>
+                <span class="sq" style="background:#e65100"></span>
+                <span>More</span>
+              </div>
+              <div class="lgd" id="calLegMon" style="margin-top:8px">
+                <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
+                <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
+                <div class="li"><span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px">己巳</span></div>
+                <div class="li"><span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px">寅</span></div>
+              </div>
+            </div>
+            <div class="card" style="background:rgba(255,255,255,.05)"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 喜び記録 -->
+      <div id="joyCountCard" style="display:none;margin-bottom:.75rem">
+        <div class="lp-glass lp-glass-sm" onclick="showJoyDetail()" style="padding:.875rem 1rem;display:flex;align-items:center;gap:.75rem;cursor:pointer">
+          <span style="font-size:24px">🌸</span>
+          <div>
+            <div id="joyCountNum" style="font-size:1.4rem;font-weight:700;color:var(--a)">0</div>
+            <div style="font-size:11px;color:var(--mu)">記録した喜び　<span style="font-size:10px;color:var(--di)">タップで詳細</span></div>
+          </div>
+          <div id="joyTopCat" style="margin-left:auto;font-size:12px;color:var(--mu);text-align:right;line-height:1.5"></div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- ── 蓮池 ── -->
   <div class="tc" id="tc-lotus">
-    <!-- 灯火カウンター -->
-    <div class="card tomoshibi-wrap">
-      <div class="tomoshibi-count" id="tomoshibiCount">—</div>
-      <div style="font-size:11px;color:var(--mu);margin-top:.2rem">今、世界中で共修している仲間</div>
-      <div class="tomoshibi-dots" id="tomoshibiDots"></div>
+
+    <!-- 蓮の池（浮かぶ蓮の花） -->
+    <div class="lp-pond-area" id="lpPondArea">
+      <div id="lpLotusContainer"></div>
+      <div style="position:absolute;bottom:8px;right:10px;font-size:9px;color:rgba(255,255,255,.35)">タップして祈る 🪷</div>
     </div>
 
     <!-- 四向四果ステージ -->
-    <div class="card card-a">
+    <div class="card card-a" style="margin-bottom:.75rem">
       <div class="stage-row">
         <div class="stage-icon" id="stageIcon">🌱</div>
         <div style="flex:1;min-width:0">
@@ -851,7 +1094,7 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
     </div>
 
     <!-- 今日の煩悩チェックイン -->
-    <div class="card">
+    <div class="card" style="margin-bottom:.75rem">
       <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.625rem">今日の心の状態（煩悩チェックイン）</div>
       <div class="klesha-grid" id="kleshaGrid"></div>
       <div class="rx-card" id="rxCard" style="display:none">
@@ -862,12 +1105,60 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
       </div>
     </div>
 
+    <!-- 煩悩ルームを作る -->
+    <div class="card" style="margin-bottom:.75rem">
+      <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.625rem">🌊 悩みを蓮池に流す</div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:.5rem">今日の煩悩（Klesha）</div>
+      <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.5rem" id="sangaKleshaSelect"></div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:.35rem">重さ</div>
+      <div style="display:flex;gap:.35rem;margin-bottom:.625rem">
+        <button class="btn-s" id="wBtnLight" onclick="selSangaWeight('light')">軽め</button>
+        <button class="btn-s" id="wBtnMedium" onclick="selSangaWeight('medium')">普通</button>
+        <button class="btn-s" id="wBtnHeavy" onclick="selSangaWeight('heavy')">重め</button>
+      </div>
+      <textarea id="sangaRoomTitle" rows="2" placeholder="一言（例：明日の大事な試験が怖い）" maxlength="80"
+        style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:12px;
+        padding:10px 12px;color:var(--tx);font-size:13px;outline:none;resize:none;font-family:inherit;
+        margin-bottom:.625rem"></textarea>
+      <button class="btn-big accent" onclick="createSangaRoom()">蓮池に悩みを流す 🌊</button>
+    </div>
+
     <!-- 回向 -->
-    <div class="card">
+    <div class="card" style="margin-bottom:.75rem">
       <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.4rem">🕯 回向（えこう）</div>
       <p style="font-size:11px;color:var(--mu);line-height:1.65;margin-bottom:.75rem">今日積んだ功徳を、この瞬間に苦しんでいる見知らぬ誰かに回向します</p>
       <button class="btn-big accent" id="ekoBtn" onclick="sendEko()">今日の功徳を回向する 🪷</button>
       <div id="ekoMsg" style="font-size:11px;color:var(--mu);text-align:center;margin-top:.5rem;line-height:1.6"></div>
+    </div>
+  </div>
+
+  <!-- ── サンガ チャットオーバーレイ ── -->
+  <div class="sanga-overlay" id="sangaOverlay">
+    <div class="sanga-panel" id="sangaPanel">
+      <div class="sanga-hd">
+        <div class="sanga-hd-klesha" id="sangaChatEmoji">🪷</div>
+        <div class="sanga-hd-info">
+          <div class="sanga-hd-title" id="sangaChatTitle">—</div>
+          <div class="sanga-hd-sub" id="sangaChatSub">—</div>
+        </div>
+        <button class="btn-s" onclick="closeSangaChat()" style="padding:5px 12px">✕</button>
+      </div>
+      <!-- HP バー -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.25rem">
+        <span style="font-size:10px;color:var(--mu)">浄化</span>
+        <span style="font-size:10px;color:#e879a0" id="sangaHpText">0 / 100</span>
+      </div>
+      <div class="sanga-hp-bar"><div class="sanga-hp-fill" id="sangaHpFill" style="width:0%"></div></div>
+      <!-- メッセージ -->
+      <div class="sanga-msgs" id="sangaMsgs"></div>
+      <!-- 祈りボタン -->
+      <div class="sanga-pray-btns">
+        <button class="sanga-pray-btn" onclick="sendSangaPrayer('lotus')">🪷 蓮 — 清らかな心</button>
+        <button class="sanga-pray-btn" onclick="sendSangaPrayer('light')">🕯 灯 — あなたの光を消さない</button>
+        <button class="sanga-pray-btn" onclick="sendSangaPrayer('merit')">✨ 功徳 — 功徳を分け合う</button>
+        <button class="sanga-pray-btn" onclick="sendSangaPrayer('heart')">🌸 共感 — 一緒にいる</button>
+      </div>
+      <button class="sanga-close-btn" onclick="closeSangaChat()">閉じる</button>
     </div>
   </div>
 
@@ -1099,7 +1390,10 @@ var st={
   readFs:100,readLh:100,readGap:100,dailyValue:5000,gIdx:0,gCounts:{},
   loginStreak:0,lastLoginDate:'',lastLoginBonusDate:'',bonusMerit:0,welcomeDone:false,
   unlockedLevel:0,
-  kleshaToday:'',ekoDate:'',ekoCount:0
+  kleshaToday:'',ekoDate:'',ekoCount:0,
+  homeMode:'',dailyGoal:0,calPurchased:false,
+  zenSeconds:0,zenRunning:false,
+  sangaRooms:[],sangaSelectedKlesha:'',sangaWeight:'medium'
 };
 var actx=null;
 var gcAnimating=false,gcCurReal=0;
@@ -1298,10 +1592,13 @@ function launchApp(opts){
   var newLogin=false;
   if(st.welcomeDone&&!opts.skipLogin)newLogin=processDailyLogin();
   loadDQNative();
-  buildCarousel();renderGongyouUnlockCard();updateChantUI();renderBanner();buildLb();updateCalStreakUI();
+  buildCarousel();renderGongyouUnlockCard();updateChantUI();renderBanner();buildLb();
+  initHomeTab();
   actTab(st.tab||'chant');
-  if(st.tab==='lotus')renderLotusTab();
+  if(st.tab==='narai')renderNaraiTab();
+  if(st.tab==='lotus'){renderLotusTab();initLotusFloaters();}
   if(st.tab==='quest'){renderDQSummary();renderDQMap();}
+  buildSangaKleshaSelect();
   initJoyBubble();renderJoyAnalysis();renderDailyCard();
   if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
 }
@@ -2405,17 +2702,301 @@ function actTab(t){
 document.querySelectorAll('.tab').forEach(function(btn){
   btn.addEventListener('click',function(){
     var t=btn.getAttribute('data-t');actTab(t);
-    // タブ切替で花びら・オーバーレイを閉じる
     var p=document.getElementById('joyPetal');if(p)p.style.display='none';
     closeJoyOverlay();
     if(t==='chant'){updateChantUI();renderBanner();}
     if(t==='gongyou'){buildCarousel();renderGongyouUnlockCard();}
-    if(t==='cal'){updateCalStreakUI();renderCal();}
-    if(t==='rank'){buildLb();renderJoyAnalysis();renderDailyCard();}
-    if(t==='lotus'){renderLotusTab();}
+    if(t==='narai'){renderNaraiTab();}
+    if(t==='lotus'){renderLotusTab();initLotusFloaters();}
     if(t==='quest'){renderDQSummary();renderDQMap();}
   });
 });
+
+// ══════════════════════════════════════════════════════════
+//  ホームタブ（モード選択・リング・浮遊テキスト）
+// ══════════════════════════════════════════════════════════
+function initHomeTab(){
+  if(!st.homeMode){showModeSelect();return;}
+  if(st.homeMode==='zen'){showZenArea();}else{showChantArea();}
+}
+function showModeSelect(){
+  document.getElementById('homeModeSelect').style.display='block';
+  document.getElementById('homeChantArea').style.display='none';
+  document.getElementById('homeZenArea').style.display='none';
+}
+function selectHomeMode(mode){
+  st.homeMode=mode;lsS(UK,st);
+  document.getElementById('homeModeSelect').style.display='none';
+  if(mode==='chant'){showChantArea();}else{showZenArea();}
+}
+function showChantArea(){
+  document.getElementById('homeModeSelect').style.display='none';
+  document.getElementById('homeChantArea').style.display='block';
+  document.getElementById('homeZenArea').style.display='none';
+  updateChantArea();
+}
+function showZenArea(){
+  document.getElementById('homeModeSelect').style.display='none';
+  document.getElementById('homeChantArea').style.display='none';
+  document.getElementById('homeZenArea').style.display='block';
+  startZenScroll();
+}
+function updateChantArea(){
+  var hasGoal=st.dailyGoal>0;
+  document.getElementById('goalRingArea').style.display=hasGoal?'block':'none';
+  document.getElementById('noGoalCount').style.display=hasGoal?'none':'block';
+  document.getElementById('ringCountSmall').style.display=hasGoal?'block':'none';
+  if(hasGoal)updateGoalRing();
+}
+function updateChantUI(){
+  var s1=document.getElementById('sesNum');if(s1)s1.textContent=st.sessionCount;
+  var s2=document.getElementById('sesNum2');if(s2)s2.textContent=st.sessionCount;
+  var c1=document.getElementById('cumul');if(c1)c1.textContent='累計: '+st.totalChants+'回';
+  var c2=document.getElementById('cumul2');if(c2)c2.textContent='累計: '+st.totalChants+'回';
+  var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
+  var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(totalMerit());
+  if(st.homeMode==='chant'&&st.dailyGoal>0)updateGoalRing();
+  buildLb();
+}
+function updateGoalRing(){
+  var goal=st.dailyGoal||0,done=st.sessionCount||0;
+  var remain=Math.max(0,goal-done);
+  var el=document.getElementById('ringRemain');if(el)el.textContent=remain;
+  var arc=document.getElementById('goalRingArc');if(!arc)return;
+  var circ=534;
+  var pct=goal>0?Math.min(1,done/goal):0;
+  arc.style.strokeDashoffset=(circ*(1-pct)).toFixed(1);
+}
+function spawnFloatMantra(){
+  var drum=document.getElementById('manBtn');if(!drum)return;
+  var r=drum.getBoundingClientRect();
+  var texts=['南無妙法蓮華経','なむみょうほうれんげきょう','Namu Myōhō','🌸','✨','🪷'];
+  var txt=texts[Math.floor(Math.random()*texts.length)];
+  var el=document.createElement('div');
+  el.className='float-mantra';
+  el.textContent=txt;
+  var x=r.left+r.width/2-20+(Math.random()-0.5)*40;
+  var y=r.top-10;
+  el.style.left=x+'px';el.style.top=y+'px';
+  document.body.appendChild(el);
+  setTimeout(function(){el.remove();},2400);
+}
+
+// ── 瞑想モード ──
+var _zenTimer=null,_zenScroll=null,_zenScrollIdx=0;
+function zenToggle(){
+  if(st.zenRunning){
+    clearInterval(_zenTimer);_zenTimer=null;
+    clearInterval(_zenScroll);_zenScroll=null;
+    st.zenRunning=false;lsS(UK,st);
+    document.getElementById('zenStartBtn').textContent='▶ 始める';
+  } else {
+    st.zenRunning=true;lsS(UK,st);
+    document.getElementById('zenStartBtn').textContent='⏸ 一時停止';
+    _zenTimer=setInterval(function(){
+      st.zenSeconds=(st.zenSeconds||0)+1;
+      var m=Math.floor(st.zenSeconds/60),s=st.zenSeconds%60;
+      var v=document.getElementById('zenTimerVal');
+      if(v)v.textContent=m+':'+(s<10?'0':'')+s;
+      var arc=document.getElementById('zenRingArc');
+      if(arc){var pct=Math.min(1,(st.zenSeconds%180)/180);arc.style.strokeDashoffset=(534*(1-pct)).toFixed(1);}
+      if(st.zenSeconds%60===0){
+        var t=today();st.daily[t]=(st.daily[t]||0)+1;st.totalChants+=1;st.sessionCount+=1;
+        var mi=document.getElementById('zenMerit');if(mi)mi.textContent='今日の功徳: '+fmt(totalMerit());
+        spawnP();lsS(UK,st);
+      }
+    },1000);
+    startZenScroll();
+  }
+}
+function startZenScroll(){
+  if(_zenScroll)return;
+  var lines=[
+    '南無妙法蓮華経','Namu Myōhō Renge Kyō',
+    '諸行無常','すべての形成されたものは移ろいゆく',
+    '慈悲 / Mettā','すべての存在への限りない優しさ',
+    '南無妙法蓮華経','Namu Myōhō Renge Kyō'
+  ];
+  _zenScrollIdx=0;
+  _zenScroll=setInterval(function(){
+    _zenScrollIdx=(_zenScrollIdx+1)%lines.length;
+    var sc=document.getElementById('zenTextScroll');
+    if(sc){sc.style.transition='transform .6s cubic-bezier(.4,0,.2,1)';sc.style.transform='translateY(-'+(_zenScrollIdx*26)+'px)';}
+  },3000);
+}
+
+// ══════════════════════════════════════════════════════════
+//  ならい タブ
+// ══════════════════════════════════════════════════════════
+function renderNaraiTab(){
+  var streak=st.loginStreak||0;
+  var sn=document.getElementById('naraiStreakNum');if(sn)sn.textContent=streak;
+  var sm=document.getElementById('naraiStreakMsg');
+  if(sm)sm.textContent=streak>=7?'素晴らしい継続力です！':streak>=3?'いい調子です！続けましょう':'今日も修行しましょう';
+  var maxS=30,pct=Math.min(100,Math.round(streak/maxS*100));
+  var sf=document.getElementById('naraiStreakFill');if(sf)sf.style.width=pct+'%';
+  var sn2=document.getElementById('naraiStreakNext');
+  if(sn2){var nxt=[3,7,14,30].find(function(n){return n>streak;})||'MAX';sn2.textContent='次のブースト: '+nxt+'日連続';}
+  var bd=document.getElementById('naraiBoostDisp');if(bd)bd.textContent='×'+streakMult().toFixed(2);
+  var tm=document.getElementById('naraiTotalMerit');if(tm)tm.textContent=fmt(totalMerit());
+  renderNaraiHeatmap();
+  renderNaraiMonthSummary();
+  var cl=document.getElementById('naraiCalLocked'),cu=document.getElementById('naraiCalUnlocked');
+  if(cl&&cu){cl.style.display=st.calPurchased?'none':'block';cu.style.display=st.calPurchased?'block':'none';}
+  if(st.calPurchased)renderCal();
+}
+function renderNaraiHeatmap(){
+  var g=document.getElementById('naraiHmGrid');if(!g)return;
+  g.innerHTML='';
+  var today_=today(),cells=91;
+  for(var i=cells-1;i>=0;i--){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var ds=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    var cnt=st.daily[ds]||0;
+    var lv=cnt===0?0:cnt<5?1:cnt<15?2:cnt<40?3:4;
+    var cell=document.createElement('div');
+    cell.className='narai-hm-cell'+(lv?' lv'+lv:'');
+    cell.title=ds+': '+cnt+'回';
+    g.appendChild(cell);
+  }
+}
+function renderNaraiMonthSummary(){
+  var now=new Date(),yr=now.getFullYear(),mo=now.getMonth()+1;
+  var sessions=0,merit=0;
+  Object.keys(st.daily).forEach(function(ds){
+    var p=ds.split('-');
+    if(+p[0]===yr&&+p[1]===mo){sessions+=(st.daily[ds]||0);merit+=dayMeritFor(ds,st.daily[ds]||0);}
+  });
+  var ms=document.getElementById('naraiMonthSessions');if(ms)ms.textContent=sessions;
+  var mm=document.getElementById('naraiMonthMerit');if(mm)mm.textContent=fmt(merit);
+}
+function openCalPaywall(){
+  st.calPurchased=true;lsS(UK,st);
+  var cl=document.getElementById('naraiCalLocked'),cu=document.getElementById('naraiCalUnlocked');
+  if(cl)cl.style.display='none';if(cu){cu.style.display='block';renderCal();}
+}
+
+// ══════════════════════════════════════════════════════════
+//  蓮池: 浮かぶ蓮の花（デモ）
+// ══════════════════════════════════════════════════════════
+var KLESHA_COLORS={
+  greed:{color:'#e57373',glow:'rgba(229,115,115,.7)',label:'貪'},
+  anger:{color:'#ff8a65',glow:'rgba(255,138,101,.7)',label:'瞋'},
+  delusion:{color:'#90a4ae',glow:'rgba(144,164,174,.7)',label:'痴'},
+  pride:{color:'#ce93d8',glow:'rgba(206,147,216,.7)',label:'慢'},
+  doubt:{color:'#80cbc4',glow:'rgba(128,203,196,.7)',label:'疑'}
+};
+var DEMO_ROOMS=[
+  {id:'r1',klesha:'greed',weight:'light',title:'仕事のことばかり考えてしまう',hp:65,maxHp:100},
+  {id:'r2',klesha:'doubt',weight:'medium',title:'自分の選択が正しかったのか不安',hp:40,maxHp:100},
+  {id:'r3',klesha:'anger',weight:'heavy',title:'理不尽なことがあって怒りが収まらない',hp:80,maxHp:100}
+];
+var _lotusSpawnTimer=null;
+function initLotusFloaters(){
+  var cont=document.getElementById('lpLotusContainer');if(!cont)return;
+  cont.innerHTML='';
+  var rooms=st.sangaRooms.concat(DEMO_ROOMS);
+  rooms.forEach(function(room,i){spawnLotusFloater(room,cont,i);});
+  if(_lotusSpawnTimer)clearInterval(_lotusSpawnTimer);
+  _lotusSpawnTimer=setInterval(function(){
+    var cont2=document.getElementById('lpLotusContainer');if(!cont2)return;
+    var rooms2=st.sangaRooms.concat(DEMO_ROOMS);
+    var r=rooms2[Math.floor(Math.random()*rooms2.length)];
+    if(r)spawnLotusFloater(r,cont2,Math.floor(Math.random()*1000));
+  },5000);
+}
+function spawnLotusFloater(room,cont,seed){
+  var kc=KLESHA_COLORS[room.klesha]||{color:'#e879a0',glow:'rgba(232,121,160,.7)',label:'?'};
+  var sz=room.weight==='heavy'?1.9:room.weight==='medium'?1.5:1.2;
+  var xPct=10+((seed*37+17)%70);
+  var dur=8+((seed*13)%8);
+  var delay=(seed*7)%4;
+  var drift=((seed*23)%80)-40;
+  var el=document.createElement('div');
+  el.className='lp-lotus-floater';
+  el.style.cssText='left:'+xPct+'%;--sz:'+sz+'rem;--dur:'+dur+'s;--del:'+delay+'s;--drift:'+drift+'px;--glow:'+kc.glow;
+  var showBubble=seed%3===0;
+  el.innerHTML=
+    '<span class="lp-lotus-emoji" style="color:'+kc.color+'">🪷</span>'+
+    (showBubble?'<span class="lp-lotus-bubble">'+room.title.slice(0,10)+'…</span>':'');
+  el.addEventListener('click',function(e){e.stopPropagation();openSangaChat(room);});
+  cont.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.remove();},((dur+delay)*1000+500));
+}
+
+// ── サンガ チャット ──
+var _activeSangaRoom=null;
+function buildSangaKleshaSelect(){
+  var wrap=document.getElementById('sangaKleshaSelect');if(!wrap)return;
+  wrap.innerHTML='';
+  Object.keys(KLESHA_DATA).forEach(function(k){
+    var d=KLESHA_DATA[k];
+    var btn=document.createElement('button');
+    btn.className='btn-s'+(st.sangaSelectedKlesha===k?' on':'');
+    btn.textContent=d.emoji+' '+d.name;
+    btn.onclick=function(){st.sangaSelectedKlesha=k;buildSangaKleshaSelect();};
+    wrap.appendChild(btn);
+  });
+}
+function selSangaWeight(w){
+  st.sangaWeight=w;lsS(UK,st);
+  ['light','medium','heavy'].forEach(function(x){
+    var b=document.getElementById('wBtn'+x.charAt(0).toUpperCase()+x.slice(1));
+    if(b)b.classList.toggle('on',x===w);
+  });
+}
+function createSangaRoom(){
+  var title=document.getElementById('sangaRoomTitle').value.trim();
+  if(!st.sangaSelectedKlesha){alert('煩悩を選んでください');return;}
+  if(!title){alert('一言を入力してください');return;}
+  var room={id:'u'+Date.now(),klesha:st.sangaSelectedKlesha,weight:st.sangaWeight||'medium',title:title,hp:0,maxHp:100};
+  st.sangaRooms.unshift(room);if(st.sangaRooms.length>20)st.sangaRooms.pop();
+  st.sangaSelectedKlesha='';lsS(UK,st);
+  document.getElementById('sangaRoomTitle').value='';
+  buildSangaKleshaSelect();
+  initLotusFloaters();
+}
+function openSangaChat(room){
+  _activeSangaRoom=room;
+  var emo=KLESHA_DATA[room.klesha]?KLESHA_DATA[room.klesha].emoji:'🪷';
+  var kLabel=KLESHA_COLORS[room.klesha]?KLESHA_COLORS[room.klesha].label:room.klesha;
+  document.getElementById('sangaChatEmoji').textContent=emo;
+  document.getElementById('sangaChatTitle').textContent=room.title;
+  document.getElementById('sangaChatSub').textContent=kLabel+' · '+{light:'軽め',medium:'普通',heavy:'重め'}[room.weight];
+  document.getElementById('sangaHpText').textContent=room.hp+' / '+room.maxHp;
+  document.getElementById('sangaHpFill').style.width=Math.round(room.hp/room.maxHp*100)+'%';
+  var msgs=document.getElementById('sangaMsgs');
+  msgs.innerHTML='<div class="sanga-msg-row"><div class="sanga-avatar">🙏</div><div class="sanga-bubble">あなたの祈りが届きました。一緒にいます。</div></div>';
+  document.getElementById('sangaOverlay').classList.add('show');
+}
+function closeSangaChat(){document.getElementById('sangaOverlay').classList.remove('show');_activeSangaRoom=null;}
+var PRAYER_MSGS={
+  lotus:['🪷 清らかな心を送ります','🪷 蓮のように泥から咲けますように'],
+  light:['🕯 あなたの光を消さない','🕯 暗闇にも光はある'],
+  merit:['✨ 功徳を分け合います','✨ あなたのために唱えます'],
+  heart:['🌸 一緒にいます','🌸 あなたは一人じゃない']
+};
+function sendSangaPrayer(type){
+  if(!_activeSangaRoom)return;
+  var msgs=PRAYER_MSGS[type]||['🪷'];
+  var txt=msgs[Math.floor(Math.random()*msgs.length)];
+  var row=document.createElement('div');
+  row.className='sanga-msg-row';
+  row.innerHTML='<div class="sanga-avatar" style="margin-left:auto;order:2">🙏</div><div class="sanga-bubble mine">'+txt+'</div>';
+  row.style.flexDirection='row-reverse';
+  var msgs2=document.getElementById('sangaMsgs');
+  msgs2.appendChild(row);msgs2.scrollTop=msgs2.scrollHeight;
+  _activeSangaRoom.hp=Math.min(_activeSangaRoom.maxHp,(_activeSangaRoom.hp||0)+10);
+  document.getElementById('sangaHpText').textContent=_activeSangaRoom.hp+' / '+_activeSangaRoom.maxHp;
+  document.getElementById('sangaHpFill').style.width=Math.round(_activeSangaRoom.hp/_activeSangaRoom.maxHp*100)+'%';
+  lsS(UK,st);
+  setTimeout(function(){
+    var reply=document.createElement('div');
+    reply.className='sanga-msg-row';
+    reply.innerHTML='<div class="sanga-avatar">🌊</div><div class="sanga-bubble">ありがとうございます。少し楽になりました。🪷</div>';
+    msgs2.appendChild(reply);msgs2.scrollTop=msgs2.scrollHeight;
+  },1200);
+}
 
 // ══════════════════════════════════════════════════════════
 //  イベントリスナー
@@ -2530,6 +3111,7 @@ function checkUnlockThreshold(){
     spawnRipples(wrap,combo);
     playDrum(combo);
     addChants(1);
+    spawnFloatMantra();
   }
   wrap.addEventListener('click',onTap);
   wrap.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();onTap();}});
