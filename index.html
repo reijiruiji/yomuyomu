@@ -715,6 +715,66 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 .sanga-pray-btn:active{transform:scale(.94);background:rgba(255,255,255,.16);}
 .sanga-close-btn{width:100%;padding:12px;margin-top:.5rem;
   border:none;background:transparent;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;}
+
+/* ══ タブ背景レイヤー ══ */
+.tc-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-size:cover;background-position:center;
+  opacity:0;transition:opacity .5s ease;}
+#tc-lotus.on .tc-bg-lotus,#tc-quest.on .tc-bg-quest{opacity:.22;}
+.tc-bg-lotus{background-image:url('images/lotus-pond-bg.jpg');}
+.tc-bg-quest{background-image:url('images/quest-bg.jpg');}
+
+/* ══ フッター SVG アイコン ══ */
+.tab-icon svg{width:22px;height:22px;display:block;margin:0 auto;}
+.tab .tab-icon svg path,.tab .tab-icon svg circle,.tab .tab-icon svg rect,.tab .tab-icon svg polyline{
+  stroke:rgba(255,255,255,.45);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke .2s;}
+.tab.on .tab-icon svg path,.tab.on .tab-icon svg circle,.tab.on .tab-icon svg rect,.tab.on .tab-icon svg polyline{
+  stroke:rgba(255,255,255,.95);}
+
+/* ══ 喜び専用カラー ══ */
+:root{--joy-pink:#f8a5c2;--joy-yellow:#ffeaa7;--joy-lavender:#a29bfe;}
+.joy-overlay-inner{
+  background:linear-gradient(160deg,rgba(18,8,30,.96) 0%,rgba(30,10,25,.96) 100%);
+  backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);
+  border-top:1px solid rgba(248,165,194,.25);
+  border-radius:24px 24px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(248,165,194,.2);}
+.joy-title{font-size:1rem;font-weight:700;letter-spacing:.04em;
+  background:linear-gradient(135deg,var(--joy-pink) 20%,var(--joy-yellow));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.joy-input-area{width:100%;background:rgba(248,165,194,.1);
+  border:1.5px solid rgba(248,165,194,.3);border-radius:14px;
+  padding:12px;color:rgba(255,255,255,.9);font-size:14px;outline:none;resize:none;
+  font-family:inherit;line-height:1.6;min-height:72px;margin-bottom:.75rem;}
+.joy-input-area:focus{border-color:rgba(248,165,194,.55);background:rgba(248,165,194,.14);}
+.joy-input-area::placeholder{color:rgba(248,165,194,.45);}
+.joy-cat-chip{font-size:11px;padding:6px 12px;border-radius:20px;
+  border:1.5px solid rgba(248,165,194,.22);background:rgba(248,165,194,.08);
+  color:rgba(255,255,255,.7);cursor:pointer;transition:all .18s;}
+.joy-cat-chip.on{background:rgba(248,165,194,.28);border-color:rgba(248,165,194,.5);
+  color:var(--joy-pink);font-weight:600;}
+.joy-btn-primary{width:100%;padding:14px;border-radius:50px;
+  background:linear-gradient(135deg,rgba(248,165,194,.75),rgba(162,155,254,.6));
+  color:#fff;border:1px solid rgba(248,165,194,.35);cursor:pointer;font-size:14px;font-weight:600;
+  box-shadow:0 4px 20px rgba(248,165,194,.3);transition:all .18s;}
+.joy-btn-primary:active{transform:scale(.97);}
+.joy-hist-btn{width:100%;padding:11px;border-radius:50px;margin-top:.5rem;
+  background:transparent;border:1px solid rgba(248,165,194,.25);
+  color:rgba(248,165,194,.75);font-size:13px;cursor:pointer;transition:all .18s;}
+.joy-hist-btn:active{background:rgba(248,165,194,.1);}
+
+/* ══ カレンダープレビューポップアップ ══ */
+.cal-preview-popup{position:fixed;inset:0;z-index:490;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:none;align-items:flex-end;justify-content:center;}
+.cal-preview-popup.show{display:flex;}
+.cal-preview-inner{width:100%;max-width:480px;
+  background:linear-gradient(160deg,rgba(12,14,24,.95),rgba(20,10,35,.95));
+  backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);
+  border:1px solid rgba(255,255,255,.18);border-radius:24px 24px 0 0;
+  padding:1.5rem 1.25rem 2rem;
+  box-shadow:0 -8px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15);}
 </style>
 </head>
 <body>
@@ -805,11 +865,11 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
   </div>
 
   <div class="tabs">
-    <button class="tab on" data-t="chant"><span class="tab-icon">🥁</span>お題目</button>
-    <button class="tab" data-t="gongyou"><span class="tab-icon">📖</span>勤行</button>
-    <button class="tab" data-t="narai"><span class="tab-icon">📅</span>ならい</button>
-    <button class="tab" data-t="lotus"><span class="tab-icon">🪷</span>蓮池</button>
-    <button class="tab" data-t="quest"><span class="tab-icon">📿</span>探求</button>
+    <button class="tab on" data-t="chant"><span class="tab-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="6"/><path d="M4 12c0 2 3.6 5 8 5s8-3 8-5"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="8" y1="7" x2="6" y2="3"/><line x1="16" y1="7" x2="18" y2="3"/></svg></span>お題目</button>
+    <button class="tab" data-t="gongyou"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 012-2h13a1 1 0 110 2H6a1 1 0 000 2h13v14H6a2 2 0 01-2-2z"/><polyline points="8 9 8 9"/><line x1="9" y1="9" x2="17" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></span>勤行</button>
+    <button class="tab" data-t="narai"><span class="tab-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="7" y="14" width="3" height="3" rx=".5"/><rect x="14" y="14" width="3" height="3" rx=".5"/></svg></span>ならい</button>
+    <button class="tab" data-t="lotus"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 21c0 0-7-5-7-10a7 7 0 0114 0c0 5-7 10-7 10z"/><path d="M12 11c-2-3-1-6 1-7 1 2 2 5 0 7"/><path d="M12 11c2-3 1-6-1-7-1 2-2 5 0 7"/><line x1="12" y1="11" x2="12" y2="21"/></svg></span>蓮池</button>
+    <button class="tab" data-t="quest"><span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="1.5"/><polyline points="12 4 10 12 12 13.5 14 12"/></svg></span>探求</button>
   </div>
 
   <!-- ── お題目 ── -->
@@ -1003,7 +1063,10 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 
       <!-- 91日ヒートマップ -->
       <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
-        <div class="narai-section-title">修行カレンダー（91日）</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+          <div class="narai-section-title" style="margin-bottom:0">修行カレンダー（91日）</div>
+          <button class="btn-s" id="calPreviewBtn" onclick="openCalPreview()" style="font-size:10px;padding:4px 10px;white-space:nowrap">📅 日付を確認する</button>
+        </div>
         <div class="narai-hm-grid" id="naraiHmGrid"></div>
         <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem;font-size:10px;color:rgba(255,255,255,.35)">
           <span>少ない</span>
@@ -1089,27 +1152,12 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 
   <!-- ── 蓮池 ── -->
   <div class="tc" id="tc-lotus">
+    <div class="tc-bg tc-bg-lotus"></div>
 
     <!-- 蓮の池（浮かぶ蓮の花） -->
     <div class="lp-pond-area" id="lpPondArea">
       <div id="lpLotusContainer"></div>
       <div style="position:absolute;bottom:8px;right:10px;font-size:9px;color:rgba(255,255,255,.35)">タップして祈る 🪷</div>
-    </div>
-
-    <!-- 四向四果ステージ -->
-    <div class="card card-a" style="margin-bottom:.75rem">
-      <div class="stage-row">
-        <div class="stage-icon" id="stageIcon">🌱</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:700;color:var(--a)" id="stageName">凡夫</div>
-          <div style="font-size:10px;color:var(--mu)" id="stageEn">Puthujjana</div>
-        </div>
-        <div class="wisdom-pill" id="wisdomPill">智慧 Lv.0 · ×1.0</div>
-      </div>
-      <div class="stage-bar">
-        <div class="stage-fill" id="stageFill" style="width:0%"></div>
-      </div>
-      <div style="font-size:10px;color:var(--mu);margin-top:.35rem" id="stageProgress"></div>
     </div>
 
     <!-- 今日の煩悩チェックイン -->
@@ -1140,14 +1188,6 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
         padding:10px 12px;color:var(--tx);font-size:13px;outline:none;resize:none;font-family:inherit;
         margin-bottom:.625rem"></textarea>
       <button class="btn-big accent" onclick="createSangaRoom()">蓮池に悩みを流す 🌊</button>
-    </div>
-
-    <!-- 回向 -->
-    <div class="card" style="margin-bottom:.75rem">
-      <div style="font-size:12px;font-weight:600;color:var(--a);margin-bottom:.4rem">🕯 回向（えこう）</div>
-      <p style="font-size:11px;color:var(--mu);line-height:1.65;margin-bottom:.75rem">今日積んだ功徳を、この瞬間に苦しんでいる見知らぬ誰かに回向します</p>
-      <button class="btn-big accent" id="ekoBtn" onclick="sendEko()">今日の功徳を回向する 🪷</button>
-      <div id="ekoMsg" style="font-size:11px;color:var(--mu);text-align:center;margin-top:.5rem;line-height:1.6"></div>
     </div>
   </div>
 
@@ -1183,6 +1223,7 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 
   <!-- ── 探求 ── -->
   <div class="tc" id="tc-quest">
+    <div class="tc-bg tc-bg-quest"></div>
     <!-- DQ ヘッダー / 進捗 -->
     <div style="padding:.875rem .875rem 0">
       <div class="card" style="margin-bottom:.5rem">
@@ -1213,6 +1254,31 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
   </div>
 </div>
 
+<!-- ════ カレンダープレビュー ════ -->
+<div class="cal-preview-popup" id="calPreviewPopup" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="cal-preview-inner">
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-size:2rem;margin-bottom:.4rem">📅</div>
+      <div style="font-size:16px;font-weight:700;color:rgba(255,255,255,.95);margin-bottom:.25rem">読経カレンダー</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">購入すると使えるようになります</div>
+    </div>
+    <!-- プレビュー: 吉日バッジつきミニカレンダーイメージ -->
+    <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:.875rem;margin-bottom:1rem">
+      <div style="font-size:10px;color:rgba(255,255,255,.45);margin-bottom:.5rem;text-align:center">プレビュー（購入後に解放）</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:.5rem" id="calPreviewGrid"></div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem">
+        <span style="font-size:9px;background:#c2185b;color:#fff;padding:1px 5px;border-radius:3px">天赦</span>
+        <span style="font-size:9px;background:hsl(35,90%,65%);color:#000;padding:1px 5px;border-radius:3px">一粒</span>
+        <span style="font-size:9px;color:rgba(255,255,255,.5);font-size:10px">吉日は功徳倍率 UP 🌟</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:.5rem">
+      <button class="joy-btn-primary" onclick="openCalPaywall();document.getElementById('calPreviewPopup').classList.remove('show')" style="background:linear-gradient(135deg,rgba(212,168,67,.8),rgba(232,121,160,.7))">✨ 解放する — ¥300</button>
+      <button onclick="document.getElementById('calPreviewPopup').classList.remove('show')" style="width:80px;padding:14px;border-radius:50px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:13px;cursor:pointer">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <!-- ════ DQ オーバーレイ ════ -->
 <!-- 原典リーダー -->
 <div class="dq-overlay" id="dqReaderOv" onclick="if(event.target===this)closeDQReader()">
@@ -1234,11 +1300,12 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 <div id="joyPetal" onclick="openJoyOverlay()">🌸</div>
 
 <!-- 入力オーバーレイ -->
-<div id="joyBg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:399" onclick="closeJoyOverlay()"></div>
-<div id="joyOverlay" style="display:none;position:fixed;bottom:0;left:0;right:0;
-  background:var(--bc);border-radius:20px 20px 0 0;padding:1.5rem 1rem 2.5rem;
-  max-height:80vh;overflow-y:auto;box-shadow:0 -4px 20px rgba(0,0,0,.2);z-index:400">
-  <div id="joyOverlayBody"><!-- 入力 or 完了 --></div>
+<div id="joyBg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:399;backdrop-filter:blur(4px)" onclick="closeJoyOverlay()"></div>
+<div id="joyOverlay" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:400;
+  max-height:85vh;overflow-y:auto;">
+  <div class="joy-overlay-inner" style="padding:1.5rem 1.25rem 2.5rem">
+    <div id="joyOverlayBody"></div>
+  </div>
 </div>
 
 <!-- ════ 読経オーバーレイ ════ -->
@@ -2614,18 +2681,21 @@ function renderJoyOverlayInput(){
             ['🏃','健康・運動'],['✨','その他']];
   var body=document.getElementById('joyOverlayBody');
   body.innerHTML=
-    '<p style="font-size:15px;font-weight:700;text-align:center;color:var(--tx);margin-bottom:1rem">本日はどんな良いことがありましたか？</p>'+
-    '<textarea id="joyInput" placeholder="今日の喜びを入力…" style="width:100%;background:var(--bi);border:1.5px solid var(--bo);border-radius:10px;padding:12px;color:var(--tx);font-size:14px;outline:none;resize:none;min-height:72px;line-height:1.6;font-family:inherit;margin-bottom:.75rem"></textarea>'+
-    '<p style="font-size:11px;color:var(--mu);margin-bottom:.5rem">どんな喜びでしたか？（任意）</p>'+
-    '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.75rem">'+
-      cats.map(function(c){return'<button class="joy-cat-btn" data-cat="'+c[1]+'">'+c[0]+' '+c[1]+'</button>';}).join('')+
+    '<div style="text-align:center;margin-bottom:.875rem">'+
+    '<div style="font-size:1.8rem;margin-bottom:.25rem">🌸</div>'+
+    '<p class="joy-title">今日はどんな良いことがありましたか？</p>'+
     '</div>'+
-    '<button onclick="submitJoy()" style="width:100%;padding:13px;border-radius:12px;background:var(--a);color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:600">記録する</button>'+
-    '<button onclick="closeJoyOverlay()" style="width:100%;margin-top:.4rem;padding:8px;border-radius:10px;background:transparent;color:var(--mu);border:none;cursor:pointer;font-size:12px">キャンセル</button>';
+    '<textarea id="joyInput" class="joy-input-area" placeholder="喜びを書いてみてください…"></textarea>'+
+    '<p style="font-size:11px;color:rgba(255,255,255,.45);margin-bottom:.5rem">カテゴリ（任意）</p>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.875rem">'+
+      cats.map(function(c){return'<button class="joy-cat-chip" data-cat="'+c[1]+'">'+c[0]+' '+c[1]+'</button>';}).join('')+
+    '</div>'+
+    '<button onclick="submitJoy()" class="joy-btn-primary">記録する 🌸</button>'+
+    '<button onclick="closeJoyOverlay()" style="width:100%;margin-top:.4rem;padding:8px;border-radius:10px;background:transparent;color:rgba(255,255,255,.35);border:none;cursor:pointer;font-size:12px">キャンセル</button>';
   setTimeout(function(){var i=document.getElementById('joyInput');if(i)i.focus();},80);
-  body.querySelectorAll('.joy-cat-btn').forEach(function(btn){
+  body.querySelectorAll('.joy-cat-chip').forEach(function(btn){
     btn.addEventListener('click',function(){
-      body.querySelectorAll('.joy-cat-btn').forEach(function(b){b.classList.remove('on');});
+      body.querySelectorAll('.joy-cat-chip').forEach(function(b){b.classList.remove('on');});
       this.classList.add('on');
     });
   });
@@ -2633,30 +2703,105 @@ function renderJoyOverlayInput(){
 function submitJoy(){
   var inp=document.getElementById('joyInput');
   var v=inp?inp.value.trim():'';if(!v)return;
-  var catBtn=document.querySelector('#joyOverlayBody .joy-cat-btn.on');
+  var catBtn=document.querySelector('#joyOverlayBody .joy-cat-chip.on');
   addJoy(v,catBtn?catBtn.dataset.cat:null);
-  // 完了画面（少し遅らせて確実に表示）
   var joys=todayJoys();
   var body=document.getElementById('joyOverlayBody');
   if(!body)return;
   body.innerHTML=
     '<div style="text-align:center;padding:.5rem 0">'+
-    '<div style="font-size:28px;margin-bottom:.5rem">🌸</div>'+
-    '<p style="font-size:14px;font-weight:600;color:var(--a);margin-bottom:.3rem">また一つ、あなたのことが知れて嬉しいです。</p>'+
-    '<p style="font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:.75rem">あなたにとっての幸福が増えますように。</p>'+
-    '<div style="text-align:left;margin-bottom:.75rem">'+
-      joys.map(function(j){
-        return'<div style="font-size:12px;color:var(--tx);padding:.3rem 0;border-bottom:1px solid var(--bo)">🌸 '+j.content+(j.category?'<span style="font-size:10px;color:var(--mu);margin-left:6px">'+j.category+'</span>':'')+'</div>';
-      }).join('')+
-    '</div>'+
-    '<button onclick="renderJoyOverlayInput()" style="padding:8px 18px;border-radius:10px;background:var(--bi);color:var(--mu);border:1px solid var(--bo);cursor:pointer;font-size:12px">もう一つ記録する</button><br>'+
-    '<button onclick="closeJoyOverlay()" style="margin-top:.5rem;padding:8px 18px;border-radius:10px;background:transparent;color:var(--mu);border:none;cursor:pointer;font-size:12px">閉じる</button>'+
+    '<div style="font-size:2.5rem;margin-bottom:.4rem">🌸</div>'+
+    '<p class="joy-title" style="font-size:1.05rem;margin-bottom:.25rem">記録しました</p>'+
+    '<p style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:1rem">また一つ、あなたのことが知れて嬉しいです。</p>'+
+    '<button onclick="showJoyHistory()" class="joy-hist-btn">🌸 今までの喜びを見る（'+getJoyLogs().length+'件）</button>'+
+    '<button onclick="renderJoyOverlayInput()" style="width:100%;margin-top:.5rem;padding:10px;border-radius:50px;background:rgba(248,165,194,.1);border:1px solid rgba(248,165,194,.2);color:rgba(248,165,194,.7);cursor:pointer;font-size:12px">もう一つ記録する</button>'+
+    '<button onclick="closeJoyOverlay()" style="width:100%;margin-top:.35rem;padding:8px;border-radius:50px;background:transparent;color:rgba(255,255,255,.3);border:none;cursor:pointer;font-size:12px">閉じる</button>'+
     '</div>';
   renderJoyAnalysis();
   if(st.tab==='cal')renderCal();
 }
 function initJoyBubble(){
   _petalCount=0;_petalLastShown=0;
+  startSerendipityTimer();
+}
+
+function showJoyHistory(){
+  var logs=getJoyLogs();
+  var body=document.getElementById('joyOverlayBody');
+  if(!body)return;
+  if(!logs.length){body.innerHTML='<p style="color:rgba(255,255,255,.45);text-align:center;padding:2rem">まだ記録がありません 🌸</p><button onclick="renderJoyOverlayInput()" class="joy-btn-primary">はじめて記録する</button>';return;}
+  var recent=logs.slice(-30).reverse();
+  body.innerHTML=
+    '<div style="text-align:center;margin-bottom:.875rem">'+
+    '<p class="joy-title">あなたの喜びの記録 🌸</p>'+
+    '<p style="font-size:10px;color:rgba(255,255,255,.4);margin-top:.2rem">'+logs.length+'件の喜び</p>'+
+    '</div>'+
+    '<div style="max-height:52vh;overflow-y:auto;-webkit-overflow-scrolling:touch">'+
+    recent.map(function(j){
+      return '<div style="padding:.5rem 0;border-bottom:1px solid rgba(248,165,194,.1)">'+
+        '<div style="font-size:12px;color:rgba(255,255,255,.85);line-height:1.55">🌸 '+j.content+'</div>'+
+        (j.category?'<span style="font-size:9px;color:rgba(248,165,194,.6);margin-top:2px;display:inline-block">'+j.category+'</span>':'')+
+        (j.ts?'<div style="font-size:9px;color:rgba(255,255,255,.25);float:right;margin-top:-16px">'+new Date(j.ts).toLocaleDateString('ja')+'</div>':'')+
+        '</div>';
+    }).join('')+
+    '</div>'+
+    '<button onclick="renderJoyOverlayInput()" class="joy-btn-primary" style="margin-top:.875rem">+ 新しく記録する</button>'+
+    '<button onclick="closeJoyOverlay()" style="width:100%;margin-top:.35rem;padding:8px;border-radius:50px;background:transparent;color:rgba(255,255,255,.3);border:none;cursor:pointer;font-size:12px">閉じる</button>';
+}
+
+function openCalPreview(){
+  if(st.calPurchased){return;}
+  var popup=document.getElementById('calPreviewPopup');
+  if(!popup)return;
+  var grid=document.getElementById('calPreviewGrid');
+  if(grid){
+    var days=['日','月','火','水','木','金','土'];
+    var html=days.map(function(d){return'<div style="font-size:9px;color:rgba(255,255,255,.35);text-align:center;padding:2px 0">'+d+'</div>';}).join('');
+    var now=new Date(),yr=now.getFullYear(),mo=now.getMonth();
+    var first=new Date(yr,mo,1).getDay();
+    var last=new Date(yr,mo+1,0).getDate();
+    for(var i=0;i<first;i++)html+='<div></div>';
+    for(var d=1;d<=last;d++){
+      var ds=yr+'-'+(mo+1)+'-'+d;
+      var cnt=st.daily[ds]||0;
+      var lv=cnt===0?0:cnt<5?1:cnt<15?2:3;
+      var colors=['rgba(255,255,255,.06)','rgba(232,121,160,.3)','rgba(232,121,160,.6)','rgba(212,168,67,.85)'];
+      html+='<div style="aspect-ratio:1;border-radius:2px;background:'+colors[lv]+';display:flex;align-items:center;justify-content:center;font-size:7px;color:rgba(255,255,255,.5)">'+d+'</div>';
+    }
+    grid.innerHTML=html;
+  }
+  popup.classList.add('show');
+}
+
+var _serendipityTimer=null,_lastJoyShown=0;
+function startSerendipityTimer(){
+  if(_serendipityTimer)return;
+  _serendipityTimer=setInterval(function(){
+    var now=Date.now();
+    if(now-_lastJoyShown<12*60*1000)return;
+    var joys=getJoyLogs();
+    if(!joys.length)return;
+    if(Math.random()<0.04){
+      _lastJoyShown=now;
+      showSerendipityJoy();
+    }
+  },3*60*1000);
+}
+function showSerendipityJoy(){
+  var logs=getJoyLogs();if(!logs.length)return;
+  var j=logs[Math.floor(Math.random()*logs.length)];
+  var toast=document.createElement('div');
+  toast.style.cssText='position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:600;'+
+    'background:linear-gradient(135deg,rgba(248,165,194,.18),rgba(162,155,254,.12));'+
+    'border:1px solid rgba(248,165,194,.35);border-radius:16px;padding:.625rem 1rem;'+
+    'backdrop-filter:blur(20px);max-width:80vw;cursor:pointer;'+
+    'box-shadow:0 4px 20px rgba(248,165,194,.2);opacity:0;transition:opacity .4s;';
+  toast.innerHTML='<div style="font-size:9px;color:rgba(248,165,194,.7);margin-bottom:2px">🌸 以前の喜び</div>'+
+    '<div style="font-size:12px;color:rgba(255,255,255,.88);line-height:1.4">'+j.content.slice(0,40)+(j.content.length>40?'…':'')+'</div>';
+  toast.onclick=function(){toast.remove();openJoyOverlay();};
+  document.body.appendChild(toast);
+  setTimeout(function(){toast.style.opacity='1';},50);
+  setTimeout(function(){toast.style.opacity='0';setTimeout(function(){toast.remove();},400);},7000);
 }
 
 // ── 喜び分析 ─────────────────────────────────────────
@@ -2898,6 +3043,7 @@ function renderNaraiTab(){
   renderNaraiMonthSummary();
   var cl=document.getElementById('naraiCalLocked'),cu=document.getElementById('naraiCalUnlocked');
   if(cl&&cu){cl.style.display=st.calPurchased?'none':'block';cu.style.display=st.calPurchased?'block':'none';}
+  var cpb=document.getElementById('calPreviewBtn');if(cpb)cpb.style.display=st.calPurchased?'none':'inline-block';
   if(st.calPurchased)renderCal();
 }
 function renderNaraiHeatmap(){
