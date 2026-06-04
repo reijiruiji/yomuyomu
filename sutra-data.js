@@ -261,14 +261,21 @@ var GG=[
 ];
 var GG_N=GG.length;
 
-// 解放レベル（0:常用 1:かんたんモード 2:難しいモード）
-var GG_LEVELS={
-  sanbo:0, kaikege:0, eko:0,
-  zange:1, h2:1, h16b:1, h25:1, m1:1, m2:1, m3:1,
-  h16a:2, h1:2, h3:2, h4:2, h5:2, h6:2, h7:2, h8:2, h9:2,
-  h10:2, h11:2, h12:2, h13:2, h14:2, h15:2, h17:2, h18:2,
-  h19:2, h20:2, h21:2, h22:2, h23:2, h24:2, h25b:2, h26:2,
-  h27:2, h28:2, kanbo:2
-};
-// 各レベルの解放に必要な累計功徳
-var UNLOCK_MERIT=[0,150,1500];
+// 無料で最初から使える経典
+// sanbo(三宝礼) kaikege(開経偈) eko(廻向文) zange(懺悔文) h2(方便品第二) h16b(自我偈)
+var GG_FREE=new Set(['sanbo','kaikege','eko','zange','h2','h16b']);
+
+// 解放コスト: 功徳 100 ずつ増加（GG 順でインデックスを割り振る）
+var GG_MERIT_UNLOCK=(function(){
+  var map={};
+  var cost=100;
+  GG.forEach(function(g){
+    if(!GG_FREE.has(g.id)){map[g.id]=cost;cost+=100;}
+  });
+  return map;
+})();
+
+// 後方互換（buildCarousel等が参照している可能性）
+var GG_LEVELS={};
+GG.forEach(function(g){GG_LEVELS[g.id]=GG_FREE.has(g.id)?0:1;});
+var UNLOCK_MERIT=[0,0];
