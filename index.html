@@ -657,14 +657,12 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 .narai-streak-num{font-size:clamp(3rem,16vw,5rem);font-weight:200;line-height:1;
   background:linear-gradient(135deg,#d4a843,#fff 50%,#d4a843);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.narai-hm-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:.5rem 0;}
-.narai-hm-cell{aspect-ratio:1;border-radius:5px;background:rgba(255,255,255,.07);transition:all .2s;
-  display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.4);}
-.narai-hm-cell.lv1{background:rgba(232,121,160,.3);}
-.narai-hm-cell.lv2{background:rgba(232,121,160,.55);}
-.narai-hm-cell.lv3{background:rgba(232,121,160,.8);color:rgba(255,255,255,.7);}
-.narai-hm-cell.lv4{background:rgba(212,168,67,.9);box-shadow:0 0 8px rgba(212,168,67,.5);color:rgba(0,0,0,.7);font-weight:700;}
-.narai-hm-cell.lucky{outline:2px solid rgba(212,168,67,.7);outline-offset:-2px;}
+.narai-hm-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:2.5px;margin:.5rem 0;}
+.narai-hm-cell{aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.07);transition:all .2s;}
+.narai-hm-cell.lv1{background:rgba(232,121,160,.25);}
+.narai-hm-cell.lv2{background:rgba(232,121,160,.5);}
+.narai-hm-cell.lv3{background:rgba(232,121,160,.75);}
+.narai-hm-cell.lv4{background:rgba(212,168,67,.9);box-shadow:0 0 6px rgba(212,168,67,.4);}
 .narai-rank-bar{height:8px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:.5rem 0;}
 .narai-rank-fill{height:100%;background:linear-gradient(90deg,#e879a0,#d4a843);border-radius:99px;transition:width .8s ease;}
 .narai-paywall{text-align:center;padding:1rem;border-radius:14px;
@@ -727,7 +725,7 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
   border:none;background:transparent;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;}
 
 /* ══ タブ専用背景レイヤー（JS で制御） ══ */
-#tabBgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;
+#tabBgLayer{position:fixed;inset:0;z-index:-1;pointer-events:none;
   background-size:cover;background-position:center;
   opacity:0;transition:opacity .7s ease;}
 
@@ -2856,6 +2854,7 @@ function actTab(t){
   var tc=document.getElementById('tc-'+t);if(tc)tc.classList.add('on');
   st.tab=t;lsS(UK,st);
   applyTabBg(t);
+  window.scrollTo(0,0);
 }
 function applyTabBg(t){
   var layer=document.getElementById('tabBgLayer');if(!layer)return;
@@ -3062,12 +3061,9 @@ function renderNaraiHeatmap(){
     var ds=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
     var cnt=st.daily[ds]||0;
     var lv=cnt===0?0:cnt<5?1:cnt<15?2:cnt<40?3:4;
-    var info=dayI(d);
-    var isLucky=getMult(info)>1;
     var cell=document.createElement('div');
-    cell.className='narai-hm-cell'+(lv?' lv'+lv:'')+(isLucky?' lucky':'');
-    cell.textContent=d.getDate();
-    cell.title=ds+': '+cnt+'回'+(isLucky?' 🌟吉日':'');
+    cell.className='narai-hm-cell'+(lv?' lv'+lv:'');
+    cell.title=ds+': '+cnt+'回';
     g.appendChild(cell);
   }
 }
