@@ -686,25 +686,13 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 .lp-lotus-emoji{font-size:var(--sz,1.8rem);
   filter:drop-shadow(0 0 14px var(--glow,rgba(232,121,160,.7)));
   transition:transform .15s;}
-/* 加算合成 (screen blend) 画像蓮 */
-.lp-lotus-img-wrap{
-  position:relative;
-  width:calc(var(--sz,1.8rem) * 1px);
-  display:inline-flex;align-items:center;justify-content:center;
-  transition:transform .15s;}
+/* 加算合成 (screen blend) 画像蓮 — filter: hue-rotate で Klesha 色変え */
 .lp-lotus-img{
-  width:var(--sz,2rem);
-  height:var(--sz,2rem);
   object-fit:contain;
   mix-blend-mode:screen;
   display:block;
-  filter:drop-shadow(0 0 14px var(--glow,rgba(232,121,160,.7))) brightness(1.1);}
-/* 感情カラーオーバーレイ（後で Klesha ごとに色変え） */
-.lp-lotus-color{
-  position:absolute;inset:0;border-radius:50%;
-  background:var(--kcolor,rgba(232,121,160,.5));
-  mix-blend-mode:screen;opacity:.55;pointer-events:none;}
-.lp-lotus-floater:active .lp-lotus-img-wrap{transform:scale(1.35);}
+  transition:transform .15s;}
+.lp-lotus-floater:active .lp-lotus-img{transform:scale(1.35);}
 .lp-lotus-floater:active .lp-lotus-emoji{transform:scale(1.35);}
 .lp-lotus-bubble{font-size:9px;color:rgba(255,255,255,.75);background:rgba(0,0,0,.5);
   border-radius:8px;padding:2px 7px;max-width:90px;text-align:center;line-height:1.4;
@@ -3133,11 +3121,12 @@ function openCalPaywall(){
 //  蓮池: 浮かぶ蓮の花（デモ）
 // ══════════════════════════════════════════════════════════
 var KLESHA_COLORS={
-  greed:{color:'#e57373',glow:'rgba(229,115,115,.7)',label:'貪'},
-  anger:{color:'#ff8a65',glow:'rgba(255,138,101,.7)',label:'瞋'},
-  delusion:{color:'#90a4ae',glow:'rgba(144,164,174,.7)',label:'痴'},
-  pride:{color:'#ce93d8',glow:'rgba(206,147,216,.7)',label:'慢'},
-  doubt:{color:'#80cbc4',glow:'rgba(128,203,196,.7)',label:'疑'}
+  // hue: 元画像からの色相シフト量、sat: 彩度倍率、bright: 明度倍率
+  greed:  {color:'#e57373',glow:'rgba(229,115,115,.7)',label:'貪',hue:'-25deg',sat:'1.4',bright:'1.1'},
+  anger:  {color:'#ff8a65',glow:'rgba(255,138,101,.7)',label:'瞋',hue:'28deg', sat:'1.5',bright:'1.15'},
+  delusion:{color:'#90a4ae',glow:'rgba(144,164,174,.7)',label:'痴',hue:'195deg',sat:'0.55',bright:'0.9'},
+  pride:  {color:'#ce93d8',glow:'rgba(206,147,216,.7)',label:'慢',hue:'265deg',sat:'1.4',bright:'1.0'},
+  doubt:  {color:'#80cbc4',glow:'rgba(128,203,196,.7)',label:'疑',hue:'158deg',sat:'1.2',bright:'1.0'}
 };
 var DEMO_ROOMS=[
   {id:'r1',klesha:'greed',weight:'light',title:'仕事のことばかり考えてしまう',hp:65,maxHp:100},
@@ -3179,11 +3168,11 @@ function spawnLotusFloater(room,cont,seed){
   el.style.cssText='left:'+xPct+'%;--sz:'+sz+'rem;--dur:'+dur+'s;--del:'+delay+'s;--drift:'+drift+'px;--glow:'+kc.glow;
   var showBubble=(seed%4===0)&&room.title;
   var imgSz=(sz*16)+'px';
+  var imgFilter='hue-rotate('+kc.hue+') saturate('+kc.sat+') brightness('+kc.bright+')'
+    +' drop-shadow(0 0 14px '+kc.glow+')';
   el.innerHTML=
-    '<div class="lp-lotus-img-wrap" style="--kcolor:'+kc.color+';width:'+imgSz+';height:'+imgSz+'">'+
-      '<img class="lp-lotus-img" src="images/lotus-hope.png" alt="" width="'+imgSz+'" height="'+imgSz+'">'+
-      '<div class="lp-lotus-color"></div>'+
-    '</div>'+
+    '<img class="lp-lotus-img" src="images/lotus-hope.png" alt=""'
+      +' style="width:'+imgSz+';height:'+imgSz+';filter:'+imgFilter+'">'+
     (showBubble?'<span class="lp-lotus-bubble">'+room.title.slice(0,10)+'</span>':'');
   el.addEventListener('click',function(e){e.stopPropagation();openSangaChat(room);});
   cont.appendChild(el);
