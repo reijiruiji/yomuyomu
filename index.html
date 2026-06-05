@@ -2002,11 +2002,13 @@ function buildCarousel(){
     card.id='gc'+i;
     card.dataset.idx=i;
     var hasText=g.lines&&g.lines.length>0;
+    var meritNow=Math.round(totalMerit());
     card.innerHTML= locked?
       '<div class="gc-num">'+(i+1)+'/'+GG_N+'</div>'+
       '<div style="font-size:1.8rem;margin:.5rem 0">🔒</div>'+
       '<div class="gc-title">'+g.t+'</div>'+
-      '<div style="font-size:10px;color:var(--mu);margin-top:.3rem">功徳 '+need+' で解放</div>':
+      '<div style="font-size:10px;color:var(--mu);margin-top:.3rem">功徳 '+need+' で解放</div>'+
+      '<div style="font-size:9px;color:var(--di);margin-top:2px">あと '+(need-meritNow)+' 功徳</div>':
       '<div class="gc-num">'+(i+1)+'/'+GG_N+'</div>'+
       '<div class="gc-title">'+g.t+'</div>'+
       '<div class="gc-sub">'+g.s+'</div>'+

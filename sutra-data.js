@@ -261,21 +261,34 @@ var GG=[
 ];
 var GG_N=GG.length;
 
-// 無料で最初から使える経典
-// sanbo(三宝礼) kaikege(開経偈) eko(廻向文) zange(懺悔文) h2(方便品第二) h16b(自我偈)
-var GG_FREE=new Set(['sanbo','kaikege','eko','zange','h2','h16b']);
+// ── 最初から無料で使える経典（ここを編集して変更可能）──
+var GG_FREE_IDS=[
+  'sanbo',   // 三宝礼（常用）
+  'kaikege', // 開経偈（常用）
+  'eko',     // 廻向文（常用）
+  'zange',   // 懺悔文（ユーザー指定無料）
+  'h2',      // 方便品第二（ユーザー指定無料）
+  'h16b'     // 自我偈・壽量品第十六（ユーザー指定無料）
+];
+var GG_FREE=new Set(GG_FREE_IDS);
 
-// 解放コスト: 功徳 100 ずつ増加（GG 順でインデックスを割り振る）
+// 解放コスト: 文字数による2段階
+//   ≤100文字  → 100功徳
+//   >100文字  → 200功徳
+//   無料リスト内 → 0（常時解放）
 var GG_MERIT_UNLOCK=(function(){
   var map={};
-  var cost=100;
   GG.forEach(function(g){
-    if(!GG_FREE.has(g.id)){map[g.id]=cost;cost+=100;}
+    if(GG_FREE.has(g.id)){map[g.id]=0;return;}
+    var chars=g.lines?g.lines.reduce(function(s,l){
+      return s+(l[0]||'').replace(/[\s\n\r]/g,'').length;
+    },0):0;
+    map[g.id]=chars<=100?100:200;
   });
   return map;
 })();
 
-// 後方互換（buildCarousel等が参照している可能性）
+// 後方互換
 var GG_LEVELS={};
 GG.forEach(function(g){GG_LEVELS[g.id]=GG_FREE.has(g.id)?0:1;});
 var UNLOCK_MERIT=[0,0];
