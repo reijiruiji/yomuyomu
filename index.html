@@ -1186,11 +1186,25 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
     <div style="width:100%;background:linear-gradient(160deg,rgba(10,12,25,.96),rgba(20,8,30,.96));
       border:1px solid rgba(255,255,255,.15);border-radius:24px 24px 0 0;padding:1.5rem 1.25rem 2.5rem;
       box-shadow:0 -8px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)">
-      <div style="text-align:center;margin-bottom:1rem">
-        <div style="font-size:1.5rem;margin-bottom:.25rem">🌊</div>
+      <div style="text-align:center;margin-bottom:.75rem">
         <div style="font-size:15px;font-weight:700;color:rgba(255,255,255,.92)">悩みを蓮池に流す</div>
         <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:.2rem">誰かがお祈りしてくれます</div>
       </div>
+
+      <!-- 蓮プレビュー -->
+      <div style="display:flex;justify-content:center;align-items:center;margin-bottom:.875rem;min-height:100px">
+        <div id="sangaLotusPreview" style="position:relative;display:flex;align-items:center;justify-content:center">
+          <img id="sangaPreviewImg" src="images/lotus-hope.png" alt=""
+            style="width:80px;height:80px;object-fit:contain;mix-blend-mode:screen;
+            transition:filter .4s ease,width .3s ease,height .3s ease;
+            filter:hue-rotate(0deg) saturate(1) brightness(1) drop-shadow(0 0 16px rgba(232,121,160,.6))">
+          <!-- 背景グロー -->
+          <div id="sangaPreviewGlow" style="position:absolute;width:100px;height:100px;border-radius:50%;
+            background:rgba(232,121,160,.15);filter:blur(20px);
+            transition:background .4s ease,width .3s ease,height .3s ease;z-index:-1;pointer-events:none"></div>
+        </div>
+      </div>
+
       <!-- Klesha 選択 -->
       <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.625rem;justify-content:center" id="sangaKleshaSelect"></div>
       <!-- 重さ -->
@@ -3186,12 +3200,20 @@ function buildSangaKleshaSelect(){
   wrap.innerHTML='';
   Object.keys(KLESHA_DATA).forEach(function(k){
     var d=KLESHA_DATA[k];
+    var kc=KLESHA_COLORS[k]||{};
     var btn=document.createElement('button');
     btn.className='btn-s'+(st.sangaSelectedKlesha===k?' on':'');
+    var isOn=st.sangaSelectedKlesha===k;
+    if(isOn&&kc.color){btn.style.borderColor=kc.color;btn.style.color=kc.color;btn.style.background='rgba('+hexToRgb(kc.color)+',0.15)';}
     btn.textContent=d.emoji+' '+d.name;
-    btn.onclick=function(){st.sangaSelectedKlesha=k;buildSangaKleshaSelect();};
+    btn.onclick=function(){st.sangaSelectedKlesha=k;buildSangaKleshaSelect();updateSangaPreview();};
     wrap.appendChild(btn);
   });
+  updateSangaPreview();
+}
+function hexToRgb(hex){
+  var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return r+','+g+','+b;
 }
 function selSangaWeight(w){
   st.sangaWeight=w;lsS(UK,st);
@@ -3199,6 +3221,33 @@ function selSangaWeight(w){
     var b=document.getElementById('wBtn'+x.charAt(0).toUpperCase()+x.slice(1));
     if(b)b.classList.toggle('on',x===w);
   });
+  updateSangaPreview();
+}
+function updateSangaPreview(){
+  var img=document.getElementById('sangaPreviewImg');
+  var glow=document.getElementById('sangaPreviewGlow');
+  if(!img)return;
+  var k=st.sangaSelectedKlesha;
+  var w=st.sangaWeight||'medium';
+  var kc=k?KLESHA_COLORS[k]:{hue:'0deg',sat:'1',bright:'1',glow:'rgba(232,121,160,.5)',color:'#e879a0'};
+  if(!kc){kc={hue:'0deg',sat:'1',bright:'1',glow:'rgba(232,121,160,.5)',color:'#e879a0'};}
+  // 重さで輝きとサイズを変える
+  var wData={
+    light: {sz:'60px',brightMult:.82,glowScale:'8px',glowAlpha:.12,glowSz:'80px'},
+    medium:{sz:'80px',brightMult:1.0, glowScale:'16px',glowAlpha:.18,glowSz:'100px'},
+    heavy: {sz:'104px',brightMult:1.25,glowScale:'28px',glowAlpha:.28,glowSz:'130px'}
+  };
+  var wd=wData[w]||wData.medium;
+  var brightFinal=(parseFloat(kc.bright||1)*wd.brightMult).toFixed(2);
+  var filter='hue-rotate('+(kc.hue||'0deg')+') saturate('+(kc.sat||'1')+') brightness('+brightFinal+')'
+    +' drop-shadow(0 0 '+wd.glowScale+' '+kc.glow+')';
+  img.style.filter=filter;
+  img.style.width=wd.sz;img.style.height=wd.sz;
+  if(glow){
+    glow.style.width=wd.glowSz;glow.style.height=wd.glowSz;
+    var c=k&&kc.color?hexToRgb(kc.color):'232,121,160';
+    glow.style.background='rgba('+c+','+wd.glowAlpha+')';
+  }
 }
 function createSangaRoom(){
   var title=document.getElementById('sangaRoomTitle').value.trim();
@@ -3736,6 +3785,7 @@ function openSangaForm(){
   if(!sheet)return;
   sheet.style.display='flex';
   buildSangaKleshaSelect();
+  updateSangaPreview();
   setTimeout(function(){var t=document.getElementById('sangaRoomTitle');if(t)t.focus();},200);
 }
 function closeSangaForm(){
