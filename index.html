@@ -686,7 +686,12 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 .lp-lotus-emoji{font-size:var(--sz,1.8rem);
   filter:drop-shadow(0 0 14px var(--glow,rgba(232,121,160,.7)));
   transition:transform .15s;}
-/* 加算合成 (screen blend) 画像蓮 — filter: hue-rotate で Klesha 色変え */
+/* プレビュー: 重め パルスアニメーション */
+@keyframes lotusPulse{
+  0%,100%{opacity:.85;}50%{opacity:1;}}
+@keyframes lotusPulseGlow{
+  0%,100%{opacity:.7;transform:scale(1);}50%{opacity:1;transform:scale(1.12);}}
+/* 加算合成 (screen blend) 画像蓮 — sepia+hue-rotate で白い画像にも色が乗る */
 .lp-lotus-img{
   object-fit:contain;
   mix-blend-mode:screen;
@@ -3134,13 +3139,13 @@ function openCalPaywall(){
 // ══════════════════════════════════════════════════════════
 //  蓮池: 浮かぶ蓮の花（デモ）
 // ══════════════════════════════════════════════════════════
+// キーは KLESHA_DATA に合わせて tan/shin/chi/man/gi
 var KLESHA_COLORS={
-  // hue: 元画像からの色相シフト量、sat: 彩度倍率、bright: 明度倍率
-  greed:  {color:'#e57373',glow:'rgba(229,115,115,.7)',label:'貪',hue:'-25deg',sat:'1.4',bright:'1.1'},
-  anger:  {color:'#ff8a65',glow:'rgba(255,138,101,.7)',label:'瞋',hue:'28deg', sat:'1.5',bright:'1.15'},
-  delusion:{color:'#90a4ae',glow:'rgba(144,164,174,.7)',label:'痴',hue:'195deg',sat:'0.55',bright:'0.9'},
-  pride:  {color:'#ce93d8',glow:'rgba(206,147,216,.7)',label:'慢',hue:'265deg',sat:'1.4',bright:'1.0'},
-  doubt:  {color:'#80cbc4',glow:'rgba(128,203,196,.7)',label:'疑',hue:'158deg',sat:'1.2',bright:'1.0'}
+  tan: {color:'#e57373',glow:'rgba(229,115,115,.75)',label:'Greed',   hue:'330deg',sat:'2.2',bright:'1.1'},
+  shin:{color:'#ff8a65',glow:'rgba(255,138,101,.75)',label:'Anger',   hue:'18deg', sat:'2.5',bright:'1.15'},
+  chi: {color:'#90a4ae',glow:'rgba(144,164,174,.6)', label:'Delusion',hue:'200deg',sat:'0.9',bright:'0.85'},
+  man: {color:'#ce93d8',glow:'rgba(206,147,216,.75)',label:'Pride',   hue:'270deg',sat:'2.2',bright:'1.0'},
+  gi:  {color:'#80cbc4',glow:'rgba(128,203,196,.7)', label:'Doubt',   hue:'160deg',sat:'2.0',bright:'1.0'}
 };
 var DEMO_ROOMS=[
   {id:'r1',klesha:'greed',weight:'light',title:'仕事のことばかり考えてしまう',hp:65,maxHp:100},
@@ -3182,7 +3187,7 @@ function spawnLotusFloater(room,cont,seed){
   el.style.cssText='left:'+xPct+'%;--sz:'+sz+'rem;--dur:'+dur+'s;--del:'+delay+'s;--drift:'+drift+'px;--glow:'+kc.glow;
   var showBubble=(seed%4===0)&&room.title;
   var imgSz=(sz*16)+'px';
-  var imgFilter='hue-rotate('+kc.hue+') saturate('+kc.sat+') brightness('+kc.bright+')'
+  var imgFilter='sepia(0.92) hue-rotate('+kc.hue+') saturate('+kc.sat+') brightness('+kc.bright+')'
     +' drop-shadow(0 0 14px '+kc.glow+')';
   el.innerHTML=
     '<img class="lp-lotus-img" src="images/lotus-hope.png" alt=""'
@@ -3205,7 +3210,8 @@ function buildSangaKleshaSelect(){
     btn.className='btn-s'+(st.sangaSelectedKlesha===k?' on':'');
     var isOn=st.sangaSelectedKlesha===k;
     if(isOn&&kc.color){btn.style.borderColor=kc.color;btn.style.color=kc.color;btn.style.background='rgba('+hexToRgb(kc.color)+',0.15)';}
-    btn.textContent=d.emoji+' '+d.name;
+    var kcLabel=(KLESHA_COLORS[k]&&KLESHA_COLORS[k].label)||d.name;
+    btn.textContent=d.emoji+' '+kcLabel;
     btn.onclick=function(){st.sangaSelectedKlesha=k;buildSangaKleshaSelect();updateSangaPreview();};
     wrap.appendChild(btn);
   });
@@ -3231,22 +3237,25 @@ function updateSangaPreview(){
   var w=st.sangaWeight||'medium';
   var kc=k?KLESHA_COLORS[k]:{hue:'0deg',sat:'1',bright:'1',glow:'rgba(232,121,160,.5)',color:'#e879a0'};
   if(!kc){kc={hue:'0deg',sat:'1',bright:'1',glow:'rgba(232,121,160,.5)',color:'#e879a0'};}
-  // 重さで輝きとサイズを変える
+  // 重さで輝きとサイズを変える（重めはパルスアニメーション）
   var wData={
-    light: {sz:'60px',brightMult:.82,glowScale:'8px',glowAlpha:.12,glowSz:'80px'},
-    medium:{sz:'80px',brightMult:1.0, glowScale:'16px',glowAlpha:.18,glowSz:'100px'},
-    heavy: {sz:'104px',brightMult:1.25,glowScale:'28px',glowAlpha:.28,glowSz:'130px'}
+    light: {sz:'58px', brightMult:.78, glowScale:'8px', glowAlpha:.10,glowSz:'80px', pulse:false},
+    medium:{sz:'78px', brightMult:.98, glowScale:'14px',glowAlpha:.16,glowSz:'100px',pulse:false},
+    heavy: {sz:'98px', brightMult:1.08,glowScale:'18px',glowAlpha:.20,glowSz:'124px',pulse:true}
   };
   var wd=wData[w]||wData.medium;
   var brightFinal=(parseFloat(kc.bright||1)*wd.brightMult).toFixed(2);
-  var filter='hue-rotate('+(kc.hue||'0deg')+') saturate('+(kc.sat||'1')+') brightness('+brightFinal+')'
+  // sepia → hue-rotate → saturate で白い画像にも色が乗る
+  var filter='sepia(0.92) hue-rotate('+(kc.hue||'0deg')+') saturate('+(kc.sat||'1')+') brightness('+brightFinal+')'
     +' drop-shadow(0 0 '+wd.glowScale+' '+kc.glow+')';
   img.style.filter=filter;
   img.style.width=wd.sz;img.style.height=wd.sz;
+  img.style.animation=wd.pulse?'lotusPulse 2.4s ease-in-out infinite':'none';
   if(glow){
     glow.style.width=wd.glowSz;glow.style.height=wd.glowSz;
     var c=k&&kc.color?hexToRgb(kc.color):'232,121,160';
     glow.style.background='rgba('+c+','+wd.glowAlpha+')';
+    glow.style.animation=wd.pulse?'lotusPulseGlow 2.4s ease-in-out infinite':'none';
   }
 }
 function createSangaRoom(){
