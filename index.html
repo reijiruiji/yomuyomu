@@ -881,6 +881,16 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
 
   <!-- ── お題目 ── -->
   <div class="tc on" id="tc-chant">
+    <!-- モード切替ピル（常時表示） -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem">
+      <button id="modeSwitchPill" onclick="showModeSelect()"
+        style="display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:5px 12px;
+        border-radius:50px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+        color:var(--tx);cursor:pointer;backdrop-filter:blur(12px);">
+        <span id="modeSwitchLabel">🥁 お題目</span>
+        <span style="color:var(--mu);font-size:10px">⇄</span>
+      </button>
+    </div>
     <div id="todayBanner"></div>
     <div id="multPill" style="display:none"></div>
 
@@ -1068,18 +1078,28 @@ body.rich .tap-drum-img{box-shadow:0 0 40px rgba(212,168,67,.55),0 6px 28px rgba
         </div>
       </div>
 
-      <!-- カレンダーボタン（ヒートマップはコメントアウト中） -->
-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem;text-align:center">
-        <div style="font-size:11px;color:var(--mu);margin-bottom:.625rem">
-          修行した日の記録を確認できます<br>
-          <span style="font-size:9px;color:rgba(212,168,67,.7)">🌟 吉日は功徳倍率UP（購入者限定）</span>
-        </div>
-        <button class="btn-big accent" onclick="openCalPreview()" style="max-width:240px;margin:0 auto">📅 カレンダーを見る</button>
-      </div>
-      <!-- ヒートマップ（コメントアウト — 必要時に復元）
+      <!-- 91日ヒートマップ＋日付確認ボタン -->
       <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+          <div class="narai-section-title" style="margin-bottom:0">修行カレンダー（91日）</div>
+          <button class="btn-s" id="calPreviewBtn" onclick="openCalPreview()" style="font-size:10px;padding:4px 10px;white-space:nowrap">📅 日付を確認する</button>
+        </div>
+        <div style="font-size:9px;color:rgba(212,168,67,.7);margin-bottom:.4rem;display:flex;align-items:center;gap:4px">
+          <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#d4a843;box-shadow:0 0 4px rgba(212,168,67,.6)"></span>
+          吉日に功徳倍率UP（購入者限定）
+        </div>
         <div class="narai-hm-grid" id="naraiHmGrid"></div>
-      </div> -->
+        <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem;font-size:10px;color:rgba(255,255,255,.35)">
+          <span>少ない</span>
+          <span style="display:flex;gap:3px">
+            <span style="width:9px;height:9px;border-radius:2px;background:rgba(255,255,255,.07);display:inline-block"></span>
+            <span style="width:9px;height:9px;border-radius:2px;background:rgba(232,121,160,.25);display:inline-block"></span>
+            <span style="width:9px;height:9px;border-radius:2px;background:rgba(232,121,160,.5);display:inline-block"></span>
+            <span style="width:9px;height:9px;border-radius:2px;background:rgba(212,168,67,.9);display:inline-block"></span>
+          </span>
+          <span>多い</span>
+        </div>
+      </div>
 
       <!-- 今月サマリー -->
       <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
@@ -2887,6 +2907,7 @@ document.querySelectorAll('.tab').forEach(function(btn){
 //  ホームタブ（モード選択・リング・浮遊テキスト）
 // ══════════════════════════════════════════════════════════
 function initHomeTab(){
+  updateModePill(st.homeMode||'chant');
   if(!st.homeMode){showModeSelect();return;}
   if(st.homeMode==='zen'){showZenArea();}else{showChantArea();}
 }
@@ -2895,9 +2916,14 @@ function showModeSelect(){
   document.getElementById('homeChantArea').style.display='none';
   document.getElementById('homeZenArea').style.display='none';
 }
+function updateModePill(mode){
+  var lbl=document.getElementById('modeSwitchLabel');
+  if(lbl)lbl.textContent=mode==='zen'?'🧘 瞑想':'🥁 お題目';
+}
 function selectHomeMode(mode){
   st.homeMode=mode;lsS(UK,st);
   document.getElementById('homeModeSelect').style.display='none';
+  updateModePill(mode);
   if(mode==='chant'){showChantArea();}else{showZenArea();}
 }
 function showChantArea(){
