@@ -1008,6 +1008,17 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     <button class="btn-s" onclick="resetAll()" style="color:var(--err);border-color:rgba(239,83,80,.4);width:100%;padding:8px">リセット（全データ削除）</button>
   </div>
 
+  <!-- PWA install banner -->
+  <div id="pwaInstallBanner" style="display:none;background:linear-gradient(90deg,rgba(212,168,67,.12),rgba(232,121,160,.1));border-bottom:1px solid rgba(212,168,67,.2);padding:9px 14px;display:none;align-items:center;gap:10px;font-size:12px">
+    <span style="font-size:1.5rem;flex-shrink:0">🪷</span>
+    <div style="flex:1;line-height:1.4">
+      <div style="font-weight:700;color:var(--tx)">ホーム画面に追加</div>
+      <div style="color:var(--mu);font-size:11px">オフラインでも使えます</div>
+    </div>
+    <button id="pwaInstallBtn" onclick="doPwaInstall()" style="padding:7px 14px;border-radius:50px;background:rgba(212,168,67,.8);border:none;color:#1a0f00;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">追加</button>
+    <button onclick="dismissPwaBanner()" style="background:none;border:none;color:var(--mu);font-size:1.1rem;cursor:pointer;padding:4px">×</button>
+  </div>
+
   <div class="app-hd">
     <div style="width:36px"></div>
     <div style="flex:1;text-align:center">
@@ -1261,6 +1272,18 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
             <div style="font-size:10px;color:var(--mu)">累計功徳 🌸</div>
           </div>
         </div>
+      </div>
+
+      <!-- 今日の教え -->
+      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.625rem">
+          <div class="narai-section-title" style="margin-bottom:0">今日の教え</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span id="dailyDateLabel" style="font-size:10px;color:var(--mu)"></span>
+            <button onclick="shareDailyTeaching()" style="padding:4px 10px;border-radius:50px;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.3);color:rgba(212,168,67,.9);font-size:10px;cursor:pointer">📤 シェア</button>
+          </div>
+        </div>
+        <div id="dailyContent"></div>
       </div>
 
       <!-- 功徳倍率内訳 + ティアアップ -->
@@ -2236,6 +2259,9 @@ function addChants(n){
   updateChantUI();lsS(UK,st);persistLb();
   if(st.tab==='cal')renderCal();
   checkUnlockThreshold();
+  if(_deferredInstallPrompt&&st.totalChants===10&&!lsG('yomy_pwa_dismissed')){
+    var pb=document.getElementById('pwaInstallBanner');if(pb)pb.style.display='flex';
+  }
 }
 function persistLb(){
   var merit=totalMerit();
@@ -2793,25 +2819,14 @@ function renderDailyCard(){
   var el=document.getElementById('dailyContent');
   var label=document.getElementById('dailyDateLabel');
   if(!el)return;
-  // トライアルヒント更新
-  var hint=document.getElementById('questTrialHint');
-  if(hint){
-    var qs=questTrialStatus();
-    if(qs.ok&&qs.reason==='pass')hint.textContent='パス有効中 ✨';
-    else if(qs.ok&&qs.reason==='new')hint.textContent='7日間無料 →';
-    else if(qs.ok&&qs.reason==='trial')hint.textContent='残り'+qs.daysLeft+'日 →';
-    else hint.textContent='パスで解放 →';
-  }
   var content=getTodayContent();
   if(label)label.textContent=today();
   el.innerHTML=
     '<div style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:.5rem">'+content.title+'</div>'+
     '<p style="font-size:13px;color:var(--tx);line-height:1.8;margin-bottom:.75rem">'+content.body+'</p>'+
-    '<div style="background:var(--bg);border-radius:8px;padding:.6rem .75rem;font-size:12px;color:var(--mu);line-height:1.6">'+
+    '<div style="background:rgba(255,255,255,.06);border-radius:8px;padding:.6rem .75rem;font-size:12px;color:var(--mu);line-height:1.6">'+
       '🪷 今日の実践ヒント<br>'+content.practice+
     '</div>';
-  var hint=document.getElementById('questTrialHint');
-  if(hint)hint.textContent='';
 }
 // Stripe Payment Link（ダッシュボードで作成後にURLを差し替え）
 // ▼ Stripeダッシュボード → Products → Payment Links で作成したURLを貼る
@@ -4706,6 +4721,57 @@ init();
 // ── PWA Service Worker ──
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('service-worker.js').catch(function(){});
+}
+
+// ── PWA Install Banner ──────────────────────
+var _deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();
+  _deferredInstallPrompt=e;
+  var dismissed=lsG('yomy_pwa_dismissed');
+  if(!dismissed&&(st.totalChants>=10)){
+    var banner=document.getElementById('pwaInstallBanner');
+    if(banner)banner.style.display='flex';
+  }
+});
+function doPwaInstall(){
+  if(!_deferredInstallPrompt)return;
+  _deferredInstallPrompt.prompt();
+  _deferredInstallPrompt.userChoice.then(function(r){
+    if(r.outcome==='accepted')lsS('yomy_pwa_dismissed',true);
+  });
+  _deferredInstallPrompt=null;
+  var banner=document.getElementById('pwaInstallBanner');
+  if(banner)banner.style.display='none';
+}
+function dismissPwaBanner(){
+  lsS('yomy_pwa_dismissed',true);
+  var banner=document.getElementById('pwaInstallBanner');
+  if(banner)banner.style.display='none';
+}
+window.addEventListener('appinstalled',function(){
+  var banner=document.getElementById('pwaInstallBanner');
+  if(banner)banner.style.display='none';
+  _deferredInstallPrompt=null;
+});
+
+// ── 今日の教えシェア ───────────────────────────
+function shareDailyTeaching(){
+  var content=getTodayContent();
+  if(!content)return;
+  var streak=st.loginStreak||0;
+  var text='📖 今日の教え\n\n「'+content.title+'」\n\n'+content.body.substring(0,80)+'…'
+    +'\n\n🪷 今日の実践：'+content.practice.substring(0,50)+'…'
+    +(streak>1?'\n\n🔥 '+streak+'日連続修行中':'')
+    +'\n\n#よむよむお題目 #仏教 #南無妙法蓮華経';
+  if(navigator.share){
+    navigator.share({title:'今日の教え — '+content.title,text:text,url:location.href}).catch(function(){});
+  }else{
+    navigator.clipboard&&navigator.clipboard.writeText(text).then(function(){
+      var btn=document.querySelector('[onclick="shareDailyTeaching()"]');
+      if(btn){var orig=btn.textContent;btn.textContent='✓ コピー済み';setTimeout(function(){btn.textContent=orig;},2000);}
+    });
+  }
 }
 </script>
 </body>
