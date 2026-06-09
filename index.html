@@ -2194,6 +2194,45 @@ function showLoginPopup(mode){
 function closeLoginBonus(){
   document.getElementById('loginBonusOverlay').classList.remove('show');
   st.todayLoginBonus=0;lsS(UK,st);
+  // ストリーク記念日に無料ユーザーへアップグレードCTA
+  var s=st.loginStreak||0;
+  var milestones=[7,30,100];
+  var isMilestone=milestones.indexOf(s)>=0;
+  if(isMilestone&&getUserTier()==='free'){
+    var key='yomy_streak_cta_'+s;
+    if(!lsG(key)){
+      lsS(key,true);
+      setTimeout(function(){showStreakUpgradeCta(s);},400);
+    }
+  }
+}
+function showStreakUpgradeCta(days){
+  var existing=document.getElementById('streakCtaOverlay');
+  if(existing)existing.remove();
+  var mult={7:'×1.1',30:'×1.25',100:'×1.5'}[days]||'×1.1';
+  var badge={7:'梅',30:'竹',100:'松'}[days]||'梅';
+  var tier={7:'ume',30:'take',100:'matsu'}[days]||'ume';
+  var ov=document.createElement('div');
+  ov.id='streakCtaOverlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center';
+  ov.innerHTML='<div style="width:100%;max-width:430px;background:linear-gradient(160deg,#0a0c19,#140820);border:1px solid rgba(212,168,67,.4);border-radius:22px 22px 0 0;padding:28px 20px 44px">'
+    +'<div style="text-align:center;margin-bottom:18px">'
+    +'<div style="font-size:3rem;margin-bottom:8px">🔥</div>'
+    +'<div style="font-size:1.4rem;font-weight:800;color:#d4a843;font-family:serif;margin-bottom:6px">'+days+'日連続達成！</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:18px">'
+    +days+'日間、毎日修行を続けられました。<br>あなたの功徳は本物です。</div>'
+    +'<div style="background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.3);border-radius:14px;padding:16px;margin-bottom:16px">'
+    +'<div style="font-size:11px;color:rgba(212,168,67,.7);font-weight:700;letter-spacing:.08em;margin-bottom:8px">'+badge+'プランにアップグレードすると</div>'
+    +'<div style="display:flex;flex-direction:column;gap:7px;text-align:left">'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.8)">🪷 功徳倍率 <strong style="color:#d4a843">'+mult+'</strong> に増加</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.8)">🛡 連続修行シールド毎週付与</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.8)">💬 サンガでカスタムメッセージ送信</div>'
+    +'</div></div>'
+    +'<button onclick="document.getElementById(\'streakCtaOverlay\').remove();openTierModal()" style="width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,rgba(212,168,67,.85),rgba(232,121,160,.75));border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:10px">🪷 '+badge+'プランを見る</button>'
+    +'<button onclick="document.getElementById(\'streakCtaOverlay\').remove()" style="width:100%;padding:12px;border-radius:14px;background:transparent;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer">今は無料のまま続ける</button>'
+    +'</div></div>';
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
 }
 function getNextAuspicious(){
   var t=new Date();
@@ -4589,11 +4628,11 @@ window.addEventListener('resize',function(){if(st.tab==='gongyou')buildCarousel(
 var TIER_KEY='yomy_tier_v1';
 var TIER_LOTUS_KEY='yomy_lotus_week_v1';
 var TIER_DEF={
-  free: {name:'無料',  badge:'🌿',lotus:1,  msgRx:0,   price:'無料'},
-  ume:  {name:'梅',    badge:'🌸',lotus:2,  msgRx:25,  price:'¥50/日・¥500/月'},
-  take: {name:'竹',    badge:'🎋',lotus:5,  msgRx:50,  price:'¥100/日・¥1,000/月'},
-  matsu:{name:'松',    badge:'🪷',lotus:10, msgRx:999, price:'¥150/日・¥1,500/月'},
-  butsu:{name:'仏',    badge:'☸️', lotus:999,msgRx:999, price:'¥1,500/月（創設価格）'}
+  free: {name:'無料',  badge:'🌿',lotus:1,  msgRx:0,   price:'無料',        mult:1.0},
+  ume:  {name:'梅',    badge:'🌸',lotus:3,  msgRx:25,  price:'¥480/月',     mult:1.1},
+  take: {name:'竹',    badge:'🎋',lotus:7,  msgRx:50,  price:'¥680/月',     mult:1.25},
+  matsu:{name:'松',    badge:'🪷',lotus:15, msgRx:999, price:'¥980/月',     mult:1.5},
+  butsu:{name:'仏',    badge:'☸️', lotus:999,msgRx:999, price:'¥1,980/月',   mult:2.0}
 };
 function getUserTier(){
   try{var t=localStorage.getItem(TIER_KEY);return TIER_DEF[t]?t:'free';}catch(e){return 'free';}
@@ -4643,12 +4682,23 @@ function openTierUpgrade(tierKey){
   if(!url||url.indexOf('REPLACE')>=0){
     var ov=document.createElement('div');
     ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)';
-    ov.innerHTML='<div style="text-align:center;padding:2rem 1.5rem;max-width:280px">'
+    var d2=TIER_DEF[tierKey]||TIER_DEF.ume;
+    ov.innerHTML='<div style="text-align:center;padding:2rem 1.5rem;max-width:300px">'
       +'<div style="font-size:2.5rem;margin-bottom:.875rem">🙏</div>'
-      +'<div style="font-size:16px;font-weight:700;color:rgba(255,255,255,.93);margin-bottom:.5rem">課金機能 準備中</div>'
-      +'<div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1.5rem">'
-      +'Stripeの設定が完了次第、<br>こちらからご購入いただけます。</div>'
-      +'<button onclick="this.parentNode.parentNode.remove()" style="padding:12px 32px;border-radius:50px;background:linear-gradient(135deg,rgba(212,168,67,.8),rgba(232,121,160,.7));color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700">閉じる</button>'
+      +'<div style="font-size:16px;font-weight:700;color:rgba(255,255,255,.93);margin-bottom:.5rem">'+d2.badge+' '+d2.name+'プラン — 準備中</div>'
+      +'<div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1rem">'
+      +'間もなく開始予定です。<br>メールアドレスをご登録いただくと、<br>先行案内をお届けします。</div>'
+      +'<div style="background:rgba(255,255,255,.07);border-radius:12px;padding:14px;margin-bottom:14px;text-align:left">'
+      +'<div style="font-size:11px;color:rgba(212,168,67,.8);font-weight:700;margin-bottom:8px">'+d2.name+'プランの特典</div>'
+      +'<div style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.9">'
+      +'🪷 功徳倍率 ×'+d2.mult.toFixed(2)+'<br>'
+      +'🌸 蓮池に週'+( d2.lotus>=999?'無制限':d2.lotus)+'個<br>'
+      +'🛡 ストリークシールド毎週付与<br>'
+      +(d2.msgRx>0?'💬 サンガカスタムメッセージ<br>':'')
+      +(tierKey==='take'||tierKey==='matsu'||tierKey==='butsu'?'📖 探求Stage5 菩薩道解放<br>':'')
+      +'</div></div>'
+      +'<a href="mailto:panda0416okura@gmail.com?subject=よむよむ'+d2.name+'プラン先行登録&body=プランに興味があります。案内をお待ちしています。" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:50px;background:linear-gradient(135deg,rgba(212,168,67,.85),rgba(232,121,160,.75));color:#fff;text-decoration:none;font-size:14px;font-weight:700;margin-bottom:10px">📧 先行登録する（無料）</a>'
+      +'<button onclick="this.parentNode.parentNode.remove()" style="padding:10px;width:100%;border-radius:50px;background:transparent;border:none;color:rgba(255,255,255,.3);font-size:12px;cursor:pointer">あとで</button>'
       +'</div>';
     ov.onclick=function(e){if(e.target===ov)ov.remove();};
     document.body.appendChild(ov);
