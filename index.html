@@ -8,8 +8,17 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="よむよむ">
 <meta name="description" content="法華経勤行・お題目カウンター・蓮池サンガ・仏典探求RPG">
+<meta property="og:type" content="website">
+<meta property="og:title" content="よむよむお題目 — 古代の智慧で孤独を静寂に変える">
+<meta property="og:description" content="南無妙法蓮華経を唱えながら功徳を積む。蓮池でサンガと繋がり、仏典クイズで智慧を深める。">
+<meta property="og:image" content="images/icon-512x512.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="よむよむお題目">
+<meta name="twitter:description" content="古代の智慧で孤独を静寂に変えるウェルネスRPG">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="images/icon-maskable-192x192.png">
+<link rel="icon" type="image/png" href="images/icon-192x192.png">
 <title>よむよむお題目</title>
 <script src="dq-data.js"></script>
 <style>
@@ -1093,9 +1102,10 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       <div class="tap-drum-wrap" id="manBtn" role="button" tabindex="0" aria-label="お題目カウント">
         <img src="images/CountButton.png" class="tap-drum-img" alt="カウント">
       </div>
-      <!-- モード切替リンク -->
-      <div style="text-align:center;margin-top:.5rem">
+      <!-- モード切替リンク + シェア -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.5rem">
         <button class="btn-s" onclick="showModeSelect()" style="font-size:10px;padding:4px 10px">⇄ モード切替</button>
+        <button class="btn-s" onclick="shareChantRecord()" style="font-size:10px;padding:4px 10px">📤 シェア</button>
       </div>
     </div>
 
@@ -1395,6 +1405,29 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
         <button class="sanga-pray-btn" onclick="sendSangaPrayer('light')">🕯 灯 — あなたの光を消さない</button>
         <button class="sanga-pray-btn" onclick="sendSangaPrayer('merit')">✨ 功徳 — 功徳を分け合う</button>
         <button class="sanga-pray-btn" onclick="sendSangaPrayer('heart')">🌸 共感 — 一緒にいる</button>
+      </div>
+      <!-- カスタムメッセージ（梅以上） -->
+      <div id="sangaCustomMsgArea" style="margin-top:.5rem;display:none">
+        <div style="display:flex;gap:.5rem;align-items:flex-end">
+          <textarea id="sangaCustomInput" rows="2" maxlength="999"
+            placeholder="心を込めたメッセージを送る…"
+            style="flex:1;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+            border-radius:12px;padding:8px 10px;color:rgba(255,255,255,.9);font-size:13px;
+            outline:none;resize:none;font-family:inherit;line-height:1.5"></textarea>
+          <button onclick="sendSangaCustomMsg()" style="flex-shrink:0;padding:8px 14px;
+            border-radius:12px;background:linear-gradient(135deg,rgba(232,121,160,.7),rgba(212,168,67,.6));
+            color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700">送信</button>
+        </div>
+        <div id="sangaCustomHint" style="font-size:9px;color:rgba(255,255,255,.3);margin-top:.3rem"></div>
+      </div>
+      <!-- 無料ユーザー向け: カスタムメッセージのアップセル -->
+      <div id="sangaUpgradeCta" style="margin-top:.5rem;display:none">
+        <button onclick="closeSangaChat();setTimeout(openTierModal,250)"
+          style="width:100%;padding:9px;border-radius:12px;font-size:11px;
+          background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.25);
+          color:rgba(212,168,67,.8);cursor:pointer">
+          💬 梅プラン以上でカスタムメッセージを送れます
+        </button>
       </div>
       <button class="sanga-close-btn" onclick="closeSangaChat()">閉じる</button>
     </div>
@@ -1945,14 +1978,48 @@ function dayDiff(dsA,dsB){
   var a=new Date(dsA+'T12:00:00'),b=new Date(dsB+'T12:00:00');
   return Math.round((b-a)/86400000);
 }
+function hasStreakShield(){
+  var k='yomy_streak_shield';
+  try{var d=JSON.parse(localStorage.getItem(k)||'{}');
+    if(!d.week||!d.used)return false;
+    return d.week===_getWeekStart()&&d.used>0;
+  }catch(e){return false;}
+}
+function consumeStreakShield(){
+  var k='yomy_streak_shield';
+  try{var d=JSON.parse(localStorage.getItem(k)||'{}');
+    if(d.week===_getWeekStart()&&d.used>0){d.used--;localStorage.setItem(k,JSON.stringify(d));}
+  }catch(e){}
+}
+function grantWeeklyStreakShields(){
+  var k='yomy_streak_shield';
+  var tier=getUserTier();
+  var shields={ume:1,take:1,matsu:2,butsu:3}[tier]||0;
+  if(!shields)return;
+  try{var d=JSON.parse(localStorage.getItem(k)||'{}');
+    var ws=_getWeekStart();
+    if(d.week!==ws)d={week:ws,used:shields,max:shields};
+    localStorage.setItem(k,JSON.stringify(d));
+  }catch(e){}
+}
 function processDailyLogin(){
   var t=today();
   if(st.lastLoginBonusDate===t)return false;
+  grantWeeklyStreakShields();
   var prev=st.lastLoginDate||'';
   if(!prev)st.loginStreak=1;
   else if(prev!==t){
     var diff=dayDiff(prev,t);
-    st.loginStreak=diff===1?(st.loginStreak||0)+1:1;
+    if(diff===1){
+      st.loginStreak=(st.loginStreak||0)+1;
+    }else if(diff>1){
+      if(hasStreakShield()&&diff<=2){
+        consumeStreakShield();
+        // 1日休んでもストリーク維持（シールド消費）
+      }else{
+        st.loginStreak=1;
+      }
+    }
   }
   st.lastLoginDate=t;
   st.lastLoginBonusDate=t;
@@ -3106,6 +3173,36 @@ document.querySelectorAll('.tab').forEach(function(btn){
 // ══════════════════════════════════════════════════════════
 //  ホームタブ（モード選択・リング・浮遊テキスト）
 // ══════════════════════════════════════════════════════════
+function shareChantRecord(){
+  var streak=st.loginStreak||0;
+  var merit=fmt(totalMerit());
+  var tier=getUserTier();var td=TIER_DEF[tier]||TIER_DEF.free;
+  var wis=getWisdomLevel();
+  var texts=[
+    '🪷 南無妙法蓮華経 🪷',
+    '今日も唱えました。累計 '+st.totalChants+'回 / 功徳 '+merit,
+    streak>1?'🔥 '+streak+'日連続':'',
+    wis>0?'📜 智慧 Lv.'+wis:'',
+    td.badge+' '+td.name+'プラン',
+    '',
+    '#よむよむお題目 #南無妙法蓮華経 #buddhism'
+  ].filter(Boolean).join('\n');
+  if(navigator.share){
+    navigator.share({title:'よむよむお題目',text:texts,url:location.href}).catch(function(){});
+  }else{
+    navigator.clipboard.writeText(texts).then(function(){
+      var msg=document.createElement('div');
+      msg.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:600;'
+        +'background:rgba(0,0,0,.85);color:#fff;padding:10px 20px;border-radius:50px;font-size:12px;'
+        +'backdrop-filter:blur(16px);pointer-events:none;white-space:nowrap;border:1px solid rgba(255,255,255,.2)';
+      msg.textContent='📋 クリップボードにコピーしました';
+      document.body.appendChild(msg);
+      setTimeout(function(){msg.remove();},2500);
+    }).catch(function(){
+      alert(texts);
+    });
+  }
+}
 function initHomeTab(){
   updateModePill(st.homeMode||'chant');
   if(!st.homeMode){showModeSelect();return;}
@@ -3455,7 +3552,15 @@ function renderNaraiTab(){
   var maxS=30,pct=Math.min(100,Math.round(streak/maxS*100));
   var sf=document.getElementById('naraiStreakFill');if(sf)sf.style.width=pct+'%';
   var sn2=document.getElementById('naraiStreakNext');
-  if(sn2){var nxt=[3,7,14,30].find(function(n){return n>streak;})||'MAX';sn2.textContent='次のブースト: '+nxt+'日連続';}
+  if(sn2){
+    var nxt=[3,7,14,30].find(function(n){return n>streak;})||'MAX';
+    var shieldK='yomy_streak_shield';
+    var shieldInfo='';
+    try{var sd=JSON.parse(localStorage.getItem(shieldK)||'{}');
+      if(sd.week===_getWeekStart()&&sd.used>0)shieldInfo=' · 🛡 シールド×'+sd.used;}
+    catch(e){}
+    sn2.textContent='次のブースト: '+nxt+'日連続'+shieldInfo;
+  }
   var sm=streakMult(),tm2=tierMult();
   var bd=document.getElementById('naraiBoostDisp');
   if(bd)bd.textContent='×'+(sm*tm2*wisdomMult()).toFixed(2);
@@ -3675,6 +3780,20 @@ function openSangaChat(room){
   document.getElementById('sangaHpFill').style.width=Math.round(room.hp/room.maxHp*100)+'%';
   var msgs=document.getElementById('sangaMsgs');
   msgs.innerHTML='<div class="sanga-msg-row"><div class="sanga-avatar">🙏</div><div class="sanga-bubble">あなたの祈りが届きました。一緒にいます。</div></div>';
+  // ティアに応じてカスタムメッセージUI制御
+  var canMsg=hasTierAccess('ume');
+  var customArea=document.getElementById('sangaCustomMsgArea');
+  var upgradeCta=document.getElementById('sangaUpgradeCta');
+  if(customArea)customArea.style.display=canMsg?'block':'none';
+  if(upgradeCta)upgradeCta.style.display=canMsg?'none':'block';
+  if(canMsg){
+    var tier=getUserTier();var td=TIER_DEF[tier]||TIER_DEF.free;
+    var maxChars=td.msgRx>=999?9999:td.msgRx;
+    var inp=document.getElementById('sangaCustomInput');
+    if(inp)inp.setAttribute('maxlength',maxChars);
+    var hint=document.getElementById('sangaCustomHint');
+    if(hint)hint.textContent=maxChars<9999?'最大'+maxChars+'文字（'+td.name+'プラン）':'制限なし（'+td.name+'プラン）';
+  }
   document.getElementById('sangaOverlay').classList.add('show');
 }
 function closeSangaChat(){document.getElementById('sangaOverlay').classList.remove('show');_activeSangaRoom=null;}
@@ -3730,6 +3849,55 @@ function trigLotusBloom(){
     })(i);
   }
 }
+function sendSangaCustomMsg(){
+  if(!_activeSangaRoom)return;
+  var inp=document.getElementById('sangaCustomInput');
+  if(!inp)return;
+  var txt=(inp.value||'').trim();
+  if(!txt)return;
+  var tier=getUserTier();var td=TIER_DEF[tier]||TIER_DEF.free;
+  var maxChars=td.msgRx>=999?9999:td.msgRx;
+  if(txt.length>maxChars){alert('このプランでは最大'+maxChars+'文字まで送信できます');return;}
+  var msgs2=document.getElementById('sangaMsgs');
+  var row=document.createElement('div');
+  row.className='sanga-msg-row';
+  row.style.flexDirection='row-reverse';
+  row.innerHTML='<div class="sanga-avatar" style="margin-left:auto;order:2">🙏</div><div class="sanga-bubble mine">'+escHtml(txt)+'</div>';
+  msgs2.appendChild(row);msgs2.scrollTop=msgs2.scrollHeight;
+  inp.value='';
+  spawnPurifyParticles();
+  _activeSangaRoom.hp=Math.min(_activeSangaRoom.maxHp,(_activeSangaRoom.hp||0)+15);
+  document.getElementById('sangaHpText').textContent=_activeSangaRoom.hp+' / '+_activeSangaRoom.maxHp;
+  document.getElementById('sangaHpFill').style.width=Math.round(_activeSangaRoom.hp/_activeSangaRoom.maxHp*100)+'%';
+  var idx=-1;
+  for(var i=0;i<st.sangaRooms.length;i++){if(st.sangaRooms[i].id===_activeSangaRoom.id){idx=i;break;}}
+  if(idx>=0)st.sangaRooms[idx].hp=_activeSangaRoom.hp;
+  lsS(UK,st);
+  if(_activeSangaRoom.hp>=_activeSangaRoom.maxHp){
+    setTimeout(function(){trigLotusBloom();},200);
+    setTimeout(function(){
+      var comp=document.createElement('div');
+      comp.className='sanga-msg-row';
+      comp.innerHTML='<div class="sanga-avatar">🌸</div>'
+        +'<div class="sanga-bubble" style="background:rgba(232,121,160,.15);'
+        +'border-color:rgba(232,121,160,.35);color:rgba(255,220,240,.95);text-align:center">'
+        +'✨ 浄化されました<br><strong>あなたの蓮が咲きました 🪷</strong></div>';
+      if(msgs2){msgs2.appendChild(comp);msgs2.scrollTop=msgs2.scrollHeight;}
+    },500);
+    setTimeout(function(){
+      st.sangaRooms=st.sangaRooms.filter(function(r){return r.id!==_activeSangaRoom.id;});
+      lsS(UK,st);closeSangaChat();initLotusFloaters();
+    },3200);
+    return;
+  }
+  setTimeout(function(){
+    var reply=document.createElement('div');
+    reply.className='sanga-msg-row';
+    reply.innerHTML='<div class="sanga-avatar">🌊</div><div class="sanga-bubble">あなたのお言葉、心に染みました。ありがとうございます。🪷</div>';
+    msgs2.appendChild(reply);msgs2.scrollTop=msgs2.scrollHeight;
+  },1000);
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function sendSangaPrayer(type){
   if(!_activeSangaRoom)return;
   var msgs=PRAYER_MSGS[type]||['🪷'];
