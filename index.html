@@ -1297,6 +1297,15 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
             🪷 プランをアップグレードして功徳UP
           </button>
         </div>
+        <!-- シェア・招待ボタン -->
+        <div style="display:flex;gap:.5rem;margin-top:.625rem">
+          <button onclick="shareMeritScore()" style="flex:1;padding:9px 6px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:11px;cursor:pointer;font-weight:600">
+            📤 功徳をシェア
+          </button>
+          <button onclick="shareInviteLink()" style="flex:1;padding:9px 6px;border-radius:11px;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.25);color:rgba(212,168,67,.9);font-size:11px;cursor:pointer;font-weight:600">
+            🎁 友達を招待
+          </button>
+        </div>
       </div>
 
       <!-- 読経カレンダー（課金）※一時コメントアウト — mainのUIを移植予定
@@ -2234,6 +2243,31 @@ function showStreakUpgradeCta(days){
   ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
   document.body.appendChild(ov);
 }
+function showFirstTimeCta(){
+  var existing=document.getElementById('firstTimeCtaOverlay');if(existing)existing.remove();
+  var ov=document.createElement('div');
+  ov.id='firstTimeCtaOverlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:flex;align-items:flex-end;justify-content:center';
+  ov.innerHTML='<div style="width:100%;max-width:430px;background:linear-gradient(160deg,#0a0c19,#160a26);border:1px solid rgba(212,168,67,.4);border-radius:22px 22px 0 0;padding:28px 20px 44px">'
+    +'<div style="text-align:center;margin-bottom:18px">'
+    +'<div style="font-size:3rem;margin-bottom:8px">🪷</div>'
+    +'<div style="font-size:1.4rem;font-weight:800;color:#d4a843;font-family:serif;margin-bottom:6px">10回の功徳、積まれました</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.75;margin-bottom:18px">'
+    +'南無妙法蓮華経を唱えるたびに<br>功徳が積み重なっていきます。<br>梅プランで功徳の流れを加速しませんか？</div>'
+    +'<div style="background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.25);border-radius:14px;padding:16px;margin-bottom:16px;text-align:left">'
+    +'<div style="font-size:11px;color:rgba(212,168,67,.8);font-weight:700;letter-spacing:.08em;margin-bottom:10px">🌸 梅プラン ¥480/月 でできること</div>'
+    +'<div style="display:flex;flex-direction:column;gap:8px">'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.85)">🔥 功徳倍率 <strong style="color:#d4a843">×1.1</strong> に増加</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.85)">🛡 連続修行シールド（週1回）</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.85)">💬 サンガで25回メッセージ送信</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.85)">🎋 ダルマクエスト全ステージ開放</div>'
+    +'</div></div>'
+    +'<button onclick="document.getElementById(\'firstTimeCtaOverlay\').remove();openTierModal()" style="width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,rgba(212,168,67,.9),rgba(232,121,160,.8));border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:10px">🌸 梅プランを見る（¥480/月）</button>'
+    +'<button onclick="document.getElementById(\'firstTimeCtaOverlay\').remove()" style="width:100%;padding:12px;border-radius:14px;background:transparent;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer">今は無料のまま続ける</button>'
+    +'</div></div>';
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
 function getNextAuspicious(){
   var t=new Date();
   for(var i=1;i<=62;i++){
@@ -2300,6 +2334,10 @@ function addChants(n){
   checkUnlockThreshold();
   if(_deferredInstallPrompt&&st.totalChants===10&&!lsG('yomy_pwa_dismissed')){
     var pb=document.getElementById('pwaInstallBanner');if(pb)pb.style.display='flex';
+  }
+  if(st.totalChants===10&&getUserTier()==='free'&&!lsG('yomy_onboard_cta_shown')){
+    lsS('yomy_onboard_cta_shown',true);
+    setTimeout(showFirstTimeCta,600);
   }
 }
 function persistLb(){
@@ -3651,6 +3689,7 @@ function renderNaraiTab(){
   if(cl&&cu){cl.style.display=st.calPurchased?'none':'block';cu.style.display=st.calPurchased?'block':'none';}
   var cpb=document.getElementById('calPreviewBtn');if(cpb)cpb.style.display=st.calPurchased?'none':'inline-block';
   if(st.calPurchased)renderCal();
+  renderDailyCard();
 }
 function renderNaraiHeatmap(){
   var g=document.getElementById('naraiHmGrid');if(!g)return;
@@ -4804,25 +4843,156 @@ window.addEventListener('appinstalled',function(){
   if(banner)banner.style.display='none';
   _deferredInstallPrompt=null;
 });
+// iOS Safari 向けホーム画面追加ガイド
+(function(){
+  var isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isSafari=/safari/i.test(navigator.userAgent)&&!/chrome/i.test(navigator.userAgent);
+  var isStandalone=window.navigator.standalone===true;
+  if(isIos&&isSafari&&!isStandalone&&!lsG('yomy_ios_banner_dismissed')&&(st.totalChants||0)>=5){
+    var iosBanner=document.createElement('div');
+    iosBanner.id='iosBanner';
+    iosBanner.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:500;background:linear-gradient(180deg,rgba(10,12,25,.97),rgba(10,8,22,.99));border-top:1px solid rgba(212,168,67,.3);padding:14px 16px 28px;text-align:center';
+    iosBanner.innerHTML='<div style="font-size:12px;color:rgba(255,255,255,.8);line-height:1.7;margin-bottom:8px">'
+      +'🪷 ホーム画面に追加してオフラインでも使えます<br>'
+      +'<span style="color:rgba(212,168,67,.9)">Safari の共有ボタン</span>'
+      +' <span style="font-size:1.1rem">⬆️</span> → 「ホーム画面に追加」</div>'
+      +'<button onclick="lsS(\'yomy_ios_banner_dismissed\',true);this.parentNode.remove()" '
+      +'style="font-size:11px;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer">✕ 閉じる</button>';
+    document.body.appendChild(iosBanner);
+  }
+})();
+
+// ── 通知許可 & Periodic Sync ───────────────────
+function requestNotifPermission(){
+  if(!('Notification' in window)||Notification.permission!=='default')return;
+  // 3日以上連続でアプリを開いた場合にのみ聞く（UX配慮）
+  if((st.loginStreak||0)<3)return;
+  Notification.requestPermission().then(function(perm){
+    if(perm==='granted'){
+      navigator.serviceWorker.ready.then(function(reg){
+        if('periodicSync' in reg){
+          navigator.permissions.query({name:'periodic-background-sync'}).then(function(st2){
+            if(st2.state==='granted'){
+              reg.periodicSync.register('daily-reminder',{minInterval:20*60*60*1000}).catch(function(){});
+            }
+          }).catch(function(){});
+        }
+      }).catch(function(){});
+    }
+  }).catch(function(){});
+}
+// 5秒後に通知許可リクエスト（初回表示UX邪魔しないよう遅延）
+setTimeout(requestNotifPermission,5000);
 
 // ── 今日の教えシェア ───────────────────────────
 function shareDailyTeaching(){
   var content=getTodayContent();
   if(!content)return;
   var streak=st.loginStreak||0;
+  var merit=totalMerit();
+  var appUrl='https://handamin.github.io/yomuyomu/';
   var text='📖 今日の教え\n\n「'+content.title+'」\n\n'+content.body.substring(0,80)+'…'
     +'\n\n🪷 今日の実践：'+content.practice.substring(0,50)+'…'
     +(streak>1?'\n\n🔥 '+streak+'日連続修行中':'')
-    +'\n\n#よむよむお題目 #仏教 #南無妙法蓮華経';
+    +'\n\n#よむよむお題目 #仏教 #南無妙法蓮華経\n'+appUrl;
+  doShare('今日の教え — '+content.title,text,appUrl);
+}
+function shareMeritScore(){
+  var merit=totalMerit(),streak=st.loginStreak||0,tier=getUserTier();
+  var d=TIER_DEF[tier]||TIER_DEF.free;
+  var appUrl='https://handamin.github.io/yomuyomu/';
+  var text='🪷 よむよむお題目 — 今日の功徳\n\n'
+    +'累計功徳: '+fmt(merit)+'\n'
+    +d.badge+' '+d.name+'プラン修行中\n'
+    +(streak>0?'🔥 '+streak+'日連続修行\n':'')
+    +'\n南無妙法蓮華経\n\n'
+    +'#よむよむお題目 #仏教 #南無妙法蓮華経\n'+appUrl;
+  doShare('よむよむお題目 — 累計功徳 '+fmt(merit),text,appUrl);
+}
+function shareInviteLink(){
+  var name=encodeURIComponent(st.userName||'friend');
+  var appUrl='https://handamin.github.io/yomuyomu/?ref='+name;
+  var text='🪷 よむよむお題目 — 一緒に修行しませんか？\n\n'
+    +'毎日の読経を記録して功徳を積むアプリです。\n'
+    +'無料で始められます（課金は任意です）。\n\n'
+    +'招待リンクから始めると +50回分の功徳ボーナスがもらえます！\n\n'
+    +'南無妙法蓮華経 🙏\n'+appUrl;
+  doShare('よむよむお題目 — 招待リンク',text,appUrl);
+}
+function doShare(title,text,url){
   if(navigator.share){
-    navigator.share({title:'今日の教え — '+content.title,text:text,url:location.href}).catch(function(){});
+    navigator.share({title:title,text:text,url:url}).catch(function(){});
   }else{
     navigator.clipboard&&navigator.clipboard.writeText(text).then(function(){
-      var btn=document.querySelector('[onclick="shareDailyTeaching()"]');
-      if(btn){var orig=btn.textContent;btn.textContent='✓ コピー済み';setTimeout(function(){btn.textContent=orig;},2000);}
-    });
+      showToast('クリップボードにコピーしました');
+    }).catch(function(){});
   }
 }
+function showToast(msg){
+  var t=document.createElement('div');
+  t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(30,20,50,.92);color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;z-index:9999;pointer-events:none;transition:opacity .4s';
+  document.body.appendChild(t);
+  setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove();},400);},2000);
+}
+
+// ── Service Worker 登録 ────────────────────────
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/yomuyomu/service-worker.js',{scope:'/yomuyomu/'})
+    .catch(function(){});
+}
+
+// ── URL パラメータ処理（Stripe return / リファラル） ────
+(function(){
+  var params=new URLSearchParams(location.search);
+  var tierParam=params.get('tier');
+  var refParam=params.get('ref');
+  var openParam=params.get('open');
+
+  // Stripe 課金完了 → ティア設定
+  if(tierParam&&['ume','take','matsu','butsu'].indexOf(tierParam)>=0){
+    try{localStorage.setItem('yomy_tier_v1',tierParam);}catch(e){}
+    history.replaceState(null,'',location.pathname);
+    setTimeout(function(){
+      var d=TIER_DEF[tierParam]||TIER_DEF.free;
+      var ov=document.createElement('div');
+      ov.style.cssText='position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center';
+      ov.innerHTML='<div style="text-align:center;padding:2rem 1.5rem;max-width:320px">'
+        +'<div style="font-size:3.5rem;margin-bottom:12px">'+d.badge+'</div>'
+        +'<div style="font-size:1.4rem;font-weight:800;color:#d4a843;font-family:serif;margin-bottom:8px">'+d.name+'プランへようこそ！</div>'
+        +'<div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.8;margin-bottom:18px">'
+        +'ご支援ありがとうございます。<br>功徳倍率 ×'+d.mult.toFixed(2)+' が適用されました。<br>南無妙法蓮華経 🙏</div>'
+        +'<button onclick="this.parentNode.parentNode.remove();updateHdrTier();" '
+        +'style="padding:13px 32px;border-radius:50px;background:linear-gradient(135deg,rgba(212,168,67,.9),rgba(232,121,160,.8));border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer">修行を続ける</button>'
+        +'</div>';
+      document.body.appendChild(ov);
+      updateHdrTier();
+    },800);
+  }
+
+  // リファラル記録（友人からの紹介リンク）
+  if(refParam&&!lsG('yomy_referred_by')){
+    lsS('yomy_referred_by',refParam);
+    // 紹介ボーナス: 50功徳ポイント付与
+    var t2=today();st.daily[t2]=(st.daily[t2]||0)+50;st.totalChants+=50;
+    lsS(UK,st);
+    history.replaceState(null,'',location.pathname);
+    setTimeout(function(){showToast('🎁 紹介ボーナス +50回分の功徳が付与されました！');},1200);
+  }
+
+  // DQ→メインアプリ: ティアモーダル開く
+  if(openParam==='tier'){
+    history.replaceState(null,'',location.pathname);
+    setTimeout(openTierModal,600);
+  }
+})();
+
+// ── DQ postMessage 受信 ─────────────────────────
+window.addEventListener('message',function(e){
+  if(e.data&&e.data.type==='openTierModal'){
+    openTierModal();
+  }
+});
 </script>
 </body>
 </html>
