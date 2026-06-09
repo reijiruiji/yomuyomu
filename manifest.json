@@ -1,15 +1,16 @@
 {
-  "name": "よむよむお題目 - Yomuyomu Odaimoku",
+  "name": "よむよむお題目",
   "short_name": "よむよむ",
-  "description": "法華経勤行・念仏カウンター・功徳ポイント",
+  "description": "法華経勤行・お題目カウンター・蓮池サンガ・仏典探求RPG",
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#2d7a4a",
-  "background_color": "#f0f5f1",
+  "theme_color": "#07080f",
+  "background_color": "#07080f",
   "dir": "ltr",
   "lang": "ja-JP",
+  "categories": ["lifestyle", "health", "education"],
   "icons": [
     {
       "src": "/images/icon-192x192.png",
@@ -36,5 +37,6 @@
       "purpose": "maskable"
     }
   ],
+  "screenshots": [],
   "prefer_related_applications": false
 }
