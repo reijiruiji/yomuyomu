@@ -2,8 +2,8 @@
   "name": "よむよむお題目",
   "short_name": "よむよむ",
   "description": "法華経勤行・お題目カウンター・蓮池サンガ・仏典探求RPG",
-  "start_url": "/index.html",
-  "scope": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#07080f",
@@ -13,25 +13,25 @@
   "categories": ["lifestyle", "health", "education"],
   "icons": [
     {
-      "src": "/images/icon-192x192.png",
+      "src": "./images/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/images/icon-512x512.png",
+      "src": "./images/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/images/icon-maskable-192x192.png",
+      "src": "./images/icon-maskable-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/images/icon-maskable-512x512.png",
+      "src": "./images/icon-maskable-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
