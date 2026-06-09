@@ -2858,7 +2858,7 @@ function renderQuestCard(){
     '</div>';
 }
 function openQuest(){
-  window.open('dharma_quest_v2.html','_blank');
+  window.open('dharma_quest_v7.html','_blank');
 }
 
 // 決済成功リダイレクト処理
@@ -2896,6 +2896,10 @@ function openQuest(){
     recordPremiumPass(parseInt(params.get('months')||1,10));
   }
   if(tier||paid)history.replaceState({},'',location.pathname);
+  var open=params.get('open');
+  if(open==='tier'){history.replaceState({},'',location.pathname);setTimeout(openTierModal,600);}
+  // message from DQ child window
+  window.addEventListener('message',function(e){if(e.data&&e.data.type==='openTierModal')openTierModal();});
 })();
 
 // ══════════════════════════════════════════════════════════

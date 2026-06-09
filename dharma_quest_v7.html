@@ -307,6 +307,22 @@ var STAGES = [
     color: '#F0C84A',
     scriptures: ['dhp-nibbana','bg-karma','satya'],
     quiz_id: 'q_s4',
+  },
+  {
+    id: 's5',
+    rank_ja: '菩薩道', rank_en: 'Bodhisattva Path',
+    icon: '🌸',
+    pali: 'bodhisatta-magga',
+    tier_required: 'take',
+    freed_ja: '四弘誓願（菩薩の誓い）：\n① 衆生無辺誓願度（あらゆる衆生を救う）\n② 煩悩無尽誓願断（無尽の煩悩を断つ）\n③ 法門無量誓願学（無量の法門を学ぶ）\n④ 仏道無上誓願成（無上の仏道を成す）',
+    freed_en: 'Four Great Vows (Bodhisattva Vows):\n① To save all sentient beings — however numberless\n② To cut all defilements — however inexhaustible\n③ To master all dharma gates — however immeasurable\n④ To attain the unsurpassed Buddha Way',
+    samsara_ja: '菩薩は慈悲の力で自ら衆生のために輪廻に留まる——智慧と慈悲の完成へ',
+    samsara_en: 'The bodhisattva voluntarily returns to saṃsāra out of compassion — perfecting wisdom and compassion together',
+    desc_ja: '自分一人の解脱（小乗）を超え、一切衆生の救済を誓う大乗の理想。南無妙法蓮華経は、すべての衆生が仏性を持ち成仏できるという法華経の核心を唱える。功徳は自分だけのものではなく、三世十方の衆生へ回向される。',
+    desc_en: 'Beyond individual liberation: the Mahāyāna vow to liberate all beings. Namu-Myōhō-Renge-Kyō embodies the Lotus Sūtra\'s core — all beings possess Buddha-nature. Merit is not kept for oneself but dedicated (ekō) to all sentient beings across time and space.',
+    color: '#D070FF',
+    scriptures: ['lotus-hoben','prajna-hrt'],
+    quiz_id: 'q_s5',
   }
 ];
 
@@ -525,6 +541,47 @@ var QUIZZES = {
         ans: 0,
         exp_ja: '上分結（⑥色貪〜⑩無明）すべてを断じると阿羅漢果。「三界には戻らず輪廻から解放」。',
         exp_en: 'When all upper fetters (⑥-⑩) are released: Arahantship. "Released from all three realms, samsāra ends."',
+      },
+    ]
+  },
+  q_s5: {
+    title_ja: '菩薩道チェック', title_en: 'Bodhisattva Path Check',
+    questions: [
+      {
+        q_ja: '大乗仏教の「菩薩（ぼさつ）」の語源は？',
+        q_en: 'What is the etymology of Mahāyāna "bodhisattva"?',
+        choices_ja: ['bodhi（悟り）＋sattva（有情・生き物）', 'buddha（覚者）＋sata（百）', 'bodha（知恵）＋satva（真実）', 'brahma（梵）＋sattva（善）'],
+        choices_en: ['bodhi (awakening) + sattva (being, sentient being)', 'buddha (awakened) + sata (hundred)', 'bodha (wisdom) + satva (truth)', 'brahma (sacred) + sattva (goodness)'],
+        ans: 0,
+        exp_ja: 'bodhi（悟り・菩提）＋sattva（有情・生き物）。「悟りを求める者・衆生」。慈悲の力で衆生とともに在る存在。',
+        exp_en: 'bodhi (awakening/enlightenment) + sattva (being). "A being aimed at awakening." One who remains with beings out of compassion.',
+      },
+      {
+        q_ja: '法華経（Saddharmapuṇḍarīka）の「pundarīka」の意味は？',
+        q_en: 'What does "puṇḍarīka" mean in the Lotus Sūtra\'s title?',
+        choices_ja: ['白蓮の花（清らかさの象徴）', '金色の蓮', '炎の花', '星の光'],
+        choices_en: ['White lotus flower (symbol of purity)', 'Golden lotus', 'Flame flower', 'Starlight'],
+        ans: 0,
+        exp_ja: 'puṇḍarīka = 白蓮。泥の中から汚れずに咲く蓮は、煩悩の中にあって清らかな仏性の象徴。「蓮のように世間にあって汚れない」。',
+        exp_en: 'puṇḍarīka = white lotus. Rising pure from muddy water — the symbol of Buddha-nature unsullied by defilements. "In the world, yet undefiled."',
+      },
+      {
+        q_ja: '般若心経の「空（śūnyatā）」が意味することは？',
+        q_en: 'What does "śūnyatā" (emptiness) mean in the Heart Sutra?',
+        choices_ja: ['すべての現象には固定した実体（自性）がない', '何も存在しない', '心が空っぽになること', '三昧の静寂'],
+        choices_en: ['All phenomena lack inherent, fixed self-nature (svabhāva)', 'Nothing exists', 'The mind becoming empty', 'The silence of samādhi'],
+        ans: 0,
+        exp_ja: 'śūnya（空）＝固有の実体がないこと。「色即是空、空即是色」——形あるものは空であり、空こそが形として現れる。「無」ではなく「無自性」。',
+        exp_en: 'śūnya (empty) = lacking svabhāva (inherent self-nature). "Form is emptiness, emptiness is form." Not nihilism — rather the freedom of interdependence.',
+      },
+      {
+        q_ja: '「回向（ekō）」とは何か？',
+        q_en: 'What is "ekō" (merit dedication, 回向)?',
+        choices_ja: ['功徳を一切衆生へ振り向けること', '修行をやめること', '功徳を自分だけのものにすること', '輪廻から逃れること'],
+        choices_en: ['Dedicating one\'s merit to all sentient beings', 'Ceasing one\'s practice', 'Keeping merit only for oneself', 'Escaping the cycle of rebirth'],
+        ans: 0,
+        exp_ja: '回向（ekō / pariṇāmanā）——積んだ功徳を自分だけのものにせず、三世十方の一切衆生へ回し向けること。菩薩行の核心。',
+        exp_en: 'Ekō (pariṇāmanā) — turning one\'s accumulated merit outward to all beings in all times and places. The core of the bodhisattva path.',
       },
     ]
   }
@@ -811,6 +868,50 @@ var SCRIPTURES = [
     ],
     summary_ja:'十の束縛が輪廻をつなぎとめる。四向四果の修行によってこれらが段階的に解放され、最終的に阿羅漢果で完全解脱が実現する。',
     summary_en:'Ten fetters bind us to samsāra. Through the four stages of the path, they are progressively released, culminating in complete liberation at arahantship.'
+  },
+  {
+    id:'lotus-hoben', icon:'🌸', collection:'法華経', ref:'方便品 第二',
+    theme_ja:'一切衆生の成仏・仏性', theme_en:'All beings can attain Buddhahood',
+    title_ja:'唯一仏乗——開三顕一', title_en:'Ekayāna — One Vehicle for All',
+    iyaku_ja:'十方の仏土に在って、ただ一乗の法のみがある。\n二つも三つもない。\n——これが諸仏の方便の教えを除いた、\n真実の教えである。',
+    iyaku_en:'Throughout all Buddha-lands in the ten directions\nthere is only the One Vehicle (ekayāna).\nThere is no second or third.\nExcept as the skillful means of the Buddhas.',
+    ctx_ja:'法華経方便品（Saddharmapuṇḍarīka-sūtra, Upāya-kauśalya）。「三乗（声聞・縁覚・菩薩）はすべて仮の方便であり、唯一の仏乗に帰する」という開三顕一の教え。南無妙法蓮華経はこの法華経を題名としている。',
+    ctx_en:'Lotus Sūtra, Chapter 2 (Upāya). The "opening of three to reveal one": the three vehicles (srāvaka, pratyekabuddha, bodhisattva) are all skillful means (upāya), ultimately pointing to the One Buddha Vehicle. Namu-Myōhō-Renge-Kyō is the title of this very sūtra.',
+    lines:[
+      {pali:'Saddharmapuṇḍarīka-sūtra',words:[
+        {w:'Saddharma',pos_ja:'複合名詞',pos_en:'compound noun',m_ja:'正法・妙法',m_en:'True Dharma, Wonderful Dharma',ety_ja:'sat（真実・正しい）＋dharma（法）。日本語「妙法」は「不可思議な真理の法」',ety_en:'sat (true, good) + dharma (truth, law). Japanese 妙法 = "wondrously true dharma"',note_ja:'日本語タイトル「妙法蓮華経（Myōhō Renge Kyō）」の「妙法」はsaddharmの漢訳。',note_en:'The Japanese title 妙法蓮華経 translates saddharma as 妙法 (wondrous dharma).'},
+        {w:'puṇḍarīka',pos_ja:'名詞',pos_en:'noun',m_ja:'白蓮の花',m_en:'white lotus flower',ety_ja:'清らかさの究極の象徴。泥水から生まれながら汚れを受けない',ety_en:'The supreme symbol of purity — born in muddy water, yet unstained',note_ja:'「南無妙法蓮華経」の「蓮華（Renge）」がこれに対応。',note_en:'Corresponds to 蓮華 (Renge) in Namu-Myōhō-Renge-Kyō.'},
+        {w:'sūtra',pos_ja:'名詞',pos_en:'noun',m_ja:'経・糸',m_en:'thread, discourse',ety_ja:'√siv（縫う・つなぐ）。教えを「つなぐ糸」の比喩。英語sew、suture（縫合）と同語根',ety_en:'From √siv (to sew, connect). The "thread" that connects teachings. Cognate with English "sew" and "suture".',note_ja:'「お経」の「経」はこの訳語。',note_en:'The Japanese 経 (kyō) translates this word.'}
+      ]},
+      {pali:'Ekayāna — 唯一仏乗',words:[
+        {w:'Eka',pos_ja:'数詞',pos_en:'numeral',m_ja:'一つの',m_en:'one, single',ety_ja:'英語 one、ラテン語 unus、ギリシャ語 oinos と同語根（印欧祖語 *oinos）',ety_en:'Cognate with English "one", Latin unus, Greek oinos. All from PIE *oinos.',note_ja:'「一乗」の「一」がこれ。三乗を超えた唯一の乗り物。',note_en:'The "one" in "One Vehicle." The single path beyond the three vehicles.'},
+        {w:'yāna',pos_ja:'名詞',pos_en:'noun',m_ja:'乗り物・道',m_en:'vehicle, path',ety_ja:'√yā（行く）から。「走らせるもの・道」。ゾロアスター教の聖典「アヴェスター」にも同語根',ety_en:'From √yā (to go). "That which carries one forward." Same root in Avestan, the Zoroastrian scripture.',note_ja:'大乗（Mahāyāna）の「乗」。Mahā=大きい、yāna=乗り物。',note_en:'The yāna in Mahāyāna (Great Vehicle). Mahā = great, yāna = vehicle.'}
+      ]}
+    ],
+    summary_ja:'唯一の仏乗——すべての衆生が成仏できる。法華経の中心命題。「南無妙法蓮華経」はこの経の名を唱えること。',
+    summary_en:'One Vehicle for all — every being can attain Buddhahood. The central teaching of the Lotus Sūtra. Chanting Namu-Myōhō-Renge-Kyō is invoking this sūtra\'s name itself.'
+  },
+  {
+    id:'prajna-hrt', icon:'💎', collection:'般若心経', ref:'Prajñāpāramitā-hṛdaya',
+    theme_ja:'空・般若——形と空の関係', theme_en:'Śūnyatā — form and emptiness',
+    title_ja:'色即是空、空即是色', title_en:'Form is emptiness, emptiness is form',
+    iyaku_ja:'形あるものは空であり\n空こそが形である。\n感受・想い・意志・識も\nまた同様である。',
+    iyaku_en:'Form is emptiness.\nEmptiness is form.\nThe same is true of feeling,\nperception, volition, and consciousness.',
+    ctx_ja:'般若心経（Prajñāpāramitā-hṛdaya Sūtra）。「色（物質・形）は空であり、空は色として現れる」——これは虚無主義ではなく、固定した自性（svabhāva）がないということ。固定した実体がないからこそ、変化・成長・成仏が可能になる。',
+    ctx_en:'Heart Sutra (Prajñā-pāramitā-hṛdaya). "Form is emptiness, emptiness is form." Not nihilism — rather: lacking fixed self-nature (svabhāva) means everything can change, grow, and ultimately awaken.',
+    lines:[
+      {pali:'rūpaṃ śūnyatā śūnyatā eva rūpam',words:[
+        {w:'rūpaṃ',pos_ja:'名詞・主格',pos_en:'noun, nominative',m_ja:'色・形あるもの',m_en:'form, matter, the material',ety_ja:'√rūp（形づくる）から。五蘊（色・受・想・行・識）の第一。',ety_en:'From √rūp (to form, shape). The first of the five aggregates (skandhas).',note_ja:'五蘊の「色蘊（しきうん）」。物質・肉体・形あるもの。',note_en:'The first skandha (aggregate) — matter, body, material form.'},
+        {w:'śūnyatā',pos_ja:'名詞・主格',pos_en:'noun, nominative',m_ja:'空・空性',m_en:'emptiness, voidness',ety_ja:'śūnya（空の）＋tā（～性）。「固有の実体がないこと」',ety_en:'śūnya (empty) + tā (abstract suffix). "The quality of lacking inherent existence."',note_ja:'「無」（nothing）ではなく「無自性」（no fixed self-nature）。縁起と表裏一体の概念。',note_en:'Not "nothingness" but "no inherent self-nature." The flip side of pratītyasamutpāda (dependent origination).'},
+        {w:'eva',pos_ja:'強調不変化詞',pos_en:'emphatic particle',m_ja:'まさに・ほかならぬ',m_en:'indeed, exactly',note_ja:'「空即是色」と「色即是空」の等号として機能する語。',note_en:'Functions as the "=" sign between śūnyatā and rūpa in both directions.'}
+      ]},
+      {pali:'prajñāpāramitā',words:[
+        {w:'prajñā',pos_ja:'名詞',pos_en:'noun',m_ja:'般若・智慧',m_en:'wisdom, insight',ety_ja:'pra（完全に）＋√jñā（知る）。サンスクリット jñāna、英語 know、gnosis と同語根（印欧祖語 *gno-）',ety_en:'pra (fully) + √jñā (to know). Cognate with Sanskrit jñāna, Greek gnosis, English "know", Latin gnoscere. PIE root *gno-.',note_ja:'パーリ語 paññā と同語。三学（戒・定・慧）の「慧」。',note_en:'Same as Pāli paññā. The "wisdom" in the three trainings (sīla, samādhi, paññā).'},
+        {w:'pāramitā',pos_ja:'名詞',pos_en:'noun',m_ja:'波羅蜜・彼岸へ至ること',m_en:'perfection, reaching the far shore',ety_ja:'pāra（彼岸・向こう岸）＋ita（行った者）。「此岸（苦の世界）から彼岸（涅槃）へ渡ること」',ety_en:'pāra (far shore, beyond) + ita (gone). "Having gone to the far shore" — from this shore of suffering to the far shore of nibbāna.',note_ja:'六波羅蜜（布施・持戒・忍辱・精進・禅定・般若）の「波羅蜜」。',note_en:'The pāramitā in the Six Perfections (dāna, śīla, kṣānti, vīrya, dhyāna, prajñā).'}
+      ]}
+    ],
+    summary_ja:'色即是空、空即是色——形と空は対立しない。固有の実体がないからこそ、変化し、成長し、成仏できる。',
+    summary_en:'Form is emptiness, emptiness is form. No opposition — lacking fixed self-nature is precisely what enables change, growth, and awakening.'
   }
 ];
 
@@ -824,9 +925,16 @@ var BADGES = [
   {id:'b6',icon:'🏯',name_ja:'不還果',name_en:'Non-Returner',desc_ja:'Stage 3 クリア',desc_en:'Stage 3 cleared',cond:function(s){return s.stagesDone.has('s3')}},
   {id:'b7',icon:'🪷',name_ja:'阿羅漢',name_en:'Arahant',desc_ja:'Stage 4 クリア——解脱！',desc_en:'Stage 4 cleared — Liberation!',cond:function(s){return s.stagesDone.has('s4')}},
   {id:'b8',icon:'⛓️',name_ja:'十結を知る者',name_en:'Knower of Ten Fetters',desc_ja:'十結の原典を読む',desc_en:'Read the Ten Fetters scripture',cond:function(s){return s.read.has('ten-fetters')}},
-  {id:'b9',icon:'🌌',name_ja:'聖域の守護者',name_en:'Sacred Keeper',desc_ja:'プレミアム加入',desc_en:'Premium member',cond:function(s){return s.premium}},
+  {id:'b9',icon:'🌌',name_ja:'聖域の守護者',name_en:'Sacred Keeper',desc_ja:'梅プラン以上',desc_en:'Ume plan or above',cond:function(s){return s.premium||hasTierAccess('ume')}},
   {id:'b10',icon:'💎',name_ja:'全原典読破',name_en:'All Read',desc_ja:'すべての原典を読む',desc_en:'Read all scriptures',cond:function(s){return s.read.size>=SCRIPTURES.length}},
+  {id:'b11',icon:'🌸',name_ja:'菩薩',name_en:'Bodhisattva',desc_ja:'菩薩道クリア',desc_en:'Bodhisattva Path cleared',cond:function(s){return s.stagesDone.has('s5')}},
 ];
+
+// ── Tier bridge (reads main app's localStorage) ──────────────
+function getUserTier(){try{return localStorage.getItem('yomy_tier_v1')||'free';}catch(e){return 'free';}}
+var TIER_ORDER=['free','ume','take','matsu','butsu'];
+function hasTierAccess(minTier){return TIER_ORDER.indexOf(getUserTier())>=TIER_ORDER.indexOf(minTier);}
+function getTierName_ja(){var m={free:'無料',ume:'梅',take:'竹',matsu:'松',butsu:'仏'};return m[getUserTier()]||'無料';}
 
 // ── STATE ────────────────────────────────────
 var S = {
@@ -834,7 +942,7 @@ var S = {
   read: new Set(),
   stagesDone: new Set(),
   earnedBadges: new Set(),
-  premium: false,
+  premium: hasTierAccess('ume'),
   quizResults: {},  // quiz_id -> {passed, bestScore}
 };
 var XP_LV = [0,80,200,380,600,900,1300];
@@ -993,9 +1101,11 @@ function renderMap(){
        +'<div style="font-size:var(--fs-sm);color:rgba(250,244,232,.45);margin-bottom:18px">'+(j?'四向四果の修行ロードマップ':'The Four Paths and Four Fruits')+'</div>';
 
   STAGES.forEach(function(stage,i){
-    var unlocked = i===0 || S.stagesDone.has(STAGES[i-1].id);
+    var tierOk = !stage.tier_required || hasTierAccess(stage.tier_required);
+    var unlocked = tierOk && (i===0 || S.stagesDone.has(STAGES[i-1].id));
     var done = S.stagesDone.has(stage.id);
     var qr = S.quizResults[stage.quiz_id]||{};
+    var tierLocked = stage.tier_required && !hasTierAccess(stage.tier_required);
 
     // 結カード（解放される煩悩）
     var freedLines=(j?stage.freed_ja:stage.freed_en).split('\n').map(function(l){
@@ -1003,7 +1113,7 @@ function renderMap(){
     }).join('');
     var samsaraLine=j?stage.samsara_ja:stage.samsara_en;
 
-    h+='<div class="stage-card'+(done?' done':unlocked?'':' locked')+'" style="border-color:'+(done?'var(--jade2)':unlocked?stage.color:'rgba(255,255,255,.15)'+'"')+'">';
+    h+='<div class="stage-card'+(done?' done':unlocked?'':' locked')+'" style="border-color:'+(done?'var(--jade2)':tierLocked?'rgba(208,112,255,.35)':unlocked?stage.color:'rgba(255,255,255,.15)')+'">';
 
     // ヘッダー
     h+='<div class="stage-header">'
@@ -1012,10 +1122,21 @@ function renderMap(){
       +'<div style="font-family:var(--serif);font-size:1rem;font-weight:900;color:'+(done?'var(--jade2)':unlocked?'var(--cream)':'rgba(255,255,255,.3)')+'">'+stage.icon+' '+(j?stage.rank_ja:stage.rank_en)+'</div>'
       +'<div style="font-size:var(--fs-xs);color:rgba(250,244,232,.45);font-style:italic;margin-top:2px">'+stage.pali+'</div>'
       +'</div>'
-      +(done?'<div style="color:var(--jade2);font-weight:800;font-size:1rem">✓</div>':!unlocked?'<div style="color:rgba(255,255,255,.25);font-size:1.1rem">🔒</div>':'')
+      +(done?'<div style="color:var(--jade2);font-weight:800;font-size:1rem">✓</div>':!unlocked?'<div style="color:'+(tierLocked?'rgba(208,112,255,.6)':'rgba(255,255,255,.25)')+';font-size:1.1rem">🔒</div>':'')
       +'</div>';
 
-    if(unlocked){
+    if(tierLocked){
+      // Tier upgrade CTA
+      var tierName=j?'竹プラン以上':'Take plan or above';
+      h+='<div style="text-align:center;padding:14px 8px">'
+        +'<div style="font-size:var(--fs-sm);color:rgba(208,112,255,.8);margin-bottom:10px;line-height:1.6">'
+        +(j?'🔒 このステージは <strong>竹プラン（¥680/月）</strong> 以上でアンロックされます':'🔒 Unlock with <strong>Take Plan (¥680/mo)</strong> or above')+'</div>'
+        +'<div style="font-size:var(--fs-xs);color:rgba(250,244,232,.4);margin-bottom:12px;line-height:1.5">'
+        +(j?'菩薩道の智慧：法華経・般若心経・大乗仏教の全原典へのアクセス':'Bodhisattva wisdom: access all Mahāyāna scriptures')+'</div>'
+        +'<button onclick="openUpgradePage()" style="width:100%;padding:13px;border-radius:var(--r-md);border:none;background:linear-gradient(135deg,rgba(208,112,255,.8),rgba(139,47,201,.7));color:#fff;font-family:var(--round);font-size:var(--fs-sm);font-weight:800;cursor:pointer;letter-spacing:.04em">'
+        +(j?'🌸 よむよむアプリで竹プランへ':'🌸 Upgrade in the Yomuyomu App')+'</button>'
+        +'</div>';
+    } else if(unlocked){
       // desc
       h+='<div style="font-size:var(--fs-sm);color:rgba(250,244,232,.65);line-height:1.7;margin-bottom:12px">'+(j?stage.desc_ja:stage.desc_en)+'</div>';
 
@@ -1060,12 +1181,24 @@ function renderMap(){
     }
   });
 
-  // 全クリア
-  if(S.stagesDone.size>=STAGES.length){
-    h+='<div style="text-align:center;padding:28px 16px;background:linear-gradient(135deg,rgba(212,168,67,.1),rgba(212,168,67,.04));border:1px solid rgba(212,168,67,.35);border-radius:var(--r-lg);margin-top:12px">'
-      +'<div style="font-size:3rem;margin-bottom:10px">🪷</div>'
-      +'<div style="font-family:var(--serif);font-size:1.3rem;font-weight:900;color:var(--gold);margin-bottom:8px">'+(j?'解脱！阿羅漢果達成':'Liberation Attained — Arahantship!')+'</div>'
-      +'<div style="font-size:var(--fs-sm);color:rgba(250,244,232,.65);line-height:1.7">'+(j?'十結すべてが断たれました。三界には戻らない。':'All ten fetters released. No return to the three realms.')+'</div>'
+  // 阿羅漢果達成バナー（s0〜s4クリア）
+  var arahantDone=S.stagesDone.has('s4');
+  var bodhiDone=S.stagesDone.has('s5');
+  if(arahantDone&&!bodhiDone){
+    h+='<div style="text-align:center;padding:22px 16px;background:linear-gradient(135deg,rgba(212,168,67,.1),rgba(212,168,67,.04));border:1px solid rgba(212,168,67,.35);border-radius:var(--r-lg);margin-top:12px">'
+      +'<div style="font-size:2.6rem;margin-bottom:8px">🪷</div>'
+      +'<div style="font-family:var(--serif);font-size:1.2rem;font-weight:900;color:var(--gold);margin-bottom:6px">'+(j?'解脱！阿羅漢果達成':'Liberation — Arahantship Attained!')+'</div>'
+      +'<div style="font-size:var(--fs-sm);color:rgba(250,244,232,.65);line-height:1.7;margin-bottom:14px">'+(j?'十結すべてが断たれました。次は菩薩の道へ。':'All ten fetters released. Now the Bodhisattva Path awaits.')+'</div>'
+      +(hasTierAccess('take')?''
+        :'<button onclick="openUpgradePage()" style="padding:12px 24px;border-radius:var(--r-md);border:none;background:linear-gradient(135deg,rgba(208,112,255,.8),rgba(139,47,201,.7));color:#fff;font-size:var(--fs-sm);font-weight:800;cursor:pointer">'
+        +(j?'🌸 菩薩道へ進む（竹プラン）':'🌸 Enter Bodhisattva Path (Take Plan)')+'</button>')
+      +'</div>';
+  }
+  if(bodhiDone){
+    h+='<div style="text-align:center;padding:28px 16px;background:linear-gradient(135deg,rgba(208,112,255,.12),rgba(212,168,67,.08));border:1px solid rgba(208,112,255,.4);border-radius:var(--r-lg);margin-top:12px">'
+      +'<div style="font-size:3rem;margin-bottom:10px">🌸</div>'
+      +'<div style="font-family:var(--serif);font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,#D070FF,#F0C84A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px">'+(j?'菩薩道完成——一切衆生の救済へ':'Bodhisattva Path Complete — Saving All Beings')+'</div>'
+      +'<div style="font-size:var(--fs-sm);color:rgba(250,244,232,.65);line-height:1.7">'+(j?'功徳はすべての衆生へ回向されます。南無妙法蓮華経。':'Merit is dedicated to all sentient beings. Namu-Myōhō-Renge-Kyō.')+'</div>'
       +'</div>';
   }
 
@@ -1326,7 +1459,19 @@ function runToast(){
 function openModal(){document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show')}
 function selPlan(p){toast(p==='yearly'?'✦ Yearly plan':'Monthly plan')}
-function activatePremium(){S.premium=true;document.getElementById('modal').classList.remove('show');toast('🌌 Premium activated!');checkBadges();renderHUD()}
+function activatePremium(){
+  try{localStorage.setItem('yomy_tier_v1','ume');}catch(e){}
+  S.premium=true;
+  document.getElementById('modal').classList.remove('show');
+  toast('🌸 '+(LANG==='ja'?'梅プランへようこそ！':'Welcome to Ume plan!'));
+  checkBadges();renderHUD();
+}
+function openUpgradePage(){
+  // Redirect to main app tier upgrade
+  var url='index.html?open=tier';
+  try{if(window.opener&&!window.opener.closed){window.opener.postMessage({type:'openTierModal'},location.origin);window.close();return;}}catch(e){}
+  window.open(url,'_blank');
+}
 
 // ── INIT ─────────────────────────────────────
 loadDQ();
