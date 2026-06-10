@@ -150,15 +150,8 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .hue-track::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;
   background:rgba(255,255,255,.9);border:2px solid rgba(255,255,255,.6);cursor:pointer;
   box-shadow:0 2px 8px rgba(0,0,0,.4);}
-.app-hd{display:flex;align-items:center;padding:.7rem 1rem;
-  background:rgba(7,8,15,.65);
-  backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);
-  border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 20px rgba(0,0,0,.25);}
-.app-logo{font-size:14px;font-weight:700;
-  background:linear-gradient(135deg,rgba(255,255,255,.95) 30%,var(--a));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.app-sub{font-size:10px;color:var(--mu);margin-top:1px;}
+/* ヘッダー非表示：ロゴ削除、ティアバッジのみtop-rightに残す */
+.app-hd{display:none;}
 /* ── ボトムナビ ── */
 .tabs{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:200;
   background:rgba(4,5,12,.78);
@@ -180,7 +173,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   width:60px;height:30px;
   background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.08) 0%,transparent 70%);
   pointer-events:none;}
-.tc{display:none;padding:.875rem;padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
+.tc{display:none;padding:.875rem;padding-top:max(50px,calc(env(safe-area-inset-top,0px) + 44px));padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
 .tc.on{display:block;}
 .card{
   background:rgba(255,255,255,.11);
@@ -521,12 +514,12 @@ body.dark .crk.ta{color:#ef9a9a;}
 /* ── 時間帯別背景 ── */
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;opacity:.7;}
 /* ── 太鼓ボタン ── */
-.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:calc(.5rem - 10mm) auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
+.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:calc(.5rem - 22px) auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
 .tap-drum-img{width:clamp(225px,78vw,330px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;will-change:transform;}
 @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
 .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
 .tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(225px,78vw,330px);height:clamp(225px,78vw,330px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
-@keyframes drum-ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(3);opacity:0}}
+@keyframes drum-ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
 /* ── 100回達成 大演出 ── */
 @keyframes milestone100Flash{
   0%{opacity:0;}12%{opacity:.85;}55%{opacity:.6;}100%{opacity:0;}}
@@ -544,8 +537,7 @@ body.dark .crk.ta{color:#ef9a9a;}
 /* ── リッチモード（背景画像時）── dark glass ベースで透明度を調整 ── */
 body.rich .card,body.rich .card-a{
   background:rgba(8,8,18,.55);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);}
-body.rich .app-hd{
-  background:rgba(8,8,18,.6);backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);}
+
 body.rich .tabs{
   background:rgba(8,8,18,.65);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);}
 body.rich #mpanel{
@@ -567,8 +559,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 /* ── Quest タブ：スクロールなし全画面 ── */
 #tc-quest.on{
   display:flex;flex-direction:column;
-  height:calc(100dvh - 50px - 60px - env(safe-area-inset-bottom,0px));
-  padding:.5rem .875rem 0;overflow:hidden;
+  height:calc(100dvh - 60px - env(safe-area-inset-bottom,0px));
+  padding:max(50px,calc(env(safe-area-inset-top,0px) + 44px)) .875rem 0;overflow:hidden;
   /* dqview-map が overflow-y:auto を持つため、マップはそちらでスクロールする */
 }
 /* ── DQ Duolingo パス ── */
@@ -982,8 +974,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   <div id="mbtn" onclick="togMenu()"><div class="hbl"></div><div class="hbl"></div><div class="hbl"></div></div>
   <div id="mover" onclick="togMenu()"></div>
   <div id="mpanel">
-    <h3 style="font-size:13px;font-weight:600;color:var(--a);margin-bottom:.25rem" id="menuName"></h3>
-    <p style="font-size:10px;color:var(--mu);margin-bottom:.875rem" id="menuSub"></p>
+    <h3 style="font-size:13px;font-weight:600;color:var(--a);margin-bottom:.1rem" id="menuName"></h3>
+    <p style="font-size:10px;color:var(--mu);margin-bottom:.625rem" id="menuSub">功徳 0 🌸</p>
     <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
     <p style="font-size:11px;color:var(--mu);margin-bottom:.4rem">お名前変更</p>
     <div class="rpair"><input type="text" id="nameChange" placeholder="新しいお名前"><button class="btn-s" onclick="changeName()">変更</button></div>
@@ -1212,7 +1204,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       <button class="gc-diff-btn active" id="gcDiff1" onclick="setGcDiff(1)">普通</button>
       <button class="gc-diff-btn" id="gcDiff2" onclick="setGcDiff(2)">難しい</button>
     </div>
-    <div style="text-align:center;font-size:9px;color:rgba(255,255,255,.2);margin-bottom:.15rem">↕ 上下スワイプで切替</div>
+    <div style="text-align:center;font-size:9px;color:rgba(255,255,255,.2);margin-bottom:.1rem">↕ 上下スワイプで切替</div>
+    <div id="gcDiffTip" style="text-align:center;font-size:9px;color:rgba(212,168,67,.5);margin-bottom:.1rem;display:none">🔒 難しいモードは功徳を積んでお経を解放できます</div>
 
     <!-- 太鼓の達人スタイルカルーセル -->
     <div class="gc-stage-wrap" id="gcWrap">
@@ -1238,138 +1231,71 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   <div class="tc" id="tc-narai">
     <div style="padding:0">
 
-      <!-- ストリークカード -->
-      <div class="lp-glass section" style="padding:1.25rem 1rem;text-align:center;margin-bottom:.75rem">
-        <div class="narai-section-title" style="justify-content:center">連続修行日数</div>
-        <div style="margin:.25rem 0">
-          <span style="font-size:1.5rem;vertical-align:middle">🔥</span>
-          <span class="narai-streak-num" id="naraiStreakNum">0</span>
+      <!-- 上段：ストリーク＋今月＋ブースト（1カード） -->
+      <div class="lp-glass" style="padding:.75rem 1rem;margin-bottom:.5rem">
+        <div style="display:flex;align-items:center;gap:0">
+          <div style="flex:1;text-align:center">
+            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">連続修行</div>
+            <div><span style="font-size:1.3rem">🔥</span><span class="narai-streak-num" id="naraiStreakNum" style="font-size:1.6rem;font-weight:300;color:var(--tx)">0</span></div>
+            <div style="font-size:10px;color:var(--mu);margin-top:1px" id="naraiStreakMsg">修行しましょう</div>
+          </div>
+          <div style="width:1px;height:44px;background:rgba(255,255,255,.1)"></div>
+          <div style="flex:1;text-align:center">
+            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">今月の修行</div>
+            <div style="font-size:1.4rem;font-weight:200;color:#d4a843" id="naraiMonthSessions">0</div>
+            <div style="font-size:10px;color:var(--mu)">回 / <span style="color:#e879a0" id="naraiMonthMerit">0</span>功徳</div>
+          </div>
+          <div style="width:1px;height:44px;background:rgba(255,255,255,.1)"></div>
+          <div style="flex:1;text-align:center">
+            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">功徳ブースト</div>
+            <div style="font-size:1.2rem;font-weight:700;color:#d4a843" id="naraiBoostDisp">×1</div>
+            <div style="font-size:10px;color:var(--mu)">累計 <span style="color:#e879a0" id="naraiTotalMerit">0</span></div>
+          </div>
         </div>
-        <div style="font-size:12px;color:var(--mu);margin-top:.35rem" id="naraiStreakMsg">今日も修行しましょう</div>
-        <div class="narai-rank-bar" style="margin-top:.875rem">
-          <div class="narai-rank-fill" id="naraiStreakFill" style="width:0%"></div>
-        </div>
-        <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:left" id="naraiStreakNext"></div>
-        <div style="margin-top:.75rem;display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap">
-          <span style="font-size:11px;color:var(--mu)">功徳ブースト</span>
-          <span style="font-size:13px;font-weight:700;color:#d4a843" id="naraiBoostDisp">×1.00</span>
-          <span style="font-size:10px;color:var(--mu)">累計功徳</span>
-          <span style="font-size:13px;font-weight:700;color:#e879a0" id="naraiTotalMerit">0</span>
+        <div class="narai-rank-bar" style="margin-top:.5rem"><div class="narai-rank-fill" id="naraiStreakFill" style="width:0%"></div></div>
+        <div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:.2rem" id="naraiStreakNext"></div>
+        <!-- 非表示の功徳倍率内訳（JS参照用） -->
+        <div id="naraiMultBreakdown" style="display:none"></div>
+        <div id="naraiTierUpgradeCta" style="display:none">
+          <button onclick="openTierModal()" style="width:100%;margin-top:.5rem;padding:8px;border-radius:10px;
+            background:linear-gradient(135deg,rgba(212,168,67,.7),rgba(232,121,160,.6));
+            color:#fff;border:none;cursor:pointer;font-size:11px;font-weight:700">
+            🪷 プランアップグレードで功徳UP
+          </button>
         </div>
       </div>
 
-      <!-- 91日ヒートマップ＋日付確認ボタン -->
-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
-          <div class="narai-section-title" style="margin-bottom:0">修行カレンダー（91日）</div>
-          <button class="btn-s" id="calPreviewBtn" onclick="openCalPreview()" style="font-size:10px;padding:4px 10px;white-space:nowrap">📅 日付を確認する</button>
-        </div>
-        <div style="font-size:9px;color:rgba(212,168,67,.7);margin-bottom:.4rem;display:flex;align-items:center;gap:4px">
-          <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#d4a843;box-shadow:0 0 4px rgba(212,168,67,.6)"></span>
-          吉日に功徳倍率UP
+      <!-- 修業カレンダー（91日ドット） -->
+      <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem">
+          <div style="font-size:11px;font-weight:600;color:var(--a)">📅 修業カレンダー</div>
+          <button class="btn-s" id="calPreviewBtn" onclick="openCalPreview()" style="font-size:9px;padding:3px 8px;white-space:nowrap">日付 🔒</button>
         </div>
         <div class="narai-hm-grid" id="naraiHmGrid"></div>
-        <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem;font-size:10px;color:rgba(255,255,255,.35)">
-          <span>少ない</span>
-          <span style="display:flex;gap:3px">
-            <span style="width:9px;height:9px;border-radius:2px;background:rgba(255,255,255,.07);display:inline-block"></span>
-            <span style="width:9px;height:9px;border-radius:2px;background:rgba(232,121,160,.25);display:inline-block"></span>
-            <span style="width:9px;height:9px;border-radius:2px;background:rgba(232,121,160,.5);display:inline-block"></span>
-            <span style="width:9px;height:9px;border-radius:2px;background:rgba(212,168,67,.9);display:inline-block"></span>
-          </span>
-          <span>多い</span>
-        </div>
-      </div>
-
-      <!-- 今月サマリー -->
-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
-        <div class="narai-section-title">今月の功徳</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-          <div style="text-align:center;padding:.5rem 0">
-            <div style="font-size:1.8rem;font-weight:200;color:#d4a843" id="naraiMonthSessions">0</div>
-            <div style="font-size:10px;color:var(--mu)">修行回数</div>
-          </div>
-          <div style="text-align:center;padding:.5rem 0">
-            <div style="font-size:1.8rem;font-weight:200;color:#e879a0" id="naraiMonthMerit">0</div>
-            <div style="font-size:10px;color:var(--mu)">累計功徳 🌸</div>
-          </div>
-        </div>
       </div>
 
       <!-- 今日の教え -->
-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.625rem">
-          <div class="narai-section-title" style="margin-bottom:0">今日の教え</div>
-          <div style="display:flex;gap:6px;align-items:center">
-            <span id="dailyDateLabel" style="font-size:10px;color:var(--mu)"></span>
-            <button onclick="shareDailyTeaching()" style="padding:4px 10px;border-radius:50px;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.3);color:rgba(212,168,67,.9);font-size:10px;cursor:pointer">📤 シェア</button>
+      <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.375rem">
+          <div style="font-size:11px;font-weight:600;color:var(--a)">📖 今日の教え
+            <span id="dailyDateLabel" style="font-size:9px;font-weight:400;color:var(--mu);margin-left:4px"></span>
           </div>
+          <button onclick="shareDailyTeaching()" style="padding:3px 9px;border-radius:50px;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.3);color:rgba(212,168,67,.9);font-size:9px;cursor:pointer">📤</button>
         </div>
         <div id="dailyContent"></div>
       </div>
 
-      <!-- 功徳倍率内訳 + ティアアップ -->
-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem" id="naraiTierCard">
-        <div class="narai-section-title">功徳倍率の内訳</div>
-        <div id="naraiMultBreakdown" style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.625rem;font-size:11px;color:var(--mu)"></div>
-        <div id="naraiTierUpgradeCta" style="display:none">
-          <button onclick="openTierModal()" style="width:100%;padding:10px;border-radius:12px;
-            background:linear-gradient(135deg,rgba(212,168,67,.7),rgba(232,121,160,.6));
-            color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.04em">
-            🪷 プランをアップグレードして功徳UP
-          </button>
-        </div>
-        <!-- シェア・招待ボタン -->
-        <div style="display:flex;gap:.5rem;margin-top:.625rem">
-          <button onclick="shareMeritScore()" style="flex:1;padding:9px 6px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:11px;cursor:pointer;font-weight:600">
-            📤 功徳をシェア
-          </button>
-          <button onclick="shareInviteLink()" style="flex:1;padding:9px 6px;border-radius:11px;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.25);color:rgba(212,168,67,.9);font-size:11px;cursor:pointer;font-weight:600">
-            🎁 友達を招待
-          </button>
-        </div>
+      <!-- シェア・招待・プランボタン -->
+      <div style="display:flex;gap:.4rem;margin-bottom:.5rem">
+        <button onclick="shareMeritScore()" style="flex:1;padding:8px 4px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:10px;cursor:pointer;font-weight:600">📤 シェア</button>
+        <button onclick="shareInviteLink()" style="flex:1;padding:8px 4px;border-radius:11px;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.25);color:rgba(212,168,67,.9);font-size:10px;cursor:pointer;font-weight:600">🎁 招待</button>
+        <button onclick="openTierModal()" style="flex:1;padding:8px 4px;border-radius:11px;background:rgba(232,121,160,.1);border:1px solid rgba(232,121,160,.25);color:rgba(232,121,160,.9);font-size:10px;cursor:pointer;font-weight:600">🪷 プラン</button>
       </div>
 
-      <!-- 読経カレンダー（課金）※一時コメントアウト — mainのUIを移植予定
-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem" id="naraiCalSection">
-        <div class="narai-section-title">📅 読経カレンダー</div>
-        <!-- 未購入時 -->
-        <div id="naraiCalLocked" class="narai-paywall">
-          <div style="font-size:1.8rem;margin-bottom:.5rem">🔒</div>
-          <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:.35rem">読経カレンダー</div>
-          <div style="font-size:11px;color:var(--mu);line-height:1.7;margin-bottom:.875rem">
-            月カレンダー表示＋<br>
-            <span style="color:#d4a843;font-weight:600">吉日に功徳倍率UP</span>（購入者限定）
-          </div>
-          <button class="btn-big accent" onclick="openCalPaywall()" style="max-width:200px;margin:0 auto;font-size:13px;padding:11px">✨ 解放する — ¥300</button>
-        </div>
-        <!-- 購入済み時 -->
-        <div id="naraiCalUnlocked" style="display:none">
-          <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
-          <div id="vCal">
-            <div class="card" style="background:rgba(255,255,255,.05)">
-              <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
-              <div class="cg" id="calGrid"></div>
-              <div class="heat-legend" id="calLegHeat"><span>Less</span>
-                <span class="sq" style="background:var(--bo)"></span>
-                <span class="sq" style="background:#fffde7"></span>
-                <span class="sq" style="background:#ffd600"></span>
-                <span class="sq" style="background:#ffa000"></span>
-                <span class="sq" style="background:#e65100"></span>
-                <span>More</span>
-              </div>
-              <div class="lgd" id="calLegMon" style="margin-top:8px">
-                <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
-                <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
-                <div class="li"><span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px">己巳</span></div>
-                <div class="li"><span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px">寅</span></div>
-              </div>
-            </div>
-            <div class="card" style="background:rgba(255,255,255,.05)"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
-          </div>
-        </div>
-      </div>
-      --> <!-- /読経カレンダー コメントアウト終わり -->
+      <!-- JS参照用の非表示要素 -->
+      <div id="naraiTierCard" style="display:none"></div>
+      <div id="naraiCalLocked" style="display:none"></div>
+      <div id="naraiCalUnlocked" style="display:none"></div>
 
     </div>
   </div>
@@ -1380,9 +1306,11 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     <div id="lpPondFull" style="position:fixed;inset:0;top:0;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:2;overflow:hidden;cursor:pointer">
       <div id="lpLotusContainer" style="position:absolute;inset:0"></div>
       <!-- ダブルタップヒント -->
-      <div id="lpDblHint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
-        font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.06em;pointer-events:none;
-        animation:bnc 2.5s ease-in-out infinite;text-align:center;white-space:nowrap">
+      <div id="lpDblHint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+        font-size:12px;color:rgba(255,255,255,.38);letter-spacing:.08em;pointer-events:none;
+        animation:bnc 2.5s ease-in-out infinite;text-align:center;white-space:nowrap;
+        background:rgba(0,0,0,.22);padding:.5rem 1.1rem;border-radius:20px;
+        border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);">
         ダブルタップで悩みを流す
       </div>
     </div>
@@ -1783,6 +1711,8 @@ function setGcDiff(mode){
     var b=document.getElementById('gcDiff'+i);
     if(b)b.classList.toggle('active',i===mode);
   });
+  var tip=document.getElementById('gcDiffTip');
+  if(tip)tip.style.display=mode===2?'block':'none';
   buildCarousel();
 }
 var readLineIdx=0,readLines=[];
@@ -2332,7 +2262,7 @@ function updateChantUI(){
   document.getElementById('sesNum').textContent=st.sessionCount;
   document.getElementById('cumul').textContent='累計: '+st.totalChants+'回';
   var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
-  var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(totalMerit());
+  var ms=document.getElementById('menuSub');if(ms)ms.textContent='功徳 '+fmt(totalMerit())+' 🌸';
   buildLb();
 }
 function dayMeritFor(ds2,cnt){
@@ -2485,11 +2415,13 @@ function buildCarousel(){
     wrap.addEventListener('mouseup',function(e){var dx=e.clientX-_mx;if(Math.abs(dx)>30)gcStep(dx<0?1:-1);});
   }
 
-  // 難易度ボタン表示同期
+  // 難易度ボタン・ヒント表示同期
   [0,1,2].forEach(function(i){
     var b=document.getElementById('gcDiff'+i);
     if(b)b.classList.toggle('active',i===gcDiffMode);
   });
+  var tip=document.getElementById('gcDiffTip');
+  if(tip)tip.style.display=gcDiffMode===2?'block':'none';
 
   posCards(false);
   renderGongyouUnlockCard();
@@ -3451,7 +3383,7 @@ function updateChantUI(){
   var c1=document.getElementById('cumul');if(c1)c1.textContent='累計: '+st.totalChants+'回';
   var c2=document.getElementById('cumul2');if(c2)c2.textContent='累計: '+st.totalChants+'回';
   var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
-  var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(totalMerit());
+  var ms=document.getElementById('menuSub');if(ms)ms.textContent='功徳 '+fmt(totalMerit())+' 🌸';
   if(st.homeMode==='chant'&&st.dailyGoal>0)updateGoalRing();
   buildLb();
 }
