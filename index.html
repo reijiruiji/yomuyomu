@@ -188,6 +188,10 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   filter:drop-shadow(0 0 20px hsla(var(--h),90%,70%,.35));}
 .count-sub{font-size:12px;color:var(--mu);margin-top:8px;}
+#countCard{background:transparent!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+.gc-glass{background:rgba(255,255,255,.09);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border:1px solid rgba(255,255,255,.18);border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.2);margin-bottom:.5rem;padding:.75rem 1rem;}
+.gc-item-unlock-btn{width:100%;margin-top:.5rem;padding:8px;border-radius:10px;background:linear-gradient(135deg,rgba(212,168,67,.75),rgba(232,121,160,.65));color:#fff;border:none;cursor:pointer;font-size:11px;font-weight:700;}
+.gc-item-unlock-btn:disabled{opacity:.4;cursor:not-allowed;}
 .merit-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.08);border-radius:14px;overflow:hidden;margin-bottom:.75rem;}
 .mc{background:rgba(255,255,255,.06);padding:.8rem;text-align:center;}
 .mv{font-size:clamp(15px,5vw,22px);font-weight:600;color:var(--a);}
@@ -1009,11 +1013,18 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
     <button class="btn-s" onclick="startTutWalk();togMenu();" style="width:100%;padding:8px">チュートリアル</button>
     <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
+    <div id="menuPwaSection">
+      <button id="menuPwaBtn" onclick="doPwaInstall();togMenu()" style="width:100%;padding:8px;margin-bottom:.4rem" class="btn-s">📱 ホーム画面に追加</button>
+      <div id="menuPwaIos" style="display:none;font-size:10px;color:rgba(255,255,255,.45);line-height:1.6;text-align:center;margin-bottom:.4rem">
+        Safari の <span style="color:rgba(212,168,67,.9)">共有ボタン ⬆️</span> →「ホーム画面に追加」
+      </div>
+    </div>
+    <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
     <button class="btn-s" onclick="resetAll()" style="color:var(--err);border-color:rgba(239,83,80,.4);width:100%;padding:8px">リセット（全データ削除）</button>
   </div>
 
   <!-- PWA install banner -->
-  <div id="pwaInstallBanner" style="display:none;background:linear-gradient(90deg,rgba(212,168,67,.12),rgba(232,121,160,.1));border-bottom:1px solid rgba(212,168,67,.2);padding:9px 14px;display:none;align-items:center;gap:10px;font-size:12px">
+  <div id="pwaInstallBanner" style="display:none;background:linear-gradient(90deg,rgba(212,168,67,.12),rgba(232,121,160,.1));border-bottom:1px solid rgba(212,168,67,.2);padding:9px 14px;align-items:center;gap:10px;font-size:12px">
     <span style="font-size:1.5rem;flex-shrink:0">🪷</span>
     <div style="flex:1;line-height:1.4">
       <div style="font-weight:700;color:var(--tx)">ホーム画面に追加</div>
@@ -1219,7 +1230,7 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 
     <button class="btn-big accent" id="gcReadBtn" style="margin-top:.25rem">📖 読む（経文を表示）</button>
     <button class="btn-big" id="gcCount" style="width:100%;margin-bottom:.75rem">唱えた</button>
-    <div class="card" id="gcEnCard" style="padding:.75rem">
+    <div class="gc-glass" id="gcEnCard">
       <p style="font-size:11px;font-weight:500;color:var(--a);margin-bottom:5px">この勤行とのご縁</p>
       <div id="gcProgress" style="font-size:12px;color:var(--mu)">0回</div>
     </div>
@@ -1439,7 +1450,7 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   <div class="tc" id="tc-quest">
     <!-- DQ ヘッダー / 進捗 -->
     <div style="padding:0 0 .375rem;flex:0 0 auto">
-      <div class="card" style="margin-bottom:.25rem">
+      <div class="lp-glass lp-glass-sm" style="margin-bottom:.25rem;padding:.875rem 1rem">
         <div style="display:flex;align-items:center;gap:.75rem">
           <div style="font-size:2rem" id="dqLvIcon">📿</div>
           <div style="flex:1;min-width:0">
@@ -1545,6 +1556,17 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   </div>
   <div class="page-dots" id="pageDots"></div>
   <div class="read-nav" id="readNav"></div>
+</div>
+
+<!-- 個別経典アンロックオーバーレイ -->
+<div id="itemUnlockOv" style="display:none;position:fixed;inset:0;z-index:520;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:rgba(10,12,25,.96);border:1px solid rgba(212,168,67,.35);border-radius:20px;padding:1.5rem;max-width:300px;width:90%;text-align:center">
+    <div style="font-size:1.6rem;margin-bottom:.5rem">📜</div>
+    <div id="iuTitle" style="font-size:15px;font-weight:700;color:var(--a);margin-bottom:.5rem"></div>
+    <div id="iuInfo" style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:1rem;line-height:1.6"></div>
+    <button id="iuBtn" class="gc-item-unlock-btn" onclick="doItemUnlock()">解放する</button>
+    <button onclick="closeItemUnlock()" style="width:100%;margin-top:.5rem;padding:9px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.4);font-size:12px;cursor:pointer">閉じる</button>
+  </div>
 </div>
 
 <!-- 解放確認オーバーレイ -->
@@ -1692,16 +1714,33 @@ var st={
   kleshaToday:'',ekoDate:'',ekoCount:0,
   homeMode:'',dailyGoal:0,calPurchased:false,
   zenSeconds:0,zenRunning:false,
-  sangaRooms:[],sangaSelectedKlesha:'',sangaWeight:'medium'
+  sangaRooms:[],sangaSelectedKlesha:'',sangaWeight:'medium',
+  unlockedItems:[],meritUsed:0
 };
 var actx=null;
 var gcAnimating=false,gcCurReal=0;
 var gcDiffMode=1; // 0=かんたん 1=普通 2=難しい
 var gcGG=[],gcGGN=0;
+function gcCharCount(g){
+  if(!g||!g.lines)return 0;
+  return g.lines.reduce(function(a,l){return a+(l[0]||'').replace(/[\s\n\r]/g,'').length;},0);
+}
+function isItemUnlocked(id){
+  if(GG_FREE.has(id))return true;
+  return (st.unlockedItems||[]).indexOf(id)>=0;
+}
+function availGongyoMerit(){
+  return Math.max(0,Math.round((st.gongyoMerit||0)-(st.meritUsed||0)));
+}
 function getGCGG(){
-  if(gcDiffMode===0)return GG.filter(function(g){return g.s.indexOf('常用勤行')>=0;});
+  var base;
+  if(gcDiffMode===0){
+    base=GG.filter(function(g){return GG_FREE.has(g.id);});
+    return base.sort(function(a,b){return gcCharCount(a)-gcCharCount(b);});
+  }
   if(gcDiffMode===1)return GG.filter(function(g){return GG_FREE.has(g.id);});
-  return GG.slice();
+  base=GG.slice();
+  return base.sort(function(a,b){return gcCharCount(b)-gcCharCount(a);});
 }
 function setGcDiff(mode){
   if(mode===gcDiffMode)return;
@@ -1946,7 +1985,20 @@ function applyRichUI(on){
   if(rb)rb.textContent=on?'🖼️ 背景ON':'🖼️ 背景OFF';
 }
 function togRichUI(){applyRichUI(!st.richUI);lsS(UK,st);}
-function togMenu(){document.getElementById('mpanel').classList.toggle('open');document.getElementById('mover').classList.toggle('open');}
+function togMenu(){
+  document.getElementById('mpanel').classList.toggle('open');
+  document.getElementById('mover').classList.toggle('open');
+  // PWAボタン表示制御
+  var isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isSafari=/safari/i.test(navigator.userAgent)&&!/chrome/i.test(navigator.userAgent);
+  var isStandalone=window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches;
+  var pwaBtn=document.getElementById('menuPwaBtn');
+  var pwaIos=document.getElementById('menuPwaIos');
+  var pwaSec=document.getElementById('menuPwaSection');
+  if(isStandalone){if(pwaSec)pwaSec.style.display='none';return;}
+  if(isIos&&isSafari){if(pwaBtn)pwaBtn.style.display='none';if(pwaIos)pwaIos.style.display='block';}
+  else{if(pwaBtn)pwaBtn.style.display=_deferredInstallPrompt?'block':'none';if(pwaIos)pwaIos.style.display='none';}
+}
 function changeName(){var v=document.getElementById('nameChange').value.trim();if(!v)return;st.userName=v;lsS(UK,st);document.getElementById('menuName').textContent=v;togMenu();}
 function resetAll(){if(!confirm('全データを削除しますか？'))return;localStorage.removeItem(UK);localStorage.removeItem(LBK);location.reload();}
 function syncSliders(){
@@ -2260,7 +2312,8 @@ function renderBanner(){
   else pill.style.display='none';
 }
 function updateChantUI(){
-  document.getElementById('sesNum').textContent=st.sessionCount;
+  var tc=st.daily[today()]||0;
+  document.getElementById('sesNum').textContent=tc;
   document.getElementById('cumul').textContent='累計: '+st.totalChants+'回';
   var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
   var ms=document.getElementById('menuSub');if(ms)ms.textContent='功徳 '+fmt(totalMerit())+' 🌸';
@@ -2374,21 +2427,29 @@ function buildCarousel(){
   gcGG.forEach(function(g,i){
     var card=document.createElement('div');
     var need=GG_MERIT_UNLOCK&&GG_MERIT_UNLOCK[g.id]?GG_MERIT_UNLOCK[g.id]:0;
-    var locked=need>0&&totalMerit()<need;
+    var locked=!isItemUnlocked(g.id)&&need>0;
     card.className='gc-card2'+(locked?' gc-locked':'');
     card.id='gc'+i;
     card.dataset.idx=i;
+    card.dataset.gid=g.id;
     var hasText=g.lines&&g.lines.length>0;
+    var charC=gcCharCount(g);
+    var charLabel=charC>0?'<span style="font-size:9px;color:rgba(255,255,255,.3)">'+charC+'文字</span>':'';
     var badge=locked
-      ?'<div class="gc-badge gc-badge-locked">🔒 未解放 / 功徳'+need+'</div>'
+      ?'<div class="gc-badge gc-badge-locked">🔒 未解放</div>'
       :(hasText?'<div class="gc-badge">📖 読める</div>':'');
+    var unlockBtn=locked
+      ?'<button class="gc-item-unlock-btn" onclick="openItemUnlock(\''+g.id+'\','+need+')">'
+        +'✨ 勤行功徳'+need+'で解放</button>'
+      :'';
     card.innerHTML=
       '<div class="gc-num">'+(i+1)+'/'+gcGGN+'</div>'+
       '<div class="gc-title">'+g.t+'</div>'+
       '<div class="gc-sub">'+g.s+'</div>'+
+      charLabel+
       badge+
-      '<div class="gc-desc">'+g.d+'</div>';
-    // カード幅を固定セット（CSSのwidthより優先）
+      '<div class="gc-desc">'+g.d+'</div>'+
+      unlockBtn;
     card.style.width=CARD_W+'px';
     if(!locked){
       card.addEventListener('click',function(){
@@ -3382,8 +3443,9 @@ function updateChantArea(){
   if(hasGoal)updateGoalRing();
 }
 function updateChantUI(){
-  var s1=document.getElementById('sesNum');if(s1)s1.textContent=st.sessionCount;
-  var s2=document.getElementById('sesNum2');if(s2)s2.textContent=st.sessionCount;
+  var tc=st.daily[today()]||0;
+  var s1=document.getElementById('sesNum');if(s1)s1.textContent=tc;
+  var s2=document.getElementById('sesNum2');if(s2)s2.textContent=tc;
   var c1=document.getElementById('cumul');if(c1)c1.textContent='累計: '+st.totalChants+'回';
   var c2=document.getElementById('cumul2');if(c2)c2.textContent='累計: '+st.totalChants+'回';
   var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
@@ -3392,7 +3454,7 @@ function updateChantUI(){
   buildLb();
 }
 function updateGoalRing(){
-  var goal=st.dailyGoal||0,done=st.sessionCount||0;
+  var goal=st.dailyGoal||0,done=st.daily[today()]||0;
   var remain=Math.max(0,goal-done);
   var el=document.getElementById('ringRemain');if(el)el.textContent=remain;
   var arc=document.getElementById('goalRingArc');if(!arc)return;
@@ -4130,6 +4192,34 @@ function openUnlockOverlay(lv){
 }
 function closeUnlockOverlay(){
   var ov=document.getElementById('unlockOverlay');if(ov)ov.style.display='none';
+}
+var _pendingItemId='',_pendingItemCost=0;
+function openItemUnlock(id,cost){
+  _pendingItemId=id;_pendingItemCost=cost;
+  var avail=availGongyoMerit();
+  var canUnlock=avail>=cost;
+  var g=GG.filter(function(x){return x.id===id;})[0];
+  var title=g?g.t:'';
+  var ov=document.getElementById('itemUnlockOv');
+  if(!ov)return;
+  document.getElementById('iuTitle').textContent='🔓 '+title;
+  document.getElementById('iuInfo').textContent='必要な勤行功徳: '+cost+' / 現在: '+avail;
+  var btn=document.getElementById('iuBtn');
+  btn.disabled=!canUnlock;
+  btn.textContent=canUnlock?'✨ 解放する':'功徳が足りません（あと'+(cost-avail)+'）';
+  ov.style.display='flex';
+}
+function closeItemUnlock(){var ov=document.getElementById('itemUnlockOv');if(ov)ov.style.display='none';}
+function doItemUnlock(){
+  var avail=availGongyoMerit();
+  if(avail<_pendingItemCost){closeItemUnlock();return;}
+  st.meritUsed=(st.meritUsed||0)+_pendingItemCost;
+  if(!st.unlockedItems)st.unlockedItems=[];
+  if(st.unlockedItems.indexOf(_pendingItemId)<0)st.unlockedItems.push(_pendingItemId);
+  lsS(UK,st);
+  closeItemUnlock();
+  spawnP();accentS();
+  buildCarousel();
 }
 function confirmUnlock(){
   if(_pendingUnlockLevel>(st.unlockedLevel||0)){
