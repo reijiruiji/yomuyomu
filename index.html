@@ -296,9 +296,9 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
   top:50%;
   /* transform は JS で translateY(-50%) scale(x) を常に付ける */
   border-radius:20px;
-  background:rgba(255,255,255,.11);
+  background:rgba(10,8,22,.72);
   backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);
-  border:1px solid rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.18);
   padding:10px 8px;
   text-align:center;
   cursor:pointer;
@@ -306,15 +306,15 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   will-change:transform,left,opacity;
   box-sizing:border-box;
-  box-shadow:0 8px 32px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.25);
+  box-shadow:0 8px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.18);
 }
-.gc-card2.active{border-color:rgba(255,255,255,.42);background:rgba(255,255,255,.17);
-  box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 28px hsla(var(--h),80%,60%,.22),inset 0 1px 0 rgba(255,255,255,.38);}
-.gc-card2.active .gc-num{font-size:11px;color:rgba(255,255,255,.55);}
-.gc-card2.active .gc-title{font-size:16px;color:rgba(255,255,255,.98);}
-.gc-card2.active .gc-sub{font-size:11px;color:rgba(255,255,255,.7);}
+.gc-card2.active{border-color:rgba(212,168,67,.5);background:rgba(8,6,20,.82);
+  box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 28px hsla(var(--h),80%,60%,.25),inset 0 1px 0 rgba(255,255,255,.25);}
+.gc-card2.active .gc-num{font-size:11px;color:rgba(255,255,255,.65);}
+.gc-card2.active .gc-title{font-size:16px;color:#ffffff;text-shadow:0 1px 8px rgba(0,0,0,.5);}
+.gc-card2.active .gc-sub{font-size:11px;color:rgba(255,255,255,.85);}
 .gc-card2.active .gc-badge{font-size:11px;padding:3px 10px;}
-.gc-card2.active .gc-desc{font-size:11px;max-height:70px;color:rgba(255,255,255,.75);}
+.gc-card2.active .gc-desc{font-size:11px;max-height:70px;color:rgba(255,255,255,.85);}
 /* ── ルーレット着地バウンス ── */
 @keyframes gcBounce{
   0%  {transform:translateY(-50%) scale(1.22);}
@@ -323,13 +323,13 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
   100%{transform:translateY(-50%) scale(1);}
 }
 .gc-card2.land{animation:gcBounce .42s cubic-bezier(.34,1.56,.64,1);}
-.gc-card2 .gc-num{font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px;}
-.gc-card2 .gc-title{font-size:12px;font-weight:700;color:rgba(255,255,255,.88);line-height:1.3;margin-bottom:2px;}
-.gc-card2 .gc-sub{font-size:10px;color:rgba(255,255,255,.6);line-height:1.3;}
+.gc-card2 .gc-num{font-size:10px;color:rgba(255,255,255,.55);margin-bottom:3px;}
+.gc-card2 .gc-title{font-size:12px;font-weight:700;color:rgba(255,255,255,.92);line-height:1.3;margin-bottom:2px;text-shadow:0 1px 4px rgba(0,0,0,.4);}
+.gc-card2 .gc-sub{font-size:10px;color:rgba(255,255,255,.75);line-height:1.3;}
 .gc-card2 .gc-badge{display:inline-block;font-size:9px;color:#fff;background:var(--a);
   border-radius:20px;padding:2px 8px;margin-top:4px;}
-.gc-card2 .gc-badge-locked{background:rgba(255,255,255,.18);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.2);}
-.gc-card2 .gc-desc{font-size:10px;color:rgba(255,255,255,.6);margin-top:5px;line-height:1.45;text-align:left;
+.gc-card2 .gc-badge-locked{background:rgba(255,255,255,.18);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);}
+.gc-card2 .gc-desc{font-size:10px;color:rgba(255,255,255,.75);margin-top:5px;line-height:1.45;text-align:left;
   max-height:48px;overflow:hidden;}
 .gc-nav{display:flex;align-items:center;justify-content:space-between;margin:.5rem 0 .75rem;}
 .gc-arrow{width:38px;height:38px;border-radius:50%;
@@ -518,7 +518,7 @@ body.dark .crk.ta{color:#ef9a9a;}
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;opacity:.7;}
 /* ── 太鼓ボタン ── */
 .tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
-.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;}
+.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;will-change:transform;}
 @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
 .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
 .tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,52vw,220px);height:clamp(150px,52vw,220px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
@@ -805,24 +805,26 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:1.5rem 1.25rem;
   width:100%;max-width:360px;max-height:90vh;overflow-y:auto;}
 .tier-modal-inner::-webkit-scrollbar{display:none;}
-.tier-row{display:flex;align-items:center;gap:.75rem;padding:.625rem .75rem;border-radius:14px;
-  border:1px solid rgba(255,255,255,.1);margin-bottom:.4rem;cursor:pointer;
+.tier-row{display:flex;flex-direction:column;padding:.7rem .875rem;border-radius:16px;
+  border:1px solid rgba(255,255,255,.1);margin-bottom:.5rem;cursor:pointer;
   transition:background .18s,border-color .18s;}
-.tier-row.t-active{border-color:rgba(232,121,160,.55);background:rgba(232,121,160,.1);}
-.tier-row:active{background:rgba(255,255,255,.08);}
-.tier-badge{font-size:1.3rem;width:34px;text-align:center;flex-shrink:0;}
+.tier-row.t-active{border-color:rgba(232,121,160,.55);background:rgba(232,121,160,.08);}
+.tier-row:active{background:rgba(255,255,255,.07);}
+.tier-row-head{display:flex;align-items:center;gap:.625rem;width:100%;}
+.tier-badge{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0;}
 .tier-info{flex:1;min-width:0;}
-.tier-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.92);}
+.tier-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.92);display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;}
+.tier-feat{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;line-height:1.45;}
 .tier-desc{font-size:10px;color:rgba(255,255,255,.42);margin-top:1px;line-height:1.4;}
-.tier-price{font-size:11px;color:rgba(212,168,67,.85);font-weight:700;white-space:nowrap;}
-.tier-upgrade-btn{width:100%;padding:11px;border-radius:14px;margin-top:.5rem;
-  background:linear-gradient(135deg,rgba(212,168,67,.85),rgba(232,121,160,.75));
+.tier-price{font-size:12px;color:rgba(212,168,67,.9);font-weight:700;white-space:nowrap;flex-shrink:0;}
+.tier-upgrade-btn{width:100%;padding:11px;border-radius:12px;margin-top:.6rem;
+  background:linear-gradient(135deg,rgba(212,168,67,.9),rgba(232,121,160,.8));
   color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.04em;
-  box-shadow:0 4px 16px rgba(212,168,67,.3);transition:opacity .15s,transform .1s;}
+  box-shadow:0 4px 16px rgba(212,168,67,.25);transition:opacity .15s,transform .1s;display:block;}
 .tier-upgrade-btn:active{opacity:.85;transform:scale(.98);}
-.tier-merit-tag{display:inline-flex;align-items:center;background:rgba(212,168,67,.14);
-  border:1px solid rgba(212,168,67,.32);border-radius:20px;padding:2px 8px;
-  font-size:10px;font-weight:700;color:#d4a843;margin-left:.35rem;}
+.tier-merit-tag{display:inline-flex;align-items:center;background:rgba(212,168,67,.18);
+  border:1px solid rgba(212,168,67,.38);border-radius:20px;padding:2px 8px;
+  font-size:10px;font-weight:700;color:#d4a843;}
 .hdr-tier{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;
   border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;
   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
@@ -1216,6 +1218,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       <p style="font-size:11px;font-weight:500;color:var(--a);margin-bottom:5px">この勤行とのご縁</p>
       <div id="gcProgress" style="font-size:12px;color:var(--mu)">0回</div>
     </div>
+    <!-- 解放カード（功徳が溜まると表示） -->
+    <div id="gongyouUnlockCard" style="display:none;margin-top:.5rem"></div>
   </div>
 
   <!-- ── ならい ── -->
@@ -2010,7 +2014,8 @@ function gongyoCharCount(g){
 }
 function streakMult(){
   var s=st.loginStreak||0;
-  return 1+Math.min(Math.max(s-1,0),49)*0.02;
+  if(s>=100)return 10;if(s>=30)return 5;if(s>=14)return 3;if(s>=7)return 2;
+  return 1;
 }
 function dayDiff(dsA,dsB){
   var a=new Date(dsA+'T12:00:00'),b=new Date(dsB+'T12:00:00');
@@ -2105,10 +2110,10 @@ function updateCalStreakUI(animate){
   var n=document.getElementById('streakNum');if(n)n.textContent=s;
   var m=document.getElementById('streakMsg');if(m)m.textContent=streakMessage(s);
   var f=document.getElementById('streakFill');if(f)f.style.width=pct+'%';
-  var md=document.getElementById('streakMultDisp');if(md)md.textContent='×'+streakMult().toFixed(2);
+  var md=document.getElementById('streakMultDisp');if(md)md.textContent='×'+streakMult();
   var bd=document.getElementById('bonusMeritDisp');if(bd)bd.textContent=fmt(st.bonusMerit||0);
   var rn=document.getElementById('rankStreakNote');
-  if(rn)rn.textContent=s>0?('連続'+s+'日 · ブースト ×'+streakMult().toFixed(2)):'';
+  if(rn)rn.textContent=s>0?('連続'+s+'日 · ブースト ×'+streakMult()):'';
   var snl=document.getElementById('streakNextLucky');
   if(snl){
     var todayItems=banItems(dayI(new Date()));
@@ -2441,6 +2446,7 @@ function buildCarousel(){
   }
 
   posCards(false);
+  renderGongyouUnlockCard();
 }
 
 function posCards(anim){
@@ -3713,7 +3719,7 @@ function renderNaraiTab(){
   }
   var sm=streakMult(),tm2=tierMult();
   var bd=document.getElementById('naraiBoostDisp');
-  if(bd)bd.textContent='×'+(sm*tm2*wisdomMult()).toFixed(2);
+  if(bd)bd.textContent='×'+(sm*tm2*wisdomMult());
   var tm=document.getElementById('naraiTotalMerit');if(tm)tm.textContent=fmt(totalMerit());
   renderNaraiHeatmap();
   renderNaraiMonthSummary();
@@ -3723,11 +3729,11 @@ function renderNaraiTab(){
     var streakV=streakMult(),wisdomV=wisdomMult(),tierV=tierMult();
     var auspV=getMult(dayI(new Date()));
     var items=[
-      {label:'🔥 連続修行ボーナス',val:'×'+streakV.toFixed(2)},
-      {label:'📜 智慧レベルボーナス',val:'×'+wisdomV.toFixed(1)},
-      {label:'🪷 ティアボーナス',val:'×'+tierV.toFixed(2)},
+      {label:'🔥 連続修行ボーナス',val:'×'+streakV},
+      {label:'📜 智慧レベルボーナス',val:'×'+wisdomV},
+      {label:'🪷 ティアボーナス',val:'×'+tierV},
     ];
-    if(auspV>1)items.push({label:'🌟 今日の吉日ボーナス',val:'×'+auspV.toFixed(1)});
+    if(auspV>1)items.push({label:'🌟 今日の吉日ボーナス',val:'×'+auspV});
     var total=(streakV*wisdomV*tierV*auspV);
     mb.innerHTML=items.map(function(it){
       return '<div style="display:flex;justify-content:space-between">'
@@ -3735,7 +3741,7 @@ function renderNaraiTab(){
     }).join('')
     +'<div style="border-top:1px solid rgba(255,255,255,.1);margin-top:.35rem;padding-top:.35rem;display:flex;justify-content:space-between;font-weight:700">'
     +'<span style="color:rgba(255,255,255,.7)">合計倍率</span>'
-    +'<span style="color:#d4a843;font-size:13px">×'+total.toFixed(2)+'</span></div>';
+    +'<span style="color:#d4a843;font-size:13px">×'+total+'</span></div>';
     var cta=document.getElementById('naraiTierUpgradeCta');
     if(cta)cta.style.display=(getUserTier()==='free'?'block':'none');
   })();
@@ -4203,10 +4209,12 @@ function checkUnlockThreshold(){
     combo++;
     clearTimeout(comboTimer);
     comboTimer=setTimeout(function(){combo=0;},1600);
+    // アニメーション再起動：強制リフローなしで class を付け直す
     wrap.classList.remove('pressing');
-    void wrap.offsetWidth;
-    wrap.classList.add('pressing');
-    setTimeout(function(){wrap.classList.remove('pressing');},220);
+    requestAnimationFrame(function(){
+      wrap.classList.add('pressing');
+      setTimeout(function(){wrap.classList.remove('pressing');},220);
+    });
     spawnRipples(wrap,combo);
     addChants(1);
     spawnFloatMantra();
@@ -4282,8 +4290,8 @@ function dqCheckBadges(){
 function getWisdomLevel(){return Math.min(10,Math.floor(dqS.read.size/4));}
 function wisdomMult(){
   var lv=getWisdomLevel();
-  if(lv>=10)return 2.0;if(lv>=7)return 1.8;if(lv>=4)return 1.5;if(lv>=1)return 1.2;
-  return 1.0;
+  if(lv>=10)return 3;if(lv>=7)return 2;if(lv>=4)return 2;if(lv>=1)return 1;
+  return 1;
 }
 
 // ── 探求タブ サマリー ──
@@ -4298,7 +4306,7 @@ function renderDQSummary(){
   var ll=document.getElementById('dqLvLabel');if(ll)ll.textContent='Lv.'+lv+' · XP '+xp;
   var rl=document.getElementById('dqReadLabel');if(rl)rl.textContent='経典 '+readN+'冊 読破';
   var wl=getWisdomLevel();
-  var wp=document.getElementById('dqWisdomPill');if(wp)wp.textContent='智慧 Lv.'+wl+' · ×'+wisdomMult().toFixed(1);
+  var wp=document.getElementById('dqWisdomPill');if(wp)wp.textContent='智慧 Lv.'+wl+' · ×'+wisdomMult();
   var xf=document.getElementById('dqXpFill');if(xf)xf.style.width=pct+'%';
   var xl=document.getElementById('dqXpLabel');if(xl)xl.textContent='次のLvまで '+(nxt-xp)+' XP';
 }
@@ -4721,11 +4729,11 @@ window.addEventListener('resize',function(){if(st.tab==='gongyou')buildCarousel(
 var TIER_KEY='yomy_tier_v1';
 var TIER_LOTUS_KEY='yomy_lotus_week_v1';
 var TIER_DEF={
-  free: {name:'無料',  badge:'🌿',lotus:1,  msgRx:0,   price:'無料',        mult:1.0},
-  ume:  {name:'梅',    badge:'🌸',lotus:3,  msgRx:25,  price:'¥480/月',     mult:1.1},
-  take: {name:'竹',    badge:'🎋',lotus:7,  msgRx:50,  price:'¥680/月',     mult:1.25},
-  matsu:{name:'松',    badge:'🪷',lotus:15, msgRx:999, price:'¥980/月',     mult:1.5},
-  butsu:{name:'仏',    badge:'☸️', lotus:999,msgRx:999, price:'¥1,980/月',   mult:2.0}
+  free: {name:'無料',  badge:'🌿',lotus:1,  msgRx:0,   price:'無料',        mult:1,  feat:'毎日1個の蓮を流せます'},
+  ume:  {name:'梅',    badge:'🌸',lotus:3,  msgRx:25,  price:'¥480/月',     mult:2,  feat:'功徳2倍・週3蓮・シールド付与'},
+  take: {name:'竹',    badge:'🎋',lotus:7,  msgRx:50,  price:'¥680/月',     mult:3,  feat:'功徳3倍・週7蓮・菩薩道解放'},
+  matsu:{name:'松',    badge:'🪷',lotus:15, msgRx:999, price:'¥980/月',     mult:5,  feat:'功徳5倍・週15蓮・全文読み書き'},
+  butsu:{name:'仏',    badge:'☸️', lotus:999,msgRx:999, price:'¥1,980/月',   mult:10, feat:'功徳10倍・蓮無制限・最高位バッジ'}
 };
 function getUserTier(){
   try{var t=localStorage.getItem(TIER_KEY);return TIER_DEF[t]?t:'free';}catch(e){return 'free';}
@@ -4769,7 +4777,7 @@ var STRIPE_TIER_URLS={
   matsu:'https://buy.stripe.com/REPLACE_MATSU_LINK',
   butsu:'https://buy.stripe.com/REPLACE_BUTSU_LINK'
 };
-var TIER_MULT_MAP={free:1.0,ume:1.1,take:1.25,matsu:1.5,butsu:2.0};
+var TIER_MULT_MAP={free:1,ume:2,take:3,matsu:5,butsu:10};
 function openTierUpgrade(tierKey){
   var url=STRIPE_TIER_URLS[tierKey];
   if(!url||url.indexOf('REPLACE')>=0){
@@ -4784,7 +4792,7 @@ function openTierUpgrade(tierKey){
       +'<div style="background:rgba(255,255,255,.07);border-radius:12px;padding:14px;margin-bottom:14px;text-align:left">'
       +'<div style="font-size:11px;color:rgba(212,168,67,.8);font-weight:700;margin-bottom:8px">'+d2.name+'プランの特典</div>'
       +'<div style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.9">'
-      +'🪷 功徳倍率 ×'+d2.mult.toFixed(2)+'<br>'
+      +'🪷 功徳倍率 ×'+d2.mult+'<br>'
       +'🌸 蓮池に週'+( d2.lotus>=999?'無制限':d2.lotus)+'個<br>'
       +'🛡 ストリークシールド毎週付与<br>'
       +(d2.msgRx>0?'💬 サンガカスタムメッセージ<br>':'')
@@ -4808,7 +4816,7 @@ function updateHdrTier(){
   if(mn)mn.textContent=d.badge+' '+d.name+'プラン';
   var mm=document.getElementById('menuTierMult');
   var mult=(TIER_MULT_MAP&&TIER_MULT_MAP[t])||1.0;
-  if(mm)mm.textContent='功徳 ×'+mult.toFixed(1);
+  if(mm)mm.textContent='功徳 ×'+mult;
 }
 function renderTierModal(){
   var cur=getUserTier();
@@ -4833,25 +4841,28 @@ function renderTierModal(){
     var isUpgrade=tierOrder.indexOf(k)>tierOrder.indexOf(cur);
     var row=document.createElement('div');
     row.className='tier-row'+(isActive?' t-active':'');
-    row.innerHTML=
-      '<div class="tier-badge">'+d.badge+'</div>'+
-      '<div class="tier-info">'+
-        '<div class="tier-name" style="display:flex;align-items:center;gap:.35rem">'+d.name
-          +(isActive?'<span style="font-size:9px;background:rgba(232,121,160,.25);color:rgba(232,121,160,.9);border-radius:20px;padding:1px 7px">現在</span>':'')+'</div>'+
-        '<div class="tier-desc">🪷 週'+lotusStr+'個 · 💬 '+msgStr
-          +'<span class="tier-merit-tag">×'+mult.toFixed(1)+'</span></div>'+
-      '</div>'+
-      '<div style="text-align:right">'+
-        '<div class="tier-price">'+d.price+'</div>'+
-      '</div>';
+    var upgradeHTML='';
     if(isUpgrade&&k!=='free'){
-      var wrap=document.createElement('div');
-      wrap.innerHTML='<button class="tier-upgrade-btn" data-tier="'+k+'">✨ '+d.name+'プランにアップグレード</button>';
-      var btn2=wrap.querySelector('button');
-      btn2.onclick=function(e){e.stopPropagation();openTierUpgrade(k);};
-      row.appendChild(btn2);
+      upgradeHTML='<button class="tier-upgrade-btn" data-tier-upgrade="'+k+'">✨ '+d.name+'プランにする（'+d.price+'）</button>';
     }
-    row.onclick=function(){};
+    row.innerHTML=
+      '<div class="tier-row-head">'+
+        '<div class="tier-badge">'+d.badge+'</div>'+
+        '<div class="tier-info">'+
+          '<div class="tier-name">'+d.name
+            +(isActive?'<span style="font-size:9px;background:rgba(232,121,160,.22);color:rgba(232,121,160,.9);border-radius:20px;padding:1px 7px">現在のプラン</span>':'')
+            +'<span class="tier-merit-tag">功徳×'+mult+'</span>'+
+          '</div>'+
+          '<div class="tier-feat">'+d.feat+'</div>'+
+        '</div>'+
+        '<div class="tier-price">'+d.price+'</div>'+
+      '</div>'+
+      upgradeHTML;
+    // upgrade ボタンのクリックを委任
+    row.addEventListener('click',function(e){
+      var btn=e.target.closest('[data-tier-upgrade]');
+      if(btn){e.stopPropagation();openTierUpgrade(btn.dataset.tierUpgrade);}
+    });
     list.appendChild(row);
   });
 }
@@ -5009,7 +5020,7 @@ if('serviceWorker' in navigator){
         +'<div style="font-size:3.5rem;margin-bottom:12px">'+d.badge+'</div>'
         +'<div style="font-size:1.4rem;font-weight:800;color:#d4a843;font-family:serif;margin-bottom:8px">'+d.name+'プランへようこそ！</div>'
         +'<div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.8;margin-bottom:18px">'
-        +'ご支援ありがとうございます。<br>功徳倍率 ×'+d.mult.toFixed(2)+' が適用されました。<br>南無妙法蓮華経 🙏</div>'
+        +'ご支援ありがとうございます。<br>功徳倍率 ×'+d.mult+' が適用されました。<br>南無妙法蓮華経 🙏</div>'
         +'<button onclick="this.parentNode.parentNode.remove();updateHdrTier();" '
         +'style="padding:13px 32px;border-radius:50px;background:linear-gradient(135deg,rgba(212,168,67,.9),rgba(232,121,160,.8));border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer">修行を続ける</button>'
         +'</div>';
