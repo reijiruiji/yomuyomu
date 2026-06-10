@@ -175,7 +175,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   width:60px;height:30px;
   background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.08) 0%,transparent 70%);
   pointer-events:none;}
-.tc{display:none;padding:.875rem;padding-top:max(50px,calc(env(safe-area-inset-top,0px) + 44px));padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
+.tc{display:none;padding:.875rem;padding-top:max(14px,calc(env(safe-area-inset-top,0px) + 6px));padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
 .tc.on{display:block;}
 .card{
   background:rgba(255,255,255,.11);
@@ -190,7 +190,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   filter:drop-shadow(0 0 20px hsla(var(--h),90%,70%,.35));}
 .count-sub{font-size:12px;color:var(--mu);margin-top:8px;}
-#countCard{background:transparent!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+#countCard{background:rgba(12,8,28,.52)!important;border:1px solid rgba(255,255,255,.13)!important;backdrop-filter:blur(10px) saturate(140%)!important;-webkit-backdrop-filter:blur(10px) saturate(140%)!important;box-shadow:0 4px 18px rgba(0,0,0,.25)!important;}
 .gc-glass{background:rgba(255,255,255,.09);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border:1px solid rgba(255,255,255,.18);border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.2);margin-bottom:.5rem;padding:.75rem 1rem;}
 .gc-item-unlock-btn{width:100%;margin-top:.5rem;padding:8px;border-radius:10px;background:linear-gradient(135deg,rgba(212,168,67,.75),rgba(232,121,160,.65));color:#fff;border:none;cursor:pointer;font-size:11px;font-weight:700;}
 .gc-item-unlock-btn:disabled{opacity:.4;cursor:not-allowed;}
@@ -330,6 +330,8 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
 .gc-card2 .gc-badge-locked{background:rgba(255,255,255,.18);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);}
 .gc-card2 .gc-desc{font-size:10px;color:rgba(255,255,255,.75);margin-top:5px;line-height:1.45;text-align:left;
   max-height:48px;overflow:hidden;}
+.gc-action-bar{position:sticky;bottom:calc(64px + env(safe-area-inset-bottom,0px) + .5rem);padding:.5rem 0 0;
+  background:linear-gradient(transparent,var(--bg) 28%);z-index:5;}
 .gc-nav{display:flex;align-items:center;justify-content:space-between;margin:.5rem 0 .75rem;}
 .gc-arrow{width:38px;height:38px;border-radius:50%;
   background:rgba(255,255,255,.1);
@@ -515,8 +517,8 @@ body.dark .crk.ta{color:#ef9a9a;}
 .gc-locked{opacity:.5;filter:grayscale(.6);cursor:not-allowed;}
 /* ── 難易度セレクター ── */
 .gc-diff-bar{display:flex;gap:.375rem;margin:.25rem .75rem .15rem;justify-content:center;}
-.gc-diff-btn{flex:1;padding:.3rem .25rem;border-radius:16px;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-size:11px;cursor:pointer;transition:all .18s;}
-.gc-diff-btn.active{border-color:var(--ag);color:#d4a843;background:rgba(212,168,67,.13);font-weight:700;}
+.gc-diff-btn{flex:1;padding:.3rem .25rem;border-radius:16px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.09);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:rgba(255,255,255,.82);font-size:11px;cursor:pointer;transition:all .18s;font-weight:500;}
+.gc-diff-btn.active{border-color:var(--ag);color:#d4a843;background:rgba(212,168,67,.18);font-weight:700;box-shadow:0 0 10px rgba(212,168,67,.2);}
 /* ── 時間帯別背景 ── */
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;opacity:.7;}
 /* ── 太鼓ボタン ── */
@@ -750,6 +752,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 .narai-section-title{font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.07em;
   text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
 .narai-section-title::before{content:'';display:block;width:3px;height:12px;background:#e879a0;border-radius:2px;}
+#tc-narai .lp-glass{background:rgba(8,5,22,.62)!important;border-color:rgba(255,255,255,.16)!important;}
+#tc-narai{--mu:rgba(255,255,255,.72);}
 
 /* ══ 蓮池: 浮かぶ蓮の花（全画面） ══ */
 .lp-lotus-floater{position:absolute;bottom:-40px;cursor:pointer;user-select:none;
@@ -1025,15 +1029,14 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     <button class="btn-s" onclick="resetAll()" style="color:var(--err);border-color:rgba(239,83,80,.4);width:100%;padding:8px">リセット（全データ削除）</button>
   </div>
 
-  <!-- PWA install banner -->
-  <div id="pwaInstallBanner" style="display:none;background:linear-gradient(90deg,rgba(212,168,67,.12),rgba(232,121,160,.1));border-bottom:1px solid rgba(212,168,67,.2);padding:9px 14px;align-items:center;gap:10px;font-size:12px">
+  <!-- PWA install banner (全体タップで追加、10秒で自動消去) -->
+  <div id="pwaInstallBanner" onclick="doPwaInstall()" style="display:none;cursor:pointer;background:linear-gradient(90deg,rgba(212,168,67,.12),rgba(232,121,160,.1));border-bottom:1px solid rgba(212,168,67,.2);padding:9px 14px;align-items:center;gap:10px;font-size:12px">
     <span style="font-size:1.5rem;flex-shrink:0">🪷</span>
     <div style="flex:1;line-height:1.4">
       <div style="font-weight:700;color:var(--tx)">ホーム画面に追加</div>
-      <div style="color:var(--mu);font-size:11px">オフラインでも使えます</div>
+      <div style="color:var(--mu);font-size:11px">タップで追加 • オフラインでも使えます</div>
     </div>
-    <button id="pwaInstallBtn" onclick="doPwaInstall()" style="padding:7px 14px;border-radius:50px;background:rgba(212,168,67,.8);border:none;color:#1a0f00;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">追加</button>
-    <button onclick="dismissPwaBanner()" style="background:none;border:none;color:var(--mu);font-size:1.1rem;cursor:pointer;padding:4px">×</button>
+    <button onclick="event.stopPropagation();dismissPwaBanner()" style="background:none;border:none;color:var(--mu);font-size:1.1rem;cursor:pointer;padding:4px">×</button>
   </div>
 
   <div class="app-hd">
@@ -1230,8 +1233,10 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       <div class="gc-arrow" id="gcNext">›</div>
     </div>
 
-    <button class="btn-big accent" id="gcReadBtn" style="margin-top:.25rem">📖 読む（経文を表示）</button>
-    <button class="btn-big" id="gcCount" style="width:100%;margin-bottom:.75rem">唱えた</button>
+    <div class="gc-action-bar">
+      <button class="btn-big accent" id="gcReadBtn" style="margin-bottom:.35rem">📖 読む（経文を表示）</button>
+      <button class="btn-big" id="gcCount" style="width:100%">唱えた</button>
+    </div>
     <div class="gc-glass" id="gcEnCard">
       <p style="font-size:11px;font-weight:500;color:var(--a);margin-bottom:5px">この勤行とのご縁</p>
       <div id="gcProgress" style="font-size:12px;color:var(--mu)">0回</div>
@@ -1415,13 +1420,18 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
         </div>
         <div id="sangaCustomHint" style="font-size:9px;color:rgba(255,255,255,.3);margin-top:.3rem"></div>
       </div>
-      <!-- 無料ユーザー向け: カスタムメッセージのアップセル -->
+      <!-- 無料ユーザー向け: カスタムメッセージの解放 -->
       <div id="sangaUpgradeCta" style="margin-top:.5rem;display:none">
+        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:.35rem;text-align:center">💬 カスタムメッセージの解放</div>
+        <div style="background:rgba(255,255,255,.08);border-radius:6px;height:5px;overflow:hidden;margin-bottom:.3rem">
+          <div id="sangaMeritProgBar" style="width:0%;height:100%;background:linear-gradient(90deg,rgba(212,168,67,.7),rgba(232,121,160,.6));transition:width .4s"></div>
+        </div>
+        <div id="sangaMeritProgTxt" style="font-size:10px;color:rgba(255,255,255,.35);margin-bottom:.4rem;text-align:center"></div>
         <button onclick="closeSangaChat();setTimeout(openTierModal,250)"
           style="width:100%;padding:9px;border-radius:12px;font-size:11px;
           background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.25);
           color:rgba(212,168,67,.8);cursor:pointer">
-          💬 梅プラン以上でカスタムメッセージを送れます
+          ⚡ 梅プランですぐ解放する
         </button>
       </div>
       <button class="sanga-close-btn" onclick="closeSangaChat()">閉じる</button>
@@ -1735,14 +1745,10 @@ function availGongyoMerit(){
   return Math.max(0,Math.round((st.gongyoMerit||0)-(st.meritUsed||0)));
 }
 function getGCGG(){
-  var base;
-  if(gcDiffMode===0){
-    base=GG.filter(function(g){return GG_FREE.has(g.id);});
-    return base.sort(function(a,b){return gcCharCount(a)-gcCharCount(b);});
-  }
-  if(gcDiffMode===1)return GG.filter(function(g){return GG_FREE.has(g.id);});
-  base=GG.slice();
-  return base.sort(function(a,b){return gcCharCount(b)-gcCharCount(a);});
+  // 全38経典を表示。モードによって並び順のみ変更（かんたん=短い順、普通=原典順、難しい=長い順）
+  if(gcDiffMode===0) return GG.slice().sort(function(a,b){return gcCharCount(a)-gcCharCount(b);});
+  if(gcDiffMode===1) return GG.slice();
+  return GG.slice().sort(function(a,b){return gcCharCount(b)-gcCharCount(a);});
 }
 function setGcDiff(mode){
   if(mode===gcDiffMode)return;
@@ -2114,6 +2120,11 @@ function hasTierAccess(minTier){
   var cur=getUserTier();
   return order.indexOf(cur)>=order.indexOf(minTier);
 }
+var CUSTOM_MSG_MERIT_THRESHOLD=300;
+function canSendCustomMsg(){
+  if(hasTierAccess('ume'))return true;
+  return (st.gongyoMerit||0)>=CUSTOM_MSG_MERIT_THRESHOLD;
+}
 function totalMerit(){
   var info=dayI(new Date());
   var chant=calcMerit(st.totalChants*NAMU_CHARS,getMult(info)*streakMult()*wisdomMult()*tierMult());
@@ -2347,11 +2358,13 @@ function spawnP(){
 }
 function addGongyoReading(g){
   if(!g&&!gcGGN)return;
-  var chars=gongyoCharCount(g||gcGG[gcCurReal]);
+  var _cur=g||gcGG[gcCurReal];
+  if(!g&&!isItemUnlocked(_cur.id)&&(GG_MERIT_UNLOCK[_cur.id]||0)>0)return;
+  var chars=gongyoCharCount(_cur);
   var m=getMult(dayI(new Date()))*streakMult();
   var merit=calcMerit(chars,m);
   st.gongyoMerit=(st.gongyoMerit||0)+merit;
-  st.gCounts[(g||gcGG[gcCurReal]).id]=(st.gCounts[(g||gcGG[gcCurReal]).id]||0)+1;
+  st.gCounts[_cur.id]=(st.gCounts[_cur.id]||0)+1;
   trigGcFlash();
   if(st.sessionCount%10===0){spawnP();}
   updateChantUI();lsS(UK,st);persistLb();updateGcUI();
@@ -2370,8 +2383,8 @@ function addChants(n){
   updateChantUI();lsS(UK,st);persistLb();
   if(st.tab==='cal')renderCal();
   checkUnlockThreshold();
-  if(_deferredInstallPrompt&&st.totalChants===10&&!lsG('yomy_pwa_dismissed')){
-    var pb=document.getElementById('pwaInstallBanner');if(pb)pb.style.display='flex';
+  if(_deferredInstallPrompt&&!lsG('yomy_pwa_dismissed')&&(st.totalChants===10||st.totalChants===50||st.totalChants===200)){
+    _showPwaBannerBriefly();
   }
   if(st.totalChants===10&&getUserTier()==='free'&&!lsG('yomy_onboard_cta_shown')){
     lsS('yomy_onboard_cta_shown',true);
@@ -2545,10 +2558,17 @@ function updateGcUI(){
   var g=gcGG[gcCurReal],cnt=st.gCounts[g.id]||0;
   document.getElementById('gcCounter').textContent=(gcCurReal+1)+' / '+gcGGN;
   document.getElementById('gcProgress').textContent=cnt+'回 唱えました';
+  var locked=!isItemUnlocked(g.id)&&(GG_MERIT_UNLOCK[g.id]||0)>0;
   var rb=document.getElementById('gcReadBtn');
+  var cb=document.getElementById('gcCount');
   var hasText=g.lines&&g.lines.length>0;
-  rb.style.opacity=hasText?'1':'0.45';
-  rb.title=hasText?'経文を表示':'（テキスト準備中）';
+  if(locked){
+    if(rb){rb.style.opacity='0.22';rb.disabled=true;rb.textContent='🔒 解放してから読めます';}
+    if(cb){cb.style.opacity='0.22';cb.disabled=true;}
+  } else {
+    if(rb){rb.style.opacity=hasText?'1':'0.45';rb.disabled=!hasText;rb.textContent='📖 読む（経文を表示）';}
+    if(cb){cb.style.opacity='1';cb.disabled=false;}
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -2631,6 +2651,10 @@ function showReadFontPick(){
 function openReading(){
   var g=gcGG[gcCurReal];
   if(!g)return;
+  if(!isItemUnlocked(g.id)&&(GG_MERIT_UNLOCK[g.id]||0)>0){
+    openItemUnlock(g.id,GG_MERIT_UNLOCK[g.id]);
+    return;
+  }
   if(!g.lines||!g.lines.length){
     alert('📖 このお経のテキストは現在準備中です。\n「唱えた」ボタンで回数を記録してください。');
     return;
@@ -4043,19 +4067,34 @@ function openSangaChat(room){
   document.getElementById('sangaHpFill').style.width=Math.round(room.hp/room.maxHp*100)+'%';
   var msgs=document.getElementById('sangaMsgs');
   msgs.innerHTML='<div class="sanga-msg-row"><div class="sanga-avatar">🙏</div><div class="sanga-bubble">あなたの祈りが届きました。一緒にいます。</div></div>';
-  // ティアに応じてカスタムメッセージUI制御
-  var canMsg=hasTierAccess('ume');
+  // 課金(梅以上)または功徳300以上でカスタムメッセージ解放
+  var canMsg=canSendCustomMsg();
   var customArea=document.getElementById('sangaCustomMsgArea');
   var upgradeCta=document.getElementById('sangaUpgradeCta');
   if(customArea)customArea.style.display=canMsg?'block':'none';
-  if(upgradeCta)upgradeCta.style.display=canMsg?'none':'block';
+  if(upgradeCta){
+    upgradeCta.style.display=canMsg?'none':'block';
+    if(!canMsg){
+      var _m=st.gongyoMerit||0;
+      var _pct=Math.min(100,Math.round(_m/CUSTOM_MSG_MERIT_THRESHOLD*100));
+      var _rem=Math.max(0,CUSTOM_MSG_MERIT_THRESHOLD-_m);
+      var _pb=document.getElementById('sangaMeritProgBar');
+      var _pt=document.getElementById('sangaMeritProgTxt');
+      if(_pb)_pb.style.width=_pct+'%';
+      if(_pt)_pt.textContent='功徳 '+_m+' / '+CUSTOM_MSG_MERIT_THRESHOLD+' — あと'+_rem+'で解放';
+    }
+  }
   if(canMsg){
     var tier=getUserTier();var td=TIER_DEF[tier]||TIER_DEF.free;
-    var maxChars=td.msgRx>=999?9999:td.msgRx;
+    var maxChars=hasTierAccess('ume')?(td.msgRx>=999?9999:td.msgRx):200;
     var inp=document.getElementById('sangaCustomInput');
     if(inp)inp.setAttribute('maxlength',maxChars);
     var hint=document.getElementById('sangaCustomHint');
-    if(hint)hint.textContent=maxChars<9999?'最大'+maxChars+'文字（'+td.name+'プラン）':'制限なし（'+td.name+'プラン）';
+    if(hasTierAccess('ume')){
+      if(hint)hint.textContent=maxChars<9999?'最大'+maxChars+'文字（'+td.name+'プラン）':'制限なし（'+td.name+'プラン）';
+    } else {
+      if(hint)hint.textContent='最大200文字（功徳解放）';
+    }
   }
   document.getElementById('sangaOverlay').classList.add('show');
 }
@@ -4114,6 +4153,7 @@ function trigLotusBloom(){
 }
 function sendSangaCustomMsg(){
   if(!_activeSangaRoom)return;
+  if(!canSendCustomMsg())return;
   var inp=document.getElementById('sangaCustomInput');
   if(!inp)return;
   var txt=(inp.value||'').trim();
@@ -5024,8 +5064,7 @@ window.addEventListener('beforeinstallprompt',function(e){
   _deferredInstallPrompt=e;
   var dismissed=lsG('yomy_pwa_dismissed');
   if(!dismissed&&(st.totalChants>=10)){
-    var banner=document.getElementById('pwaInstallBanner');
-    if(banner)banner.style.display='flex';
+    _showPwaBannerBriefly();
   }
 });
 function doPwaInstall(){
@@ -5038,8 +5077,16 @@ function doPwaInstall(){
   var banner=document.getElementById('pwaInstallBanner');
   if(banner)banner.style.display='none';
 }
+var _pwaBannerTimer=null;
+function _showPwaBannerBriefly(){
+  var pb=document.getElementById('pwaInstallBanner');if(!pb)return;
+  pb.style.display='flex';
+  clearTimeout(_pwaBannerTimer);
+  _pwaBannerTimer=setTimeout(function(){if(pb)pb.style.display='none';},10000);
+}
 function dismissPwaBanner(){
   lsS('yomy_pwa_dismissed',true);
+  clearTimeout(_pwaBannerTimer);
   var banner=document.getElementById('pwaInstallBanner');
   if(banner)banner.style.display='none';
 }
