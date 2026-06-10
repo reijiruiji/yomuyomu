@@ -4686,10 +4686,12 @@ document.getElementById('rouletteBtn').addEventListener('click',function(){
 document.querySelectorAll('.dq-snb').forEach(function(b){
   b.addEventListener('click',function(){dqNavTo(b.getAttribute('data-dqv'));});
 });
-document.getElementById('btnHeat').addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
-document.getElementById('btnMon').addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
-document.getElementById('calPrev').addEventListener('click',function(){st.calMonth--;if(st.calMonth<0){st.calMonth=11;st.calYear--;}lsS(UK,st);renderCal();});
-document.getElementById('calNext').addEventListener('click',function(){st.calMonth++;if(st.calMonth>11){st.calMonth=0;st.calYear++;}lsS(UK,st);renderCal();});
+(function(){
+  var bh=document.getElementById('btnHeat');if(bh)bh.addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
+  var bm=document.getElementById('btnMon');if(bm)bm.addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
+  var cp=document.getElementById('calPrev');if(cp)cp.addEventListener('click',function(){st.calMonth--;if(st.calMonth<0){st.calMonth=11;st.calYear--;}lsS(UK,st);renderCal();});
+  var cn=document.getElementById('calNext');if(cn)cn.addEventListener('click',function(){st.calMonth++;if(st.calMonth>11){st.calMonth=0;st.calYear++;}lsS(UK,st);renderCal();});
+})();
 (function(){
   var map={readFsR:'readFs',readLhR:'readLh',readGapR:'readGap'};
   Object.keys(map).forEach(function(id){
