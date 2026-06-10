@@ -24,6 +24,8 @@
 <link rel="apple-touch-icon" href="images/icon-maskable-192x192.png">
 <link rel="icon" type="image/png" href="images/icon-192x192.png">
 <title>よむよむお題目</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="dq-data.js"></script>
 <style>
 :root{
@@ -3839,30 +3841,77 @@ var KLESHA_COLORS={
   gi:  {color:'#80cbc4',glow:'rgba(128,203,196,.7)', label:'Doubt',   hue:'160deg',sat:'2.0',bright:'1.0'}
 };
 var DEMO_ROOMS=[
-  {id:'r1',klesha:'greed',weight:'light',title:'仕事のことばかり考えてしまう',hp:65,maxHp:100},
-  {id:'r2',klesha:'doubt',weight:'medium',title:'自分の選択が正しかったのか不安',hp:40,maxHp:100},
-  {id:'r3',klesha:'anger',weight:'heavy',title:'理不尽なことがあって怒りが収まらない',hp:80,maxHp:100}
+  {id:'r1',klesha:'tan',weight:'light',title:'仕事のことばかり考えてしまう',hp:65,maxHp:100},
+  {id:'r2',klesha:'gi',weight:'medium',title:'自分の選択が正しかったのか不安',hp:40,maxHp:100},
+  {id:'r3',klesha:'shin',weight:'heavy',title:'理不尽なことがあって怒りが収まらない',hp:80,maxHp:100}
 ];
 var _lotusSpawnTimer=null;
-function initLotusFloaters(){
-  var cont=document.getElementById('lpLotusContainer');if(!cont)return;
+var _db=null,_firebaseRooms=[],_sangaUnsub=null;
+(function(){
+  try{
+    firebase.initializeApp({
+      apiKey:'AIzaSyC45mOFbZBpdqtK0ap0eOOVm-EXc1WMRPc',
+      authDomain:'yomyomu-84cee.firebaseapp.com',
+      projectId:'yomyomu-84cee',
+      storageBucket:'yomyomu-84cee.firebasestorage.app',
+      messagingSenderId:'494910239105',
+      appId:'1:494910239105:web:b12a9f3c52d3ffa8a9f880'
+    });
+    _db=firebase.firestore();
+  }catch(e){console.warn('[蓮池] Firebase init:',e);}
+})();
+function _allSangaRooms(){
+  var base=_firebaseRooms.length>0?_firebaseRooms:DEMO_ROOMS;
+  return st.sangaRooms.concat(base);
+}
+function _renderLotusFloaters(cont){
+  if(!cont)return;
   cont.innerHTML='';
-  if(_lotusSpawnTimer)clearInterval(_lotusSpawnTimer);
-  var rooms=st.sangaRooms.concat(DEMO_ROOMS);
+  var rooms=_allSangaRooms();
   var spread=Math.max(6,rooms.length);
   for(var i=0;i<spread;i++){
-    var r=rooms[i%rooms.length];
     (function(room,seed){
       setTimeout(function(){
         var c=document.getElementById('lpLotusContainer');if(c)spawnLotusFloater(room,c,seed);
       },seed*(2000/spread));
-    })(r,i);
+    })(rooms[i%rooms.length],i);
   }
+}
+function initLotusFloaters(){
+  var cont=document.getElementById('lpLotusContainer');if(!cont)return;
+  cont.innerHTML='';
+  if(_lotusSpawnTimer)clearInterval(_lotusSpawnTimer);
+
+  // Firestore購読（既存があればいったん解除）
+  if(_sangaUnsub){try{_sangaUnsub();}catch(e){}}_sangaUnsub=null;
+  if(_db){
+    try{
+      _sangaUnsub=_db.collection('sangaRooms')
+        .orderBy('createdAt','desc').limit(40)
+        .onSnapshot(function(snap){
+          _firebaseRooms=[];
+          snap.forEach(function(doc){
+            var d=doc.data();
+            if(!d||d.hp>=d.maxHp)return; // 浄化済みはスキップ
+            d.id=doc.id;d._fbId=doc.id;
+            _firebaseRooms.push(d);
+          });
+          // 蓮池タブが開いていれば再描画
+          var tc=document.getElementById('tc-lotus');
+          if(tc&&tc.classList.contains('on')){
+            var c2=document.getElementById('lpLotusContainer');
+            _renderLotusFloaters(c2);
+          }
+        },function(e){console.warn('[蓮池] snapshot:',e);});
+    }catch(e){console.warn('[蓮池] subscribe:',e);}
+  }
+
+  _renderLotusFloaters(cont);
   _lotusSpawnTimer=setInterval(function(){
     var cont2=document.getElementById('lpLotusContainer');if(!cont2)return;
     if(!document.getElementById('tc-lotus').classList.contains('on'))return;
-    var rooms2=st.sangaRooms.concat(DEMO_ROOMS);
-    var r=rooms2[Math.floor(Math.random()*rooms2.length)];
+    var rooms=_allSangaRooms();
+    var r=rooms[Math.floor(Math.random()*rooms.length)];
     if(r)spawnLotusFloater(r,cont2,Math.floor(Math.random()*9999));
   },2500);
 }
@@ -3966,6 +4015,18 @@ function createSangaRoom(){
   var room={id:'u'+Date.now(),klesha:st.sangaSelectedKlesha,weight:st.sangaWeight||'medium',title:title,hp:0,maxHp:100};
   st.sangaRooms.unshift(room);if(st.sangaRooms.length>20)st.sangaRooms.pop();
   st.sangaSelectedKlesha='';lsS(UK,st);
+  // Firestoreに書き込み
+  if(_db){
+    try{
+      _db.collection('sangaRooms').add({
+        klesha:room.klesha,weight:room.weight,title:room.title,
+        hp:room.hp,maxHp:room.maxHp,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function(ref){
+        room._fbId=ref.id;lsS(UK,st);
+      }).catch(function(e){console.warn('[蓮池] write:',e);});
+    }catch(e){console.warn('[蓮池] add:',e);}
+  }
   addWeeklyLotus();
   document.getElementById('sangaRoomTitle').value='';
   buildSangaKleshaSelect();
@@ -4115,11 +4176,15 @@ function sendSangaPrayer(type){
   _activeSangaRoom.hp=Math.min(_activeSangaRoom.maxHp,(_activeSangaRoom.hp||0)+10);
   document.getElementById('sangaHpText').textContent=_activeSangaRoom.hp+' / '+_activeSangaRoom.maxHp;
   document.getElementById('sangaHpFill').style.width=Math.round(_activeSangaRoom.hp/_activeSangaRoom.maxHp*100)+'%';
-  // sangaRooms にHP反映
+  // ローカルHP反映
   var idx=-1;
   for(var i=0;i<st.sangaRooms.length;i++){if(st.sangaRooms[i].id===_activeSangaRoom.id){idx=i;break;}}
   if(idx>=0)st.sangaRooms[idx].hp=_activeSangaRoom.hp;
   lsS(UK,st);
+  // Firestoreに同期
+  if(_db&&_activeSangaRoom._fbId){
+    try{_db.collection('sangaRooms').doc(_activeSangaRoom._fbId).update({hp:_activeSangaRoom.hp}).catch(function(e){console.warn('[蓮池] hp update:',e);});}catch(e){}
+  }
   // 浄化完了
   if(_activeSangaRoom.hp>=_activeSangaRoom.maxHp){
     setTimeout(function(){trigLotusBloom();},200);
@@ -4133,8 +4198,13 @@ function sendSangaPrayer(type){
       if(msgs2){msgs2.appendChild(comp);msgs2.scrollTop=msgs2.scrollHeight;}
     },500);
     setTimeout(function(){
+      var fbId=_activeSangaRoom._fbId;
       st.sangaRooms=st.sangaRooms.filter(function(r){return r.id!==_activeSangaRoom.id;});
       lsS(UK,st);
+      // Firestoreから削除
+      if(_db&&fbId){
+        try{_db.collection('sangaRooms').doc(fbId).delete().catch(function(e){console.warn('[蓮池] delete:',e);});}catch(e){}
+      }
       closeSangaChat();
       initLotusFloaters();
     },3200);
