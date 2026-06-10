@@ -11,15 +11,15 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="よむよむお題目 — 古代の智慧で孤独を静寂に変える">
 <meta property="og:description" content="南無妙法蓮華経を唱えながら功徳を積む。蓮池でサンガと繋がり、仏典クイズで智慧を深める。">
-<meta property="og:url" content="https://handamin.github.io/yomuyomu/">
-<meta property="og:image" content="https://handamin.github.io/yomuyomu/images/icon-512x512.png">
+<meta property="og:url" content="https://reijiruiji.github.io/yomuyomu/">
+<meta property="og:image" content="https://reijiruiji.github.io/yomuyomu/images/icon-512x512.png">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="よむよむお題目">
 <meta name="twitter:description" content="古代の智慧で孤独を静寂に変えるウェルネスRPG">
-<meta name="twitter:image" content="https://handamin.github.io/yomuyomu/images/icon-512x512.png">
+<meta name="twitter:image" content="https://reijiruiji.github.io/yomuyomu/images/icon-512x512.png">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="images/icon-maskable-192x192.png">
 <link rel="icon" type="image/png" href="images/icon-192x192.png">
@@ -129,6 +129,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .font-pick-q{font-size:.85rem;font-weight:600;color:var(--a);margin-bottom:.45rem;line-height:1.4;}
 .hint-bounce{font-size:12px;color:var(--mu);margin-top:1.25rem;animation:bnc 1.5s ease-in-out infinite;}
 @keyframes bnc{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes lpHintFloat{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-7px)}}
 
 /* ── APP ── */
 #app{display:none;min-height:100dvh;}
@@ -783,6 +784,39 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 #tc-quest .dq-snb{background:rgba(8,5,22,.72)!important;border-color:rgba(255,255,255,.2)!important;}
 #tc-quest .dq-snb.on{background:rgba(212,168,67,.28)!important;border-color:var(--boa)!important;}
 
+/* ══ iOS風 Vibrancy Material — 明るい背景タブ共通 ══
+   原則: backdrop-filter:blur(20px)+saturate(160%) + 暗色ベース + 白文字
+   → 背景の明度に関わらず文字コントラスト WCAG AA 達成 */
+#tc-quest,#tc-lotus{
+  --glass-bg: rgba(8,5,20,.76);
+  --glass-border: rgba(255,255,255,.22);
+  --glass-blur: blur(20px) saturate(160%);
+  --text-primary: rgba(255,255,255,.95);
+  --text-secondary: rgba(255,255,255,.72);
+}
+/* 全パネル類に適用 */
+#tc-quest .card,#tc-quest .lp-glass,
+#tc-lotus .lp-glass{
+  background:var(--glass-bg)!important;
+  backdrop-filter:var(--glass-blur)!important;
+  -webkit-backdrop-filter:var(--glass-blur)!important;
+  border-color:var(--glass-border)!important;
+  color:var(--text-primary)!important;
+}
+/* タブナビ・ヘッダー部 */
+#tc-quest .tab-hd{
+  background:rgba(6,4,16,.6);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-radius:14px;padding:.5rem .75rem;margin-bottom:.5rem;
+}
+#tc-quest .tab-hd .tab-hd-title,#tc-quest .tab-hd-title{color:#fff!important;}
+/* DQ進捗ヘッダー */
+#tc-quest #dqLvLabel{color:#fff!important;}
+#tc-quest #dqReadLabel{color:var(--text-secondary)!important;}
+#tc-quest .wisdom-pill{background:rgba(8,5,20,.82)!important;color:rgba(255,255,255,.88)!important;border-color:rgba(255,255,255,.2)!important;}
+/* XPバー */
+#tc-quest .stage-bar{background:rgba(255,255,255,.15)!important;}
+
 /* ══ 蓮池: 浮かぶ蓮の花（全画面） ══ */
 .lp-lotus-floater{position:absolute;bottom:-40px;cursor:pointer;user-select:none;
   display:flex;flex-direction:column;align-items:center;gap:3px;z-index:3;
@@ -1346,20 +1380,19 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   <div class="tc" id="tc-lotus" style="padding:0;overflow:hidden;position:relative">
     <!-- 全画面蓮の花エリア -->
     <div id="lpPondFull" style="position:fixed;inset:0;top:0;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:2;overflow:hidden;cursor:pointer">
-      <!-- 蓮池タイトル -->
-      <div style="position:absolute;top:max(14px,calc(env(safe-area-inset-top,0px)+6px));left:50%;transform:translateX(-50%);
-        z-index:10;pointer-events:none;font-size:12px;font-weight:600;color:rgba(212,168,67,.75);
-        background:rgba(0,0,0,.28);padding:4px 14px;border-radius:20px;white-space:nowrap;
-        backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);">
-        🪷 蓮池 — 祈りの池
+      <!-- 蓮池ヘッダー（tab-hdスタイルに統一） -->
+      <div style="position:absolute;top:0;left:0;right:0;z-index:10;pointer-events:none;
+        padding:max(14px,calc(env(safe-area-inset-top,0px)+6px)) .875rem .75rem;
+        background:linear-gradient(to bottom,rgba(6,4,18,.62) 0%,transparent 100%);">
+        <span style="font-size:13px;font-weight:600;color:var(--a)">🪷 蓮池 — 祈りの池</span>
       </div>
       <div id="lpLotusContainer" style="position:absolute;inset:0"></div>
-      <!-- ダブルタップヒント -->
-      <div id="lpDblHint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-        font-size:12px;color:rgba(255,255,255,.38);letter-spacing:.08em;pointer-events:none;
-        animation:bnc 2.5s ease-in-out infinite;text-align:center;white-space:nowrap;
-        background:rgba(0,0,0,.22);padding:.5rem 1.1rem;border-radius:20px;
-        border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);">
+      <!-- ダブルタップヒント（centering animation で上下バウンス） -->
+      <div id="lpDblHint" style="position:absolute;top:50%;left:50%;
+        font-size:12px;color:rgba(255,255,255,.5);letter-spacing:.08em;pointer-events:none;
+        animation:lpHintFloat 2.8s ease-in-out infinite;text-align:center;white-space:nowrap;
+        background:rgba(0,0,0,.28);padding:.5rem 1.2rem;border-radius:20px;
+        border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);">
         ダブルタップで悩みを流す
       </div>
     </div>
@@ -5306,7 +5339,7 @@ function shareDailyTeaching(){
   if(!content)return;
   var streak=st.loginStreak||0;
   var merit=totalMerit();
-  var appUrl='https://handamin.github.io/yomuyomu/';
+  var appUrl='https://reijiruiji.github.io/yomuyomu/';
   var text='📖 今日の教え\n\n「'+content.title+'」\n\n'+content.body.substring(0,80)+'…'
     +'\n\n🪷 今日の実践：'+content.practice.substring(0,50)+'…'
     +(streak>1?'\n\n🔥 '+streak+'日連続修行中':'')
@@ -5316,7 +5349,7 @@ function shareDailyTeaching(){
 function shareMeritScore(){
   var merit=totalMerit(),streak=st.loginStreak||0,tier=getUserTier();
   var d=TIER_DEF[tier]||TIER_DEF.free;
-  var appUrl='https://handamin.github.io/yomuyomu/';
+  var appUrl='https://reijiruiji.github.io/yomuyomu/';
   var text='🪷 よむよむお題目 — 今日の功徳\n\n'
     +'累計功徳: '+fmt(merit)+'\n'
     +d.badge+' '+d.name+'プラン修行中\n'
@@ -5327,7 +5360,7 @@ function shareMeritScore(){
 }
 function shareInviteLink(){
   var name=encodeURIComponent(st.userName||'friend');
-  var appUrl='https://handamin.github.io/yomuyomu/?ref='+name;
+  var appUrl='https://reijiruiji.github.io/yomuyomu/?ref='+name;
   var text='🪷 よむよむお題目 — 一緒に修行しませんか？\n\n'
     +'毎日の読経を記録して功徳を積むアプリです。\n'
     +'無料で始められます（課金は任意です）。\n\n'
