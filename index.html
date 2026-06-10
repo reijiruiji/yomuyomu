@@ -2567,6 +2567,7 @@ function showReadFontPick(){
 }
 function openReading(){
   var g=gcGG[gcCurReal];
+  if(!g)return;
   if(!g.lines||!g.lines.length){
     alert('📖 このお経のテキストは現在準備中です。\n「唱えた」ボタンで回数を記録してください。');
     return;
@@ -2741,10 +2742,10 @@ function buildMonthly(){
 }
 function renderCal(){
   var h=st.calView==='heat';
-  document.getElementById('btnHeat').classList.toggle('on',h);
-  document.getElementById('btnMon').classList.toggle('on',!h);
-  document.getElementById('calLegMon').style.display=h?'none':'flex';
-  document.getElementById('calLegHeat').style.display=h?'flex':'none';
+  var bh=document.getElementById('btnHeat');if(bh)bh.classList.toggle('on',h);
+  var bm=document.getElementById('btnMon');if(bm)bm.classList.toggle('on',!h);
+  var lm=document.getElementById('calLegMon');if(lm)lm.style.display=h?'none':'flex';
+  var lh=document.getElementById('calLegHeat');if(lh)lh.style.display=h?'flex':'none';
   updateCalStreakUI();
   buildMonthly();
   buildRecent();
@@ -4274,8 +4275,8 @@ function dqCheckBadges(){
 function getWisdomLevel(){return Math.min(10,Math.floor(dqS.read.size/4));}
 function wisdomMult(){
   var lv=getWisdomLevel();
-  if(lv>=10)return 3;if(lv>=7)return 2;if(lv>=4)return 2;if(lv>=1)return 1;
-  return 1;
+  if(lv>=10)return 3;if(lv>=7)return 2.0;if(lv>=4)return 1.5;if(lv>=1)return 1.2;
+  return 1.0;
 }
 
 // ── 探求タブ サマリー ──
