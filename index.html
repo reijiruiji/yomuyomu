@@ -514,14 +514,18 @@ body.dark .crk.ta{color:#ef9a9a;}
   filter:drop-shadow(0 2px 12px rgba(248,165,194,.5));opacity:.88;}
 /* ── 勤行ロックカード ── */
 .gc-locked{opacity:.5;filter:grayscale(.6);cursor:not-allowed;}
+/* ── 難易度セレクター ── */
+.gc-diff-bar{display:flex;gap:.375rem;margin:.25rem .75rem .15rem;justify-content:center;}
+.gc-diff-btn{flex:1;padding:.3rem .25rem;border-radius:16px;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-size:11px;cursor:pointer;transition:all .18s;}
+.gc-diff-btn.active{border-color:var(--ag);color:#d4a843;background:rgba(212,168,67,.13);font-weight:700;}
 /* ── 時間帯別背景 ── */
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;opacity:.7;}
 /* ── 太鼓ボタン ── */
-.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
-.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;will-change:transform;}
+.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:calc(.5rem - 10mm) auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
+.tap-drum-img{width:clamp(225px,78vw,330px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;will-change:transform;}
 @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
 .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
-.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,52vw,220px);height:clamp(150px,52vw,220px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
+.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(225px,78vw,330px);height:clamp(225px,78vw,330px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
 @keyframes drum-ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(3);opacity:0}}
 /* ── 100回達成 大演出 ── */
 @keyframes milestone100Flash{
@@ -549,7 +553,7 @@ body.rich #mpanel{
 /* お題目ボタン：常時黄金グロー */
 .tap-drum-wrap::before{
   content:'';position:absolute;border-radius:50%;
-  width:calc(clamp(150px,48vw,210px) + 48px);height:calc(clamp(150px,48vw,210px) + 48px);
+  width:calc(clamp(225px,74vw,314px) + 48px);height:calc(clamp(225px,74vw,314px) + 48px);
   top:50%;left:50%;transform:translate(-50%,-50%);
   background:radial-gradient(circle,hsla(var(--h),80%,60%,.3) 0%,transparent 70%);
   animation:rich-glow 2.8s ease-in-out infinite;pointer-events:none;z-index:0;}
@@ -1202,6 +1206,14 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       </div>
     </div>
 
+    <!-- 難易度セレクター -->
+    <div class="gc-diff-bar">
+      <button class="gc-diff-btn" id="gcDiff0" onclick="setGcDiff(0)">かんたん</button>
+      <button class="gc-diff-btn active" id="gcDiff1" onclick="setGcDiff(1)">普通</button>
+      <button class="gc-diff-btn" id="gcDiff2" onclick="setGcDiff(2)">難しい</button>
+    </div>
+    <div style="text-align:center;font-size:9px;color:rgba(255,255,255,.2);margin-bottom:.15rem">↕ 上下スワイプで切替</div>
+
     <!-- 太鼓の達人スタイルカルーセル -->
     <div class="gc-stage-wrap" id="gcWrap">
       <div id="gcStage"><!-- カード挿入 --></div>
@@ -1756,6 +1768,23 @@ var st={
 };
 var actx=null;
 var gcAnimating=false,gcCurReal=0;
+var gcDiffMode=1; // 0=かんたん 1=普通 2=難しい
+var gcGG=[],gcGGN=0;
+function getGCGG(){
+  if(gcDiffMode===0)return GG.filter(function(g){return g.s.indexOf('常用勤行')>=0;});
+  if(gcDiffMode===1)return GG.filter(function(g){return GG_FREE.has(g.id);});
+  return GG.slice();
+}
+function setGcDiff(mode){
+  if(mode===gcDiffMode)return;
+  gcDiffMode=mode;
+  gcCurReal=0;
+  [0,1,2].forEach(function(i){
+    var b=document.getElementById('gcDiff'+i);
+    if(b)b.classList.toggle('active',i===mode);
+  });
+  buildCarousel();
+}
 var readLineIdx=0,readLines=[];
 var CARD_W=155, STEP=118;
 
@@ -2318,13 +2347,23 @@ function trigGcFlash(){
   var btn=document.getElementById('gcCount');if(btn){btn.classList.add('flashing');setTimeout(function(){btn.classList.remove('flashing');},500);}
   spawnP();try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}
 }
-function spawnP(){['🌸','✨','🪷'].forEach(function(e){var p=document.createElement('div');p.className='particle';p.textContent=e;p.style.left=(20+Math.random()*60)+'%';p.style.top=(20+Math.random()*40)+'%';document.body.appendChild(p);setTimeout(function(){p.remove();},1200);});}
+function spawnP(){
+  var drum=document.getElementById('manBtn');
+  var rect=drum?drum.getBoundingClientRect():{left:window.innerWidth/2-80,top:window.innerHeight/2-80,width:160,height:160};
+  var cx=rect.left+rect.width/2,cy=rect.top+rect.height*0.35;
+  ['🌸','✨','🪷'].forEach(function(e){
+    var p=document.createElement('div');p.className='particle';p.textContent=e;
+    p.style.left=(cx+(Math.random()*120-60))+'px';
+    p.style.top=(cy+(Math.random()*60-80))+'px';
+    document.body.appendChild(p);setTimeout(function(){p.remove();},1200);
+  });
+}
 function addGongyoReading(g){
-  var chars=gongyoCharCount(g||GG[gcCurReal]);
+  var chars=gongyoCharCount(g||gcGG[gcCurReal]);
   var m=getMult(dayI(new Date()))*streakMult();
   var merit=calcMerit(chars,m);
   st.gongyoMerit=(st.gongyoMerit||0)+merit;
-  st.gCounts[(g||GG[gcCurReal]).id]=(st.gCounts[(g||GG[gcCurReal]).id]||0)+1;
+  st.gCounts[(g||gcGG[gcCurReal]).id]=(st.gCounts[(g||gcGG[gcCurReal]).id]||0)+1;
   trigGcFlash();
   if(st.sessionCount%10===0){spawnP();}
   updateChantUI();lsS(UK,st);persistLb();updateGcUI();
@@ -2390,6 +2429,8 @@ var _gcSX=0,_gcSY=0,rouletteRunning=false;
 var stageW=0; // キャッシュした幅
 
 function buildCarousel(){
+  gcGG=getGCGG();gcGGN=gcGG.length;
+  if(gcCurReal>=gcGGN)gcCurReal=0;
   var stage=document.getElementById('gcStage');
   stage.innerHTML='';
   // 幅を一度だけ計測してキャッシュ（ルーレット中に再計測しない）
@@ -2397,7 +2438,7 @@ function buildCarousel(){
   CARD_W=Math.min(Math.round(stageW*0.46),180);
   STEP=Math.round(CARD_W*0.84);
 
-  GG.forEach(function(g,i){
+  gcGG.forEach(function(g,i){
     var card=document.createElement('div');
     var need=GG_MERIT_UNLOCK&&GG_MERIT_UNLOCK[g.id]?GG_MERIT_UNLOCK[g.id]:0;
     var locked=need>0&&totalMerit()<need;
@@ -2405,12 +2446,11 @@ function buildCarousel(){
     card.id='gc'+i;
     card.dataset.idx=i;
     var hasText=g.lines&&g.lines.length>0;
-    var meritNow=Math.round(totalMerit());
     var badge=locked
       ?'<div class="gc-badge gc-badge-locked">🔒 未解放 / 功徳'+need+'</div>'
       :(hasText?'<div class="gc-badge">📖 読める</div>':'');
     card.innerHTML=
-      '<div class="gc-num">'+(i+1)+'/'+GG_N+'</div>'+
+      '<div class="gc-num">'+(i+1)+'/'+gcGGN+'</div>'+
       '<div class="gc-title">'+g.t+'</div>'+
       '<div class="gc-sub">'+g.s+'</div>'+
       badge+
@@ -2421,7 +2461,7 @@ function buildCarousel(){
       card.addEventListener('click',function(){
         var idx=parseInt(card.dataset.idx);
         if(idx===gcCurReal)return;
-        var n=GG_N;
+        var n=gcGGN;
         var raw=idx-gcCurReal;while(raw>n/2)raw-=n;while(raw<-n/2)raw+=n;
         if(raw>0)for(var k=0;k<raw;k++)gcStep(1);
         else for(var k=0;k<-raw;k++)gcStep(-1);
@@ -2430,27 +2470,33 @@ function buildCarousel(){
     stage.appendChild(card);
   });
 
-  // タッチスワイプ
+  // タッチスワイプ（横:カード切替 / 縦:難易度切替）
   var wrap=document.getElementById('gcWrap');
-  // 既存リスナーが重複しないよう、HTMLにdata-initを使う
   if(!wrap.dataset.init){
     wrap.dataset.init='1';
     wrap.addEventListener('touchstart',function(e){_gcSX=e.touches[0].clientX;_gcSY=e.touches[0].clientY;},{passive:true});
     wrap.addEventListener('touchend',function(e){
       var dx=e.changedTouches[0].clientX-_gcSX,dy=e.changedTouches[0].clientY-_gcSY;
-      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>30)gcStep(dx<0?1:-1);
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>30){gcStep(dx<0?1:-1);}
+      else if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>40){setGcDiff(dy<0?Math.min(gcDiffMode+1,2):Math.max(gcDiffMode-1,0));}
     },{passive:true});
     var _mx=0;
     wrap.addEventListener('mousedown',function(e){_mx=e.clientX;});
     wrap.addEventListener('mouseup',function(e){var dx=e.clientX-_mx;if(Math.abs(dx)>30)gcStep(dx<0?1:-1);});
   }
 
+  // 難易度ボタン表示同期
+  [0,1,2].forEach(function(i){
+    var b=document.getElementById('gcDiff'+i);
+    if(b)b.classList.toggle('active',i===gcDiffMode);
+  });
+
   posCards(false);
   renderGongyouUnlockCard();
 }
 
 function posCards(anim){
-  var n=GG_N;
+  var n=gcGGN;
   var W=stageW; // キャッシュを使う（DOM読み取りなし）
   var CW=CARD_W;
   var centerX=W/2; // ステージ中央
@@ -2490,15 +2536,16 @@ function posCards(anim){
 function gcStep(dir){
   if(gcAnimating)return;gcAnimating=true;
   mokuS();
-  gcCurReal=(gcCurReal+dir+GG_N)%GG_N;
+  gcCurReal=(gcCurReal+dir+gcGGN)%gcGGN;
   st.gIdx=gcCurReal;
   posCards(true);lsS(UK,st);
   setTimeout(function(){gcAnimating=false;},340);
 }
 function gotoIdx(ri){gcCurReal=ri;st.gIdx=ri;posCards(false);lsS(UK,st);}
 function updateGcUI(){
-  var g=GG[gcCurReal],cnt=st.gCounts[g.id]||0;
-  document.getElementById('gcCounter').textContent=(gcCurReal+1)+' / '+GG_N;
+  if(!gcGGN)return;
+  var g=gcGG[gcCurReal],cnt=st.gCounts[g.id]||0;
+  document.getElementById('gcCounter').textContent=(gcCurReal+1)+' / '+gcGGN;
   document.getElementById('gcProgress').textContent=cnt+'回 唱えました';
   var rb=document.getElementById('gcReadBtn');
   var hasText=g.lines&&g.lines.length>0;
@@ -2584,7 +2631,7 @@ function showReadFontPick(){
   ov.classList.remove('gone');ov.style.display='flex';
 }
 function openReading(){
-  var g=GG[gcCurReal];
+  var g=gcGG[gcCurReal];
   if(!g.lines||!g.lines.length){
     alert('📖 このお経のテキストは現在準備中です。\n「唱えた」ボタンで回数を記録してください。');
     return;
@@ -2593,7 +2640,7 @@ function openReading(){
   doOpenReading();
 }
 function doOpenReading(){
-  var g=GG[gcCurReal];
+  var g=gcGG[gcCurReal];
   readLines=g.lines;readLineIdx=0;
   readViewMode=st.fontPref||'kanji';
   if(readViewMode==='imi')readViewMode='kanji';
@@ -2644,7 +2691,7 @@ function gotoPage(idx){
 function readNext(){
   if(readLineIdx>=readLines.length-1){
     closeReading();
-    addGongyoReading(GG[gcCurReal]);lsS(UK,st);
+    addGongyoReading(gcGG[gcCurReal]);lsS(UK,st);
     spawnP();accentS();
     setTimeout(function(){alert('🪷 読経完了！功徳が得られました。\n南無妙法蓮華経');},200);
     return;
@@ -4686,8 +4733,8 @@ function startRoulette(){
   
   var timer = setInterval(function(){
     var elapsed = Date.now() - startTime;
-    // 0から項目の数（GG.length）の間でランダムに選ぶ
-    var randIdx = Math.floor(Math.random() * GG.length);
+    // 0から難易度フィルタ後の項目数の間でランダムに選ぶ
+    var randIdx = Math.floor(Math.random() * gcGGN);
     st.gIdx = randIdx;
     gcCurReal = randIdx;
     buildCarousel(); // 表示を更新
