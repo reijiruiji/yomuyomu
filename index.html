@@ -763,10 +763,25 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 .narai-section-title{font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.07em;
   text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
 .narai-section-title::before{content:'';display:block;width:3px;height:12px;background:#e879a0;border-radius:2px;}
-#tc-narai .lp-glass,#tc-quest .lp-glass{background:rgba(8,5,22,.68)!important;border-color:rgba(255,255,255,.18)!important;}
-#tc-narai,#tc-quest{--mu:rgba(255,255,255,.80);}
-#tc-quest .dq-stage-card{background:rgba(8,5,22,.72)!important;border-color:rgba(255,255,255,.18)!important;}
-#tc-quest .dq-node-detail{background:rgba(8,5,22,.78)!important;border-color:rgba(255,255,255,.18)!important;}
+#tc-narai .lp-glass,#tc-quest .lp-glass{background:rgba(8,5,22,.75)!important;border-color:rgba(255,255,255,.22)!important;}
+#tc-narai,#tc-quest{--mu:rgba(255,255,255,.82);}
+#tc-quest .dq-stage-card{background:rgba(8,5,22,.80)!important;border-color:rgba(255,255,255,.2)!important;}
+#tc-quest .dq-node-detail{background:rgba(8,5,22,.85)!important;border-color:rgba(255,255,255,.2)!important;}
+/* マップ・バッジ・原典 — 読みやすさ対応 */
+#tc-quest .dq-view{background:rgba(6,4,19,.55);border-radius:14px;padding:.5rem .25rem;}
+#tc-quest .dq-badge{background:rgba(8,5,22,.82)!important;border-color:rgba(255,255,255,.2)!important;color:#fff!important;}
+#tc-quest .dq-badge.earned{background:rgba(14,9,36,.88)!important;border-color:var(--boa)!important;}
+#tc-quest .dq-badge-grid{gap:8px;}
+#tc-quest .dq-node-btn{background:rgba(8,5,22,.75)!important;border-color:rgba(255,255,255,.28)!important;box-shadow:0 4px 18px rgba(0,0,0,.55)!important;}
+#tc-quest .dq-node-btn.done{background:hsla(var(--h),60%,28%,.7)!important;border-color:var(--boa)!important;}
+#tc-quest .dq-node-label{color:#fff!important;text-shadow:0 1px 4px rgba(0,0,0,.9);}
+#tc-quest .dq-node-label.locked{color:rgba(255,255,255,.45)!important;}
+#tc-quest .dq-sc-card{background:rgba(8,5,22,.80)!important;border-color:rgba(255,255,255,.2)!important;color:#fff!important;}
+#tc-quest .dq-sc-card.read{background:rgba(14,9,36,.85)!important;border-color:var(--boa)!important;}
+#tc-quest .dq-connector-line{background:rgba(255,255,255,.25);}
+#tc-quest .dq-connector-line.done{background:var(--a);}
+#tc-quest .dq-snb{background:rgba(8,5,22,.72)!important;border-color:rgba(255,255,255,.2)!important;}
+#tc-quest .dq-snb.on{background:rgba(212,168,67,.28)!important;border-color:var(--boa)!important;}
 
 /* ══ 蓮池: 浮かぶ蓮の花（全画面） ══ */
 .lp-lotus-floater{position:absolute;bottom:-40px;cursor:pointer;user-select:none;
