@@ -179,7 +179,17 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.08) 0%,transparent 70%);
   pointer-events:none;}
 .tc{display:none;padding:.875rem;padding-top:max(14px,calc(env(safe-area-inset-top,0px) + 6px));padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
-.tc.on{display:block;}
+.tc.on{display:flex;flex-direction:column;}
+/* お題目タブ: スクロールなし、コンテンツが画面に収まるよう縦伸縮 */
+#tc-chant{
+  height:calc(100dvh - 64px - env(safe-area-inset-bottom,0px));
+  overflow:hidden;
+  box-sizing:border-box;
+}
+#homeChantArea,#homeZenArea{flex:1;display:flex;flex-direction:column;min-height:0;}
+#goalRingArea,#noGoalCount{flex:0 0 auto;}
+.tap-drum-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;}
+.tap-drum-img{max-height:min(48vh,240px);width:auto;object-fit:contain;}
 .card{
   background:rgba(255,255,255,.11);
   backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);
@@ -630,6 +640,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 .dq-badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
 .dq-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:.625rem;text-align:center;color:rgba(255,255,255,.88);}
 .dq-badge.earned{border-color:var(--boa);background:hsla(var(--h),60%,50%,.2);}
+.dq-enlighten-goal{text-align:center;padding:1.5rem .5rem .75rem;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(212,168,67,.08),transparent);border-radius:14px 14px 0 0;}
 .dq-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:450;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
 .dq-overlay.show{display:flex;align-items:flex-start;}
 .dq-panel{background:rgba(12,14,24,.92);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border:1px solid rgba(255,255,255,.18);border-radius:20px 20px 0 0;margin-top:auto;padding:1.25rem;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2);}
@@ -1113,21 +1125,18 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 
   <!-- ── お題目 ── -->
   <div class="tc on" id="tc-chant">
-    <div class="tab-hd">
+    <div class="tab-hd" style="margin-bottom:.4rem">
       <span class="tab-hd-title">🥁 お題目</span>
       <div style="display:flex;gap:5px;align-items:center">
+        <button id="modeSwitchPill" onclick="showModeSelect()"
+          style="display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:4px 10px;
+          border-radius:50px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+          color:var(--tx);cursor:pointer;backdrop-filter:blur(12px);">
+          <span id="modeSwitchLabel">🥁 お題目</span>
+          <span style="color:var(--mu);font-size:9px">⇄</span>
+        </button>
         <button class="hint-btn" onclick="showHint('chant')">?</button>
       </div>
-    </div>
-    <!-- モード切替ピル（常時表示） -->
-    <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem">
-      <button id="modeSwitchPill" onclick="showModeSelect()"
-        style="display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:5px 12px;
-        border-radius:50px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
-        color:var(--tx);cursor:pointer;backdrop-filter:blur(12px);">
-        <span id="modeSwitchLabel">🥁 お題目</span>
-        <span style="color:var(--mu);font-size:10px">⇄</span>
-      </button>
     </div>
     <div id="todayBanner"></div>
     <div id="multPill" style="display:none"></div>
@@ -1194,9 +1203,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       <div class="tap-drum-wrap" id="manBtn" role="button" tabindex="0" aria-label="お題目カウント">
         <img src="images/CountButton.png" class="tap-drum-img" alt="カウント">
       </div>
-      <!-- モード切替リンク + シェア -->
-      <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.5rem">
-        <button class="btn-s" onclick="showModeSelect()" style="font-size:10px;padding:4px 10px">⇄ モード切替</button>
+      <!-- シェア -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.3rem">
         <button class="btn-s" onclick="shareChantRecord()" style="font-size:10px;padding:4px 10px">📤 シェア</button>
       </div>
     </div>
@@ -1258,9 +1266,6 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
           <button class="btn-big accent" id="zenStartBtn" onclick="zenToggle()" style="max-width:160px;margin:0">▶ 始める</button>
         </div>
         <div id="zenMerit" style="font-size:11px;color:var(--mu);margin-top:.35rem">今日の功徳: 0</div>
-      </div>
-      <div style="text-align:center;margin-top:.5rem">
-        <button class="btn-s" onclick="showModeSelect()" style="font-size:10px;padding:4px 10px">⇄ モード切替</button>
       </div>
     </div>
   </div>
@@ -1383,8 +1388,14 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       <!-- 蓮池ヘッダー（tab-hdスタイルに統一） -->
       <div style="position:absolute;top:0;left:0;right:0;z-index:10;pointer-events:none;
         padding:max(14px,calc(env(safe-area-inset-top,0px)+6px)) .875rem .75rem;
-        background:linear-gradient(to bottom,rgba(6,4,18,.62) 0%,transparent 100%);">
+        background:linear-gradient(to bottom,rgba(6,4,18,.62) 0%,transparent 100%);
+        display:flex;align-items:center;justify-content:space-between;">
         <span style="font-size:13px;font-weight:600;color:var(--a)">🪷 蓮池 — 祈りの池</span>
+        <button onclick="showHint('lotus')" style="pointer-events:auto;width:24px;height:24px;border-radius:50%;
+          border:1.5px solid rgba(255,255,255,.3);background:rgba(0,0,0,.35);
+          color:rgba(255,255,255,.7);font-size:11px;font-weight:700;cursor:pointer;
+          display:flex;align-items:center;justify-content:center;
+          backdrop-filter:blur(8px);">?</button>
       </div>
       <div id="lpLotusContainer" style="position:absolute;inset:0"></div>
       <!-- ダブルタップヒント（centering animation で上下バウンス） -->
@@ -1530,9 +1541,16 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     </div>
     <!-- DQ ヘッダー / 進捗 -->
     <div style="padding:0 0 .375rem;flex:0 0 auto">
-      <div class="lp-glass lp-glass-sm" style="margin-bottom:.25rem;padding:.875rem 1rem">
+      <div class="lp-glass lp-glass-sm" style="margin-bottom:.25rem;padding:.75rem 1rem">
         <div style="display:flex;align-items:center;gap:.75rem">
-          <div style="font-size:2rem" id="dqLvIcon">📿</div>
+          <!-- レベルアイコン → タップでバッジ一覧 -->
+          <div onclick="openDQBadgeOv()" style="cursor:pointer;position:relative;flex-shrink:0">
+            <div style="font-size:2rem" id="dqLvIcon">📿</div>
+            <div style="position:absolute;bottom:-2px;right:-6px;font-size:8px;font-weight:700;
+              background:var(--a);color:#000;border-radius:8px;padding:1px 5px;white-space:nowrap">
+              バッジ
+            </div>
+          </div>
           <div style="flex:1;min-width:0">
             <div style="font-size:13px;font-weight:700;color:var(--a)" id="dqLvLabel">Lv.1</div>
             <div style="font-size:10px;color:var(--mu)" id="dqReadLabel">経典 0冊 読破</div>
@@ -1543,18 +1561,15 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
         <div style="font-size:10px;color:var(--mu);margin-top:.3rem" id="dqXpLabel"></div>
       </div>
     </div>
-    <!-- サブナビ -->
+    <!-- サブナビ（マップ・原典のみ） -->
     <div class="dq-subnav">
       <button class="dq-snb on" data-dqv="map">🗺 マップ</button>
       <button class="dq-snb" data-dqv="texts">📜 原典</button>
-      <button class="dq-snb" data-dqv="badges">🏅 バッジ</button>
     </div>
-    <!-- マップ（ステージ） -->
-    <div class="dq-view on" id="dqview-map"></div>
+    <!-- マップ（ステージ：下から上へ＝悟りの道） -->
+    <div class="dq-view on" id="dqview-map" style="flex-direction:column-reverse"></div>
     <!-- 原典一覧 -->
     <div class="dq-view" id="dqview-texts"></div>
-    <!-- バッジ -->
-    <div class="dq-view" id="dqview-badges"></div>
   </div>
 </div>
 
@@ -1636,6 +1651,17 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   </div>
   <div class="page-dots" id="pageDots"></div>
   <div class="read-nav" id="readNav"></div>
+</div>
+
+<!-- DQバッジオーバーレイ -->
+<div id="dqBadgeOv" onclick="if(event.target===this)closeDQBadgeOv()" style="display:none;position:fixed;inset:0;z-index:520;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:flex-end;justify-content:center">
+  <div style="background:rgba(10,12,28,.97);border:1px solid rgba(212,168,67,.28);border-top-left-radius:22px;border-top-right-radius:22px;padding:1.25rem 1.25rem 2rem;width:100%;max-height:80vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem">
+      <div style="font-size:14px;font-weight:700;color:var(--a)">🏅 バッジ</div>
+      <button onclick="closeDQBadgeOv()" style="font-size:11px;color:var(--mu);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:5px 12px;cursor:pointer">閉じる</button>
+    </div>
+    <div id="dqBadgeOvGrid" class="dq-badge-grid"></div>
+  </div>
 </div>
 
 <!-- バグ報告オーバーレイ -->
@@ -1959,10 +1985,12 @@ document.getElementById('helpOverlay').addEventListener('click',function(e){if(e
 //  チュートリアルウォークスルー（軽量版）
 // ══════════════════════════════════════════════════════════
 var TUT_STEPS=[
-  {tab:'chant',title:'お題目タブ',body:'ここで「南無妙法蓮華経」を唱えた回数、読誦回数をカウントします。「南無妙法蓮華経」と唱えたらカウントを押しましょう。南無妙法蓮華経のお題目は、正しく人生の道を進むチカラになります。'},
-  {tab:'gongyou',title:'勤行',body:'法華経が読めます。声に出して唱えて功徳を積みましょう。'},
-  {tab:'cal',title:'カレンダータブ',body:'日々の記録が確認できます。毎日記録を重ねて功徳を高めましょう。'},
-  {tab:'chant',title:'毎日続けましょう',body:'祈り、唱えることによって正しい良い方向に導かれます。それが土台となり運命の基礎となりますから、続けられることをお勧め致します🪷'}
+  {tab:'chant',title:'🥁 お題目タブ',body:'「南無妙法蓮華経」と唱えるたびに太鼓をタップ。回数が積み重なり功徳となります。お題目は、正しく人生の道を進む力💪になります。'},
+  {tab:'gongyou',title:'📖 勤行 — 法華経',body:'法華経全品をカルーセルで選択して読めます。声に出して読み、カード内の「✓ 唱えた」ボタンで記録。難易度でソート順が変わります。'},
+  {tab:'narai',title:'📅 ならい — 修行記録',body:'毎日の修行の記録です。連続修行日数（ストリーク）が増えると功徳ブーストが上がります。継続が最大の修行です🔥'},
+  {tab:'lotus',title:'🪷 蓮池 — 祈りの池',body:'ダブルタップして悩みを蓮の花に込め、池に流しましょう。世界中の人の蓮の花が池に浮かびます。蓮がプレミアムプランで強化できます。'},
+  {tab:'quest',title:'🔍 探求 — ダルマクエスト',body:'経典（原典）を読んでクイズに挑戦。正解してXPを獲得しレベルアップ。マップを下から上へと進み、悟りの道を歩みましょう。レベルアイコンをタップするとバッジ一覧が開きます。'},
+  {tab:'chant',title:'✨ さあ、修行を始めましょう',body:'毎日お題目を唱え、経典を読み、祈りを積み重ねることで、心が穏やかになり、正しい方向へ導かれます。南無妙法蓮華経🪷'}
 ];
 var tutWalkStep=0;
 function startTutWalk(){
@@ -1977,6 +2005,9 @@ function showTutStep(idx){
     if(step.tab==='chant'){updateChantUI();renderBanner();}
     if(step.tab==='gongyou')buildCarousel();
     if(step.tab==='cal')renderCal();
+    if(step.tab==='narai')renderNaraiTab();
+    if(step.tab==='lotus'){renderLotusTab();initLotusFloaters();}
+    if(step.tab==='quest'){renderDQSummary();renderDQMap();}
   }
   document.getElementById('twTitle').textContent=step.title;
   document.getElementById('twBody').textContent=step.body;
@@ -2926,6 +2957,10 @@ var HINTS={
   rank:{icon:'🏆',title:'累計功徳について',body:
     '<p>このアプリで獲得した功徳の合計です。</p>'+
     '<p>祈り続けることによって正しい良い方向に導かれます。それが土台となり運命の基礎となりますから、続けられることをお勧め致します。</p>'},
+  lotus:{icon:'🪷',title:'蓮池 — 祈りの池',body:
+    '<p>ダブルタップで悩みを入力し、蓮の花に込めて池に流します。</p>'+
+    '<p>世界中の修行者の蓮の花が池に浮かびます。花をタップして祈りを送りましょう。</p>'+
+    '<p>蓮の花の枚数・強さはプランによって異なります（梅・竹・松・仏プラン）。</p>'},
   narai:{icon:'📅',title:'ならい — 修行記録',body:
     '<p>毎日の修行記録と連続修行日数を管理します。</p>'+
     '<p><b>連続修行：</b>毎日お題目か勤行を続けるとストリークが伸びます。功徳ブーストが上がります。</p>'+
@@ -4692,12 +4727,37 @@ function dqNavTo(v){
   document.querySelectorAll('.dq-view').forEach(function(d){d.classList.toggle('on',d.id==='dqview-'+v);});
   if(v==='map')renderDQMap();
   else if(v==='texts')renderDQTexts();
-  else if(v==='badges')renderDQBadges();
+}
+function openDQBadgeOv(){
+  var ov=document.getElementById('dqBadgeOv');if(!ov)return;
+  var grid=document.getElementById('dqBadgeOvGrid');
+  if(grid&&typeof BADGES!=='undefined'){
+    var html='';
+    BADGES.forEach(function(b){
+      var earned=dqS.earnedBadges.has(b.id);
+      html+='<div class="dq-badge'+(earned?' earned':'')+(earned?'':' locked')+'">'
+        +'<div style="font-size:1.5rem;'+(earned?'':'filter:grayscale(1);opacity:.4')+'">'+b.icon+'</div>'
+        +'<div style="font-size:10px;font-weight:600;color:var(--a);line-height:1.3;margin-top:.2rem">'+b.name_ja+'</div>'
+        +'<div style="font-size:9px;color:var(--mu)">'+b.desc_ja+'</div>'
+        +'</div>';
+    });
+    grid.innerHTML=html;
+  }
+  ov.style.display='flex';
+}
+function closeDQBadgeOv(){
+  var ov=document.getElementById('dqBadgeOv');if(ov)ov.style.display='none';
 }
 var _dqOpenNode=null;
 function renderDQMap(){
   var el=document.getElementById('dqview-map');if(!el||typeof STAGES==='undefined')return;
-  var html='<div class="dq-path"><div class="dq-path-track">';
+  // 悟りの頂上（column-reverseで視覚的に一番上に表示）
+  var html='<div class="dq-path"><div class="dq-enlighten-goal">'
+    +'<div style="font-size:2.2rem;margin-bottom:.3rem">☸️</div>'
+    +'<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.08em">涅槃 · Nirvāṇa</div>'
+    +'<div style="font-size:9px;color:rgba(255,255,255,.35);margin-top:.15rem">悟りの道の頂</div>'
+    +'</div>'
+    +'<div class="dq-path-track">';
   STAGES.forEach(function(sg,i){
     var unlocked=i===0||dqS.stagesDone.has(STAGES[i-1].id);
     var done=dqS.stagesDone.has(sg.id);
@@ -4742,8 +4802,10 @@ function renderDQMap(){
       html+='<div class="dq-connector"><div class="dq-connector-line'+(done?' done':'')+'"></div></div>';
     }
   });
-  html+='</div></div>';
+  html+='</div></div></div>';
   el.innerHTML=html;
+  // 悟りの道: column-reverseで初期スクロールを最下部（ユーザーの現在地）に合わせる
+  el.scrollTop=el.scrollHeight;
 }
 function dqToggleNode(id){
   _dqOpenNode=(_dqOpenNode===id)?null:id;
