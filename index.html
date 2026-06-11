@@ -189,7 +189,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 #homeChantArea,#homeZenArea{flex:1;display:flex;flex-direction:column;min-height:0;}
 #goalRingArea,#noGoalCount{flex:0 0 auto;}
 .tap-drum-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;}
-.tap-drum-img{max-height:min(48vh,240px);width:auto;object-fit:contain;}
+.tap-drum-img{max-height:none;width:auto;object-fit:contain;}
 .card{
   background:rgba(255,255,255,.11);
   backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);
@@ -292,6 +292,11 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
 .gc-stage-wrap{
   position:relative;
   width:100%;
+  flex:1;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   overflow:hidden;
   touch-action:pan-y;
   -webkit-mask-image:linear-gradient(to right,transparent 0%,black 14%,black 86%,transparent 100%);
@@ -527,6 +532,14 @@ body.dark .crk.ta{color:#ef9a9a;}
 .popup ul{padding-left:1.25rem;}
 .info-formula{font-size:10px;color:var(--mu);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 12px;margin:.5rem 0;line-height:1.8;text-align:left;}
 
+/* ── バッジ獲得トースト ── */
+@keyframes badgeIn{from{opacity:0;transform:translateX(-50%) translateY(-24px) scale(.8)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+@keyframes badgeOut{from{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}to{opacity:0;transform:translateX(-50%) translateY(-20px) scale(.85)}}
+.badge-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:600;
+  background:linear-gradient(135deg,rgba(14,9,36,.97),rgba(8,5,22,.97));
+  border:1.5px solid rgba(212,168,67,.7);border-radius:20px;padding:.875rem 1.5rem;
+  text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 28px rgba(212,168,67,.25);
+  animation:badgeIn .4s cubic-bezier(.34,1.56,.64,1);min-width:200px;max-width:280px;pointer-events:none;}
 /* ── FLASH / PARTICLE ── */
 @keyframes flash{0%{box-shadow:0 0 0 0 hsla(var(--h),var(--s),48%,.8)}50%{box-shadow:0 0 0 18px transparent,inset 0 0 25px var(--ag)}100%{box-shadow:0 0 0 0 transparent}}
 .flashing{animation:flash .5s ease-out;}
@@ -544,11 +557,11 @@ body.dark .crk.ta{color:#ef9a9a;}
 /* ── 時間帯別背景 ── */
 #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;opacity:.7;}
 /* ── 太鼓ボタン ── */
-.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:calc(.5rem - 22px) auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
-.tap-drum-img{width:clamp(225px,78vw,330px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;will-change:transform;}
+.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
+.tap-drum-img{width:clamp(300px,92vw,540px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;will-change:transform;}
 @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
 .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
-.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(225px,78vw,330px);height:clamp(225px,78vw,330px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
+.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(300px,92vw,540px);height:clamp(300px,92vw,540px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
 @keyframes drum-ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
 /* ── 100回達成 大演出 ── */
 @keyframes milestone100Flash{
@@ -575,7 +588,7 @@ body.rich #mpanel{
 /* お題目ボタン：常時黄金グロー */
 .tap-drum-wrap::before{
   content:'';position:absolute;border-radius:50%;
-  width:calc(clamp(225px,74vw,314px) + 48px);height:calc(clamp(225px,74vw,314px) + 48px);
+  width:calc(clamp(300px,90vw,528px) + 48px);height:calc(clamp(300px,90vw,528px) + 48px);
   top:50%;left:50%;transform:translate(-50%,-50%);
   background:radial-gradient(circle,hsla(var(--h),80%,60%,.3) 0%,transparent 70%);
   animation:rich-glow 2.8s ease-in-out infinite;pointer-events:none;z-index:0;}
@@ -596,9 +609,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 /* ── DQ Duolingo パス ── */
 .dq-path{display:flex;flex-direction:column;padding:.25rem .5rem;}
 .dq-path-track{display:flex;flex-direction:column;}
-.dq-path-node{display:flex;flex:0 0 auto;position:relative;z-index:1;}
-.dq-path-node.dq-left{justify-content:flex-start;padding-left:calc(25% - 30px);}
-.dq-path-node.dq-right{justify-content:flex-end;padding-right:calc(25% - 30px);}
+.dq-path-node{display:flex;flex:0 0 auto;position:relative;z-index:1;justify-content:center;}
+.dq-path-node.dq-left,.dq-path-node.dq-right{justify-content:center;padding:0;}
 .dq-node-btn{width:60px;height:60px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.4rem;
   border:2px solid rgba(255,255,255,.18);
   background:rgba(255,255,255,.1);
@@ -1375,8 +1387,50 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 
       <!-- JS参照用の非表示要素 -->
       <div id="naraiTierCard" style="display:none"></div>
-      <div id="naraiCalLocked" style="display:none"></div>
-      <div id="naraiCalUnlocked" style="display:none"></div>
+      <div id="naraiCalLocked" style="display:none">
+        <div class="narai-paywall" style="margin-bottom:.5rem">
+          <div style="font-size:1.4rem;margin-bottom:.3rem">📅</div>
+          <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:.3rem">月別カレンダーを解放</div>
+          <div style="font-size:10px;color:var(--mu);margin-bottom:.75rem">日付別の修行履歴・吉日・功徳グラフが見られます</div>
+          <button onclick="openCalPreview()" class="btn-s" style="font-size:10px;padding:6px 16px">✨ 解放する — ¥300</button>
+        </div>
+      </div>
+      <div id="naraiCalUnlocked" style="display:none">
+        <!-- 表示切替 + 月ナビ -->
+        <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
+          <div style="display:flex;align-items:center;gap:.35rem;margin-bottom:.5rem">
+            <button class="btn-s on" id="btnHeat" style="font-size:9px;padding:3px 8px">🔥 ヒート</button>
+            <button class="btn-s" id="btnMon" style="font-size:9px;padding:3px 8px">📅 月別</button>
+            <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:.25rem">
+              <button class="gc-arrow" id="calPrev" style="width:26px;height:26px;font-size:13px">‹</button>
+              <span style="font-size:11px;color:var(--a);min-width:72px;text-align:center" id="calTitle"></span>
+              <button class="gc-arrow" id="calNext" style="width:26px;height:26px;font-size:13px">›</button>
+            </div>
+          </div>
+          <div class="cg" id="calGrid" style="margin-bottom:.4rem"></div>
+          <!-- 凡例ヒートマップ -->
+          <div id="calLegHeat" style="display:flex;gap:3px;align-items:center;flex-wrap:wrap;margin-bottom:.25rem;font-size:9px;color:var(--di)">
+            <span>少</span>
+            <span style="width:11px;height:11px;border-radius:2px;background:rgba(255,255,255,.07);display:inline-block"></span>
+            <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.25);display:inline-block"></span>
+            <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.5);display:inline-block"></span>
+            <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.75);display:inline-block"></span>
+            <span style="width:11px;height:11px;border-radius:2px;background:rgba(212,168,67,.9);display:inline-block"></span>
+            <span>多</span>
+          </div>
+          <!-- 凡例月別 -->
+          <div id="calLegMon" style="display:none;gap:.35rem;flex-wrap:wrap;margin-bottom:.25rem">
+            <span style="font-size:9px;background:#c2185b;color:#fff;padding:1px 5px;border-radius:3px">天赦</span>
+            <span style="font-size:9px;background:hsl(35,90%,65%);color:#000;padding:1px 5px;border-radius:3px">一粒万倍</span>
+            <span style="font-size:9px;background:rgba(255,255,255,.15);color:#fff;padding:1px 5px;border-radius:3px">大安</span>
+          </div>
+        </div>
+        <!-- 最近の記録 -->
+        <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
+          <div style="font-size:11px;font-weight:600;color:var(--a);margin-bottom:.4rem">📝 最近の修行</div>
+          <div id="recList" style="font-size:11px"></div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -1862,7 +1916,7 @@ var st={
   loginStreak:0,lastLoginDate:'',lastLoginBonusDate:'',bonusMerit:0,welcomeDone:false,
   unlockedLevel:0,
   kleshaToday:'',ekoDate:'',ekoCount:0,
-  homeMode:'',dailyGoal:0,calPurchased:false,
+  homeMode:'',dailyGoal:0,calPurchased:true,
   zenSeconds:0,zenRunning:false,
   sangaRooms:[],sangaSelectedKlesha:'',sangaWeight:'medium',
   unlockedItems:[],meritUsed:0
@@ -4735,7 +4789,30 @@ function dqAddXP(n){
 }
 function dqCheckBadges(){
   if(typeof BADGES==='undefined')return;
-  BADGES.forEach(function(b){if(!dqS.earnedBadges.has(b.id)&&b.cond(dqS))dqS.earnedBadges.add(b.id);});
+  BADGES.forEach(function(b){
+    if(!dqS.earnedBadges.has(b.id)&&b.cond(dqS)){
+      dqS.earnedBadges.add(b.id);
+      showBadgeEarned(b);
+    }
+  });
+}
+var _badgeToastTimer=null;
+function showBadgeEarned(b){
+  var existing=document.querySelector('.badge-toast');
+  if(existing)document.body.removeChild(existing);
+  if(_badgeToastTimer)clearTimeout(_badgeToastTimer);
+  var t=document.createElement('div');
+  t.className='badge-toast';
+  t.innerHTML='<div style="font-size:2.4rem;margin-bottom:.25rem">'+b.icon+'</div>'
+    +'<div style="font-size:10px;color:rgba(212,168,67,.8);font-weight:700;letter-spacing:.06em;margin-bottom:.15rem">バッジ 獲得！</div>'
+    +'<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:.2rem">'+b.name_ja+'</div>'
+    +'<div style="font-size:10px;color:rgba(255,255,255,.5)">'+b.desc_ja+'</div>';
+  document.body.appendChild(t);
+  _badgeToastTimer=setTimeout(function(){
+    if(!t.parentNode)return;
+    t.style.animation='badgeOut .38s ease-in forwards';
+    setTimeout(function(){if(t.parentNode)document.body.removeChild(t);},400);
+  },3200);
 }
 function getWisdomLevel(){return Math.min(10,Math.floor(dqS.read.size/4));}
 function wisdomMult(){
