@@ -1689,6 +1689,18 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
         送信する
       </button>
     </div>
+    <div style="display:flex;gap:.5rem;margin-top:.4rem">
+      <button onclick="sendBugByEmail()"
+        style="flex:1;padding:9px;border-radius:12px;border:1px solid rgba(80,200,120,.35);
+        background:rgba(80,200,120,.15);color:rgba(255,255,255,.85);font-size:11px;cursor:pointer">
+        📧 メールで送る
+      </button>
+      <button onclick="sendBugByTwitter()"
+        style="flex:1;padding:9px;border-radius:12px;border:1px solid rgba(100,160,255,.35);
+        background:rgba(100,160,255,.15);color:rgba(255,255,255,.85);font-size:11px;cursor:pointer">
+        𝕏 Xで送る
+      </button>
+    </div>
     <button onclick="closeBugReport()" style="width:100%;margin-top:.5rem;padding:8px;border-radius:12px;
       border:none;background:transparent;color:rgba(255,255,255,.4);font-size:11px;cursor:pointer">
       キャンセル
@@ -2183,28 +2195,31 @@ function captureBugScreenshot(){
     });
   },200);
 }
+var BUG_REPORT_EMAIL='reijiruiji@gmail.com';
+var BUG_REPORT_TWITTER='bdqq8s';
+function _buildBugPayload(desc){
+  var activeTab=document.querySelector('.tab.on');
+  return {
+    ts:Date.now(),description:desc,
+    tab:activeTab?activeTab.dataset.t:'',
+    ua:navigator.userAgent,
+    screenW:screen.width,screenH:screen.height,
+    appVersion:'develop',
+    state:{
+      streak:st.streak||0,gongyoMerit:st.gongyoMerit||0,
+      tier:getUserTier?getUserTier():'free',
+      gcDiffMode:typeof gcDiffMode!=='undefined'?gcDiffMode:0,
+      totalChants:st.total||0
+    }
+  };
+}
 function submitBugReport(){
   var txt=document.getElementById('bugReportTxt');
   var desc=(txt?txt.value:'').trim();
   if(!desc){alert('内容を入力してください。');return;}
   var btn=document.getElementById('bugSubmitBtn');
   if(btn){btn.textContent='送信中...';btn.disabled=true;}
-  var activeTab=document.querySelector('.tab.on');
-  var payload={
-    ts:Date.now(),
-    description:desc,
-    tab:activeTab?activeTab.dataset.t:'',
-    ua:navigator.userAgent,
-    screenW:screen.width,screenH:screen.height,
-    appVersion:'develop',
-    state:{
-      streak:st.streak||0,
-      gongyoMerit:st.gongyoMerit||0,
-      tier:getUserTier?getUserTier():'free',
-      gcDiffMode:typeof gcDiffMode!=='undefined'?gcDiffMode:0,
-      totalChants:st.total||0
-    }
-  };
+  var payload=_buildBugPayload(desc);
   if(_bugScreenshotData)payload.screenshot=_bugScreenshotData;
   function finish(ok){
     closeBugReport();
@@ -2215,9 +2230,33 @@ function submitBugReport(){
     _db.collection('bugReports').add(payload)
       .then(function(){finish(true);})
       .catch(function(e){console.warn('[BugReport] Firestore:',e);finish(false);});
-  } else {
-    finish(false);
-  }
+  } else {finish(false);}
+}
+function sendBugByEmail(){
+  var txt=document.getElementById('bugReportTxt');
+  var desc=(txt?txt.value:'').trim();
+  if(!desc){alert('内容を入力してください。');return;}
+  var payload=_buildBugPayload(desc);
+  var body='【バグ報告】よむよむお題目\n\n'
+    +desc+'\n\n'
+    +'---\n'
+    +'タブ: '+payload.tab+'\n'
+    +'UA: '+payload.ua.substring(0,80)+'\n'
+    +'状態: 功徳'+payload.state.gongyoMerit+' / ストリーク'+payload.state.streak+'\n'
+    +'---\nよむよむお題目 バグ報告';
+  var subject='[バグ報告] よむよむお題目';
+  window.open('mailto:'+BUG_REPORT_EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body));
+  closeBugReport();
+}
+function sendBugByTwitter(){
+  var txt=document.getElementById('bugReportTxt');
+  var desc=(txt?txt.value:'').trim();
+  if(!desc){alert('内容を入力してください。');return;}
+  var tweet='@'+BUG_REPORT_TWITTER+' 【バグ報告】よむよむお題目\n'
+    +desc.substring(0,100)
+    +'\n#よむよむお題目';
+  window.open('https://x.com/intent/tweet?text='+encodeURIComponent(tweet));
+  closeBugReport();
 }
 function syncSliders(){
   var hs=document.getElementById('hueSlider');if(hs)hs.value=st.hue;
