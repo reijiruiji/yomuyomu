@@ -186,11 +186,11 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   width:60px;height:30px;
   background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.08) 0%,transparent 70%);
   pointer-events:none;}
-.tc{display:none;padding:.875rem;padding-top:calc(max(8px,env(safe-area-inset-top,0px)) + 48px);padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
+.tc{display:none;padding:.875rem;padding-top:calc(max(8px,env(safe-area-inset-top,0px)) + 40px);padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
 .tc.on{display:flex;flex-direction:column;}
 /* お題目タブ: スクロールなし、コンテンツが画面に収まるよう縦伸縮 */
 #tc-chant{
-  height:calc(100dvh - 64px - env(safe-area-inset-bottom,0px) - max(8px,env(safe-area-inset-top,0px)) - 36px);
+  height:calc(100dvh - 64px - env(safe-area-inset-bottom,0px));
   overflow:hidden;
   box-sizing:border-box;
 }
@@ -611,8 +611,10 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 /* ── Quest タブ：スクロールなし全画面 ── */
 #tc-quest.on{
   display:flex;flex-direction:column;
-  height:calc(100dvh - 60px - env(safe-area-inset-bottom,0px) - max(8px,env(safe-area-inset-top,0px)) - 36px);
-  padding:0 .875rem 0;overflow:hidden;
+  height:calc(100dvh - 60px - env(safe-area-inset-bottom,0px));
+  padding-top:calc(max(8px,env(safe-area-inset-top,0px)) + 40px);
+  padding-left:.875rem;padding-right:.875rem;padding-bottom:0;
+  overflow:hidden;
   /* dqview-map が overflow-y:auto を持つため、マップはそちらでスクロールする */
 }
 /* ── DQ Duolingo パス ── */
