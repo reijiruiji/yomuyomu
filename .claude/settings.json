@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit -m ' *)",
+      "Bash(powershell -command \"\\(Get-Content index.html | Measure-Object -Line\\).Lines\")",
+      "Bash(Get-ChildItem *)",
+      "Bash(awk '/var DAILY_CONTENT=\\\\[/,/^];/' index.html)",
+      "Read(//mnt/c/Users/syuri/Videos/**)",
+      "Bash(python3 -c ' *)",
+      "Bash(py -3.12 -m playwright --version)",
+      "Bash(py -3.12 -c \"import playwright; print\\('playwright OK'\\)\")",
+      "Bash(grep -v \"//\\\\|<!--\")",
+      "Bash(grep -v \"<!--\\\\|//\")",
+      "WebFetch(domain:x.com)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\syuri\\Videos",
+      "h:\\マイドライブ\\GIT",
+      "C:\\Users\\syuri"
+    ]
+  }
+}

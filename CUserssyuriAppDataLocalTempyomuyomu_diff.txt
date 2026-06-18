@@ -1,0 +1,888 @@
+diff --git a/index.html b/index.html
+index c22d3a1..fb578a2 100644
+--- a/index.html
++++ b/index.html
+@@ -150,15 +150,8 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+ .hue-track::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+   background:rgba(255,255,255,.9);border:2px solid rgba(255,255,255,.6);cursor:pointer;
+   box-shadow:0 2px 8px rgba(0,0,0,.4);}
+-.app-hd{display:flex;align-items:center;padding:.7rem 1rem;
+-  background:rgba(7,8,15,.65);
+-  backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);
+-  border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:100;
+-  box-shadow:0 2px 20px rgba(0,0,0,.25);}
+-.app-logo{font-size:14px;font-weight:700;
+-  background:linear-gradient(135deg,rgba(255,255,255,.95) 30%,var(--a));
+-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+-.app-sub{font-size:10px;color:var(--mu);margin-top:1px;}
++/* ヘッダー非表示：ロゴ削除、ティアバッジのみtop-rightに残す */
++.app-hd{display:none;}
+ /* ── ボトムナビ ── */
+ .tabs{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:200;
+   background:rgba(4,5,12,.78);
+@@ -180,7 +173,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+   width:60px;height:30px;
+   background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.08) 0%,transparent 70%);
+   pointer-events:none;}
+-.tc{display:none;padding:.875rem;padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
++.tc{display:none;padding:.875rem;padding-top:max(50px,calc(env(safe-area-inset-top,0px) + 44px));padding-bottom:calc(.875rem + 64px + env(safe-area-inset-bottom,0px));}
+ .tc.on{display:block;}
+ .card{
+   background:rgba(255,255,255,.11);
+@@ -296,9 +289,9 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
+   top:50%;
+   /* transform は JS で translateY(-50%) scale(x) を常に付ける */
+   border-radius:20px;
+-  background:rgba(255,255,255,.11);
++  background:rgba(10,8,22,.72);
+   backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);
+-  border:1px solid rgba(255,255,255,.2);
++  border:1px solid rgba(255,255,255,.18);
+   padding:10px 8px;
+   text-align:center;
+   cursor:pointer;
+@@ -306,15 +299,15 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
+   display:flex;flex-direction:column;align-items:center;justify-content:center;
+   will-change:transform,left,opacity;
+   box-sizing:border-box;
+-  box-shadow:0 8px 32px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.25);
++  box-shadow:0 8px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.18);
+ }
+-.gc-card2.active{border-color:rgba(255,255,255,.42);background:rgba(255,255,255,.17);
+-  box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 28px hsla(var(--h),80%,60%,.22),inset 0 1px 0 rgba(255,255,255,.38);}
+-.gc-card2.active .gc-num{font-size:11px;color:rgba(255,255,255,.55);}
+-.gc-card2.active .gc-title{font-size:16px;color:rgba(255,255,255,.98);}
+-.gc-card2.active .gc-sub{font-size:11px;color:rgba(255,255,255,.7);}
++.gc-card2.active{border-color:rgba(212,168,67,.5);background:rgba(8,6,20,.82);
++  box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 28px hsla(var(--h),80%,60%,.25),inset 0 1px 0 rgba(255,255,255,.25);}
++.gc-card2.active .gc-num{font-size:11px;color:rgba(255,255,255,.65);}
++.gc-card2.active .gc-title{font-size:16px;color:#ffffff;text-shadow:0 1px 8px rgba(0,0,0,.5);}
++.gc-card2.active .gc-sub{font-size:11px;color:rgba(255,255,255,.85);}
+ .gc-card2.active .gc-badge{font-size:11px;padding:3px 10px;}
+-.gc-card2.active .gc-desc{font-size:11px;max-height:70px;color:rgba(255,255,255,.75);}
++.gc-card2.active .gc-desc{font-size:11px;max-height:70px;color:rgba(255,255,255,.85);}
+ /* ── ルーレット着地バウンス ── */
+ @keyframes gcBounce{
+   0%  {transform:translateY(-50%) scale(1.22);}
+@@ -323,13 +316,13 @@ textarea{resize:none;min-height:72px;line-height:1.6;}
+   100%{transform:translateY(-50%) scale(1);}
+ }
+ .gc-card2.land{animation:gcBounce .42s cubic-bezier(.34,1.56,.64,1);}
+-.gc-card2 .gc-num{font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px;}
+-.gc-card2 .gc-title{font-size:12px;font-weight:700;color:rgba(255,255,255,.88);line-height:1.3;margin-bottom:2px;}
+-.gc-card2 .gc-sub{font-size:10px;color:rgba(255,255,255,.6);line-height:1.3;}
++.gc-card2 .gc-num{font-size:10px;color:rgba(255,255,255,.55);margin-bottom:3px;}
++.gc-card2 .gc-title{font-size:12px;font-weight:700;color:rgba(255,255,255,.92);line-height:1.3;margin-bottom:2px;text-shadow:0 1px 4px rgba(0,0,0,.4);}
++.gc-card2 .gc-sub{font-size:10px;color:rgba(255,255,255,.75);line-height:1.3;}
+ .gc-card2 .gc-badge{display:inline-block;font-size:9px;color:#fff;background:var(--a);
+   border-radius:20px;padding:2px 8px;margin-top:4px;}
+-.gc-card2 .gc-badge-locked{background:rgba(255,255,255,.18);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.2);}
+-.gc-card2 .gc-desc{font-size:10px;color:rgba(255,255,255,.6);margin-top:5px;line-height:1.45;text-align:left;
++.gc-card2 .gc-badge-locked{background:rgba(255,255,255,.18);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);}
++.gc-card2 .gc-desc{font-size:10px;color:rgba(255,255,255,.75);margin-top:5px;line-height:1.45;text-align:left;
+   max-height:48px;overflow:hidden;}
+ .gc-nav{display:flex;align-items:center;justify-content:space-between;margin:.5rem 0 .75rem;}
+ .gc-arrow{width:38px;height:38px;border-radius:50%;
+@@ -514,15 +507,19 @@ body.dark .crk.ta{color:#ef9a9a;}
+   filter:drop-shadow(0 2px 12px rgba(248,165,194,.5));opacity:.88;}
+ /* ── 勤行ロックカード ── */
+ .gc-locked{opacity:.5;filter:grayscale(.6);cursor:not-allowed;}
++/* ── 難易度セレクター ── */
++.gc-diff-bar{display:flex;gap:.375rem;margin:.25rem .75rem .15rem;justify-content:center;}
++.gc-diff-btn{flex:1;padding:.3rem .25rem;border-radius:16px;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-size:11px;cursor:pointer;transition:all .18s;}
++.gc-diff-btn.active{border-color:var(--ag);color:#d4a843;background:rgba(212,168,67,.13);font-weight:700;}
+ /* ── 時間帯別背景 ── */
+ #bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;opacity:.7;}
+ /* ── 太鼓ボタン ── */
+-.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
+-.tap-drum-img{width:clamp(150px,52vw,220px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;}
++.tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:calc(.5rem - 22px) auto .75rem;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
++.tap-drum-img{width:clamp(225px,78vw,330px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;will-change:transform;}
+ @keyframes drum-press{0%{transform:scale(1)}40%{transform:scale(.86)}100%{transform:scale(1.05)}}
+ .tap-drum-wrap.pressing .tap-drum-img{animation:drum-press .2s ease-out forwards;}
+-.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(150px,52vw,220px);height:clamp(150px,52vw,220px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
+-@keyframes drum-ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(3);opacity:0}}
++.tap-ripple{position:absolute;border-radius:50%;pointer-events:none;border:2.5px solid;width:clamp(225px,78vw,330px);height:clamp(225px,78vw,330px);top:50%;left:50%;transform:translate(-50%,-50%) scale(1);animation:drum-ripple .7s ease-out forwards;}
++@keyframes drum-ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
+ /* ── 100回達成 大演出 ── */
+ @keyframes milestone100Flash{
+   0%{opacity:0;}12%{opacity:.85;}55%{opacity:.6;}100%{opacity:0;}}
+@@ -540,8 +537,7 @@ body.dark .crk.ta{color:#ef9a9a;}
+ /* ── リッチモード（背景画像時）── dark glass ベースで透明度を調整 ── */
+ body.rich .card,body.rich .card-a{
+   background:rgba(8,8,18,.55);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);}
+-body.rich .app-hd{
+-  background:rgba(8,8,18,.6);backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);}
++
+ body.rich .tabs{
+   background:rgba(8,8,18,.65);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);}
+ body.rich #mpanel{
+@@ -549,7 +545,7 @@ body.rich #mpanel{
+ /* お題目ボタン：常時黄金グロー */
+ .tap-drum-wrap::before{
+   content:'';position:absolute;border-radius:50%;
+-  width:calc(clamp(150px,48vw,210px) + 48px);height:calc(clamp(150px,48vw,210px) + 48px);
++  width:calc(clamp(225px,74vw,314px) + 48px);height:calc(clamp(225px,74vw,314px) + 48px);
+   top:50%;left:50%;transform:translate(-50%,-50%);
+   background:radial-gradient(circle,hsla(var(--h),80%,60%,.3) 0%,transparent 70%);
+   animation:rich-glow 2.8s ease-in-out infinite;pointer-events:none;z-index:0;}
+@@ -563,11 +559,13 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
+ /* ── Quest タブ：スクロールなし全画面 ── */
+ #tc-quest.on{
+   display:flex;flex-direction:column;
+-  height:calc(100dvh - 50px - 60px - env(safe-area-inset-bottom,0px));
+-  padding:.5rem .875rem 0;overflow:hidden;}
++  height:calc(100dvh - 60px - env(safe-area-inset-bottom,0px));
++  padding:max(50px,calc(env(safe-area-inset-top,0px) + 44px)) .875rem 0;overflow:hidden;
++  /* dqview-map が overflow-y:auto を持つため、マップはそちらでスクロールする */
++}
+ /* ── DQ Duolingo パス ── */
+-.dq-path{flex:1;display:flex;flex-direction:column;padding:.25rem .5rem;}
+-.dq-path-track{flex:1;display:flex;flex-direction:column;}
++.dq-path{display:flex;flex-direction:column;padding:.25rem .5rem;}
++.dq-path-track{display:flex;flex-direction:column;}
+ .dq-path-node{display:flex;flex:0 0 auto;position:relative;z-index:1;}
+ .dq-path-node.dq-left{justify-content:flex-start;padding-left:calc(25% - 30px);}
+ .dq-path-node.dq-right{justify-content:flex-end;padding-right:calc(25% - 30px);}
+@@ -596,8 +594,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
+ .dq-snb.on{background:hsla(var(--h),70%,58%,.55);border-color:hsla(var(--h),80%,70%,.5);color:#fff;font-weight:700;
+   box-shadow:0 4px 16px hsla(var(--h),70%,50%,.25);}
+ .dq-view{display:none;padding:0;}
+-.dq-view.on{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+-#dqview-texts.on,#dqview-badges.on{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.25rem 0 .5rem;}
++.dq-view.on{flex:1;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;}
++#dqview-texts.on,#dqview-badges.on{padding:.25rem 0 .5rem;}
+ .dq-stage-card{background:rgba(255,255,255,.11);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+   border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:.875rem;margin-bottom:.625rem;
+   box-shadow:0 6px 20px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.2);}
+@@ -803,24 +801,26 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
+   border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:1.5rem 1.25rem;
+   width:100%;max-width:360px;max-height:90vh;overflow-y:auto;}
+ .tier-modal-inner::-webkit-scrollbar{display:none;}
+-.tier-row{display:flex;align-items:center;gap:.75rem;padding:.625rem .75rem;border-radius:14px;
+-  border:1px solid rgba(255,255,255,.1);margin-bottom:.4rem;cursor:pointer;
++.tier-row{display:flex;flex-direction:column;padding:.7rem .875rem;border-radius:16px;
++  border:1px solid rgba(255,255,255,.1);margin-bottom:.5rem;cursor:pointer;
+   transition:background .18s,border-color .18s;}
+-.tier-row.t-active{border-color:rgba(232,121,160,.55);background:rgba(232,121,160,.1);}
+-.tier-row:active{background:rgba(255,255,255,.08);}
+-.tier-badge{font-size:1.3rem;width:34px;text-align:center;flex-shrink:0;}
++.tier-row.t-active{border-color:rgba(232,121,160,.55);background:rgba(232,121,160,.08);}
++.tier-row:active{background:rgba(255,255,255,.07);}
++.tier-row-head{display:flex;align-items:center;gap:.625rem;width:100%;}
++.tier-badge{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0;}
+ .tier-info{flex:1;min-width:0;}
+-.tier-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.92);}
++.tier-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.92);display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;}
++.tier-feat{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;line-height:1.45;}
+ .tier-desc{font-size:10px;color:rgba(255,255,255,.42);margin-top:1px;line-height:1.4;}
+-.tier-price{font-size:11px;color:rgba(212,168,67,.85);font-weight:700;white-space:nowrap;}
+-.tier-upgrade-btn{width:100%;padding:11px;border-radius:14px;margin-top:.5rem;
+-  background:linear-gradient(135deg,rgba(212,168,67,.85),rgba(232,121,160,.75));
++.tier-price{font-size:12px;color:rgba(212,168,67,.9);font-weight:700;white-space:nowrap;flex-shrink:0;}
++.tier-upgrade-btn{width:100%;padding:11px;border-radius:12px;margin-top:.6rem;
++  background:linear-gradient(135deg,rgba(212,168,67,.9),rgba(232,121,160,.8));
+   color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.04em;
+-  box-shadow:0 4px 16px rgba(212,168,67,.3);transition:opacity .15s,transform .1s;}
++  box-shadow:0 4px 16px rgba(212,168,67,.25);transition:opacity .15s,transform .1s;display:block;}
+ .tier-upgrade-btn:active{opacity:.85;transform:scale(.98);}
+-.tier-merit-tag{display:inline-flex;align-items:center;background:rgba(212,168,67,.14);
+-  border:1px solid rgba(212,168,67,.32);border-radius:20px;padding:2px 8px;
+-  font-size:10px;font-weight:700;color:#d4a843;margin-left:.35rem;}
++.tier-merit-tag{display:inline-flex;align-items:center;background:rgba(212,168,67,.18);
++  border:1px solid rgba(212,168,67,.38);border-radius:20px;padding:2px 8px;
++  font-size:10px;font-weight:700;color:#d4a843;}
+ .hdr-tier{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;
+   border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;
+   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+@@ -974,8 +974,8 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
+   <div id="mbtn" onclick="togMenu()"><div class="hbl"></div><div class="hbl"></div><div class="hbl"></div></div>
+   <div id="mover" onclick="togMenu()"></div>
+   <div id="mpanel">
+-    <h3 style="font-size:13px;font-weight:600;color:var(--a);margin-bottom:.25rem" id="menuName"></h3>
+-    <p style="font-size:10px;color:var(--mu);margin-bottom:.875rem" id="menuSub"></p>
++    <h3 style="font-size:13px;font-weight:600;color:var(--a);margin-bottom:.1rem" id="menuName"></h3>
++    <p style="font-size:10px;color:var(--mu);margin-bottom:.625rem" id="menuSub">功徳 0 🌸</p>
+     <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:.75rem 0">
+     <p style="font-size:11px;color:var(--mu);margin-bottom:.4rem">お名前変更</p>
+     <div class="rpair"><input type="text" id="nameChange" placeholder="新しいお名前"><button class="btn-s" onclick="changeName()">変更</button></div>
+@@ -1034,10 +1034,10 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
+ 
+   <div class="tabs">
+     <button class="tab on" data-t="chant"><span class="tab-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="6"/><path d="M4 12c0 2 3.6 5 8 5s8-3 8-5"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="8" y1="7" x2="6" y2="3"/><line x1="16" y1="7" x2="18" y2="3"/></svg></span>お題目</button>
++    <button class="tab" data-t="quest"><span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="1.5"/><polyline points="12 4 10 12 12 13.5 14 12"/></svg></span>探求</button>
+     <button class="tab" data-t="gongyou"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 012-2h13a1 1 0 110 2H6a1 1 0 000 2h13v14H6a2 2 0 01-2-2z"/><polyline points="8 9 8 9"/><line x1="9" y1="9" x2="17" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></span>勤行</button>
+     <button class="tab" data-t="narai"><span class="tab-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="7" y="14" width="3" height="3" rx=".5"/><rect x="14" y="14" width="3" height="3" rx=".5"/></svg></span>ならい</button>
+     <button class="tab" data-t="lotus"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 21c0 0-7-5-7-10a7 7 0 0114 0c0 5-7 10-7 10z"/><path d="M12 11c-2-3-1-6 1-7 1 2 2 5 0 7"/><path d="M12 11c2-3 1-6-1-7-1 2-2 5 0 7"/><line x1="12" y1="11" x2="12" y2="21"/></svg></span>蓮池</button>
+-    <button class="tab" data-t="quest"><span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="1.5"/><polyline points="12 4 10 12 12 13.5 14 12"/></svg></span>探求</button>
+   </div>
+ 
+   <!-- ── お題目 ── -->
+@@ -1198,6 +1198,15 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
+       </div>
+     </div>
+ 
++    <!-- 難易度セレクター -->
++    <div class="gc-diff-bar">
++      <button class="gc-diff-btn" id="gcDiff0" onclick="setGcDiff(0)">かんたん</button>
++      <button class="gc-diff-btn active" id="gcDiff1" onclick="setGcDiff(1)">普通</button>
++      <button class="gc-diff-btn" id="gcDiff2" onclick="setGcDiff(2)">難しい</button>
++    </div>
++    <div style="text-align:center;font-size:9px;color:rgba(255,255,255,.2);margin-bottom:.1rem">↕ 上下スワイプで切替</div>
++    <div id="gcDiffTip" style="text-align:center;font-size:9px;color:rgba(212,168,67,.5);margin-bottom:.1rem;display:none">🔒 難しいモードは功徳を積んでお経を解放できます</div>
++
+     <!-- 太鼓の達人スタイルカルーセル -->
+     <div class="gc-stage-wrap" id="gcWrap">
+       <div id="gcStage"><!-- カード挿入 --></div>
+@@ -1214,144 +1223,79 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
+       <p style="font-size:11px;font-weight:500;color:var(--a);margin-bottom:5px">この勤行とのご縁</p>
+       <div id="gcProgress" style="font-size:12px;color:var(--mu)">0回</div>
+     </div>
++    <!-- 解放カード（功徳が溜まると表示） -->
++    <div id="gongyouUnlockCard" style="display:none;margin-top:.5rem"></div>
+   </div>
+ 
+   <!-- ── ならい ── -->
+   <div class="tc" id="tc-narai">
+     <div style="padding:0">
+ 
+-      <!-- ストリークカード -->
+-      <div class="lp-glass section" style="padding:1.25rem 1rem;text-align:center;margin-bottom:.75rem">
+-        <div class="narai-section-title" style="justify-content:center">連続修行日数</div>
+-        <div style="margin:.25rem 0">
+-          <span style="font-size:1.5rem;vertical-align:middle">🔥</span>
+-          <span class="narai-streak-num" id="naraiStreakNum">0</span>
+-        </div>
+-        <div style="font-size:12px;color:var(--mu);margin-top:.35rem" id="naraiStreakMsg">今日も修行しましょう</div>
+-        <div class="narai-rank-bar" style="margin-top:.875rem">
+-          <div class="narai-rank-fill" id="naraiStreakFill" style="width:0%"></div>
++      <!-- 上段：ストリーク＋今月＋ブースト（1カード） -->
++      <div class="lp-glass" style="padding:.75rem 1rem;margin-bottom:.5rem">
++        <div style="display:flex;align-items:center;gap:0">
++          <div style="flex:1;text-align:center">
++            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">連続修行</div>
++            <div><span style="font-size:1.3rem">🔥</span><span class="narai-streak-num" id="naraiStreakNum" style="font-size:1.6rem;font-weight:300;color:var(--tx)">0</span></div>
++            <div style="font-size:10px;color:var(--mu);margin-top:1px" id="naraiStreakMsg">修行しましょう</div>
++          </div>
++          <div style="width:1px;height:44px;background:rgba(255,255,255,.1)"></div>
++          <div style="flex:1;text-align:center">
++            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">今月の修行</div>
++            <div style="font-size:1.4rem;font-weight:200;color:#d4a843" id="naraiMonthSessions">0</div>
++            <div style="font-size:10px;color:var(--mu)">回 / <span style="color:#e879a0" id="naraiMonthMerit">0</span>功徳</div>
++          </div>
++          <div style="width:1px;height:44px;background:rgba(255,255,255,.1)"></div>
++          <div style="flex:1;text-align:center">
++            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">功徳ブースト</div>
++            <div style="font-size:1.2rem;font-weight:700;color:#d4a843" id="naraiBoostDisp">×1</div>
++            <div style="font-size:10px;color:var(--mu)">累計 <span style="color:#e879a0" id="naraiTotalMerit">0</span></div>
++          </div>
+         </div>
+-        <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:left" id="naraiStreakNext"></div>
+-        <div style="margin-top:.75rem;display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap">
+-          <span style="font-size:11px;color:var(--mu)">功徳ブースト</span>
+-          <span style="font-size:13px;font-weight:700;color:#d4a843" id="naraiBoostDisp">×1.00</span>
+-          <span style="font-size:10px;color:var(--mu)">累計功徳</span>
+-          <span style="font-size:13px;font-weight:700;color:#e879a0" id="naraiTotalMerit">0</span>
++        <div class="narai-rank-bar" style="margin-top:.5rem"><div class="narai-rank-fill" id="naraiStreakFill" style="width:0%"></div></div>
++        <div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:.2rem" id="naraiStreakNext"></div>
++        <!-- 非表示の功徳倍率内訳（JS参照用） -->
++        <div id="naraiMultBreakdown" style="display:none"></div>
++        <div id="naraiTierUpgradeCta" style="display:none">
++          <button onclick="openTierModal()" style="width:100%;margin-top:.5rem;padding:8px;border-radius:10px;
++            background:linear-gradient(135deg,rgba(212,168,67,.7),rgba(232,121,160,.6));
++            color:#fff;border:none;cursor:pointer;font-size:11px;font-weight:700">
++            🪷 プランアップグレードで功徳UP
++          </button>
+         </div>
+       </div>
+ 
+-      <!-- 91日ヒートマップ＋日付確認ボタン -->
+-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
+-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+-          <div class="narai-section-title" style="margin-bottom:0">修行カレンダー（91日）</div>
+-          <button class="btn-s" id="calPreviewBtn" onclick="openCalPreview()" style="font-size:10px;padding:4px 10px;white-space:nowrap">📅 日付を確認する</button>
+-        </div>
+-        <div style="font-size:9px;color:rgba(212,168,67,.7);margin-bottom:.4rem;display:flex;align-items:center;gap:4px">
+-          <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#d4a843;box-shadow:0 0 4px rgba(212,168,67,.6)"></span>
+-          吉日に功徳倍率UP
++      <!-- 修業カレンダー（91日ドット） -->
++      <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
++        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem">
++          <div style="font-size:11px;font-weight:600;color:var(--a)">📅 修業カレンダー</div>
++          <button class="btn-s" id="calPreviewBtn" onclick="openCalPreview()" style="font-size:9px;padding:3px 8px;white-space:nowrap">日付 🔒</button>
+         </div>
+         <div class="narai-hm-grid" id="naraiHmGrid"></div>
+-        <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem;font-size:10px;color:rgba(255,255,255,.35)">
+-          <span>少ない</span>
+-          <span style="display:flex;gap:3px">
+-            <span style="width:9px;height:9px;border-radius:2px;background:rgba(255,255,255,.07);display:inline-block"></span>
+-            <span style="width:9px;height:9px;border-radius:2px;background:rgba(232,121,160,.25);display:inline-block"></span>
+-            <span style="width:9px;height:9px;border-radius:2px;background:rgba(232,121,160,.5);display:inline-block"></span>
+-            <span style="width:9px;height:9px;border-radius:2px;background:rgba(212,168,67,.9);display:inline-block"></span>
+-          </span>
+-          <span>多い</span>
+-        </div>
+-      </div>
+-
+-      <!-- 今月サマリー -->
+-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
+-        <div class="narai-section-title">今月の功徳</div>
+-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+-          <div style="text-align:center;padding:.5rem 0">
+-            <div style="font-size:1.8rem;font-weight:200;color:#d4a843" id="naraiMonthSessions">0</div>
+-            <div style="font-size:10px;color:var(--mu)">修行回数</div>
+-          </div>
+-          <div style="text-align:center;padding:.5rem 0">
+-            <div style="font-size:1.8rem;font-weight:200;color:#e879a0" id="naraiMonthMerit">0</div>
+-            <div style="font-size:10px;color:var(--mu)">累計功徳 🌸</div>
+-          </div>
+-        </div>
+       </div>
+ 
+       <!-- 今日の教え -->
+-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem">
+-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.625rem">
+-          <div class="narai-section-title" style="margin-bottom:0">今日の教え</div>
+-          <div style="display:flex;gap:6px;align-items:center">
+-            <span id="dailyDateLabel" style="font-size:10px;color:var(--mu)"></span>
+-            <button onclick="shareDailyTeaching()" style="padding:4px 10px;border-radius:50px;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.3);color:rgba(212,168,67,.9);font-size:10px;cursor:pointer">📤 シェア</button>
++      <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
++        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.375rem">
++          <div style="font-size:11px;font-weight:600;color:var(--a)">📖 今日の教え
++            <span id="dailyDateLabel" style="font-size:9px;font-weight:400;color:var(--mu);margin-left:4px"></span>
+           </div>
++          <button onclick="shareDailyTeaching()" style="padding:3px 9px;border-radius:50px;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.3);color:rgba(212,168,67,.9);font-size:9px;cursor:pointer">📤</button>
+         </div>
+         <div id="dailyContent"></div>
+       </div>
+ 
+-      <!-- 功徳倍率内訳 + ティアアップ -->
+-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem" id="naraiTierCard">
+-        <div class="narai-section-title">功徳倍率の内訳</div>
+-        <div id="naraiMultBreakdown" style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.625rem;font-size:11px;color:var(--mu)"></div>
+-        <div id="naraiTierUpgradeCta" style="display:none">
+-          <button onclick="openTierModal()" style="width:100%;padding:10px;border-radius:12px;
+-            background:linear-gradient(135deg,rgba(212,168,67,.7),rgba(232,121,160,.6));
+-            color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.04em">
+-            🪷 プランをアップグレードして功徳UP
+-          </button>
+-        </div>
+-        <!-- シェア・招待ボタン -->
+-        <div style="display:flex;gap:.5rem;margin-top:.625rem">
+-          <button onclick="shareMeritScore()" style="flex:1;padding:9px 6px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:11px;cursor:pointer;font-weight:600">
+-            📤 功徳をシェア
+-          </button>
+-          <button onclick="shareInviteLink()" style="flex:1;padding:9px 6px;border-radius:11px;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.25);color:rgba(212,168,67,.9);font-size:11px;cursor:pointer;font-weight:600">
+-            🎁 友達を招待
+-          </button>
+-        </div>
++      <!-- シェア・招待・プランボタン -->
++      <div style="display:flex;gap:.4rem;margin-bottom:.5rem">
++        <button onclick="shareMeritScore()" style="flex:1;padding:8px 4px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:10px;cursor:pointer;font-weight:600">📤 シェア</button>
++        <button onclick="shareInviteLink()" style="flex:1;padding:8px 4px;border-radius:11px;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.25);color:rgba(212,168,67,.9);font-size:10px;cursor:pointer;font-weight:600">🎁 招待</button>
++        <button onclick="openTierModal()" style="flex:1;padding:8px 4px;border-radius:11px;background:rgba(232,121,160,.1);border:1px solid rgba(232,121,160,.25);color:rgba(232,121,160,.9);font-size:10px;cursor:pointer;font-weight:600">🪷 プラン</button>
+       </div>
+ 
+-      <!-- 読経カレンダー（課金）※一時コメントアウト — mainのUIを移植予定
+-      <div class="lp-glass lp-glass-sm" style="padding:.875rem 1rem;margin-bottom:.75rem" id="naraiCalSection">
+-        <div class="narai-section-title">📅 読経カレンダー</div>
+-        <!-- 未購入時 -->
+-        <div id="naraiCalLocked" class="narai-paywall">
+-          <div style="font-size:1.8rem;margin-bottom:.5rem">🔒</div>
+-          <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:.35rem">読経カレンダー</div>
+-          <div style="font-size:11px;color:var(--mu);line-height:1.7;margin-bottom:.875rem">
+-            月カレンダー表示＋<br>
+-            <span style="color:#d4a843;font-weight:600">吉日に功徳倍率UP</span>（購入者限定）
+-          </div>
+-          <button class="btn-big accent" onclick="openCalPaywall()" style="max-width:200px;margin:0 auto;font-size:13px;padding:11px">✨ 解放する — ¥300</button>
+-        </div>
+-        <!-- 購入済み時 -->
+-        <div id="naraiCalUnlocked" style="display:none">
+-          <div class="trow"><button class="btn-s on" id="btnHeat">ヒートマップ</button><button class="btn-s" id="btnMon">月カレンダー</button></div>
+-          <div id="vCal">
+-            <div class="card" style="background:rgba(255,255,255,.05)">
+-              <div class="cn"><button class="btn-s" id="calPrev">← 前月</button><div class="ct" id="calTitle"></div><button class="btn-s" id="calNext">次月 →</button></div>
+-              <div class="cg" id="calGrid"></div>
+-              <div class="heat-legend" id="calLegHeat"><span>Less</span>
+-                <span class="sq" style="background:var(--bo)"></span>
+-                <span class="sq" style="background:#fffde7"></span>
+-                <span class="sq" style="background:#ffd600"></span>
+-                <span class="sq" style="background:#ffa000"></span>
+-                <span class="sq" style="background:#e65100"></span>
+-                <span>More</span>
+-              </div>
+-              <div class="lgd" id="calLegMon" style="margin-top:8px">
+-                <div class="li"><span class="cb" style="background:#c2185b;padding:1px 4px;border-radius:3px">天赦</span></div>
+-                <div class="li"><span class="cb" style="background:hsl(var(--h),65%,42%);padding:1px 4px;border-radius:3px">一粒</span></div>
+-                <div class="li"><span class="cb" style="background:#0277bd;padding:1px 4px;border-radius:3px">己巳</span></div>
+-                <div class="li"><span class="cb" style="background:#e65100;padding:1px 4px;border-radius:3px">寅</span></div>
+-              </div>
+-            </div>
+-            <div class="card" style="background:rgba(255,255,255,.05)"><p style="font-size:12px;font-weight:500;color:var(--a);margin-bottom:8px">直近の記録</p><div id="recList"></div></div>
+-          </div>
+-        </div>
+-      </div>
+-      --> <!-- /読経カレンダー コメントアウト終わり -->
++      <!-- JS参照用の非表示要素 -->
++      <div id="naraiTierCard" style="display:none"></div>
++      <div id="naraiCalLocked" style="display:none"></div>
++      <div id="naraiCalUnlocked" style="display:none"></div>
+ 
+     </div>
+   </div>
+@@ -1362,9 +1306,11 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
+     <div id="lpPondFull" style="position:fixed;inset:0;top:0;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:2;overflow:hidden;cursor:pointer">
+       <div id="lpLotusContainer" style="position:absolute;inset:0"></div>
+       <!-- ダブルタップヒント -->
+-      <div id="lpDblHint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+-        font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.06em;pointer-events:none;
+-        animation:bnc 2.5s ease-in-out infinite;text-align:center;white-space:nowrap">
++      <div id="lpDblHint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
++        font-size:12px;color:rgba(255,255,255,.38);letter-spacing:.08em;pointer-events:none;
++        animation:bnc 2.5s ease-in-out infinite;text-align:center;white-space:nowrap;
++        background:rgba(0,0,0,.22);padding:.5rem 1.1rem;border-radius:20px;
++        border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);">
+         ダブルタップで悩みを流す
+       </div>
+     </div>
+@@ -1750,6 +1696,25 @@ var st={
+ };
+ var actx=null;
+ var gcAnimating=false,gcCurReal=0;
++var gcDiffMode=1; // 0=かんたん 1=普通 2=難しい
++var gcGG=[],gcGGN=0;
++function getGCGG(){
++  if(gcDiffMode===0)return GG.filter(function(g){return g.s.indexOf('常用勤行')>=0;});
++  if(gcDiffMode===1)return GG.filter(function(g){return GG_FREE.has(g.id);});
++  return GG.slice();
++}
++function setGcDiff(mode){
++  if(mode===gcDiffMode)return;
++  gcDiffMode=mode;
++  gcCurReal=0;
++  [0,1,2].forEach(function(i){
++    var b=document.getElementById('gcDiff'+i);
++    if(b)b.classList.toggle('active',i===mode);
++  });
++  var tip=document.getElementById('gcDiffTip');
++  if(tip)tip.style.display=mode===2?'block':'none';
++  buildCarousel();
++}
+ var readLineIdx=0,readLines=[];
+ var CARD_W=155, STEP=118;
+ 
+@@ -2008,7 +1973,8 @@ function gongyoCharCount(g){
+ }
+ function streakMult(){
+   var s=st.loginStreak||0;
+-  return 1+Math.min(Math.max(s-1,0),49)*0.02;
++  if(s>=100)return 10;if(s>=30)return 5;if(s>=14)return 3;if(s>=7)return 2;
++  return 1;
+ }
+ function dayDiff(dsA,dsB){
+   var a=new Date(dsA+'T12:00:00'),b=new Date(dsB+'T12:00:00');
+@@ -2103,10 +2069,10 @@ function updateCalStreakUI(animate){
+   var n=document.getElementById('streakNum');if(n)n.textContent=s;
+   var m=document.getElementById('streakMsg');if(m)m.textContent=streakMessage(s);
+   var f=document.getElementById('streakFill');if(f)f.style.width=pct+'%';
+-  var md=document.getElementById('streakMultDisp');if(md)md.textContent='×'+streakMult().toFixed(2);
++  var md=document.getElementById('streakMultDisp');if(md)md.textContent='×'+streakMult();
+   var bd=document.getElementById('bonusMeritDisp');if(bd)bd.textContent=fmt(st.bonusMerit||0);
+   var rn=document.getElementById('rankStreakNote');
+-  if(rn)rn.textContent=s>0?('連続'+s+'日 · ブースト ×'+streakMult().toFixed(2)):'';
++  if(rn)rn.textContent=s>0?('連続'+s+'日 · ブースト ×'+streakMult()):'';
+   var snl=document.getElementById('streakNextLucky');
+   if(snl){
+     var todayItems=banItems(dayI(new Date()));
+@@ -2296,7 +2262,7 @@ function updateChantUI(){
+   document.getElementById('sesNum').textContent=st.sessionCount;
+   document.getElementById('cumul').textContent='累計: '+st.totalChants+'回';
+   var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
+-  var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(totalMerit());
++  var ms=document.getElementById('menuSub');if(ms)ms.textContent='功徳 '+fmt(totalMerit())+' 🌸';
+   buildLb();
+ }
+ function dayMeritFor(ds2,cnt){
+@@ -2311,13 +2277,23 @@ function trigGcFlash(){
+   var btn=document.getElementById('gcCount');if(btn){btn.classList.add('flashing');setTimeout(function(){btn.classList.remove('flashing');},500);}
+   spawnP();try{navigator.vibrate&&navigator.vibrate([80]);}catch(e){}
+ }
+-function spawnP(){['🌸','✨','🪷'].forEach(function(e){var p=document.createElement('div');p.className='particle';p.textContent=e;p.style.left=(20+Math.random()*60)+'%';p.style.top=(20+Math.random()*40)+'%';document.body.appendChild(p);setTimeout(function(){p.remove();},1200);});}
++function spawnP(){
++  var drum=document.getElementById('manBtn');
++  var rect=drum?drum.getBoundingClientRect():{left:window.innerWidth/2-80,top:window.innerHeight/2-80,width:160,height:160};
++  var cx=rect.left+rect.width/2,cy=rect.top+rect.height*0.35;
++  ['🌸','✨','🪷'].forEach(function(e){
++    var p=document.createElement('div');p.className='particle';p.textContent=e;
++    p.style.left=(cx+(Math.random()*120-60))+'px';
++    p.style.top=(cy+(Math.random()*60-80))+'px';
++    document.body.appendChild(p);setTimeout(function(){p.remove();},1200);
++  });
++}
+ function addGongyoReading(g){
+-  var chars=gongyoCharCount(g||GG[gcCurReal]);
++  var chars=gongyoCharCount(g||gcGG[gcCurReal]);
+   var m=getMult(dayI(new Date()))*streakMult();
+   var merit=calcMerit(chars,m);
+   st.gongyoMerit=(st.gongyoMerit||0)+merit;
+-  st.gCounts[(g||GG[gcCurReal]).id]=(st.gCounts[(g||GG[gcCurReal]).id]||0)+1;
++  st.gCounts[(g||gcGG[gcCurReal]).id]=(st.gCounts[(g||gcGG[gcCurReal]).id]||0)+1;
+   trigGcFlash();
+   if(st.sessionCount%10===0){spawnP();}
+   updateChantUI();lsS(UK,st);persistLb();updateGcUI();
+@@ -2383,6 +2359,8 @@ var _gcSX=0,_gcSY=0,rouletteRunning=false;
+ var stageW=0; // キャッシュした幅
+ 
+ function buildCarousel(){
++  gcGG=getGCGG();gcGGN=gcGG.length;
++  if(gcCurReal>=gcGGN)gcCurReal=0;
+   var stage=document.getElementById('gcStage');
+   stage.innerHTML='';
+   // 幅を一度だけ計測してキャッシュ（ルーレット中に再計測しない）
+@@ -2390,7 +2368,7 @@ function buildCarousel(){
+   CARD_W=Math.min(Math.round(stageW*0.46),180);
+   STEP=Math.round(CARD_W*0.84);
+ 
+-  GG.forEach(function(g,i){
++  gcGG.forEach(function(g,i){
+     var card=document.createElement('div');
+     var need=GG_MERIT_UNLOCK&&GG_MERIT_UNLOCK[g.id]?GG_MERIT_UNLOCK[g.id]:0;
+     var locked=need>0&&totalMerit()<need;
+@@ -2398,12 +2376,11 @@ function buildCarousel(){
+     card.id='gc'+i;
+     card.dataset.idx=i;
+     var hasText=g.lines&&g.lines.length>0;
+-    var meritNow=Math.round(totalMerit());
+     var badge=locked
+       ?'<div class="gc-badge gc-badge-locked">🔒 未解放 / 功徳'+need+'</div>'
+       :(hasText?'<div class="gc-badge">📖 読める</div>':'');
+     card.innerHTML=
+-      '<div class="gc-num">'+(i+1)+'/'+GG_N+'</div>'+
++      '<div class="gc-num">'+(i+1)+'/'+gcGGN+'</div>'+
+       '<div class="gc-title">'+g.t+'</div>'+
+       '<div class="gc-sub">'+g.s+'</div>'+
+       badge+
+@@ -2414,7 +2391,7 @@ function buildCarousel(){
+       card.addEventListener('click',function(){
+         var idx=parseInt(card.dataset.idx);
+         if(idx===gcCurReal)return;
+-        var n=GG_N;
++        var n=gcGGN;
+         var raw=idx-gcCurReal;while(raw>n/2)raw-=n;while(raw<-n/2)raw+=n;
+         if(raw>0)for(var k=0;k<raw;k++)gcStep(1);
+         else for(var k=0;k<-raw;k++)gcStep(-1);
+@@ -2423,26 +2400,35 @@ function buildCarousel(){
+     stage.appendChild(card);
+   });
+ 
+-  // タッチスワイプ
++  // タッチスワイプ（横:カード切替 / 縦:難易度切替）
+   var wrap=document.getElementById('gcWrap');
+-  // 既存リスナーが重複しないよう、HTMLにdata-initを使う
+   if(!wrap.dataset.init){
+     wrap.dataset.init='1';
+     wrap.addEventListener('touchstart',function(e){_gcSX=e.touches[0].clientX;_gcSY=e.touches[0].clientY;},{passive:true});
+     wrap.addEventListener('touchend',function(e){
+       var dx=e.changedTouches[0].clientX-_gcSX,dy=e.changedTouches[0].clientY-_gcSY;
+-      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>30)gcStep(dx<0?1:-1);
++      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>30){gcStep(dx<0?1:-1);}
++      else if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>40){setGcDiff(dy<0?Math.min(gcDiffMode+1,2):Math.max(gcDiffMode-1,0));}
+     },{passive:true});
+     var _mx=0;
+     wrap.addEventListener('mousedown',function(e){_mx=e.clientX;});
+     wrap.addEventListener('mouseup',function(e){var dx=e.clientX-_mx;if(Math.abs(dx)>30)gcStep(dx<0?1:-1);});
+   }
+ 
++  // 難易度ボタン・ヒント表示同期
++  [0,1,2].forEach(function(i){
++    var b=document.getElementById('gcDiff'+i);
++    if(b)b.classList.toggle('active',i===gcDiffMode);
++  });
++  var tip=document.getElementById('gcDiffTip');
++  if(tip)tip.style.display=gcDiffMode===2?'block':'none';
++
+   posCards(false);
++  renderGongyouUnlockCard();
+ }
+ 
+ function posCards(anim){
+-  var n=GG_N;
++  var n=gcGGN;
+   var W=stageW; // キャッシュを使う（DOM読み取りなし）
+   var CW=CARD_W;
+   var centerX=W/2; // ステージ中央
+@@ -2482,15 +2468,16 @@ function posCards(anim){
+ function gcStep(dir){
+   if(gcAnimating)return;gcAnimating=true;
+   mokuS();
+-  gcCurReal=(gcCurReal+dir+GG_N)%GG_N;
++  gcCurReal=(gcCurReal+dir+gcGGN)%gcGGN;
+   st.gIdx=gcCurReal;
+   posCards(true);lsS(UK,st);
+   setTimeout(function(){gcAnimating=false;},340);
+ }
+ function gotoIdx(ri){gcCurReal=ri;st.gIdx=ri;posCards(false);lsS(UK,st);}
+ function updateGcUI(){
+-  var g=GG[gcCurReal],cnt=st.gCounts[g.id]||0;
+-  document.getElementById('gcCounter').textContent=(gcCurReal+1)+' / '+GG_N;
++  if(!gcGGN)return;
++  var g=gcGG[gcCurReal],cnt=st.gCounts[g.id]||0;
++  document.getElementById('gcCounter').textContent=(gcCurReal+1)+' / '+gcGGN;
+   document.getElementById('gcProgress').textContent=cnt+'回 唱えました';
+   var rb=document.getElementById('gcReadBtn');
+   var hasText=g.lines&&g.lines.length>0;
+@@ -2576,7 +2563,7 @@ function showReadFontPick(){
+   ov.classList.remove('gone');ov.style.display='flex';
+ }
+ function openReading(){
+-  var g=GG[gcCurReal];
++  var g=gcGG[gcCurReal];
+   if(!g.lines||!g.lines.length){
+     alert('📖 このお経のテキストは現在準備中です。\n「唱えた」ボタンで回数を記録してください。');
+     return;
+@@ -2585,7 +2572,7 @@ function openReading(){
+   doOpenReading();
+ }
+ function doOpenReading(){
+-  var g=GG[gcCurReal];
++  var g=gcGG[gcCurReal];
+   readLines=g.lines;readLineIdx=0;
+   readViewMode=st.fontPref||'kanji';
+   if(readViewMode==='imi')readViewMode='kanji';
+@@ -2636,7 +2623,7 @@ function gotoPage(idx){
+ function readNext(){
+   if(readLineIdx>=readLines.length-1){
+     closeReading();
+-    addGongyoReading(GG[gcCurReal]);lsS(UK,st);
++    addGongyoReading(gcGG[gcCurReal]);lsS(UK,st);
+     spawnP();accentS();
+     setTimeout(function(){alert('🪷 読経完了！功徳が得られました。\n南無妙法蓮華経');},200);
+     return;
+@@ -3307,7 +3294,13 @@ document.querySelectorAll('.tab').forEach(function(btn){
+     if(t==='gongyou'){buildCarousel();}
+     if(t==='narai'){renderNaraiTab();}
+     if(t==='lotus'){renderLotusTab();initLotusFloaters();}
+-    if(t==='quest'){renderDQSummary();renderDQMap();setTimeout(function(){window.scrollTo(0,0);},30);}
++    if(t==='quest'){
++      renderDQSummary();renderDQMap();
++      setTimeout(function(){
++        window.scrollTo(0,0);
++        var mv=document.getElementById('dqview-map');if(mv)mv.scrollTop=0;
++      },30);
++    }
+     window.scrollTo(0,0);
+   });
+ });
+@@ -3390,7 +3383,7 @@ function updateChantUI(){
+   var c1=document.getElementById('cumul');if(c1)c1.textContent='累計: '+st.totalChants+'回';
+   var c2=document.getElementById('cumul2');if(c2)c2.textContent='累計: '+st.totalChants+'回';
+   var dvV2=document.getElementById('dvV');if(dvV2)dvV2.textContent='¥'+Math.round(st.dailyValue/1000)+'k';
+-  var hi=document.getElementById('hdrInfo');if(hi)hi.textContent=st.userName+' · 功徳 '+fmt(totalMerit());
++  var ms=document.getElementById('menuSub');if(ms)ms.textContent='功徳 '+fmt(totalMerit())+' 🌸';
+   if(st.homeMode==='chant'&&st.dailyGoal>0)updateGoalRing();
+   buildLb();
+ }
+@@ -3705,7 +3698,7 @@ function renderNaraiTab(){
+   }
+   var sm=streakMult(),tm2=tierMult();
+   var bd=document.getElementById('naraiBoostDisp');
+-  if(bd)bd.textContent='×'+(sm*tm2*wisdomMult()).toFixed(2);
++  if(bd)bd.textContent='×'+(sm*tm2*wisdomMult());
+   var tm=document.getElementById('naraiTotalMerit');if(tm)tm.textContent=fmt(totalMerit());
+   renderNaraiHeatmap();
+   renderNaraiMonthSummary();
+@@ -3715,11 +3708,11 @@ function renderNaraiTab(){
+     var streakV=streakMult(),wisdomV=wisdomMult(),tierV=tierMult();
+     var auspV=getMult(dayI(new Date()));
+     var items=[
+-      {label:'🔥 連続修行ボーナス',val:'×'+streakV.toFixed(2)},
+-      {label:'📜 智慧レベルボーナス',val:'×'+wisdomV.toFixed(1)},
+-      {label:'🪷 ティアボーナス',val:'×'+tierV.toFixed(2)},
++      {label:'🔥 連続修行ボーナス',val:'×'+streakV},
++      {label:'📜 智慧レベルボーナス',val:'×'+wisdomV},
++      {label:'🪷 ティアボーナス',val:'×'+tierV},
+     ];
+-    if(auspV>1)items.push({label:'🌟 今日の吉日ボーナス',val:'×'+auspV.toFixed(1)});
++    if(auspV>1)items.push({label:'🌟 今日の吉日ボーナス',val:'×'+auspV});
+     var total=(streakV*wisdomV*tierV*auspV);
+     mb.innerHTML=items.map(function(it){
+       return '<div style="display:flex;justify-content:space-between">'
+@@ -3727,7 +3720,7 @@ function renderNaraiTab(){
+     }).join('')
+     +'<div style="border-top:1px solid rgba(255,255,255,.1);margin-top:.35rem;padding-top:.35rem;display:flex;justify-content:space-between;font-weight:700">'
+     +'<span style="color:rgba(255,255,255,.7)">合計倍率</span>'
+-    +'<span style="color:#d4a843;font-size:13px">×'+total.toFixed(2)+'</span></div>';
++    +'<span style="color:#d4a843;font-size:13px">×'+total+'</span></div>';
+     var cta=document.getElementById('naraiTierUpgradeCta');
+     if(cta)cta.style.display=(getUserTier()==='free'?'block':'none');
+   })();
+@@ -4195,10 +4188,12 @@ function checkUnlockThreshold(){
+     combo++;
+     clearTimeout(comboTimer);
+     comboTimer=setTimeout(function(){combo=0;},1600);
++    // アニメーション再起動：強制リフローなしで class を付け直す
+     wrap.classList.remove('pressing');
+-    void wrap.offsetWidth;
+-    wrap.classList.add('pressing');
+-    setTimeout(function(){wrap.classList.remove('pressing');},220);
++    requestAnimationFrame(function(){
++      wrap.classList.add('pressing');
++      setTimeout(function(){wrap.classList.remove('pressing');},220);
++    });
+     spawnRipples(wrap,combo);
+     addChants(1);
+     spawnFloatMantra();
+@@ -4274,8 +4269,8 @@ function dqCheckBadges(){
+ function getWisdomLevel(){return Math.min(10,Math.floor(dqS.read.size/4));}
+ function wisdomMult(){
+   var lv=getWisdomLevel();
+-  if(lv>=10)return 2.0;if(lv>=7)return 1.8;if(lv>=4)return 1.5;if(lv>=1)return 1.2;
+-  return 1.0;
++  if(lv>=10)return 3;if(lv>=7)return 2;if(lv>=4)return 2;if(lv>=1)return 1;
++  return 1;
+ }
+ 
+ // ── 探求タブ サマリー ──
+@@ -4290,7 +4285,7 @@ function renderDQSummary(){
+   var ll=document.getElementById('dqLvLabel');if(ll)ll.textContent='Lv.'+lv+' · XP '+xp;
+   var rl=document.getElementById('dqReadLabel');if(rl)rl.textContent='経典 '+readN+'冊 読破';
+   var wl=getWisdomLevel();
+-  var wp=document.getElementById('dqWisdomPill');if(wp)wp.textContent='智慧 Lv.'+wl+' · ×'+wisdomMult().toFixed(1);
++  var wp=document.getElementById('dqWisdomPill');if(wp)wp.textContent='智慧 Lv.'+wl+' · ×'+wisdomMult();
+   var xf=document.getElementById('dqXpFill');if(xf)xf.style.width=pct+'%';
+   var xl=document.getElementById('dqXpLabel');if(xl)xl.textContent='次のLvまで '+(nxt-xp)+' XP';
+ }
+@@ -4670,8 +4665,8 @@ function startRoulette(){
+   
+   var timer = setInterval(function(){
+     var elapsed = Date.now() - startTime;
+-    // 0から項目の数（GG.length）の間でランダムに選ぶ
+-    var randIdx = Math.floor(Math.random() * GG.length);
++    // 0から難易度フィルタ後の項目数の間でランダムに選ぶ
++    var randIdx = Math.floor(Math.random() * gcGGN);
+     st.gIdx = randIdx;
+     gcCurReal = randIdx;
+     buildCarousel(); // 表示を更新
+@@ -4691,10 +4686,12 @@ document.getElementById('rouletteBtn').addEventListener('click',function(){
+ document.querySelectorAll('.dq-snb').forEach(function(b){
+   b.addEventListener('click',function(){dqNavTo(b.getAttribute('data-dqv'));});
+ });
+-document.getElementById('btnHeat').addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
+-document.getElementById('btnMon').addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
+-document.getElementById('calPrev').addEventListener('click',function(){st.calMonth--;if(st.calMonth<0){st.calMonth=11;st.calYear--;}lsS(UK,st);renderCal();});
+-document.getElementById('calNext').addEventListener('click',function(){st.calMonth++;if(st.calMonth>11){st.calMonth=0;st.calYear++;}lsS(UK,st);renderCal();});
++(function(){
++  var bh=document.getElementById('btnHeat');if(bh)bh.addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
++  var bm=document.getElementById('btnMon');if(bm)bm.addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
++  var cp=document.getElementById('calPrev');if(cp)cp.addEventListener('click',function(){st.calMonth--;if(st.calMonth<0){st.calMonth=11;st.calYear--;}lsS(UK,st);renderCal();});
++  var cn=document.getElementById('calNext');if(cn)cn.addEventListener('click',function(){st.calMonth++;if(st.calMonth>11){st.calMonth=0;st.calYear++;}lsS(UK,st);renderCal();});
++})();
+ (function(){
+   var map={readFsR:'readFs',readLhR:'readLh',readGapR:'readGap'};
+   Object.keys(map).forEach(function(id){
+@@ -4713,11 +4710,11 @@ window.addEventListener('resize',function(){if(st.tab==='gongyou')buildCarousel(
+ var TIER_KEY='yomy_tier_v1';
+ var TIER_LOTUS_KEY='yomy_lotus_week_v1';
+ var TIER_DEF={
+-  free: {name:'無料',  badge:'🌿',lotus:1,  msgRx:0,   price:'無料',        mult:1.0},
+-  ume:  {name:'梅',    badge:'🌸',lotus:3,  msgRx:25,  price:'¥480/月',     mult:1.1},
+-  take: {name:'竹',    badge:'🎋',lotus:7,  msgRx:50,  price:'¥680/月',     mult:1.25},
+-  matsu:{name:'松',    badge:'🪷',lotus:15, msgRx:999, price:'¥980/月',     mult:1.5},
+-  butsu:{name:'仏',    badge:'☸️', lotus:999,msgRx:999, price:'¥1,980/月',   mult:2.0}
++  free: {name:'無料',  badge:'🌿',lotus:1,  msgRx:0,   price:'無料',        mult:1,  feat:'毎日1個の蓮を流せます'},
++  ume:  {name:'梅',    badge:'🌸',lotus:3,  msgRx:25,  price:'¥480/月',     mult:2,  feat:'功徳2倍・週3蓮・シールド付与'},
++  take: {name:'竹',    badge:'🎋',lotus:7,  msgRx:50,  price:'¥680/月',     mult:3,  feat:'功徳3倍・週7蓮・菩薩道解放'},
++  matsu:{name:'松',    badge:'🪷',lotus:15, msgRx:999, price:'¥980/月',     mult:5,  feat:'功徳5倍・週15蓮・全文読み書き'},
++  butsu:{name:'仏',    badge:'☸️', lotus:999,msgRx:999, price:'¥1,980/月',   mult:10, feat:'功徳10倍・蓮無制限・最高位バッジ'}
+ };
+ function getUserTier(){
+   try{var t=localStorage.getItem(TIER_KEY);return TIER_DEF[t]?t:'free';}catch(e){return 'free';}
+@@ -4761,7 +4758,7 @@ var STRIPE_TIER_URLS={
+   matsu:'https://buy.stripe.com/REPLACE_MATSU_LINK',
+   butsu:'https://buy.stripe.com/REPLACE_BUTSU_LINK'
+ };
+-var TIER_MULT_MAP={free:1.0,ume:1.1,take:1.25,matsu:1.5,butsu:2.0};
++var TIER_MULT_MAP={free:1,ume:2,take:3,matsu:5,butsu:10};
+ function openTierUpgrade(tierKey){
+   var url=STRIPE_TIER_URLS[tierKey];
+   if(!url||url.indexOf('REPLACE')>=0){
+@@ -4776,13 +4773,13 @@ function openTierUpgrade(tierKey){
+       +'<div style="background:rgba(255,255,255,.07);border-radius:12px;padding:14px;margin-bottom:14px;text-align:left">'
+       +'<div style="font-size:11px;color:rgba(212,168,67,.8);font-weight:700;margin-bottom:8px">'+d2.name+'プランの特典</div>'
+       +'<div style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.9">'
+-      +'🪷 功徳倍率 ×'+d2.mult.toFixed(2)+'<br>'
++      +'🪷 功徳倍率 ×'+d2.mult+'<br>'
+       +'🌸 蓮池に週'+( d2.lotus>=999?'無制限':d2.lotus)+'個<br>'
+       +'🛡 ストリークシールド毎週付与<br>'
+       +(d2.msgRx>0?'💬 サンガカスタムメッセージ<br>':'')
+       +(tierKey==='take'||tierKey==='matsu'||tierKey==='butsu'?'📖 探求Stage5 菩薩道解放<br>':'')
+       +'</div></div>'
+-      +'<a href="mailto:panda0416okura@gmail.com?subject=よむよむ'+d2.name+'プラン先行登録&body=プランに興味があります。案内をお待ちしています。" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:50px;background:linear-gradient(135deg,rgba(212,168,67,.85),rgba(232,121,160,.75));color:#fff;text-decoration:none;font-size:14px;font-weight:700;margin-bottom:10px">📧 先行登録する（無料）</a>'
++      +'<a href="mailto:panda0416okura@gmail.com?subject=%E3%82%88%E3%82%80%E3%82%88%E3%82%80'+encodeURIComponent(d2.name)+'%E3%83%97%E3%83%A9%E3%83%B3%E5%85%88%E8%A1%8C%E7%99%BB%E9%8C%B2&body='+encodeURIComponent(d2.name+'プランに興味があります。開始したらすぐに案内をお送りください。\n\nプラン: '+d2.name+' ('+d2.price+')\n\nよむよむお題目アプリより') +'" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:50px;background:linear-gradient(135deg,rgba(212,168,67,.85),rgba(232,121,160,.75));color:#fff;text-decoration:none;font-size:14px;font-weight:700;margin-bottom:10px">📧 先行登録する（無料）</a>'
+       +'<button onclick="this.parentNode.parentNode.remove()" style="padding:10px;width:100%;border-radius:50px;background:transparent;border:none;color:rgba(255,255,255,.3);font-size:12px;cursor:pointer">あとで</button>'
+       +'</div>';
+     ov.onclick=function(e){if(e.target===ov)ov.remove();};
+@@ -4800,7 +4797,7 @@ function updateHdrTier(){
+   if(mn)mn.textContent=d.badge+' '+d.name+'プラン';
+   var mm=document.getElementById('menuTierMult');
+   var mult=(TIER_MULT_MAP&&TIER_MULT_MAP[t])||1.0;
+-  if(mm)mm.textContent='功徳 ×'+mult.toFixed(1);
++  if(mm)mm.textContent='功徳 ×'+mult;
+ }
+ function renderTierModal(){
+   var cur=getUserTier();
+@@ -4825,25 +4822,28 @@ function renderTierModal(){
+     var isUpgrade=tierOrder.indexOf(k)>tierOrder.indexOf(cur);
+     var row=document.createElement('div');
+     row.className='tier-row'+(isActive?' t-active':'');
+-    row.innerHTML=
+-      '<div class="tier-badge">'+d.badge+'</div>'+
+-      '<div class="tier-info">'+
+-        '<div class="tier-name" style="display:flex;align-items:center;gap:.35rem">'+d.name
+-          +(isActive?'<span style="font-size:9px;background:rgba(232,121,160,.25);color:rgba(232,121,160,.9);border-radius:20px;padding:1px 7px">現在</span>':'')+'</div>'+
+-        '<div class="tier-desc">🪷 週'+lotusStr+'個 · 💬 '+msgStr
+-          +'<span class="tier-merit-tag">×'+mult.toFixed(1)+'</span></div>'+
+-      '</div>'+
+-      '<div style="text-align:right">'+
+-        '<div class="tier-price">'+d.price+'</div>'+
+-      '</div>';
++    var upgradeHTML='';
+     if(isUpgrade&&k!=='free'){
+-      var wrap=document.createElement('div');
+-      wrap.innerHTML='<button class="tier-upgrade-btn" data-tier="'+k+'">✨ '+d.name+'プランにアップグレード</button>';
+-      var btn2=wrap.querySelector('button');
+-      btn2.onclick=function(e){e.stopPropagation();openTierUpgrade(k);};
+-      row.appendChild(btn2);
++      upgradeHTML='<button class="tier-upgrade-btn" data-tier-upgrade="'+k+'">✨ '+d.name+'プランにする（'+d.price+'）</button>';
+     }
+-    row.onclick=function(){};
++    row.innerHTML=
++      '<div class="tier-row-head">'+
++        '<div class="tier-badge">'+d.badge+'</div>'+
++        '<div class="tier-info">'+
++          '<div class="tier-name">'+d.name
++            +(isActive?'<span style="font-size:9px;background:rgba(232,121,160,.22);color:rgba(232,121,160,.9);border-radius:20px;padding:1px 7px">現在のプラン</span>':'')
++            +'<span class="tier-merit-tag">功徳×'+mult+'</span>'+
++          '</div>'+
++          '<div class="tier-feat">'+d.feat+'</div>'+
++        '</div>'+
++        '<div class="tier-price">'+d.price+'</div>'+
++      '</div>'+
++      upgradeHTML;
++    // upgrade ボタンのクリックを委任
++    row.addEventListener('click',function(e){
++      var btn=e.target.closest('[data-tier-upgrade]');
++      if(btn){e.stopPropagation();openTierUpgrade(btn.dataset.tierUpgrade);}
++    });
+     list.appendChild(row);
+   });
+ }
+@@ -5001,7 +5001,7 @@ if('serviceWorker' in navigator){
+         +'<div style="font-size:3.5rem;margin-bottom:12px">'+d.badge+'</div>'
+         +'<div style="font-size:1.4rem;font-weight:800;color:#d4a843;font-family:serif;margin-bottom:8px">'+d.name+'プランへようこそ！</div>'
+         +'<div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.8;margin-bottom:18px">'
+-        +'ご支援ありがとうございます。<br>功徳倍率 ×'+d.mult.toFixed(2)+' が適用されました。<br>南無妙法蓮華経 🙏</div>'
++        +'ご支援ありがとうございます。<br>功徳倍率 ×'+d.mult+' が適用されました。<br>南無妙法蓮華経 🙏</div>'
+         +'<button onclick="this.parentNode.parentNode.remove();updateHdrTier();" '
+         +'style="padding:13px 32px;border-radius:50px;background:linear-gradient(135deg,rgba(212,168,67,.9),rgba(232,121,160,.8));border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer">修行を続ける</button>'
+         +'</div>';

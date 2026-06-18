@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="よむよむ">
-<meta name="description" content="法華経勤行・お題目カウンター・蓮池サンガ・仏典探求RPG">
+<meta name="description" content="法華経勤行・お題目カウンター・仏典探求RPG — Nichiren Buddhist practice app: chant Odaimoku, read Lotus Sutra, track your daily practice.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="よむよむお題目 — 古代の智慧で孤独を静寂に変える">
 <meta property="og:description" content="南無妙法蓮華経を唱えながら功徳を積む。蓮池でサンガと繋がり、仏典クイズで智慧を深める。">
@@ -176,6 +176,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.2;
   position:relative;}
 .tab-icon{font-size:1.25rem;line-height:1;display:block;transition:transform .25s,filter .25s;}
+.tab-en{font-size:7px;opacity:.45;letter-spacing:.03em;display:block;line-height:1;}
 .tab.on{color:rgba(255,255,255,.95);font-weight:600;}
 .tab.on .tab-icon{transform:scale(1.2);filter:drop-shadow(0 0 10px rgba(255,255,255,.7));}
 .tab.on::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
@@ -196,7 +197,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 }
 #homeChantArea,#homeZenArea{flex:1;display:flex;flex-direction:column;min-height:0;}
 #goalRingArea,#noGoalCount{flex:0 0 auto;}
-.tap-drum-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;}
+.tap-drum-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding-bottom:clamp(60px,16dvh,130px);}
 .tap-drum-img{max-height:none;width:auto;object-fit:contain;}
 .card{
   background:rgba(255,255,255,.11);
@@ -564,7 +565,7 @@ body.dark .crk.ta{color:#ef9a9a;}
 .gc-diff-btn{flex:1;padding:.3rem .25rem;border-radius:16px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.09);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:rgba(255,255,255,.82);font-size:11px;cursor:pointer;transition:all .18s;font-weight:500;}
 .gc-diff-btn.active{border-color:var(--ag);color:#d4a843;background:rgba(212,168,67,.18);font-weight:700;box-shadow:0 0 10px rgba(212,168,67,.2);}
 /* ── 時間帯別背景 ── */
-#bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .8s;opacity:.7;}
+#bgLayer{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .4s;opacity:0;}
 /* ── 太鼓ボタン ── */
 .tap-drum-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none;width:fit-content;}
 .tap-drum-img{width:clamp(300px,92vw,540px);height:auto;object-fit:contain;border-radius:0;display:block;pointer-events:none;will-change:transform;}
@@ -980,7 +981,7 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 .sanga-close-btn{width:100%;padding:12px;margin-top:.5rem;
   border:none;background:transparent;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;}
 
-/* タブ専用背景は body.style.backgroundImage で直接制御 */
+/* 背景画像は #bgLayer に集約 */
 
 /* ══ フッター SVG アイコン ══ */
 .tab-icon svg{width:22px;height:22px;display:block;margin:0 auto;}
@@ -1041,15 +1042,18 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 <!-- ════ TUTORIAL ════ -->
 <div class="tscr" id="t1">
   <div class="tut-title-wrap" id="tutTitle" aria-label="よむよむお題目"></div>
-  <div class="hint-bounce" id="t1hint" style="opacity:0">▼ タップして続ける</div>
+  <div class="hint-bounce" id="t1hint" style="opacity:0">▼ タップして続ける <span style="font-size:.75em;opacity:.7">/ Tap to continue</span></div>
+  <button id="ceremonyEntryBtn" onclick="openCeremony()" style="display:none;position:absolute;bottom:calc(90px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:50px;padding:9px 20px;font-size:12px;color:rgba(255,255,255,.75);cursor:pointer;white-space:nowrap;backdrop-filter:blur(8px);">
+    🙏 セレモニーに参加中の方はこちら<br><span style="font-size:10px;opacity:.55">Joining a ceremony? Tap here</span>
+  </button>
 </div>
 <div class="tscr hidden" id="t2">
   <div style="max-width:300px;text-align:center">
-    <div class="worry-header" id="w0">こんなお悩みありませんか？</div>
-    <div class="worry-li" id="w1">🔢 お題目を唱えた回数を忘れてしまう</div>
-    <div class="worry-li" id="w2">📖 お経本がないけど、僧侶みたいに唱えてみたい</div>
-    <div class="worry-li" id="w3">👓 本だと文字が小さくて読みにくい</div>
-    <div class="worry-solve" id="wS">そんなお悩みを解決します。</div>
+    <div class="worry-header" id="w0">こんなお悩みありませんか？<br><span style="font-size:.6em;opacity:.6;font-weight:400">Sound familiar?</span></div>
+    <div class="worry-li" id="w1">🔢 お題目を唱えた回数を忘れてしまう<br><span style="font-size:.72em;opacity:.55">Losing count of your chants</span></div>
+    <div class="worry-li" id="w2">📖 お経本がないけど、僧侶みたいに唱えてみたい<br><span style="font-size:.72em;opacity:.55">Wanting to recite sutras without a book</span></div>
+    <div class="worry-li" id="w3">👓 本だと文字が小さくて読みにくい<br><span style="font-size:.72em;opacity:.55">Text too small to read comfortably</span></div>
+    <div class="worry-solve" id="wS">そんなお悩みを解決します。<br><span style="font-size:.75em;opacity:.65">We've got you covered.</span></div>
   </div>
 </div>
 <div class="tscr hidden" id="t3">
@@ -1057,10 +1061,11 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     <div class="tut-ask">
       <span style="animation-delay:.1s">あなたのお名前を</span>
       <span style="animation-delay:.5s">教えていただけますでしょうか？</span>
+      <span style="animation-delay:.9s;font-size:.7em;opacity:.6;display:block;margin-top:.25rem">What's your name?</span>
     </div>
     <div class="tut-inp-wrap" id="tutInpWrap">
-      <input class="tut-inp" type="text" id="tutName" placeholder="お名前" autocomplete="off" maxlength="20">
-      <button class="btn-done" id="tutNameBtn">完了 →</button>
+      <input class="tut-inp" type="text" id="tutName" placeholder="お名前 / Your name" autocomplete="off" maxlength="20">
+      <button class="btn-done" id="tutNameBtn">完了 / Done →</button>
     </div>
   </div>
 </div>
@@ -1079,7 +1084,43 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       ✨ シンプル（すっきり）<br>
       <span style="font-size:10px;font-weight:400;color:var(--mu)">背景なし。あとでメニューから変更できます</span>
     </button>
-    <button class="btn-done" id="fontNext" style="margin-top:.875rem;opacity:.4;pointer-events:none" disabled>アプリを始める 🪷</button>
+    <button class="btn-done" id="fontNext" style="margin-top:.875rem;opacity:.4;pointer-events:none" disabled>アプリを始める / Start 🪷</button>
+  </div>
+</div>
+
+<!-- ════ CEREMONY QUICK-START OVERLAY ════ -->
+<div id="ceremonyOverlay" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(4,3,12,.97);flex-direction:column;font-family:inherit">
+  <!-- header -->
+  <div style="display:flex;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 10px;gap:8px;border-bottom:1px solid rgba(255,255,255,.1);flex:0 0 auto">
+    <button onclick="closeCeremony()" style="background:transparent;border:none;color:rgba(255,255,255,.55);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1">✕</button>
+    <div style="flex:1;text-align:center">
+      <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.9)">🙏 朝のお勤め</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:1px">Morning Ceremony</div>
+    </div>
+    <div style="width:40px"></div>
+  </div>
+  <!-- step dots -->
+  <div id="cStepDots" style="display:flex;justify-content:center;gap:6px;padding:10px 0 6px;flex:0 0 auto"></div>
+  <!-- step title -->
+  <div style="text-align:center;padding:0 16px 8px;flex:0 0 auto">
+    <div id="cStepTitle" style="font-size:16px;font-weight:700;color:var(--a,#e879a0)"></div>
+    <div id="cStepSub" style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px"></div>
+  </div>
+  <!-- language toggle -->
+  <div style="display:flex;justify-content:center;gap:4px;padding:0 16px 10px;flex:0 0 auto">
+    <button id="cLang_kanji" onclick="setCLang('kanji')" style="padding:4px 11px;border-radius:20px;font-size:11px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);cursor:pointer;transition:background .15s;background:rgba(255,255,255,.18)">漢字</button>
+    <button id="cLang_yomi" onclick="setCLang('yomi')" style="padding:4px 11px;border-radius:20px;font-size:11px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);cursor:pointer;transition:background .15s;background:transparent">読み</button>
+    <button id="cLang_romaji" onclick="setCLang('romaji')" style="padding:4px 11px;border-radius:20px;font-size:11px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);cursor:pointer;transition:background .15s;background:transparent">Romaji</button>
+    <button id="cLang_en" onclick="setCLang('en')" style="padding:4px 11px;border-radius:20px;font-size:11px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);cursor:pointer;transition:background .15s;background:transparent">意訳</button>
+  </div>
+  <!-- scrollable body -->
+  <div id="cMainScroll" style="flex:1;overflow-y:auto;padding:0 24px;-webkit-overflow-scrolling:touch">
+    <div id="cBody" style="padding-bottom:20px"></div>
+  </div>
+  <!-- nav footer -->
+  <div style="display:flex;gap:10px;padding:12px 20px calc(env(safe-area-inset-bottom,0px) + 12px);border-top:1px solid rgba(255,255,255,.08);flex:0 0 auto">
+    <button id="cPrevBtn" onclick="setCStep(_cStep-1)" style="flex:1;padding:12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);font-size:13px;cursor:pointer">← 前へ / Prev</button>
+    <button id="cNextBtn" onclick="setCStep(_cStep+1)" style="flex:2;padding:12px;border-radius:14px;background:var(--a,#e879a0);border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer">次へ / Next →</button>
   </div>
 </div>
 
@@ -1153,11 +1194,9 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   </div>
 
   <div class="tabs">
-    <button class="tab on" data-t="chant"><span class="tab-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="6"/><path d="M4 12c0 2 3.6 5 8 5s8-3 8-5"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="8" y1="7" x2="6" y2="3"/><line x1="16" y1="7" x2="18" y2="3"/></svg></span>お題目</button>
-    <button class="tab" data-t="gongyou"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 012-2h13a1 1 0 110 2H6a1 1 0 000 2h13v14H6a2 2 0 01-2-2z"/><polyline points="8 9 8 9"/><line x1="9" y1="9" x2="17" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></span>勤行</button>
-    <button class="tab" data-t="narai"><span class="tab-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="7" y="14" width="3" height="3" rx=".5"/><rect x="14" y="14" width="3" height="3" rx=".5"/></svg></span>ならい</button>
-    <button class="tab" data-t="lotus"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 21c0 0-7-5-7-10a7 7 0 0114 0c0 5-7 10-7 10z"/><path d="M12 11c-2-3-1-6 1-7 1 2 2 5 0 7"/><path d="M12 11c2-3 1-6-1-7-1 2-2 5 0 7"/><line x1="12" y1="11" x2="12" y2="21"/></svg></span>蓮池</button>
-    <button class="tab" data-t="quest"><span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="1.5"/><polyline points="12 4 10 12 12 13.5 14 12"/></svg></span>探求</button>
+    <button class="tab on" data-t="chant"><span class="tab-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="6"/><path d="M4 12c0 2 3.6 5 8 5s8-3 8-5"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="8" y1="7" x2="6" y2="3"/><line x1="16" y1="7" x2="18" y2="3"/></svg></span>お題目<span class="tab-en">Chant</span></button>
+    <button class="tab" data-t="gongyou"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 012-2h13a1 1 0 110 2H6a1 1 0 000 2h13v14H6a2 2 0 01-2-2z"/><polyline points="8 9 8 9"/><line x1="9" y1="9" x2="17" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></span>勤行<span class="tab-en">Sutra</span></button>
+    <button class="tab" data-t="narai"><span class="tab-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="7" y="14" width="3" height="3" rx=".5"/><rect x="14" y="14" width="3" height="3" rx=".5"/></svg></span>ならい<span class="tab-en">Log</span></button>
   </div>
 
   <!-- ── お題目 ── -->
@@ -1178,18 +1217,18 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     <div id="homeModeSelect" style="display:none;padding:.5rem 0">
       <div style="text-align:center;margin-bottom:.875rem">
         <div style="font-size:1.1rem;font-weight:700;color:var(--tx);margin-bottom:.25rem">今日の修行を選んでください</div>
-        <div style="font-size:11px;color:var(--mu)">いつでも切り替えられます</div>
+        <div style="font-size:11px;color:var(--mu)">Choose today's practice · いつでも切り替えられます</div>
       </div>
       <div class="home-mode-wrap">
         <div class="home-mode-btn" onclick="selectHomeMode('chant')">
           <span class="mi">🥁</span>
-          <span class="ml">お題目</span>
-          <span class="ms">南無妙法蓮華経を唱える</span>
+          <span class="ml">お題目 <span style="font-size:.65em;opacity:.55">Chant</span></span>
+          <span class="ms">南無妙法蓮華経を唱える<br><span style="font-size:.85em;opacity:.65">Recite Namu Myoho Renge Kyo</span></span>
         </div>
         <div class="home-mode-btn" onclick="selectHomeMode('zen')">
           <span class="mi">🧘</span>
-          <span class="ml">瞑想</span>
-          <span class="ms">静かに心を整える<br>1分 = 1功徳</span>
+          <span class="ml">瞑想 <span style="font-size:.65em;opacity:.55">Meditation</span></span>
+          <span class="ms">静かに心を整える<br><span style="font-size:.85em;opacity:.65">Mindful silence · 1 min = 1 merit</span></span>
         </div>
       </div>
     </div>
@@ -1233,7 +1272,7 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
         <div style="font-size:10px;color:var(--mu);margin-top:2px" id="cumul2">累計: 0回</div>
       </div>
       <div id="smsg" class="smsg"></div>
-      <div class="tap-drum-wrap" id="manBtn" role="button" tabindex="0" aria-label="お題目カウント">
+      <div class="tap-drum-wrap" id="manBtn" role="button" tabindex="0" aria-label="お題目カウント / Tap to chant">
         <img src="images/CountButton.png" class="tap-drum-img" alt="カウント">
       </div>
       <!-- シェア -->
@@ -1305,20 +1344,24 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 
   <!-- ── 勤行 ── -->
   <div class="tc" id="tc-gongyou">
-    <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem">
-      <button class="hint-btn" id="rouletteBtn" style="font-size:13px">🎰</button>
+
+    <!-- メインCTA: 朝のお勤め -->
+    <button onclick="openCeremony()" class="btn-big accent" style="margin-bottom:1rem;font-size:15px;padding:16px">
+      🙏 朝のお勤め / Morning Gongyo
+    </button>
+    <div style="text-align:center;font-size:10px;color:var(--mu);margin-bottom:1.25rem;line-height:1.6">
+      三宝礼 → 方便品 → 自我偈 → 懺悔文<br>
+      <span style="opacity:.6">漢字 / 読み / Romaji / 意訳</span>
     </div>
 
-    <!-- 難易度セレクター -->
-    <div class="gc-diff-bar">
-      <button class="gc-diff-btn" id="gcDiff0" onclick="setGcDiff(0)">かんたん</button>
-      <button class="gc-diff-btn active" id="gcDiff1" onclick="setGcDiff(1)">普通</button>
-      <button class="gc-diff-btn" id="gcDiff2" onclick="setGcDiff(2)">難しい</button>
+    <!-- 区切り -->
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.875rem">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,.1)"></div>
+      <span style="font-size:10px;color:var(--mu)">📖 経典を読む / Browse Sutras</span>
+      <div style="flex:1;height:1px;background:rgba(255,255,255,.1)"></div>
     </div>
-    <div style="text-align:center;font-size:9px;color:rgba(255,255,255,.2);margin-bottom:.1rem">↕ 上下スワイプで切替</div>
-    <div id="gcDiffTip" style="text-align:center;font-size:9px;color:rgba(212,168,67,.5);margin-bottom:.1rem;display:none">🔒 難しいモードは功徳を積んでお経を解放できます</div>
 
-    <!-- 太鼓の達人スタイルカルーセル -->
+    <!-- カルーセル -->
     <div class="gc-stage-wrap" id="gcWrap">
       <div id="gcStage"><!-- カード挿入 --></div>
     </div>
@@ -1329,7 +1372,7 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     </div>
 
     <div class="gc-action-bar">
-      <button class="btn-big accent" id="gcReadBtn">📖 読む（経文を表示）</button>
+      <button class="btn-big accent" id="gcReadBtn">📖 読む（経文を表示）<span style="font-size:.7em;opacity:.6;margin-left:.3em">/ Read Sutra</span></button>
     </div>
   </div>
 
@@ -1341,19 +1384,19 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       <div class="lp-glass" style="padding:.75rem 1rem;margin-bottom:.5rem">
         <div style="display:flex;align-items:center;gap:0">
           <div style="flex:1;text-align:center">
-            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">連続修行</div>
+            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">連続修行 <span style="font-size:8px;opacity:.55">Streak</span></div>
             <div><span style="font-size:1.3rem">🔥</span><span class="narai-streak-num" id="naraiStreakNum" style="font-size:1.6rem;font-weight:300;color:var(--tx)">0</span></div>
             <div style="font-size:10px;color:var(--mu);margin-top:1px" id="naraiStreakMsg">修行しましょう</div>
           </div>
           <div style="width:1px;height:44px;background:rgba(255,255,255,.1)"></div>
           <div style="flex:1;text-align:center">
-            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">今月の修行</div>
+            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">今月の修行 <span style="font-size:8px;opacity:.55">This Month</span></div>
             <div style="font-size:1.4rem;font-weight:200;color:#d4a843" id="naraiMonthSessions">0</div>
             <div style="font-size:10px;color:var(--mu)">回 / <span style="color:#e879a0" id="naraiMonthMerit">0</span>功徳</div>
           </div>
           <div style="width:1px;height:44px;background:rgba(255,255,255,.1)"></div>
           <div style="flex:1;text-align:center">
-            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">功徳ブースト</div>
+            <div style="font-size:10px;color:var(--mu);margin-bottom:2px">功徳ブースト <span style="font-size:8px;opacity:.55">Merit Boost</span></div>
             <div style="font-size:1.2rem;font-weight:700;color:#d4a843" id="naraiBoostDisp">×1</div>
             <div style="font-size:10px;color:var(--mu)">累計 <span style="color:#e879a0" id="naraiTotalMerit">0</span></div>
           </div>
@@ -1448,21 +1491,21 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     </div>
   </div>
 
-  <!-- ── 蓮池 ── 全画面：蓮の花が主役 ── -->
+  <!--
+  == 蓮池タブ（将来実装・現在オミット）==
   <div class="tc" id="tc-lotus" style="padding:0;overflow:hidden;position:relative">
-    <!-- 全画面蓮の花エリア -->
     <div id="lpPondFull" style="position:fixed;inset:0;top:0;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:2;overflow:hidden;cursor:pointer">
       <div id="lpLotusContainer" style="position:absolute;inset:0"></div>
-      <!-- ダブルタップヒント（centering animation で上下バウンス） -->
       <div id="lpDblHint" style="position:absolute;top:50%;left:50%;
         font-size:12px;color:rgba(255,255,255,.5);letter-spacing:.08em;pointer-events:none;
         animation:lpHintFloat 2.8s ease-in-out infinite;text-align:center;white-space:nowrap;
         background:rgba(0,0,0,.28);padding:.5rem 1.2rem;border-radius:20px;
         border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);">
-        ダブルタップで悩みを流す
+        ダブルタップで悩みを流す<br><span style="font-size:9px;opacity:.55;letter-spacing:.02em">Double-tap to share a worry</span>
       </div>
     </div>
   </div>
+  -->
 
   <!-- 悩み入力シート（ダブルタップで開く） -->
   <div id="sangaFormSheet" style="display:none;position:fixed;inset:0;z-index:490;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);align-items:flex-end">
@@ -1588,13 +1631,12 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     </div>
   </div>
 
-  <!-- ── 探求 ── -->
+  <!--
+  == 探求タブ（将来実装・現在オミット）==
   <div class="tc" id="tc-quest">
-    <!-- DQ ヘッダー / 進捗 -->
     <div style="padding:0 0 .375rem;flex:0 0 auto">
       <div class="lp-glass lp-glass-sm" style="margin-bottom:.25rem;padding:.75rem 1rem">
         <div style="display:flex;align-items:center;gap:.75rem">
-          <!-- レベルアイコン → タップでバッジ一覧 -->
           <div onclick="openDQBadgeOv()" style="cursor:pointer;position:relative;flex-shrink:0">
             <div style="font-size:2rem" id="dqLvIcon">📿</div>
             <div style="position:absolute;bottom:-2px;right:-6px;font-size:8px;font-weight:700;
@@ -1612,16 +1654,14 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
         <div style="font-size:10px;color:var(--mu);margin-top:.3rem" id="dqXpLabel"></div>
       </div>
     </div>
-    <!-- サブナビ（マップ・原典のみ） -->
     <div class="dq-subnav">
       <button class="dq-snb on" data-dqv="map">🗺 マップ</button>
       <button class="dq-snb" data-dqv="texts">📜 原典</button>
     </div>
-    <!-- マップ（ステージ：下から上へ＝悟りの道） -->
     <div class="dq-view on" id="dqview-map" style="flex-direction:column-reverse"></div>
-    <!-- 原典一覧 -->
     <div class="dq-view" id="dqview-texts"></div>
   </div>
+  -->
 </div>
 
 <!-- ════ カレンダープレビュー ════ -->
@@ -2006,7 +2046,7 @@ document.getElementById('tutNameBtn').addEventListener('click',function(){
   var n=document.getElementById('tutName').value.trim();if(!n){document.getElementById('tutName').focus();return;}
   st.userName=n;
   document.getElementById('tutInpWrap').classList.add('vanish');
-  setTimeout(function(){document.getElementById('tutGreet').textContent=n+'さんとお呼びしますね。';swTut(4);},480);
+  setTimeout(function(){document.getElementById('tutGreet').textContent=n+'さん、ようこそ。';swTut(4);},480);
 });
 document.getElementById('tutName').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('tutNameBtn').click();});
 document.querySelectorAll('.rfp-opt').forEach(function(b){
@@ -2061,8 +2101,6 @@ var TUT_STEPS=[
   {tab:'chant',title:'🥁 お題目タブ',body:'「南無妙法蓮華経」と唱えるたびに太鼓をタップ。回数が積み重なり功徳となります。お題目は、正しく人生の道を進む力💪になります。'},
   {tab:'gongyou',title:'📖 勤行 — 法華経',body:'法華経を読めます。声に出して読みましょう。中には功徳によって解放できるものもあります。全てのお経を読めるようになりましょう。'},
   {tab:'narai',title:'📅 ならい — 修行記録',body:'毎日の修行の記録です。連続修行日数（ストリーク）が増えると功徳ブーストが上がります。継続が最大の修行です🔥'},
-  {tab:'lotus',title:'🪷 蓮池 — 祈りの池',body:'ダブルタップして悩みを蓮の花に込め、池に流しましょう。世界中の人、近くの人の蓮の花が池に浮かびます。カスタムメッセージを送るにはプレミアムプランに入る必要があります。'},
-  {tab:'quest',title:'🔍 探求 — ダルマクエスト',body:'経典（原典）を読んでクイズに挑戦。正解してXPを獲得しレベルアップ。マップを進み、悟りの道を歩みましょう。レベルアイコンをタップすると、実績解放で手に入れたバッジ一覧が開きます。'},
   {tab:'chant',title:'✨ さあ、修行を始めましょう',body:'毎日お題目を唱え、経典を読み、祈りを積み重ねることで、心が穏やかになり、正しい方向へ導かれます。南無妙法蓮華経🪷'}
 ];
 var tutWalkStep=0;
@@ -2165,10 +2203,10 @@ function launchApp(opts){
   buildCarousel();updateChantUI();renderBanner();buildLb();
   initHomeTab();
   updateHdrTier();
-  actTab(st.tab||'chant');
-  if(st.tab==='narai')renderNaraiTab();
-  if(st.tab==='lotus'){renderLotusTab();initLotusFloaters();}
-  if(st.tab==='quest'){renderDQSummary();renderDQMap();}
+  var _initTab=(st.tab==='lotus'||st.tab==='quest'||!document.querySelector('[data-t="'+st.tab+'"]'))?'chant':(st.tab||'chant');
+  actTab(_initTab);
+  if(_initTab==='narai')renderNaraiTab();
+  if(_initTab==='quest'){renderDQSummary();renderDQMap();}
   buildSangaKleshaSelect();
   initJoyBubble();renderJoyAnalysis();renderDailyCard();
   if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
@@ -2181,15 +2219,22 @@ function launchApp(opts){
 function applyHue(h){st.hue=h;document.documentElement.style.setProperty('--h',h);}
 function applyMode(d){st.dark=d;document.body.classList.toggle('dark',d);var mb=document.getElementById('modeBtn');if(mb)mb.textContent=d?'☀️ ライト':'🌙 ダーク';}
 function togDark(){applyMode(!st.dark);lsS(UK,st);}
+function clearBg(){
+  var bl=document.getElementById('bgLayer');
+  if(bl)bl.removeAttribute('style');
+  document.body.style.backgroundImage='';
+  document.body.style.backgroundSize='';
+  document.body.style.backgroundPosition='';
+  document.body.style.backgroundAttachment='';
+}
 function applyRichUI(on){
   st.richUI=on;
-  var bl=document.getElementById('bgLayer');
   if(on){
-    applyBg();
     document.body.classList.add('rich');
+    applyTabBg(st.tab);
   }else{
-    if(bl)bl.style.backgroundImage='';
     document.body.classList.remove('rich');
+    clearBg();
   }
   var rb=document.getElementById('richBtn');
   if(rb)rb.textContent=on?'🖼️ 背景ON':'🖼️ 背景OFF';
@@ -2230,7 +2275,7 @@ function captureBugScreenshot(){
   if(btn){btn.textContent='📸 取得中...';btn.disabled=true;}
   if(typeof html2canvas==='undefined'){
     if(btn){btn.textContent='📸 スクショ取得';btn.disabled=false;}
-    alert('スクリーンショット機能を読み込んでいます。もう一度お試しください。');
+    showToast('スクリーンショット機能を読み込み中です。もう一度お試しください。');
     return;
   }
   var ov=document.getElementById('bugReportOv');
@@ -2275,7 +2320,7 @@ function _buildBugPayload(desc){
 function submitBugReport(){
   var txt=document.getElementById('bugReportTxt');
   var desc=(txt?txt.value:'').trim();
-  if(!desc){alert('内容を入力してください。');return;}
+  if(!desc){showToast('内容を入力してください。');return;}
   var btn=document.getElementById('bugSubmitBtn');
   if(btn){btn.textContent='送信中...';btn.disabled=true;}
   var payload=_buildBugPayload(desc);
@@ -2283,7 +2328,7 @@ function submitBugReport(){
   function finish(ok){
     closeBugReport();
     if(btn){btn.textContent='送信する';btn.disabled=false;}
-    alert(ok?'✅ ご報告ありがとうございます！改善に活かします。':'⚠️ 送信できませんでした。後でお試しください。');
+    showToast(ok?'✅ ご報告ありがとうございます！':'⚠️ 送信できませんでした。後でお試しください。');
   }
   if(_db){
     _db.collection('bugReports').add(payload)
@@ -2294,7 +2339,7 @@ function submitBugReport(){
 function sendBugByEmail(){
   var txt=document.getElementById('bugReportTxt');
   var desc=(txt?txt.value:'').trim();
-  if(!desc){alert('内容を入力してください。');return;}
+  if(!desc){showToast('内容を入力してください。');return;}
   var payload=_buildBugPayload(desc);
   var body='【バグ報告】よむよむお題目\n\n'
     +desc+'\n\n'
@@ -2310,7 +2355,7 @@ function sendBugByEmail(){
 function sendBugByTwitter(){
   var txt=document.getElementById('bugReportTxt');
   var desc=(txt?txt.value:'').trim();
-  if(!desc){alert('内容を入力してください。');return;}
+  if(!desc){showToast('内容を入力してください。');return;}
   var tweet='@'+BUG_REPORT_TWITTER+' 【バグ報告】よむよむお題目\n'
     +desc.substring(0,100)
     +'\n#よむよむお題目';
@@ -2969,7 +3014,7 @@ function openReading(){
     return;
   }
   if(!g.lines||!g.lines.length){
-    alert('📖 このお経のテキストは現在準備中です。\n「唱えた」ボタンで回数を記録してください。');
+    showToast('📖 このお経は準備中です。「唱えた」ボタンで記録できます。');
     return;
   }
   if(!st.gongyouFontDone){showReadFontPick();return;}
@@ -3029,7 +3074,7 @@ function readNext(){
     closeReading();
     addGongyoReading(gcGG[gcCurReal]);lsS(UK,st);
     spawnP();accentS();
-    setTimeout(function(){alert('🪷 読経完了！功徳が得られました。\n南無妙法蓮華経');},200);
+    setTimeout(function(){showToast('🪷 読経完了！功徳が得られました。南無妙法蓮華経');},200);
     return;
   }
   gotoPage(readLineIdx+1);
@@ -3682,14 +3727,8 @@ function actTab(t){
 function applyTabBg(t){
   var bl=document.getElementById('bgLayer');
   if(!bl)return;
-  if(t==='lotus'){
-    bl.style.backgroundImage="url('images/lotus-pond-bg.jpg')";
-  } else if(t==='quest'){
-    bl.style.backgroundImage="url('images/quest-bg.jpg')";
-  } else {
-    if(st.richUI){applyBg();}
-    else{bl.style.backgroundImage='';}
-  }
+  if(st.richUI){applyBg();}
+  else{clearBg();}
 }
 document.querySelectorAll('.tab').forEach(function(btn){
   btn.addEventListener('click',function(){
@@ -3740,7 +3779,7 @@ function shareChantRecord(){
       document.body.appendChild(msg);
       setTimeout(function(){msg.remove();},2500);
     }).catch(function(){
-      alert(texts);
+      showToast('📋 コピーできませんでした。手動でコピーしてください。');
     });
   }
 }
@@ -4248,7 +4287,7 @@ function initLotusFloaters(){
   _renderLotusFloaters(cont);
   _lotusSpawnTimer=setInterval(function(){
     var cont2=document.getElementById('lpLotusContainer');if(!cont2)return;
-    if(!document.getElementById('tc-lotus').classList.contains('on'))return;
+    var _tcL=document.getElementById('tc-lotus');if(!_tcL||!_tcL.classList.contains('on'))return;
     var rooms=_allSangaRooms();
     var r=rooms[Math.floor(Math.random()*rooms.length)];
     if(r)spawnLotusFloater(r,cont2,Math.floor(Math.random()*9999));
@@ -4344,8 +4383,8 @@ function updateSangaPreview(){
 }
 function createSangaRoom(){
   var title=document.getElementById('sangaRoomTitle').value.trim();
-  if(!st.sangaSelectedKlesha){alert('煩悩を選んでください');return;}
-  if(!title){alert('一言を入力してください');return;}
+  if(!st.sangaSelectedKlesha){showToast('煩悩を選んでください');return;}
+  if(!title){showToast('一言を入力してください');return;}
   if(!canSendLotus()){
     closeSangaForm();
     setTimeout(function(){openTierModal();},250);
@@ -4475,7 +4514,7 @@ function sendSangaCustomMsg(){
   if(!txt)return;
   var tier=getUserTier();var td=TIER_DEF[tier]||TIER_DEF.free;
   var maxChars=td.msgRx>=999?9999:td.msgRx;
-  if(txt.length>maxChars){alert('このプランでは最大'+maxChars+'文字まで送信できます');return;}
+  if(txt.length>maxChars){showToast('このプランでは最大'+maxChars+'文字まで送信できます');return;}
   var msgs2=document.getElementById('sangaMsgs');
   var row=document.createElement('div');
   row.className='sanga-msg-row';
@@ -4731,7 +4770,13 @@ function applyBg(){
   if(!st.richUI)return;
   var img=getBgImg(new Date().getHours());
   var bl=document.getElementById('bgLayer');
-  if(bl)bl.style.backgroundImage="url('"+img+"')";
+  if(bl){
+    bl.style.backgroundImage="url('"+img+"')";
+    bl.style.backgroundSize='cover';
+    bl.style.backgroundPosition='center';
+    bl.style.backgroundRepeat='no-repeat';
+    bl.style.opacity='0.7';
+  }
 }
 (function(){
   applyBg();
@@ -4890,9 +4935,11 @@ function renderDQMap(keepScroll){
     // 詳細パネル（展開中のみ）
     if(openDetail&&unlocked){
       html+='<div class="dq-node-detail">'
-        +'<div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:.25rem">'+sg.icon+' '+sg.rank_ja+' <span style="font-size:10px;font-weight:400;color:var(--mu)">'+sg.pali+'</span></div>'
-        +'<div style="font-size:11px;color:var(--tx);line-height:1.6;margin-bottom:.5rem">'+sg.desc_ja+'</div>'
-        +'<div style="font-size:10px;color:var(--mu);background:var(--bi);border-radius:7px;padding:.375rem .625rem;margin-bottom:.5rem;white-space:pre-line;line-height:1.5">'+sg.freed_ja+'</div>'
+        +'<div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:.25rem">'+sg.icon+' '+sg.rank_ja+(sg.rank_en?' <span style="font-size:9px;font-weight:400;opacity:.55">'+sg.rank_en+'</span>':'')+' <span style="font-size:10px;font-weight:400;color:var(--mu)">'+sg.pali+'</span></div>'
+        +'<div style="font-size:11px;color:var(--tx);line-height:1.6;margin-bottom:.25rem">'+sg.desc_ja+'</div>'
+        +(sg.desc_en?'<div style="font-size:10px;color:var(--mu);line-height:1.5;margin-bottom:.5rem;font-style:italic">'+sg.desc_en+'</div>':'')
+        +'<div style="font-size:10px;color:var(--mu);background:var(--bi);border-radius:7px;padding:.375rem .625rem;margin-bottom:.25rem;white-space:pre-line;line-height:1.5">'+sg.freed_ja+'</div>'
+        +(sg.freed_en?'<div style="font-size:9px;color:var(--mu);opacity:.6;background:var(--bi);border-radius:7px;padding:.25rem .625rem;margin-bottom:.5rem;font-style:italic">'+sg.freed_en+'</div>':'')
         +'<div style="font-size:10px;color:var(--mu);margin-bottom:.5rem">📜 原典 '+readCount+'/'+scIds.length+' 読了</div>'
         +'<div class="dq-row">'
         +'<button class="btn-s" onclick="openDQStageTexts('+JSON.stringify(scIds).replace(/"/g,'&quot;')+')">📜 原典を読む</button>'
@@ -4974,7 +5021,8 @@ function openDQReader(id){
   if(firstRead){dqS.read.add(id);dqCheckBadges();dqAddXP(25);}
   // 内容レンダリング
   var html='<div style="font-size:10px;color:var(--mu);margin-bottom:.25rem">'+s.collection+' · '+s.ref+'</div>'
-    +'<div style="font-size:15px;font-weight:700;color:var(--a);margin-bottom:.35rem">'+s.title_ja+'</div>'
+    +'<div style="font-size:15px;font-weight:700;color:var(--a);margin-bottom:.1rem">'+s.title_ja+'</div>'
+    +(s.title_en?'<div style="font-size:11px;color:var(--mu);font-style:italic;margin-bottom:.35rem;opacity:.7">'+s.title_en+'</div>':'')
     +(firstRead?'<div style="font-size:11px;color:var(--ok);margin-bottom:.5rem">✨ +25 XP 初読了！</div>':'')
     +'<div style="font-size:11px;font-weight:600;color:var(--mu);margin-bottom:.25rem">意訳</div>'
     +'<div class="dq-iyaku">'+s.iyaku_ja+'</div>'
@@ -5003,7 +5051,7 @@ function openDQQuiz(stageId){
   var scIds=sg.scriptures||[];
   var readCount=scIds.filter(function(id){return dqS.read.has(id);}).length;
   if(scIds.length>0&&readCount===0){
-    alert('📜 クイズに挑戦する前に「原典を読む」から経典を読んでください。');
+    showToast('📜 クイズの前に「原典を読む」から経典を読んでください。');
     return;
   }
   _dqQuizStageId=stageId;_dqQuizIdx=0;_dqQuizScore=0;_dqQuizAnswered=false;
@@ -5014,12 +5062,14 @@ function renderDQQuizQ(quiz){
   var body=document.getElementById('dqQuizBody');if(!body)return;
   var q=quiz.questions[_dqQuizIdx];if(!q){finishDQQuiz(quiz);return;}
   var total=quiz.questions.length;
-  var html='<div style="font-size:10px;color:var(--mu);margin-bottom:.5rem">'+quiz.title_ja+' ('+(_dqQuizIdx+1)+'/'+total+')</div>'
-    +'<div class="dq-quiz-q">'+q.q_ja+'</div>';
+  var titleEn=quiz.title_en?'<span style="opacity:.55;font-size:.9em"> / '+quiz.title_en+'</span>':'';
+  var html='<div style="font-size:10px;color:var(--mu);margin-bottom:.5rem">'+quiz.title_ja+titleEn+' ('+(_dqQuizIdx+1)+'/'+total+')</div>'
+    +'<div class="dq-quiz-q">'+q.q_ja+(q.q_en?'<div style="font-size:.78em;opacity:.55;margin-top:.25rem;font-weight:400">'+q.q_en+'</div>':'')+'</div>';
   q.choices_ja.forEach(function(c,i){
-    html+='<button class="dq-quiz-ch" onclick="answerDQQuiz('+i+')">'+c+'</button>';
+    var en=q.choices_en&&q.choices_en[i]?'<span style="display:block;font-size:.8em;opacity:.5">'+q.choices_en[i]+'</span>':'';
+    html+='<button class="dq-quiz-ch" onclick="answerDQQuiz('+i+')">'+c+en+'</button>';
   });
-  html+='<div class="dq-exp" id="dqExp">'+q.exp_ja+'</div>';
+  html+='<div class="dq-exp" id="dqExp">'+q.exp_ja+(q.exp_en?'<div style="font-size:.88em;opacity:.65;margin-top:.3rem;border-top:1px solid rgba(255,255,255,.1);padding-top:.3rem">'+q.exp_en+'</div>':'')+'</div>';
   if(_dqQuizIdx>0){
     html='<div style="font-size:11px;color:var(--mu);margin-bottom:.5rem">'+_dqQuizScore+'/'+_dqQuizIdx+' 正解</div>'+html;
   }
@@ -5161,7 +5211,8 @@ function closeSangaForm(){
 (function(){
   var _lastTap=0;
   document.addEventListener('click',function(e){
-    if(!document.getElementById('tc-lotus').classList.contains('on'))return;
+    var _tcLotus=document.getElementById('tc-lotus');
+    if(!_tcLotus||!_tcLotus.classList.contains('on'))return;
     if(e.target.closest('#sangaFormSheet')||e.target.closest('.sanga-overlay'))return;
     var now=Date.now();
     if(now-_lastTap<380){openSangaForm();}
@@ -5553,7 +5604,7 @@ function doShare(title,text,url){
 function showToast(msg){
   var t=document.createElement('div');
   t.textContent=msg;
-  t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(30,20,50,.92);color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;z-index:9999;pointer-events:none;transition:opacity .4s';
+  t.style.cssText='position:fixed;bottom:calc(60px + env(safe-area-inset-bottom, 0px) + 12px);left:50%;transform:translateX(-50%);background:rgba(30,20,50,.92);color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;z-index:9999;pointer-events:none;transition:opacity .4s;white-space:nowrap;max-width:90vw;text-align:center;';
   document.body.appendChild(t);
   setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove();},400);},2000);
 }
@@ -5614,6 +5665,79 @@ window.addEventListener('message',function(e){
     openTierModal();
   }
 });
+
+// ════ セレモニークイックスタート ════
+var CEREMONY_SECTS=[
+  {id:'sanbo',  label:'三宝礼',          label_en:'Taking Refuge',  role:'始まり'},
+  {id:'kaikege',label:'開経偈',          label_en:'Opening Verse',  role:'開経'},
+  {id:'h2',     label:'方便品第二（抜粋）',label_en:'Chapter 2',      role:'第２章'},
+  {id:'h16b',   label:'自我偈',          label_en:'Chapter 16',     role:'第１６章'},
+  {id:'zange',  label:'懺悔文（抜粋）',   label_en:'Confession',     role:'懺悔'},
+  {id:'sanbo',  label:'三宝礼',          label_en:'Closing',        role:'締め'}
+];
+var _cStep=0,_cLang='kanji';
+function openCeremony(){
+  _cStep=0;_cLang='kanji';
+  document.getElementById('ceremonyOverlay').style.display='flex';
+  renderCeremonyStep();
+}
+function closeCeremony(){
+  document.getElementById('ceremonyOverlay').style.display='none';
+}
+function setCLang(lang){_cLang=lang;renderCeremonyStep();}
+function setCStep(n){
+  _cStep=Math.max(0,Math.min(CEREMONY_SECTS.length-1,n));
+  var sc=document.getElementById('cMainScroll');if(sc)sc.scrollTop=0;
+  renderCeremonyStep();
+}
+function renderCeremonyStep(){
+  var sect=CEREMONY_SECTS[_cStep];
+  var g=null;
+  if(typeof GG!=='undefined'){for(var i=0;i<GG.length;i++){if(GG[i].id===sect.id){g=GG[i];break;}}}
+  // step dots
+  var dots=document.getElementById('cStepDots');
+  if(dots){var dh='';for(var i=0;i<CEREMONY_SECTS.length;i++){dh+='<div style="width:8px;height:8px;border-radius:50%;background:'+(i===_cStep?'var(--a,#e879a0)':'rgba(255,255,255,.18)')+';transition:background .2s"></div>';}dots.innerHTML=dh;}
+  // titles
+  var t=document.getElementById('cStepTitle');if(t)t.innerHTML=sect.role+' <span style="font-size:.7em;opacity:.5">/ '+sect.label_en+'</span>';
+  var s=document.getElementById('cStepSub');if(s)s.textContent=sect.label;
+  // lang toggle highlight
+  ['kanji','yomi','romaji','en'].forEach(function(l){var b=document.getElementById('cLang_'+l);if(b)b.style.background=_cLang===l?'rgba(255,255,255,.2)':'transparent';});
+  // body
+  var body=document.getElementById('cBody');
+  if(!body)return;
+  if(!g){body.innerHTML='<div style="color:rgba(255,255,255,.4);text-align:center;padding:3rem 0;font-size:13px">読み込み中... / Loading...</div>';return;}
+  var langIdx={kanji:0,yomi:1,romaji:2,en:3}[_cLang]||0;
+  var html='';
+  g.lines.forEach(function(line){
+    var text=(line[langIdx]||line[0]||'').trim();
+    var fs=_cLang==='romaji'?'14px':_cLang==='en'?'14px':'18px';
+    html+='<div style="font-size:'+fs+';line-height:1.9;margin-bottom:.625rem;padding:.5rem .125rem;border-bottom:1px solid rgba(255,255,255,.05);white-space:pre-line;color:rgba(255,255,255,.9)">'+text+'</div>';
+  });
+  body.innerHTML=html;
+  // nav
+  var prev=document.getElementById('cPrevBtn');
+  var next=document.getElementById('cNextBtn');
+  if(prev){prev.disabled=_cStep===0;prev.style.opacity=_cStep===0?'.3':'1';}
+  if(next){
+    var isLast=_cStep===CEREMONY_SECTS.length-1;
+    next.textContent=isLast?'完了 / Done ✓':'次へ / Next →';
+    next.onclick=isLast?closeCeremony:function(){setCStep(_cStep+1);};
+  }
+}
+// t1画面でセレモニーボタンを遅延表示
+(function(){
+  function _showCeremonyBtn(){
+    var btn=document.getElementById('ceremonyEntryBtn');
+    if(btn)btn.style.display='block';
+  }
+  var _t1interval=setInterval(function(){
+    var t1=document.getElementById('t1');
+    if(t1&&!t1.classList.contains('hidden')){
+      clearInterval(_t1interval);
+      setTimeout(_showCeremonyBtn,2500);
+    }
+  },500);
+})();
 </script>
 </body>
 </html>
