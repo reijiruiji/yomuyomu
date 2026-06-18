@@ -1,0 +1,35 @@
+name: Sync main → develop
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main into develop
+        run: |
+          git checkout develop
+          if git merge origin/main --no-edit -m "chore: sync main → develop [auto]"; then
+            git push origin develop
+            echo "✅ main の変更を develop に自動マージしました"
+          else
+            echo "⚠️ コンフリクトが発生しました。手動でマージしてください。"
+            git merge --abort
+            exit 1
+          fi

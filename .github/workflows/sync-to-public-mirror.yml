@@ -1,0 +1,20 @@
+name: Sync to public mirror (handa554)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mirror all branches and tags to public mirror
+        run: |
+          git remote add mirror https://x-access-token:${{ secrets.MIRROR_PAT }}@github.com/handa554/yomuyomu.git
+          git push mirror --mirror
+          echo "✅ public mirror (handa554/yomuyomu) に完全同期しました"
