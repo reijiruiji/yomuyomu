@@ -129,7 +129,6 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .font-pick-q{font-size:.85rem;font-weight:600;color:var(--a);margin-bottom:.45rem;line-height:1.4;}
 .hint-bounce{font-size:12px;color:var(--mu);margin-top:1.25rem;animation:bnc 1.5s ease-in-out infinite;}
 @keyframes bnc{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-@keyframes lpHintFloat{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-7px)}}
 
 /* ── APP ── */
 #app{display:none;min-height:100dvh;}
@@ -542,14 +541,6 @@ body.dark .crk.ta{color:#ef9a9a;}
 .popup ul{padding-left:1.25rem;}
 .info-formula{font-size:10px;color:var(--mu);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 12px;margin:.5rem 0;line-height:1.8;text-align:left;}
 
-/* ── バッジ獲得トースト ── */
-@keyframes badgeIn{from{opacity:0;transform:translateX(-50%) translateY(-24px) scale(.8)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
-@keyframes badgeOut{from{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}to{opacity:0;transform:translateX(-50%) translateY(-20px) scale(.85)}}
-.badge-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:600;
-  background:linear-gradient(135deg,rgba(14,9,36,.97),rgba(8,5,22,.97));
-  border:1.5px solid rgba(212,168,67,.7);border-radius:20px;padding:.875rem 1.5rem;
-  text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 28px rgba(212,168,67,.25);
-  animation:badgeIn .4s cubic-bezier(.34,1.56,.64,1);min-width:200px;max-width:280px;pointer-events:none;}
 /* ── FLASH / PARTICLE ── */
 @keyframes flash{0%{box-shadow:0 0 0 0 hsla(var(--h),var(--s),48%,.8)}50%{box-shadow:0 0 0 18px transparent,inset 0 0 25px var(--ag)}100%{box-shadow:0 0 0 0 transparent}}
 .flashing{animation:flash .5s ease-out;}
@@ -608,92 +599,11 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 @keyframes rich-glow{
   0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1);}
   50%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}}
-/* ── DQ ネイティブUI ── */
-/* ── Quest タブ：スクロールなし全画面 ── */
-#tc-quest.on{
-  display:flex;flex-direction:column;
-  height:calc(100dvh - 60px - env(safe-area-inset-bottom,0px));
-  padding-top:calc(max(8px,env(safe-area-inset-top,0px)) + 56px);
-  padding-left:.875rem;padding-right:.875rem;padding-bottom:0;
-  overflow:hidden;
-  /* dqview-map が overflow-y:auto を持つため、マップはそちらでスクロールする */
-}
 #tc-gongyou.on{
   height:calc(100dvh - 60px - env(safe-area-inset-bottom,0px));
   overflow:hidden;
   padding-bottom:0;
 }
-/* ── DQ Duolingo パス ── */
-.dq-path{display:flex;flex-direction:column;padding:.25rem .5rem;}
-.dq-path-track{display:flex;flex-direction:column;}
-.dq-path-node{display:flex;flex:0 0 auto;position:relative;z-index:1;justify-content:center;}
-.dq-path-node.dq-left,.dq-path-node.dq-right{justify-content:center;padding:0;}
-.dq-node-btn{width:60px;height:60px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.4rem;
-  border:2px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.1);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  cursor:pointer;transition:all .2s;flex-shrink:0;position:relative;
-  box-shadow:0 4px 16px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.22);}
-.dq-node-btn.done{border-color:var(--boa);background:hsla(var(--h),60%,50%,.25);box-shadow:0 4px 20px hsla(var(--h),60%,50%,.3),inset 0 1px 0 rgba(255,255,255,.25);}
-.dq-node-btn.current{border-color:var(--boa);animation:dq-pulse 1.8s ease-in-out infinite;}
-.dq-node-btn.locked{opacity:.35;cursor:default;filter:grayscale(.6);}
-@keyframes dq-pulse{0%,100%{box-shadow:0 0 0 0 var(--ag)}60%{box-shadow:0 0 0 10px transparent}}
-.dq-node-label{margin-top:3px;white-space:nowrap;font-size:9px;font-weight:600;color:var(--a);text-align:center;}
-.dq-node-label.locked{color:var(--di);}
-.dq-node-check{position:absolute;top:-3px;right:-3px;width:17px;height:17px;border-radius:50%;background:var(--a);color:#000;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700;}
-.dq-connector{flex:1;min-height:10px;max-height:80px;position:relative;z-index:0;}
-.dq-connector-line{position:absolute;left:50%;width:2px;height:100%;background:rgba(255,255,255,.12);transform:translateX(-50%);border-radius:2px;}
-.dq-connector-line.done{background:var(--a);}
-.dq-node-detail{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:.875rem;margin:.375rem .25rem 0;box-shadow:var(--gsh);}
-.dq-node-detail .dq-row{gap:6px;margin-top:.5rem;}
-.dq-subnav{display:flex;gap:5px;padding:.375rem .875rem .125rem;flex:0 0 auto;background:transparent;}
-.dq-snb{flex:1;padding:6px 4px;font-size:11px;font-weight:600;
-  border:1px solid rgba(255,255,255,.2);border-radius:10px;
-  background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);cursor:pointer;transition:all .15s;}
-.dq-snb.on{background:hsla(var(--h),70%,58%,.55);border-color:hsla(var(--h),80%,70%,.5);color:#fff;font-weight:700;
-  box-shadow:0 4px 16px hsla(var(--h),70%,50%,.25);}
-.dq-view{display:none;padding:0;}
-.dq-view.on{flex:1;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-#dqview-texts.on,#dqview-badges.on{padding:.25rem 0 .5rem;}
-.dq-stage-card{background:rgba(255,255,255,.11);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:.875rem;margin-bottom:.625rem;
-  box-shadow:0 6px 20px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.2);}
-.dq-stage-card.done{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.14);}
-.dq-stage-card.locked{opacity:.45;}
-.dq-stage-hd{display:flex;align-items:center;gap:.625rem;margin-bottom:.5rem;}
-.dq-stage-icon{font-size:1.6rem;line-height:1;flex-shrink:0;}
-.dq-sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:.5rem;}
-.dq-sc-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:.625rem;cursor:pointer;transition:all .18s;color:rgba(255,255,255,.88);}
-.dq-sc-card:active{background:rgba(255,255,255,.16);}
-.dq-sc-card.read{border-color:var(--boa);background:hsla(var(--h),60%,50%,.2);}
-.dq-badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
-.dq-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:.625rem;text-align:center;color:rgba(255,255,255,.88);}
-.dq-badge.earned{border-color:var(--boa);background:hsla(var(--h),60%,50%,.2);}
-.dq-enlighten-goal{text-align:center;padding:1.5rem .5rem .75rem;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(212,168,67,.08),transparent);border-radius:14px 14px 0 0;}
-.dq-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:450;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
-.dq-overlay.show{display:flex;align-items:flex-start;}
-.dq-panel{background:rgba(12,14,24,.92);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border:1px solid rgba(255,255,255,.18);border-radius:20px 20px 0 0;margin-top:auto;padding:1.25rem;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2);}
-.dq-reader-pali{font-family:Georgia,serif;font-size:1rem;color:var(--a);line-height:1.9;margin:.4rem 0;letter-spacing:.02em;}
-.dq-iyaku{font-size:12px;color:var(--tx);line-height:1.8;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:.75rem;white-space:pre-line;margin:.5rem 0;}
-.dq-ctx{font-size:11px;color:var(--mu);line-height:1.7;margin-top:.5rem;}
-.dq-quiz-q{font-size:13px;font-weight:600;color:var(--tx);line-height:1.6;margin-bottom:.75rem;}
-.dq-quiz-ch{width:100%;text-align:left;padding:.75rem;margin-bottom:.5rem;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:var(--tx);font-size:13px;cursor:pointer;transition:all .15s;}
-.dq-quiz-ch:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.12);}
-.dq-quiz-ch.correct{border-color:#4caf50;background:rgba(76,175,80,.15);color:#a5d6a7;}
-.dq-quiz-ch.wrong{border-color:#ef5350;background:rgba(239,83,80,.1);color:#ef9a9a;}
-.dq-exp{font-size:11px;color:var(--mu);background:var(--bi);border-radius:8px;padding:.625rem;line-height:1.6;margin-top:.5rem;display:none;}
-.dq-xp-toast{display:inline-flex;align-items:center;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.4);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:700;color:#c8860a;margin-left:.4rem;}
-.coll-hd{font-size:11px;font-weight:700;color:var(--a);margin:.75rem 0 .35rem;letter-spacing:.03em;padding-left:.1rem;}
-/* ── 蓮池タブ ── */
-.stage-row{display:flex;align-items:center;gap:.75rem;}
-.stage-icon{font-size:2rem;line-height:1;flex-shrink:0;filter:drop-shadow(0 0 12px var(--a));}
-.stage-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-top:.625rem;}
-.stage-fill{height:100%;background:linear-gradient(90deg,var(--a),hsl(calc(var(--h) + 40),80%,72%));border-radius:3px;transition:width .7s ease;box-shadow:0 0 8px var(--a);}
-.wisdom-pill{display:inline-flex;align-items:center;font-size:10px;font-weight:600;color:var(--a);
-  background:linear-gradient(135deg,hsla(var(--h),80%,60%,.18),hsla(var(--h),60%,50%,.08));
-  border:1px solid hsla(var(--h),80%,60%,.3);
-  border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0;}
 .klesha-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:.625rem;}
 .klesha-btn{padding:8px 2px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.07);color:var(--tx);font-size:10px;cursor:pointer;text-align:center;transition:all .18s;line-height:1.4;
@@ -707,15 +617,6 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 .rx-meaning{font-size:11px;color:var(--mu);margin-bottom:.5rem;}
 .rx-body{font-size:12px;color:var(--tx);line-height:1.7;margin-bottom:.5rem;}
 .rx-sutra{font-size:10px;color:var(--di);font-style:italic;border-top:1px solid rgba(255,255,255,.1);padding-top:.4rem;}
-.tomoshibi-wrap{text-align:center;padding:1.1rem 1rem .875rem;}
-.tomoshibi-count{font-size:clamp(2rem,10vw,2.8rem);font-weight:200;
-  background:linear-gradient(135deg,#fff,var(--a));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  line-height:1;filter:drop-shadow(0 0 16px var(--a));}
-.tomoshibi-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-top:.75rem;max-height:34px;overflow:hidden;}
-.tdot{width:5px;height:5px;border-radius:50%;background:var(--a);opacity:.5;
-  box-shadow:0 0 4px var(--a);
-  animation:blink calc(.8s + var(--dl,0s)) ease-in-out var(--dl,0s) infinite;}
 
 /* ══ HOME: モード選択 ══ */
 .home-mode-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1.25rem 0;}
@@ -791,59 +692,13 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 .narai-streak-num{font-size:clamp(3rem,16vw,5rem);font-weight:200;line-height:1;
   background:linear-gradient(135deg,#d4a843,#fff 50%,#d4a843);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.narai-hm-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:2.5px;margin:.5rem 0;}
-.narai-hm-cell{aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.07);transition:all .2s;}
-.narai-hm-cell.lv1{background:rgba(232,121,160,.25);}
-.narai-hm-cell.lv2{background:rgba(232,121,160,.5);}
-.narai-hm-cell.lv3{background:rgba(232,121,160,.75);}
-.narai-hm-cell.lv4{background:rgba(212,168,67,.9);box-shadow:0 0 6px rgba(212,168,67,.4);}
 .narai-rank-bar{height:8px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:.5rem 0;}
 .narai-rank-fill{height:100%;background:linear-gradient(90deg,#e879a0,#d4a843);border-radius:99px;transition:width .8s ease;}
-.narai-paywall{text-align:center;padding:1rem;border-radius:14px;
-  background:linear-gradient(135deg,rgba(212,168,67,.12),rgba(232,121,160,.08));
-  border:1px solid rgba(212,168,67,.28);}
 .narai-section-title{font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.07em;
   text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
 .narai-section-title::before{content:'';display:block;width:3px;height:12px;background:#e879a0;border-radius:2px;}
-#tc-narai .lp-glass,#tc-quest .lp-glass{background:rgba(8,5,22,.75)!important;border-color:rgba(255,255,255,.22)!important;}
-#tc-narai,#tc-quest{--mu:rgba(255,255,255,.82);}
-#tc-quest .dq-stage-card{background:rgba(8,5,22,.80)!important;border-color:rgba(255,255,255,.2)!important;}
-#tc-quest .dq-node-detail{background:rgba(8,5,22,.85)!important;border-color:rgba(255,255,255,.2)!important;}
-/* マップ・バッジ・原典 — 読みやすさ対応 */
-#tc-quest .dq-view{background:rgba(6,4,19,.55);border-radius:14px;padding:.5rem .25rem;}
-#tc-quest .dq-badge{background:rgba(8,5,22,.82)!important;border-color:rgba(255,255,255,.2)!important;color:#fff!important;}
-#tc-quest .dq-badge.earned{background:rgba(14,9,36,.88)!important;border-color:var(--boa)!important;}
-#tc-quest .dq-badge-grid{gap:8px;}
-#tc-quest .dq-node-btn{background:rgba(8,5,22,.75)!important;border-color:rgba(255,255,255,.28)!important;box-shadow:0 4px 18px rgba(0,0,0,.55)!important;}
-#tc-quest .dq-node-btn.done{background:hsla(var(--h),60%,28%,.7)!important;border-color:var(--boa)!important;}
-#tc-quest .dq-node-label{color:#fff!important;text-shadow:0 1px 4px rgba(0,0,0,.9);}
-#tc-quest .dq-node-label.locked{color:rgba(255,255,255,.45)!important;}
-#tc-quest .dq-sc-card{background:rgba(8,5,22,.80)!important;border-color:rgba(255,255,255,.2)!important;color:#fff!important;}
-#tc-quest .dq-sc-card.read{background:rgba(14,9,36,.85)!important;border-color:var(--boa)!important;}
-#tc-quest .dq-connector-line{background:rgba(255,255,255,.25);}
-#tc-quest .dq-connector-line.done{background:var(--a);}
-#tc-quest .dq-snb{background:rgba(8,5,22,.72)!important;border-color:rgba(255,255,255,.2)!important;}
-#tc-quest .dq-snb.on{background:rgba(212,168,67,.28)!important;border-color:var(--boa)!important;}
-
-/* ══ iOS風 Vibrancy Material — 明るい背景タブ共通 ══
-   原則: backdrop-filter:blur(20px)+saturate(160%) + 暗色ベース + 白文字
-   → 背景の明度に関わらず文字コントラスト WCAG AA 達成 */
-#tc-quest,#tc-lotus{
-  --glass-bg: rgba(8,5,20,.76);
-  --glass-border: rgba(255,255,255,.22);
-  --glass-blur: blur(20px) saturate(160%);
-  --text-primary: rgba(255,255,255,.95);
-  --text-secondary: rgba(255,255,255,.72);
-}
-/* 全パネル類に適用 */
-#tc-quest .card,#tc-quest .lp-glass,
-#tc-lotus .lp-glass{
-  background:var(--glass-bg)!important;
-  backdrop-filter:var(--glass-blur)!important;
-  -webkit-backdrop-filter:var(--glass-blur)!important;
-  border-color:var(--glass-border)!important;
-  color:var(--text-primary)!important;
-}
+#tc-narai .lp-glass{background:rgba(8,5,22,.75)!important;border-color:rgba(255,255,255,.22)!important;}
+#tc-narai{--mu:rgba(255,255,255,.82);}
 /* ══ テキスト光彩システム ══ */
 .tab-hd-title{
   text-shadow:0 0 14px hsla(var(--h),80%,68%,.55),0 1px 4px rgba(0,0,0,.6);}
@@ -853,60 +708,7 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   text-shadow:0 0 18px hsla(var(--h),82%,68%,.6),0 0 36px hsla(var(--h),70%,55%,.3);}
 .goal-ring-num,.goal-ring-label{
   text-shadow:0 0 10px hsla(var(--h),80%,68%,.5);}
-/* DQ進捗ヘッダー */
-#tc-quest #dqLvLabel{color:#fff!important;}
-#tc-quest #dqReadLabel{color:var(--text-secondary)!important;}
-#tc-quest .wisdom-pill{background:rgba(8,5,20,.82)!important;color:rgba(255,255,255,.88)!important;border-color:rgba(255,255,255,.2)!important;}
-/* XPバー */
-#tc-quest .stage-bar{background:rgba(255,255,255,.15)!important;}
 
-/* ══ 蓮池: 浮かぶ蓮の花（全画面） ══ */
-.lp-lotus-floater{position:absolute;bottom:-40px;cursor:pointer;user-select:none;
-  display:flex;flex-direction:column;align-items:center;gap:3px;z-index:3;
-  animation:lotusRise var(--dur,14s) var(--del,0s) ease-in-out forwards;}
-@keyframes lotusRise{
-  0%{transform:translateX(0) translateY(0) rotate(0deg);opacity:0;}
-  8%{opacity:.9;}
-  40%{opacity:.85;}
-  80%{opacity:.7;}
-  100%{transform:translateX(var(--drift,0px)) translateY(-105vh) rotate(15deg);opacity:0;}}
-.lp-lotus-emoji{font-size:var(--sz,1.8rem);
-  filter:drop-shadow(0 0 14px var(--glow,rgba(232,121,160,.7)));
-  transition:transform .15s;}
-/* プレビュー: 重め パルスアニメーション */
-@keyframes lotusPulse{
-  0%,100%{opacity:.85;}50%{opacity:1;}}
-@keyframes lotusPulseGlow{
-  0%,100%{opacity:.7;transform:scale(1);}50%{opacity:1;transform:scale(1.12);}}
-/* 加算合成 (screen blend) 画像蓮 — sepia+hue-rotate で白い画像にも色が乗る */
-.lp-lotus-img{
-  object-fit:contain;
-  mix-blend-mode:screen;
-  display:block;
-  transition:transform .15s;}
-.lp-lotus-floater:active .lp-lotus-img{transform:scale(1.35);}
-.lp-lotus-floater:active .lp-lotus-emoji{transform:scale(1.35);}
-.lp-lotus-bubble{font-size:9px;color:rgba(255,255,255,.75);background:rgba(0,0,0,.5);
-  border-radius:8px;padding:2px 7px;max-width:90px;text-align:center;line-height:1.4;
-  backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);}
-/* 腐れかけの蓮: 低HP時に揺れる */
-.lotus-decay{animation:lotusDecay 3s ease-in-out infinite;}
-@keyframes lotusDecay{
-  0%,100%{transform:rotate(-3deg) translateY(2px);}
-  50%{transform:rotate(3deg) translateY(-2px);}}
-/* 浄化完了ブルーム */
-@keyframes lotusBloom{
-  0%{transform:scale(1);opacity:1;}
-  40%{transform:scale(2.8);opacity:.9;}
-  70%{transform:scale(3.8);opacity:.5;filter:brightness(5) blur(3px);}
-  100%{transform:scale(5.5);opacity:0;filter:brightness(8) blur(6px);}}
-/* 浄化粒子が降り注ぐ */
-@keyframes purifyDrop{
-  0%{transform:translateY(-10px) scale(0.6);opacity:0;}
-  20%{opacity:1;transform:translateY(0) scale(1);}
-  100%{transform:translateY(80px) scale(0.8);opacity:0;}}
-.purify-particle{position:fixed;pointer-events:none;z-index:515;
-  animation:purifyDrop var(--pd,1s) ease-in forwards;}
 /* ══ ティア選択モーダル ══ */
 .tier-modal{position:fixed;inset:0;z-index:505;background:rgba(0,0,0,.78);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
@@ -946,40 +748,6 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 .hdr-tier.tier-matsu{border-color:rgba(232,121,160,.55);color:rgba(232,121,160,.9);}
 .hdr-tier.tier-butsu{border-color:rgba(212,168,67,.55);color:rgba(212,168,67,.9);}
 
-/* ══ サンガ: チャットルーム ══ */
-.sanga-overlay{position:fixed;inset:0;z-index:480;background:rgba(0,0,0,.7);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  display:none;flex-direction:column;}
-.sanga-overlay.show{display:flex;}
-.sanga-panel{background:rgba(8,13,26,.92);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);
-  border:1px solid rgba(255,255,255,.18);border-radius:24px 24px 0 0;margin-top:auto;
-  padding:1.25rem 1rem 0;width:100%;max-height:88vh;display:flex;flex-direction:column;
-  box-shadow:0 -8px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.2);
-  position:relative;}
-.sanga-hd{display:flex;align-items:center;gap:.625rem;margin-bottom:.875rem;}
-.sanga-hd-klesha{font-size:1.8rem;line-height:1;}
-.sanga-hd-info{flex:1;min-width:0;}
-.sanga-hd-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.93);}
-.sanga-hd-sub{font-size:10px;color:rgba(255,255,255,.45);margin-top:1px;}
-.sanga-hp-bar{height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:.4rem 0;}
-.sanga-hp-fill{height:100%;border-radius:99px;transition:width .6s ease;
-  background:linear-gradient(90deg,#7b1fa2,#e91e63);}
-.sanga-msgs{flex:1;overflow-y:auto;padding:.5rem 0;min-height:80px;max-height:240px;}
-.sanga-msgs::-webkit-scrollbar{display:none;}
-.sanga-msg-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:.5rem;}
-.sanga-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:.8rem;flex-shrink:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);}
-.sanga-bubble{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  border-radius:0 12px 12px 12px;padding:.45rem .625rem;font-size:11px;line-height:1.55;
-  flex:1;min-width:0;color:rgba(255,255,255,.85);}
-.sanga-bubble.mine{border-radius:12px 0 12px 12px;background:rgba(212,168,67,.12);border-color:rgba(212,168,67,.25);}
-.sanga-pray-btns{display:flex;gap:.4rem;flex-wrap:wrap;padding:.625rem 0;}
-.sanga-pray-btn{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:7px 12px;
-  border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.09);color:rgba(255,255,255,.85);transition:all .18s;white-space:nowrap;}
-.sanga-pray-btn:active{transform:scale(.94);background:rgba(255,255,255,.16);}
-.sanga-close-btn{width:100%;padding:12px;margin-top:.5rem;
-  border:none;background:transparent;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;}
 
 /* 背景画像は #bgLayer に集約 */
 
@@ -1023,17 +791,6 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   color:rgba(248,165,194,.75);font-size:13px;cursor:pointer;transition:all .18s;}
 .joy-hist-btn:active{background:rgba(248,165,194,.1);}
 
-/* ══ カレンダープレビューポップアップ ══ */
-.cal-preview-popup{position:fixed;inset:0;z-index:490;background:rgba(0,0,0,.7);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  display:none;align-items:flex-end;justify-content:center;}
-.cal-preview-popup.show{display:flex;}
-.cal-preview-inner{width:100%;max-width:480px;
-  background:linear-gradient(160deg,rgba(12,14,24,.95),rgba(20,10,35,.95));
-  backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);
-  border:1px solid rgba(255,255,255,.18);border-radius:24px 24px 0 0;
-  padding:1.5rem 1.25rem 2rem;
-  box-shadow:0 -8px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15);}
 </style>
 </head>
 <body>
@@ -1361,6 +1118,14 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
       <div style="flex:1;height:1px;background:rgba(255,255,255,.1)"></div>
     </div>
 
+    <!-- 難易度セレクター -->
+    <div class="gc-diff-bar">
+      <button class="gc-diff-btn" id="gcDiff0" onclick="setGcDiff(0)">かんたん</button>
+      <button class="gc-diff-btn" id="gcDiff1" onclick="setGcDiff(1)">ふつう</button>
+      <button class="gc-diff-btn" id="gcDiff2" onclick="setGcDiff(2)">難しい</button>
+    </div>
+    <div id="gcDiffTip" style="display:none;font-size:10px;color:var(--mu);text-align:center;margin-bottom:.5rem">📜 長いお経から表示中</div>
+
     <!-- カルーセル -->
     <div class="gc-stage-wrap" id="gcWrap">
       <div id="gcStage"><!-- カード挿入 --></div>
@@ -1414,13 +1179,42 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
         </div>
       </div>
 
-      <!-- 修業カレンダー（91日ドット） -->
+      <!-- 修業カレンダー -->
       <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem">
           <div style="font-size:11px;font-weight:600;color:var(--a)">📅 修業カレンダー</div>
-          <button class="btn-s" id="calPreviewBtn" onclick="openCalPreview()" style="font-size:9px;padding:3px 8px;white-space:nowrap">日付 🔒</button>
         </div>
-        <div class="narai-hm-grid" id="naraiHmGrid"></div>
+        <div style="display:flex;align-items:center;gap:.35rem;margin-bottom:.5rem">
+          <button class="btn-s on" id="btnHeat" style="font-size:9px;padding:3px 8px">🔥 ヒート</button>
+          <button class="btn-s" id="btnMon" style="font-size:9px;padding:3px 8px">📅 月別</button>
+          <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:.25rem">
+            <button class="gc-arrow" id="calPrev" style="width:26px;height:26px;font-size:13px">‹</button>
+            <span style="font-size:11px;color:var(--a);min-width:72px;text-align:center" id="calTitle"></span>
+            <button class="gc-arrow" id="calNext" style="width:26px;height:26px;font-size:13px">›</button>
+          </div>
+        </div>
+        <div class="cg" id="calGrid" style="margin-bottom:.4rem"></div>
+        <!-- 凡例ヒートマップ -->
+        <div id="calLegHeat" style="display:flex;gap:3px;align-items:center;flex-wrap:wrap;margin-bottom:.25rem;font-size:9px;color:var(--di)">
+          <span>少</span>
+          <span style="width:11px;height:11px;border-radius:2px;background:rgba(255,255,255,.07);display:inline-block"></span>
+          <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.25);display:inline-block"></span>
+          <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.5);display:inline-block"></span>
+          <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.75);display:inline-block"></span>
+          <span style="width:11px;height:11px;border-radius:2px;background:rgba(212,168,67,.9);display:inline-block"></span>
+          <span>多</span>
+        </div>
+        <!-- 凡例月別 -->
+        <div id="calLegMon" style="display:none;gap:.35rem;flex-wrap:wrap;margin-bottom:.25rem">
+          <span style="font-size:9px;background:#c2185b;color:#fff;padding:1px 5px;border-radius:3px">天赦</span>
+          <span style="font-size:9px;background:hsl(35,90%,65%);color:#000;padding:1px 5px;border-radius:3px">一粒万倍</span>
+          <span style="font-size:9px;background:rgba(255,255,255,.15);color:#fff;padding:1px 5px;border-radius:3px">大安</span>
+        </div>
+      </div>
+      <!-- 最近の記録 -->
+      <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
+        <div style="font-size:11px;font-weight:600;color:var(--a);margin-bottom:.4rem">📝 最近の修行</div>
+        <div id="recList" style="font-size:11px"></div>
       </div>
 
       <!-- 今日の教え -->
@@ -1443,171 +1237,7 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
 
       <!-- JS参照用の非表示要素 -->
       <div id="naraiTierCard" style="display:none"></div>
-      <div id="naraiCalLocked" style="display:none">
-        <div class="narai-paywall" style="margin-bottom:.5rem">
-          <div style="font-size:1.4rem;margin-bottom:.3rem">📅</div>
-          <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:.3rem">月別カレンダーを解放</div>
-          <div style="font-size:10px;color:var(--mu);margin-bottom:.75rem">日付別の修行履歴・吉日・功徳グラフが見られます</div>
-          <button onclick="openCalPreview()" class="btn-s" style="font-size:10px;padding:6px 16px">✨ 解放する — ¥300</button>
-        </div>
-      </div>
-      <div id="naraiCalUnlocked" style="display:none">
-        <!-- 表示切替 + 月ナビ -->
-        <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
-          <div style="display:flex;align-items:center;gap:.35rem;margin-bottom:.5rem">
-            <button class="btn-s on" id="btnHeat" style="font-size:9px;padding:3px 8px">🔥 ヒート</button>
-            <button class="btn-s" id="btnMon" style="font-size:9px;padding:3px 8px">📅 月別</button>
-            <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:.25rem">
-              <button class="gc-arrow" id="calPrev" style="width:26px;height:26px;font-size:13px">‹</button>
-              <span style="font-size:11px;color:var(--a);min-width:72px;text-align:center" id="calTitle"></span>
-              <button class="gc-arrow" id="calNext" style="width:26px;height:26px;font-size:13px">›</button>
-            </div>
-          </div>
-          <div class="cg" id="calGrid" style="margin-bottom:.4rem"></div>
-          <!-- 凡例ヒートマップ -->
-          <div id="calLegHeat" style="display:flex;gap:3px;align-items:center;flex-wrap:wrap;margin-bottom:.25rem;font-size:9px;color:var(--di)">
-            <span>少</span>
-            <span style="width:11px;height:11px;border-radius:2px;background:rgba(255,255,255,.07);display:inline-block"></span>
-            <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.25);display:inline-block"></span>
-            <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.5);display:inline-block"></span>
-            <span style="width:11px;height:11px;border-radius:2px;background:rgba(232,121,160,.75);display:inline-block"></span>
-            <span style="width:11px;height:11px;border-radius:2px;background:rgba(212,168,67,.9);display:inline-block"></span>
-            <span>多</span>
-          </div>
-          <!-- 凡例月別 -->
-          <div id="calLegMon" style="display:none;gap:.35rem;flex-wrap:wrap;margin-bottom:.25rem">
-            <span style="font-size:9px;background:#c2185b;color:#fff;padding:1px 5px;border-radius:3px">天赦</span>
-            <span style="font-size:9px;background:hsl(35,90%,65%);color:#000;padding:1px 5px;border-radius:3px">一粒万倍</span>
-            <span style="font-size:9px;background:rgba(255,255,255,.15);color:#fff;padding:1px 5px;border-radius:3px">大安</span>
-          </div>
-        </div>
-        <!-- 最近の記録 -->
-        <div class="lp-glass lp-glass-sm" style="padding:.625rem .875rem;margin-bottom:.5rem">
-          <div style="font-size:11px;font-weight:600;color:var(--a);margin-bottom:.4rem">📝 最近の修行</div>
-          <div id="recList" style="font-size:11px"></div>
-        </div>
-      </div>
 
-    </div>
-  </div>
-
-  <!--
-  == 蓮池タブ（将来実装・現在オミット）==
-  <div class="tc" id="tc-lotus" style="padding:0;overflow:hidden;position:relative">
-    <div id="lpPondFull" style="position:fixed;inset:0;top:0;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:2;overflow:hidden;cursor:pointer">
-      <div id="lpLotusContainer" style="position:absolute;inset:0"></div>
-      <div id="lpDblHint" style="position:absolute;top:50%;left:50%;
-        font-size:12px;color:rgba(255,255,255,.5);letter-spacing:.08em;pointer-events:none;
-        animation:lpHintFloat 2.8s ease-in-out infinite;text-align:center;white-space:nowrap;
-        background:rgba(0,0,0,.28);padding:.5rem 1.2rem;border-radius:20px;
-        border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);">
-        ダブルタップで悩みを流す<br><span style="font-size:9px;opacity:.55;letter-spacing:.02em">Double-tap to share a worry</span>
-      </div>
-    </div>
-  </div>
-  -->
-
-  <!-- 悩み入力シート（ダブルタップで開く） -->
-  <div id="sangaFormSheet" style="display:none;position:fixed;inset:0;z-index:490;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);align-items:flex-end">
-    <div style="width:100%;background:linear-gradient(160deg,rgba(10,12,25,.96),rgba(20,8,30,.96));
-      border:1px solid rgba(255,255,255,.15);border-radius:24px 24px 0 0;padding:1.5rem 1.25rem 2.5rem;
-      box-shadow:0 -8px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)">
-      <div style="text-align:center;margin-bottom:.75rem">
-        <div style="font-size:15px;font-weight:700;color:rgba(255,255,255,.92)">悩みを蓮池に流す</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:.2rem">誰かがお祈りしてくれます</div>
-        <button id="sangaLotusCountBtn" onclick="closeSangaForm();setTimeout(openTierModal,250)"
-          style="margin-top:.4rem;padding:3px 11px;border-radius:20px;font-size:9px;cursor:pointer;
-          background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.45);">
-          🪷 今週 0/1個
-        </button>
-      </div>
-
-      <!-- 蓮プレビュー -->
-      <div style="display:flex;justify-content:center;align-items:center;margin-bottom:.875rem;min-height:100px">
-        <div id="sangaLotusPreview" style="position:relative;display:flex;align-items:center;justify-content:center">
-          <img id="sangaPreviewImg" src="images/lotus-hope.png" alt=""
-            style="width:80px;height:80px;object-fit:contain;mix-blend-mode:screen;
-            transition:filter .4s ease,width .3s ease,height .3s ease;
-            filter:hue-rotate(0deg) saturate(1) brightness(1) drop-shadow(0 0 16px rgba(232,121,160,.6))">
-          <!-- 背景グロー -->
-          <div id="sangaPreviewGlow" style="position:absolute;width:100px;height:100px;border-radius:50%;
-            background:rgba(232,121,160,.15);filter:blur(20px);
-            transition:background .4s ease,width .3s ease,height .3s ease;z-index:-1;pointer-events:none"></div>
-        </div>
-      </div>
-
-      <!-- Klesha 選択 -->
-      <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.625rem;justify-content:center" id="sangaKleshaSelect"></div>
-      <!-- 重さ -->
-      <div style="display:flex;gap:.35rem;justify-content:center;margin-bottom:.625rem">
-        <button class="btn-s" id="wBtnLight" onclick="selSangaWeight('light')">軽め</button>
-        <button class="btn-s on" id="wBtnMedium" onclick="selSangaWeight('medium')">普通</button>
-        <button class="btn-s" id="wBtnHeavy" onclick="selSangaWeight('heavy')">重め</button>
-      </div>
-      <textarea id="sangaRoomTitle" rows="2" placeholder="一言（例：明日の大事な試験が怖い）" maxlength="80"
-        style="width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;
-        padding:12px;color:rgba(255,255,255,.92);font-size:13px;outline:none;resize:none;font-family:inherit;
-        margin-bottom:.75rem"></textarea>
-      <button class="btn-big accent" onclick="createSangaRoom();closeSangaForm()">蓮池に流す 🌊</button>
-      <button onclick="closeSangaForm()" style="width:100%;margin-top:.35rem;padding:10px;border-radius:50px;background:transparent;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer">閉じる</button>
-    </div>
-  </div>
-
-  <!-- ── サンガ チャットオーバーレイ ── -->
-  <div class="sanga-overlay" id="sangaOverlay">
-    <div class="sanga-panel" id="sangaPanel">
-      <div class="sanga-hd">
-        <div class="sanga-hd-klesha" id="sangaChatEmoji">🪷</div>
-        <div class="sanga-hd-info">
-          <div class="sanga-hd-title" id="sangaChatTitle">—</div>
-          <div class="sanga-hd-sub" id="sangaChatSub">—</div>
-        </div>
-        <button class="btn-s" onclick="closeSangaChat()" style="padding:5px 12px">✕</button>
-      </div>
-      <!-- HP バー -->
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.25rem">
-        <span style="font-size:10px;color:var(--mu)">浄化</span>
-        <span style="font-size:10px;color:#e879a0" id="sangaHpText">0 / 100</span>
-      </div>
-      <div class="sanga-hp-bar"><div class="sanga-hp-fill" id="sangaHpFill" style="width:0%"></div></div>
-      <!-- メッセージ -->
-      <div class="sanga-msgs" id="sangaMsgs"></div>
-      <!-- 祈りボタン -->
-      <div class="sanga-pray-btns">
-        <button class="sanga-pray-btn" onclick="sendSangaPrayer('lotus')">🪷 蓮 — 清らかな心</button>
-        <button class="sanga-pray-btn" onclick="sendSangaPrayer('light')">🕯 灯 — あなたの光を消さない</button>
-        <button class="sanga-pray-btn" onclick="sendSangaPrayer('merit')">✨ 功徳 — 功徳を分け合う</button>
-        <button class="sanga-pray-btn" onclick="sendSangaPrayer('heart')">🌸 共感 — 一緒にいる</button>
-      </div>
-      <!-- カスタムメッセージ（梅以上） -->
-      <div id="sangaCustomMsgArea" style="margin-top:.5rem;display:none">
-        <div style="display:flex;gap:.5rem;align-items:flex-end">
-          <textarea id="sangaCustomInput" rows="2" maxlength="999"
-            placeholder="心を込めたメッセージを送る…"
-            style="flex:1;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-            border-radius:12px;padding:8px 10px;color:rgba(255,255,255,.9);font-size:13px;
-            outline:none;resize:none;font-family:inherit;line-height:1.5"></textarea>
-          <button onclick="sendSangaCustomMsg()" style="flex-shrink:0;padding:8px 14px;
-            border-radius:12px;background:linear-gradient(135deg,rgba(232,121,160,.7),rgba(212,168,67,.6));
-            color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700">送信</button>
-        </div>
-        <div id="sangaCustomHint" style="font-size:9px;color:rgba(255,255,255,.3);margin-top:.3rem"></div>
-      </div>
-      <!-- 無料ユーザー向け: カスタムメッセージの解放 -->
-      <div id="sangaUpgradeCta" style="margin-top:.5rem;display:none">
-        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:.35rem;text-align:center">💬 カスタムメッセージの解放</div>
-        <div style="background:rgba(255,255,255,.08);border-radius:6px;height:5px;overflow:hidden;margin-bottom:.3rem">
-          <div id="sangaMeritProgBar" style="width:0%;height:100%;background:linear-gradient(90deg,rgba(212,168,67,.7),rgba(232,121,160,.6));transition:width .4s"></div>
-        </div>
-        <div id="sangaMeritProgTxt" style="font-size:10px;color:rgba(255,255,255,.35);margin-bottom:.4rem;text-align:center"></div>
-        <button onclick="closeSangaChat();setTimeout(openTierModal,250)"
-          style="width:100%;padding:9px;border-radius:12px;font-size:11px;
-          background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.25);
-          color:rgba(212,168,67,.8);cursor:pointer">
-          ⚡ 梅プランですぐ解放する
-        </button>
-      </div>
-      <button class="sanga-close-btn" onclick="closeSangaChat()">閉じる</button>
     </div>
   </div>
 
@@ -1631,78 +1261,6 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
     </div>
   </div>
 
-  <!--
-  == 探求タブ（将来実装・現在オミット）==
-  <div class="tc" id="tc-quest">
-    <div style="padding:0 0 .375rem;flex:0 0 auto">
-      <div class="lp-glass lp-glass-sm" style="margin-bottom:.25rem;padding:.75rem 1rem">
-        <div style="display:flex;align-items:center;gap:.75rem">
-          <div onclick="openDQBadgeOv()" style="cursor:pointer;position:relative;flex-shrink:0">
-            <div style="font-size:2rem" id="dqLvIcon">📿</div>
-            <div style="position:absolute;bottom:-2px;right:-6px;font-size:8px;font-weight:700;
-              background:var(--a);color:#000;border-radius:8px;padding:1px 5px;white-space:nowrap">
-              バッジ
-            </div>
-          </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:700;color:var(--a)" id="dqLvLabel">Lv.1</div>
-            <div style="font-size:10px;color:var(--mu)" id="dqReadLabel">経典 0冊 読破</div>
-          </div>
-          <div class="wisdom-pill" id="dqWisdomPill">智慧 Lv.0 · ×1.0</div>
-        </div>
-        <div class="stage-bar" style="margin-top:.5rem"><div class="stage-fill" id="dqXpFill" style="width:0%"></div></div>
-        <div style="font-size:10px;color:var(--mu);margin-top:.3rem" id="dqXpLabel"></div>
-      </div>
-    </div>
-    <div class="dq-subnav">
-      <button class="dq-snb on" data-dqv="map">🗺 マップ</button>
-      <button class="dq-snb" data-dqv="texts">📜 原典</button>
-    </div>
-    <div class="dq-view on" id="dqview-map" style="flex-direction:column-reverse"></div>
-    <div class="dq-view" id="dqview-texts"></div>
-  </div>
-  -->
-</div>
-
-<!-- ════ カレンダープレビュー ════ -->
-<div class="cal-preview-popup" id="calPreviewPopup" onclick="if(event.target===this)this.classList.remove('show')">
-  <div class="cal-preview-inner">
-    <div style="text-align:center;margin-bottom:1rem">
-      <div style="font-size:2rem;margin-bottom:.4rem">📅</div>
-      <div style="font-size:16px;font-weight:700;color:rgba(255,255,255,.95);margin-bottom:.25rem">読経カレンダー</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">購入すると使えるようになります</div>
-    </div>
-    <!-- プレビュー: 吉日バッジつきミニカレンダーイメージ -->
-    <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:.875rem;margin-bottom:1rem">
-      <div style="font-size:10px;color:rgba(255,255,255,.45);margin-bottom:.5rem;text-align:center">プレビュー（購入後に解放）</div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:.5rem" id="calPreviewGrid"></div>
-      <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem">
-        <span style="font-size:9px;background:#c2185b;color:#fff;padding:1px 5px;border-radius:3px">天赦</span>
-        <span style="font-size:9px;background:hsl(35,90%,65%);color:#000;padding:1px 5px;border-radius:3px">一粒</span>
-        <span style="font-size:9px;color:rgba(255,255,255,.5);font-size:10px">吉日は功徳倍率 UP 🌟</span>
-      </div>
-    </div>
-    <div style="display:flex;gap:.5rem">
-      <button class="joy-btn-primary" onclick="openCalPaywall();document.getElementById('calPreviewPopup').classList.remove('show')" style="background:linear-gradient(135deg,rgba(212,168,67,.8),rgba(232,121,160,.7))">✨ 解放する — ¥300</button>
-      <button onclick="document.getElementById('calPreviewPopup').classList.remove('show')" style="width:80px;padding:14px;border-radius:50px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:13px;cursor:pointer">閉じる</button>
-    </div>
-  </div>
-</div>
-
-<!-- ════ DQ オーバーレイ ════ -->
-<!-- 原典リーダー -->
-<div class="dq-overlay" id="dqReaderOv" onclick="if(event.target===this)closeDQReader()">
-  <div class="dq-panel" style="margin-top:3rem">
-    <button class="btn-s" style="margin-bottom:.75rem" onclick="closeDQReader()">✕ 閉じる</button>
-    <div id="dqReaderBody"></div>
-  </div>
-</div>
-<!-- クイズ -->
-<div class="dq-overlay" id="dqQuizOv" onclick="if(event.target===this)closeDQQuiz()">
-  <div class="dq-panel" style="margin-top:3rem">
-    <button class="btn-s" style="margin-bottom:.75rem" onclick="closeDQQuiz()">✕ 閉じる</button>
-    <div id="dqQuizBody"></div>
-  </div>
 </div>
 
 <!-- ════ 喜び記録 ════ -->
@@ -1742,17 +1300,6 @@ body.rich .tap-drum-img{filter:drop-shadow(0 0 20px rgba(212,168,67,.65));}
   </div>
   <div class="page-dots" id="pageDots"></div>
   <div class="read-nav" id="readNav"></div>
-</div>
-
-<!-- DQバッジオーバーレイ -->
-<div id="dqBadgeOv" onclick="if(event.target===this)closeDQBadgeOv()" style="display:none;position:fixed;inset:0;z-index:520;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:flex-end;justify-content:center">
-  <div style="background:rgba(10,12,28,.97);border:1px solid rgba(212,168,67,.28);border-top-left-radius:22px;border-top-right-radius:22px;padding:1.25rem 1.25rem 2rem;width:100%;max-height:80vh;overflow-y:auto">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem">
-      <div style="font-size:14px;font-weight:700;color:var(--a)">🏅 バッジ</div>
-      <button onclick="closeDQBadgeOv()" style="font-size:11px;color:var(--mu);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:5px 12px;cursor:pointer">閉じる</button>
-    </div>
-    <div id="dqBadgeOvGrid" class="dq-badge-grid"></div>
-  </div>
 </div>
 
 <!-- バグ報告オーバーレイ -->
@@ -1963,7 +1510,7 @@ var st={
   loginStreak:0,lastLoginDate:'',lastLoginBonusDate:'',bonusMerit:0,welcomeDone:false,
   unlockedLevel:0,
   kleshaToday:'',ekoDate:'',ekoCount:0,
-  homeMode:'',dailyGoal:0,calPurchased:true,
+  homeMode:'',dailyGoal:0,
   zenSeconds:0,zenRunning:false,
   sangaRooms:[],sangaSelectedKlesha:'',sangaWeight:'medium',
   unlockedItems:[],meritUsed:0
@@ -2117,8 +1664,6 @@ function showTutStep(idx){
     if(step.tab==='gongyou')buildCarousel();
     if(step.tab==='cal')renderCal();
     if(step.tab==='narai')renderNaraiTab();
-    if(step.tab==='lotus'){renderLotusTab();initLotusFloaters();}
-    if(step.tab==='quest'){renderDQSummary();renderDQMap();}
   }
   document.getElementById('twTitle').textContent=step.title;
   document.getElementById('twBody').textContent=step.body;
@@ -2206,8 +1751,6 @@ function launchApp(opts){
   var _initTab=(st.tab==='lotus'||st.tab==='quest'||!document.querySelector('[data-t="'+st.tab+'"]'))?'chant':(st.tab||'chant');
   actTab(_initTab);
   if(_initTab==='narai')renderNaraiTab();
-  if(_initTab==='quest'){renderDQSummary();renderDQMap();}
-  buildSangaKleshaSelect();
   initJoyBubble();renderJoyAnalysis();renderDailyCard();
   if(newLogin)setTimeout(function(){showLoginPopup('daily');},450);
 }
@@ -2226,11 +1769,13 @@ function clearBg(){
   document.body.style.backgroundSize='';
   document.body.style.backgroundPosition='';
   document.body.style.backgroundAttachment='';
+  document.body.style.background='';
 }
 function applyRichUI(on){
   st.richUI=on;
   if(on){
     document.body.classList.add('rich');
+    document.body.style.background='transparent'; // bodyの不透明背景が#bgLayer(z-index:-1)を覆ってしまうため透明化
     applyTabBg(st.tab);
   }else{
     document.body.classList.remove('rich');
@@ -2472,11 +2017,6 @@ function hasTierAccess(minTier){
   var order=['free','ume','take','matsu','butsu'];
   var cur=getUserTier();
   return order.indexOf(cur)>=order.indexOf(minTier);
-}
-var CUSTOM_MSG_MERIT_THRESHOLD=300;
-function canSendCustomMsg(){
-  if(hasTierAccess('ume'))return true;
-  return (st.gongyoMerit||0)>=CUSTOM_MSG_MERIT_THRESHOLD;
 }
 function totalMerit(){
   var info=dayI(new Date());
@@ -3598,37 +3138,6 @@ function showJoyHistory(){
     '<button onclick="closeJoyOverlay()" style="width:100%;margin-top:.35rem;padding:8px;border-radius:50px;background:transparent;color:rgba(255,255,255,.3);border:none;cursor:pointer;font-size:12px">閉じる</button>';
 }
 
-function openCalPreview(){
-  if(st.calPurchased){return;}
-  var popup=document.getElementById('calPreviewPopup');
-  if(!popup)return;
-  var grid=document.getElementById('calPreviewGrid');
-  if(grid){
-    var days=['日','月','火','水','木','金','土'];
-    var html=days.map(function(d){return'<div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.45);text-align:center;padding:4px 0">'+d+'</div>';}).join('');
-    var now=new Date(),yr=now.getFullYear(),mo=now.getMonth();
-    var first=new Date(yr,mo,1).getDay();
-    var last=new Date(yr,mo+1,0).getDate();
-    for(var i=0;i<first;i++)html+='<div></div>';
-    for(var d=1;d<=last;d++){
-      var ds=yr+'-'+(mo+1)+'-'+d;
-      var cnt=st.daily[ds]||0;
-      var lv=cnt===0?0:cnt<5?1:cnt<15?2:3;
-      var dObj=new Date(yr,mo,d);
-      var info=dayI(dObj);var mult=getMult(info);
-      var isLucky=mult>1;
-      var colors=['rgba(255,255,255,.06)','rgba(232,121,160,.3)','rgba(232,121,160,.6)','rgba(212,168,67,.85)'];
-      var isToday=(d===now.getDate());
-      html+='<div style="aspect-ratio:1;border-radius:4px;background:'+colors[lv]+';display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:'+(isToday?700:400)+';color:rgba(255,255,255,'+(lv>=2?.9:.65)+');'+
-        (isLucky?'outline:2px solid rgba(212,168,67,.7);outline-offset:-2px;':'')+
-        (isToday?'box-shadow:0 0 0 2px rgba(232,121,160,.8);':'')+
-        '">'+d+'</div>';
-    }
-    grid.innerHTML=html;
-  }
-  popup.classList.add('show');
-}
-
 var _serendipityTimer=null,_lastJoyShown=0;
 function startSerendipityTimer(){
   if(_serendipityTimer)return;
@@ -3738,14 +3247,6 @@ document.querySelectorAll('.tab').forEach(function(btn){
     if(t==='chant'){updateChantUI();renderBanner();}
     if(t==='gongyou'){buildCarousel();}
     if(t==='narai'){renderNaraiTab();}
-    if(t==='lotus'){renderLotusTab();initLotusFloaters();}
-    if(t==='quest'){
-      renderDQSummary();renderDQMap();
-      setTimeout(function(){
-        window.scrollTo(0,0);
-        var mv=document.getElementById('dqview-map');if(mv)mv.scrollTop=0;
-      },30);
-    }
     window.scrollTo(0,0);
   });
 });
@@ -4146,7 +3647,6 @@ function renderNaraiTab(){
   var bd=document.getElementById('naraiBoostDisp');
   if(bd)bd.textContent='×'+(sm*tm2*wisdomMult());
   var tm=document.getElementById('naraiTotalMerit');if(tm)tm.textContent=fmt(totalMerit());
-  renderNaraiHeatmap();
   renderNaraiMonthSummary();
   // 功徳倍率内訳
   (function(){
@@ -4170,26 +3670,8 @@ function renderNaraiTab(){
     var cta=document.getElementById('naraiTierUpgradeCta');
     if(cta)cta.style.display=(getUserTier()==='free'?'block':'none');
   })();
-  var cl=document.getElementById('naraiCalLocked'),cu=document.getElementById('naraiCalUnlocked');
-  if(cl&&cu){cl.style.display=st.calPurchased?'none':'block';cu.style.display=st.calPurchased?'block':'none';}
-  var cpb=document.getElementById('calPreviewBtn');if(cpb)cpb.style.display=st.calPurchased?'none':'inline-block';
-  if(st.calPurchased)renderCal();
+  renderCal();
   renderDailyCard();
-}
-function renderNaraiHeatmap(){
-  var g=document.getElementById('naraiHmGrid');if(!g)return;
-  g.innerHTML='';
-  var cells=91;
-  for(var i=cells-1;i>=0;i--){
-    var d=new Date();d.setDate(d.getDate()-i);
-    var ds=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-    var cnt=st.daily[ds]||0;
-    var lv=cnt===0?0:cnt<5?1:cnt<15?2:cnt<40?3:4;
-    var cell=document.createElement('div');
-    cell.className='narai-hm-cell'+(lv?' lv'+lv:'');
-    cell.title=ds+': '+cnt+'回';
-    g.appendChild(cell);
-  }
 }
 function renderNaraiMonthSummary(){
   var now=new Date(),yr=now.getFullYear(),mo=now.getMonth()+1;
@@ -4201,30 +3683,10 @@ function renderNaraiMonthSummary(){
   var ms=document.getElementById('naraiMonthSessions');if(ms)ms.textContent=sessions;
   var mm=document.getElementById('naraiMonthMerit');if(mm)mm.textContent=fmt(merit);
 }
-function openCalPaywall(){
-  st.calPurchased=true;lsS(UK,st);
-  var cl=document.getElementById('naraiCalLocked'),cu=document.getElementById('naraiCalUnlocked');
-  if(cl)cl.style.display='none';if(cu){cu.style.display='block';renderCal();}
-}
-
 // ══════════════════════════════════════════════════════════
-//  蓮池: 浮かぶ蓮の花（デモ）
+//  Firebase（バグ報告で使用）
 // ══════════════════════════════════════════════════════════
-// キーは KLESHA_DATA に合わせて tan/shin/chi/man/gi
-var KLESHA_COLORS={
-  tan: {color:'#e57373',glow:'rgba(229,115,115,.75)',label:'Greed',   hue:'330deg',sat:'2.2',bright:'1.1'},
-  shin:{color:'#ff8a65',glow:'rgba(255,138,101,.75)',label:'Anger',   hue:'18deg', sat:'2.5',bright:'1.15'},
-  chi: {color:'#90a4ae',glow:'rgba(144,164,174,.6)', label:'Delusion',hue:'200deg',sat:'0.9',bright:'0.85'},
-  man: {color:'#ce93d8',glow:'rgba(206,147,216,.75)',label:'Pride',   hue:'270deg',sat:'2.2',bright:'1.0'},
-  gi:  {color:'#80cbc4',glow:'rgba(128,203,196,.7)', label:'Doubt',   hue:'160deg',sat:'2.0',bright:'1.0'}
-};
-var DEMO_ROOMS=[
-  {id:'r1',klesha:'tan',weight:'light',title:'仕事のことばかり考えてしまう',hp:65,maxHp:100},
-  {id:'r2',klesha:'gi',weight:'medium',title:'自分の選択が正しかったのか不安',hp:40,maxHp:100},
-  {id:'r3',klesha:'shin',weight:'heavy',title:'理不尽なことがあって怒りが収まらない',hp:80,maxHp:100}
-];
-var _lotusSpawnTimer=null;
-var _db=null,_firebaseRooms=[],_sangaUnsub=null;
+var _db=null;
 (function(){
   try{
     firebase.initializeApp({
@@ -4236,381 +3698,8 @@ var _db=null,_firebaseRooms=[],_sangaUnsub=null;
       appId:'1:494910239105:web:b12a9f3c52d3ffa8a9f880'
     });
     _db=firebase.firestore();
-  }catch(e){console.warn('[蓮池] Firebase init:',e);}
+  }catch(e){console.warn('Firebase init:',e);}
 })();
-function _allSangaRooms(){
-  var base=_firebaseRooms.length>0?_firebaseRooms:DEMO_ROOMS;
-  return st.sangaRooms.concat(base);
-}
-function _renderLotusFloaters(cont){
-  if(!cont)return;
-  cont.innerHTML='';
-  var rooms=_allSangaRooms();
-  var spread=Math.max(6,rooms.length);
-  for(var i=0;i<spread;i++){
-    (function(room,seed){
-      setTimeout(function(){
-        var c=document.getElementById('lpLotusContainer');if(c)spawnLotusFloater(room,c,seed);
-      },seed*(2000/spread));
-    })(rooms[i%rooms.length],i);
-  }
-}
-function initLotusFloaters(){
-  var cont=document.getElementById('lpLotusContainer');if(!cont)return;
-  cont.innerHTML='';
-  if(_lotusSpawnTimer)clearInterval(_lotusSpawnTimer);
-
-  // Firestore購読（既存があればいったん解除）
-  if(_sangaUnsub){try{_sangaUnsub();}catch(e){}}_sangaUnsub=null;
-  if(_db){
-    try{
-      _sangaUnsub=_db.collection('sangaRooms')
-        .orderBy('createdAt','desc').limit(40)
-        .onSnapshot(function(snap){
-          _firebaseRooms=[];
-          snap.forEach(function(doc){
-            var d=doc.data();
-            if(!d||d.hp>=d.maxHp)return; // 浄化済みはスキップ
-            d.id=doc.id;d._fbId=doc.id;
-            _firebaseRooms.push(d);
-          });
-          // 蓮池タブが開いていれば再描画
-          var tc=document.getElementById('tc-lotus');
-          if(tc&&tc.classList.contains('on')){
-            var c2=document.getElementById('lpLotusContainer');
-            _renderLotusFloaters(c2);
-          }
-        },function(e){console.warn('[蓮池] snapshot:',e);});
-    }catch(e){console.warn('[蓮池] subscribe:',e);}
-  }
-
-  _renderLotusFloaters(cont);
-  _lotusSpawnTimer=setInterval(function(){
-    var cont2=document.getElementById('lpLotusContainer');if(!cont2)return;
-    var _tcL=document.getElementById('tc-lotus');if(!_tcL||!_tcL.classList.contains('on'))return;
-    var rooms=_allSangaRooms();
-    var r=rooms[Math.floor(Math.random()*rooms.length)];
-    if(r)spawnLotusFloater(r,cont2,Math.floor(Math.random()*9999));
-  },2500);
-}
-function spawnLotusFloater(room,cont,seed){
-  var kc=KLESHA_COLORS[room.klesha]||{color:'#e879a0',glow:'rgba(232,121,160,.7)',label:'?',hue:'330deg',sat:'2.0',bright:'1.0'};
-  var sz=room.weight==='heavy'?2.4:room.weight==='medium'?1.9:1.4;
-  var xPct=3+((seed*37+17)%92);
-  var dur=12+((seed*13)%10);
-  var delay=((seed*7)%6);
-  var drift=((seed*23)%120)-60;
-  // HP に基づくビジュアル（0=腐れかけ/暗い、1=輝く）
-  var hpPct=Math.max(0,Math.min(1,(room.hp||0)/(room.maxHp||100)));
-  var hpBright=(parseFloat(kc.bright||1)*(0.28+hpPct*0.9)).toFixed(2);
-  var hpSat=hpPct<0.3?(parseFloat(kc.sat||2)*0.22).toFixed(2):kc.sat;
-  var decayClass=hpPct<0.3?' lotus-decay':'';
-  var el=document.createElement('div');
-  el.className='lp-lotus-floater';
-  el.style.cssText='left:'+xPct+'%;--sz:'+sz+'rem;--dur:'+dur+'s;--del:'+delay+'s;--drift:'+drift+'px;--glow:'+kc.glow;
-  var showBubble=(seed%4===0)&&room.title;
-  var imgSz=(sz*16)+'px';
-  var imgFilter='sepia(0.92) hue-rotate('+kc.hue+') saturate('+hpSat+') brightness('+hpBright+')'
-    +' drop-shadow(0 0 14px '+kc.glow+')';
-  el.innerHTML=
-    '<img class="lp-lotus-img'+decayClass+'" src="images/lotus-hope.png" alt=""'
-      +' style="width:'+imgSz+';height:'+imgSz+';filter:'+imgFilter+'">'+
-    (showBubble?'<span class="lp-lotus-bubble">'+room.title.slice(0,10)+'</span>':'');
-  el.addEventListener('click',function(e){e.stopPropagation();openSangaChat(room);});
-  cont.appendChild(el);
-  setTimeout(function(){if(el.parentNode)el.remove();},((dur+delay)*1000+500));
-}
-
-// ── サンガ チャット ──
-var _activeSangaRoom=null;
-function buildSangaKleshaSelect(){
-  var wrap=document.getElementById('sangaKleshaSelect');if(!wrap)return;
-  wrap.innerHTML='';
-  Object.keys(KLESHA_DATA).forEach(function(k){
-    var d=KLESHA_DATA[k];
-    var kc=KLESHA_COLORS[k]||{};
-    var btn=document.createElement('button');
-    btn.className='btn-s'+(st.sangaSelectedKlesha===k?' on':'');
-    var isOn=st.sangaSelectedKlesha===k;
-    if(isOn&&kc.color){btn.style.borderColor=kc.color;btn.style.color=kc.color;btn.style.background='rgba('+hexToRgb(kc.color)+',0.15)';}
-    var kcLabel=(KLESHA_COLORS[k]&&KLESHA_COLORS[k].label)||d.name;
-    btn.textContent=d.emoji+' '+kcLabel;
-    btn.onclick=function(){st.sangaSelectedKlesha=k;buildSangaKleshaSelect();updateSangaPreview();};
-    wrap.appendChild(btn);
-  });
-  updateSangaPreview();
-}
-function hexToRgb(hex){
-  var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-  return r+','+g+','+b;
-}
-function selSangaWeight(w){
-  st.sangaWeight=w;lsS(UK,st);
-  ['light','medium','heavy'].forEach(function(x){
-    var b=document.getElementById('wBtn'+x.charAt(0).toUpperCase()+x.slice(1));
-    if(b)b.classList.toggle('on',x===w);
-  });
-  updateSangaPreview();
-}
-function updateSangaPreview(){
-  var img=document.getElementById('sangaPreviewImg');
-  var glow=document.getElementById('sangaPreviewGlow');
-  if(!img)return;
-  var k=st.sangaSelectedKlesha;
-  var w=st.sangaWeight||'medium';
-  var kc=k?KLESHA_COLORS[k]:{hue:'0deg',sat:'1',bright:'1',glow:'rgba(232,121,160,.5)',color:'#e879a0'};
-  if(!kc){kc={hue:'0deg',sat:'1',bright:'1',glow:'rgba(232,121,160,.5)',color:'#e879a0'};}
-  // 重さで輝きとサイズを変える（重めはパルスアニメーション）
-  var wData={
-    light: {sz:'58px', brightMult:.78, glowScale:'8px', glowAlpha:.10,glowSz:'80px', pulse:false},
-    medium:{sz:'78px', brightMult:.98, glowScale:'14px',glowAlpha:.16,glowSz:'100px',pulse:false},
-    heavy: {sz:'98px', brightMult:1.08,glowScale:'18px',glowAlpha:.20,glowSz:'124px',pulse:true}
-  };
-  var wd=wData[w]||wData.medium;
-  var brightFinal=(parseFloat(kc.bright||1)*wd.brightMult).toFixed(2);
-  // sepia → hue-rotate → saturate で白い画像にも色が乗る
-  var filter='sepia(0.92) hue-rotate('+(kc.hue||'0deg')+') saturate('+(kc.sat||'1')+') brightness('+brightFinal+')'
-    +' drop-shadow(0 0 '+wd.glowScale+' '+kc.glow+')';
-  img.style.filter=filter;
-  img.style.width=wd.sz;img.style.height=wd.sz;
-  img.style.animation=wd.pulse?'lotusPulse 2.4s ease-in-out infinite':'none';
-  if(glow){
-    glow.style.width=wd.glowSz;glow.style.height=wd.glowSz;
-    var c=k&&kc.color?hexToRgb(kc.color):'232,121,160';
-    glow.style.background='rgba('+c+','+wd.glowAlpha+')';
-    glow.style.animation=wd.pulse?'lotusPulseGlow 2.4s ease-in-out infinite':'none';
-  }
-}
-function createSangaRoom(){
-  var title=document.getElementById('sangaRoomTitle').value.trim();
-  if(!st.sangaSelectedKlesha){showToast('煩悩を選んでください');return;}
-  if(!title){showToast('一言を入力してください');return;}
-  if(!canSendLotus()){
-    closeSangaForm();
-    setTimeout(function(){openTierModal();},250);
-    return;
-  }
-  var room={id:'u'+Date.now(),klesha:st.sangaSelectedKlesha,weight:st.sangaWeight||'medium',title:title,hp:0,maxHp:100};
-  st.sangaRooms.unshift(room);if(st.sangaRooms.length>20)st.sangaRooms.pop();
-  st.sangaSelectedKlesha='';lsS(UK,st);
-  // Firestoreに書き込み
-  if(_db){
-    try{
-      _db.collection('sangaRooms').add({
-        klesha:room.klesha,weight:room.weight,title:room.title,
-        hp:room.hp,maxHp:room.maxHp,
-        createdAt:firebase.firestore.FieldValue.serverTimestamp()
-      }).then(function(ref){
-        room._fbId=ref.id;lsS(UK,st);
-      }).catch(function(e){console.warn('[蓮池] write:',e);});
-    }catch(e){console.warn('[蓮池] add:',e);}
-  }
-  addWeeklyLotus();
-  document.getElementById('sangaRoomTitle').value='';
-  buildSangaKleshaSelect();
-  initLotusFloaters();
-}
-function openSangaChat(room){
-  _activeSangaRoom=room;
-  var emo=KLESHA_DATA[room.klesha]?KLESHA_DATA[room.klesha].emoji:'🪷';
-  var kLabel=KLESHA_COLORS[room.klesha]?KLESHA_COLORS[room.klesha].label:room.klesha;
-  document.getElementById('sangaChatEmoji').textContent=emo;
-  document.getElementById('sangaChatTitle').textContent=room.title;
-  document.getElementById('sangaChatSub').textContent=kLabel+' · '+{light:'軽め',medium:'普通',heavy:'重め'}[room.weight];
-  document.getElementById('sangaHpText').textContent=room.hp+' / '+room.maxHp;
-  document.getElementById('sangaHpFill').style.width=Math.round(room.hp/room.maxHp*100)+'%';
-  var msgs=document.getElementById('sangaMsgs');
-  msgs.innerHTML='<div class="sanga-msg-row"><div class="sanga-avatar">🙏</div><div class="sanga-bubble">あなたの祈りが届きました。一緒にいます。</div></div>';
-  // 課金(梅以上)または功徳300以上でカスタムメッセージ解放
-  var canMsg=canSendCustomMsg();
-  var customArea=document.getElementById('sangaCustomMsgArea');
-  var upgradeCta=document.getElementById('sangaUpgradeCta');
-  if(customArea)customArea.style.display=canMsg?'block':'none';
-  if(upgradeCta){
-    upgradeCta.style.display=canMsg?'none':'block';
-    if(!canMsg){
-      var _m=st.gongyoMerit||0;
-      var _pct=Math.min(100,Math.round(_m/CUSTOM_MSG_MERIT_THRESHOLD*100));
-      var _rem=Math.max(0,CUSTOM_MSG_MERIT_THRESHOLD-_m);
-      var _pb=document.getElementById('sangaMeritProgBar');
-      var _pt=document.getElementById('sangaMeritProgTxt');
-      if(_pb)_pb.style.width=_pct+'%';
-      if(_pt)_pt.textContent='功徳 '+_m+' / '+CUSTOM_MSG_MERIT_THRESHOLD+' — あと'+_rem+'で解放';
-    }
-  }
-  if(canMsg){
-    var tier=getUserTier();var td=TIER_DEF[tier]||TIER_DEF.free;
-    var maxChars=hasTierAccess('ume')?(td.msgRx>=999?9999:td.msgRx):200;
-    var inp=document.getElementById('sangaCustomInput');
-    if(inp)inp.setAttribute('maxlength',maxChars);
-    var hint=document.getElementById('sangaCustomHint');
-    if(hasTierAccess('ume')){
-      if(hint)hint.textContent=maxChars<9999?'最大'+maxChars+'文字（'+td.name+'プラン）':'制限なし（'+td.name+'プラン）';
-    } else {
-      if(hint)hint.textContent='最大200文字（功徳解放）';
-    }
-  }
-  document.getElementById('sangaOverlay').classList.add('show');
-}
-function closeSangaChat(){document.getElementById('sangaOverlay').classList.remove('show');_activeSangaRoom=null;}
-var PRAYER_MSGS={
-  lotus:['🪷 清らかな心を送ります','🪷 蓮のように泥から咲けますように'],
-  light:['🕯 あなたの光を消さない','🕯 暗闇にも光はある'],
-  merit:['✨ 功徳を分け合います','✨ あなたのために唱えます'],
-  heart:['🌸 一緒にいます','🌸 あなたは一人じゃない']
-};
-function spawnPurifyParticles(){
-  var panel=document.getElementById('sangaPanel');if(!panel)return;
-  var pr=panel.getBoundingClientRect();
-  var emojis=['✨','🌟','💫','🌸','🪷'];
-  for(var i=0;i<6;i++){
-    (function(ii){
-      setTimeout(function(){
-        var p=document.createElement('div');
-        p.className='purify-particle';
-        p.style.cssText='left:'+(pr.left+pr.width*(.15+Math.random()*.7))+'px;'
-          +'top:'+(pr.top+10)+'px;font-size:'+(11+Math.random()*9)+'px;'
-          +'--pd:'+(0.7+Math.random()*.5)+'s;';
-        p.textContent=emojis[ii%5];
-        document.body.appendChild(p);
-        setTimeout(function(){p.remove();},1200);
-      },ii*100);
-    })(i);
-  }
-}
-function trigLotusBloom(){
-  var panel=document.getElementById('sangaPanel');if(!panel)return;
-  panel.style.position='relative';
-  var bloom=document.createElement('div');
-  bloom.style.cssText='position:absolute;inset:0;border-radius:24px 24px 0 0;pointer-events:none;z-index:10;'
-    +'background:radial-gradient(circle,rgba(232,121,160,.9) 0%,rgba(168,85,247,.55) 45%,transparent 100%);'
-    +'animation:lotusBloom .9s ease-out forwards;';
-  panel.appendChild(bloom);
-  setTimeout(function(){if(bloom.parentNode)bloom.remove();},1100);
-  // 大量の花びらを画面全体に
-  var emojis=['🌸','✨','🪷','💫','🌟','🕊️'];
-  for(var i=0;i<18;i++){
-    (function(ii){
-      setTimeout(function(){
-        var p=document.createElement('div');
-        p.style.cssText='position:fixed;pointer-events:none;z-index:516;'
-          +'font-size:'+(10+Math.random()*14)+'px;'
-          +'left:'+(5+Math.random()*90)+'%;top:'+(20+Math.random()*30)+'%;'
-          +'--pd:'+(0.6+Math.random()*1.0)+'s;';
-        p.className='purify-particle';
-        p.textContent=emojis[ii%6];
-        document.body.appendChild(p);
-        setTimeout(function(){p.remove();},1800);
-      },ii*65);
-    })(i);
-  }
-}
-function sendSangaCustomMsg(){
-  if(!_activeSangaRoom)return;
-  if(!canSendCustomMsg())return;
-  var inp=document.getElementById('sangaCustomInput');
-  if(!inp)return;
-  var txt=(inp.value||'').trim();
-  if(!txt)return;
-  var tier=getUserTier();var td=TIER_DEF[tier]||TIER_DEF.free;
-  var maxChars=td.msgRx>=999?9999:td.msgRx;
-  if(txt.length>maxChars){showToast('このプランでは最大'+maxChars+'文字まで送信できます');return;}
-  var msgs2=document.getElementById('sangaMsgs');
-  var row=document.createElement('div');
-  row.className='sanga-msg-row';
-  row.style.flexDirection='row-reverse';
-  row.innerHTML='<div class="sanga-avatar" style="margin-left:auto;order:2">🙏</div><div class="sanga-bubble mine">'+escHtml(txt)+'</div>';
-  msgs2.appendChild(row);msgs2.scrollTop=msgs2.scrollHeight;
-  inp.value='';
-  spawnPurifyParticles();
-  _activeSangaRoom.hp=Math.min(_activeSangaRoom.maxHp,(_activeSangaRoom.hp||0)+15);
-  document.getElementById('sangaHpText').textContent=_activeSangaRoom.hp+' / '+_activeSangaRoom.maxHp;
-  document.getElementById('sangaHpFill').style.width=Math.round(_activeSangaRoom.hp/_activeSangaRoom.maxHp*100)+'%';
-  var idx=-1;
-  for(var i=0;i<st.sangaRooms.length;i++){if(st.sangaRooms[i].id===_activeSangaRoom.id){idx=i;break;}}
-  if(idx>=0)st.sangaRooms[idx].hp=_activeSangaRoom.hp;
-  lsS(UK,st);
-  if(_activeSangaRoom.hp>=_activeSangaRoom.maxHp){
-    setTimeout(function(){trigLotusBloom();},200);
-    setTimeout(function(){
-      var comp=document.createElement('div');
-      comp.className='sanga-msg-row';
-      comp.innerHTML='<div class="sanga-avatar">🌸</div>'
-        +'<div class="sanga-bubble" style="background:rgba(232,121,160,.15);'
-        +'border-color:rgba(232,121,160,.35);color:rgba(255,220,240,.95);text-align:center">'
-        +'✨ 浄化されました<br><strong>あなたの蓮が咲きました 🪷</strong></div>';
-      if(msgs2){msgs2.appendChild(comp);msgs2.scrollTop=msgs2.scrollHeight;}
-    },500);
-    setTimeout(function(){
-      st.sangaRooms=st.sangaRooms.filter(function(r){return r.id!==_activeSangaRoom.id;});
-      lsS(UK,st);closeSangaChat();initLotusFloaters();
-    },3200);
-    return;
-  }
-  setTimeout(function(){
-    var reply=document.createElement('div');
-    reply.className='sanga-msg-row';
-    reply.innerHTML='<div class="sanga-avatar">🌊</div><div class="sanga-bubble">あなたのお言葉、心に染みました。ありがとうございます。🪷</div>';
-    msgs2.appendChild(reply);msgs2.scrollTop=msgs2.scrollHeight;
-  },1000);
-}
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function sendSangaPrayer(type){
-  if(!_activeSangaRoom)return;
-  var msgs=PRAYER_MSGS[type]||['🪷'];
-  var txt=msgs[Math.floor(Math.random()*msgs.length)];
-  var row=document.createElement('div');
-  row.className='sanga-msg-row';
-  row.innerHTML='<div class="sanga-avatar" style="margin-left:auto;order:2">🙏</div><div class="sanga-bubble mine">'+txt+'</div>';
-  row.style.flexDirection='row-reverse';
-  var msgs2=document.getElementById('sangaMsgs');
-  msgs2.appendChild(row);msgs2.scrollTop=msgs2.scrollHeight;
-  // 光の粒エフェクト
-  spawnPurifyParticles();
-  _activeSangaRoom.hp=Math.min(_activeSangaRoom.maxHp,(_activeSangaRoom.hp||0)+10);
-  document.getElementById('sangaHpText').textContent=_activeSangaRoom.hp+' / '+_activeSangaRoom.maxHp;
-  document.getElementById('sangaHpFill').style.width=Math.round(_activeSangaRoom.hp/_activeSangaRoom.maxHp*100)+'%';
-  // ローカルHP反映
-  var idx=-1;
-  for(var i=0;i<st.sangaRooms.length;i++){if(st.sangaRooms[i].id===_activeSangaRoom.id){idx=i;break;}}
-  if(idx>=0)st.sangaRooms[idx].hp=_activeSangaRoom.hp;
-  lsS(UK,st);
-  // Firestoreに同期
-  if(_db&&_activeSangaRoom._fbId){
-    try{_db.collection('sangaRooms').doc(_activeSangaRoom._fbId).update({hp:_activeSangaRoom.hp}).catch(function(e){console.warn('[蓮池] hp update:',e);});}catch(e){}
-  }
-  // 浄化完了
-  if(_activeSangaRoom.hp>=_activeSangaRoom.maxHp){
-    setTimeout(function(){trigLotusBloom();},200);
-    setTimeout(function(){
-      var comp=document.createElement('div');
-      comp.className='sanga-msg-row';
-      comp.innerHTML='<div class="sanga-avatar">🌸</div>'
-        +'<div class="sanga-bubble" style="background:rgba(232,121,160,.15);'
-        +'border-color:rgba(232,121,160,.35);color:rgba(255,220,240,.95);text-align:center">'
-        +'✨ 浄化されました<br><strong>あなたの蓮が咲きました 🪷</strong></div>';
-      if(msgs2){msgs2.appendChild(comp);msgs2.scrollTop=msgs2.scrollHeight;}
-    },500);
-    setTimeout(function(){
-      var fbId=_activeSangaRoom._fbId;
-      st.sangaRooms=st.sangaRooms.filter(function(r){return r.id!==_activeSangaRoom.id;});
-      lsS(UK,st);
-      // Firestoreから削除
-      if(_db&&fbId){
-        try{_db.collection('sangaRooms').doc(fbId).delete().catch(function(e){console.warn('[蓮池] delete:',e);});}catch(e){}
-      }
-      closeSangaChat();
-      initLotusFloaters();
-    },3200);
-    return;
-  }
-  setTimeout(function(){
-    var reply=document.createElement('div');
-    reply.className='sanga-msg-row';
-    reply.innerHTML='<div class="sanga-avatar">🌊</div><div class="sanga-bubble">ありがとうございます。少し楽になりました。🪷</div>';
-    msgs2.appendChild(reply);msgs2.scrollTop=msgs2.scrollHeight;
-  },1200);
-}
 
 // ══════════════════════════════════════════════════════════
 //  イベントリスナー
@@ -4818,40 +3907,6 @@ function loadDQNative(){
     dqS.quizResults=d.quizResults||{};
   }catch(e){}
 }
-function dqAddXP(n){
-  if(typeof XP_LV==='undefined')return;
-  dqS.xp+=n;
-  while(dqS.lv<XP_LV.length-1&&dqS.xp>=XP_LV[dqS.lv])dqS.lv++;
-  saveDQNative();renderDQSummary();
-  if(st.tab==='lotus')renderLotusTab();
-}
-function dqCheckBadges(){
-  if(typeof BADGES==='undefined')return;
-  BADGES.forEach(function(b){
-    if(!dqS.earnedBadges.has(b.id)&&b.cond(dqS)){
-      dqS.earnedBadges.add(b.id);
-      showBadgeEarned(b);
-    }
-  });
-}
-var _badgeToastTimer=null;
-function showBadgeEarned(b){
-  var existing=document.querySelector('.badge-toast');
-  if(existing)document.body.removeChild(existing);
-  if(_badgeToastTimer)clearTimeout(_badgeToastTimer);
-  var t=document.createElement('div');
-  t.className='badge-toast';
-  t.innerHTML='<div style="font-size:2.4rem;margin-bottom:.25rem">'+b.icon+'</div>'
-    +'<div style="font-size:10px;color:rgba(212,168,67,.8);font-weight:700;letter-spacing:.06em;margin-bottom:.15rem">バッジ 獲得！</div>'
-    +'<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:.2rem">'+b.name_ja+'</div>'
-    +'<div style="font-size:10px;color:rgba(255,255,255,.5)">'+b.desc_ja+'</div>';
-  document.body.appendChild(t);
-  _badgeToastTimer=setTimeout(function(){
-    if(!t.parentNode)return;
-    t.style.animation='badgeOut .38s ease-in forwards';
-    setTimeout(function(){if(t.parentNode)document.body.removeChild(t);},400);
-  },3200);
-}
 function getWisdomLevel(){return Math.min(10,Math.floor(dqS.read.size/4));}
 function wisdomMult(){
   var lv=getWisdomLevel();
@@ -4859,273 +3914,9 @@ function wisdomMult(){
   return 1.0;
 }
 
-// ── 探求タブ サマリー ──
-function renderDQSummary(){
-  var xp=dqS.xp,lv=dqS.lv,readN=dqS.read.size;
-  var xlv=typeof XP_LV!=='undefined'?XP_LV:[0,80,200,380,600,900,1300];
-  var prv=xlv[Math.max(0,lv-1)]||0;
-  var nxt=xlv[Math.min(lv,xlv.length-1)]||xlv[xlv.length-1];
-  var pct=nxt>prv?Math.min(100,Math.round((xp-prv)/(nxt-prv)*100)):100;
-  var icons=['📿','🌱','🕯️','🌊','🌿','🌸','🪷','💎','🔱','☀️','🌌'];
-  var el=document.getElementById('dqLvIcon');if(el)el.textContent=icons[Math.min(lv,icons.length-1)];
-  var ll=document.getElementById('dqLvLabel');if(ll)ll.textContent='Lv.'+lv+' · XP '+xp;
-  var rl=document.getElementById('dqReadLabel');if(rl)rl.textContent='経典 '+readN+'冊 読破';
-  var wl=getWisdomLevel();
-  var wp=document.getElementById('dqWisdomPill');if(wp)wp.textContent='智慧 Lv.'+wl+' · ×'+wisdomMult();
-  var xf=document.getElementById('dqXpFill');if(xf)xf.style.width=pct+'%';
-  var xl=document.getElementById('dqXpLabel');if(xl)xl.textContent='次のLvまで '+(nxt-xp)+' XP';
-}
-// ── DQネイティブ レンダリング ──
-function dqNavTo(v){
-  document.querySelectorAll('.dq-snb').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-dqv')===v);});
-  document.querySelectorAll('.dq-view').forEach(function(d){d.classList.toggle('on',d.id==='dqview-'+v);});
-  if(v==='map')renderDQMap();
-  else if(v==='texts')renderDQTexts();
-}
-function openDQBadgeOv(){
-  var ov=document.getElementById('dqBadgeOv');if(!ov)return;
-  var grid=document.getElementById('dqBadgeOvGrid');
-  if(grid&&typeof BADGES!=='undefined'){
-    var html='';
-    BADGES.forEach(function(b){
-      var earned=dqS.earnedBadges.has(b.id);
-      html+='<div class="dq-badge'+(earned?' earned':'')+(earned?'':' locked')+'">'
-        +'<div style="font-size:1.5rem;'+(earned?'':'filter:grayscale(1);opacity:.4')+'">'+b.icon+'</div>'
-        +'<div style="font-size:10px;font-weight:600;color:var(--a);line-height:1.3;margin-top:.2rem">'+b.name_ja+'</div>'
-        +'<div style="font-size:9px;color:var(--mu)">'+b.desc_ja+'</div>'
-        +'</div>';
-    });
-    grid.innerHTML=html;
-  }
-  ov.style.display='flex';
-}
-function closeDQBadgeOv(){
-  var ov=document.getElementById('dqBadgeOv');if(ov)ov.style.display='none';
-}
-var _dqOpenNode=null;
-function renderDQMap(keepScroll){
-  var el=document.getElementById('dqview-map');if(!el||typeof STAGES==='undefined')return;
-  // 悟りの頂上（column-reverseで視覚的に一番上に表示）
-  var html='<div class="dq-path"><div class="dq-enlighten-goal">'
-    +'<div style="font-size:2.2rem;margin-bottom:.3rem">☸️</div>'
-    +'<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.08em">涅槃 · Nirvāṇa</div>'
-    +'<div style="font-size:9px;color:rgba(255,255,255,.35);margin-top:.15rem">悟りの道の頂</div>'
-    +'</div>'
-    +'<div class="dq-path-track">';
-  STAGES.forEach(function(sg,i){
-    var unlocked=i===0||dqS.stagesDone.has(STAGES[i-1].id);
-    var done=dqS.stagesDone.has(sg.id);
-    var isCurrent=unlocked&&!done;
-    var scIds=sg.scriptures||[];
-    var readCount=scIds.filter(function(id){return dqS.read.has(id);}).length;
-    var qr=dqS.quizResults[sg.quiz_id]||{};
-    var stateClass=done?'done':(isCurrent?'current':'locked');
-    var openDetail=_dqOpenNode===sg.id;
-    // ノード
-    var side=i%2===0?'dq-left':'dq-right';
-    html+='<div class="dq-path-node '+side+'">'
-      +'<div style="display:flex;flex-direction:column;align-items:center">'
-      +'<div class="dq-node-btn '+stateClass+'" onclick="dqToggleNode(\''+sg.id+'\')">'
-      +sg.icon
-      +(done?'<div class="dq-node-check">✓</div>':'')
-      +'</div>'
-      +'<div class="dq-node-label'+((!unlocked)?' locked':'')+'">'+sg.rank_ja+'</div>'
-      +'</div>'
-      +'</div>';
-    // 詳細パネル（展開中のみ）
-    if(openDetail&&unlocked){
-      html+='<div class="dq-node-detail">'
-        +'<div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:.25rem">'+sg.icon+' '+sg.rank_ja+(sg.rank_en?' <span style="font-size:9px;font-weight:400;opacity:.55">'+sg.rank_en+'</span>':'')+' <span style="font-size:10px;font-weight:400;color:var(--mu)">'+sg.pali+'</span></div>'
-        +'<div style="font-size:11px;color:var(--tx);line-height:1.6;margin-bottom:.25rem">'+sg.desc_ja+'</div>'
-        +(sg.desc_en?'<div style="font-size:10px;color:var(--mu);line-height:1.5;margin-bottom:.5rem;font-style:italic">'+sg.desc_en+'</div>':'')
-        +'<div style="font-size:10px;color:var(--mu);background:var(--bi);border-radius:7px;padding:.375rem .625rem;margin-bottom:.25rem;white-space:pre-line;line-height:1.5">'+sg.freed_ja+'</div>'
-        +(sg.freed_en?'<div style="font-size:9px;color:var(--mu);opacity:.6;background:var(--bi);border-radius:7px;padding:.25rem .625rem;margin-bottom:.5rem;font-style:italic">'+sg.freed_en+'</div>':'')
-        +'<div style="font-size:10px;color:var(--mu);margin-bottom:.5rem">📜 原典 '+readCount+'/'+scIds.length+' 読了</div>'
-        +'<div class="dq-row">'
-        +'<button class="btn-s" onclick="openDQStageTexts('+JSON.stringify(scIds).replace(/"/g,'&quot;')+')">📜 原典を読む</button>'
-        +'<button class="btn-s'+(qr.passed?' btn-done-mark':'')+'" onclick="openDQQuiz(\''+sg.id+'\')" style="'+(qr.passed?'color:var(--a)':'')+'">'
-        +(qr.passed?'📝 クイズ ✓':'📝 クイズに挑戦')+'</button>'
-        +'</div>'
-        +'</div>';
-    }else if(openDetail&&!unlocked){
-      html+='<div class="dq-node-detail" style="text-align:center">'
-        +'<div style="font-size:1.5rem;margin-bottom:.25rem">🔒</div>'
-        +'<div style="font-size:11px;color:var(--mu)">前のステージをクリアすると解放されます</div>'
-        +'</div>';
-    }
-    // コネクター
-    if(i<STAGES.length-1){
-      html+='<div class="dq-connector"><div class="dq-connector-line'+(done?' done':'')+'"></div></div>';
-    }
-  });
-  html+='</div></div></div>';
-  el.innerHTML=html;
-  if(!keepScroll)el.scrollTop=el.scrollHeight;
-}
-function dqToggleNode(id){
-  var el=document.getElementById('dqview-map');
-  var s=el?el.scrollTop:null;
-  _dqOpenNode=(_dqOpenNode===id)?null:id;
-  renderDQMap(true);
-  if(el&&s!==null)el.scrollTop=s;
-}
-function renderDQTexts(){
-  var el=document.getElementById('dqview-texts');if(!el||typeof SCRIPTURES==='undefined')return;
-  el.innerHTML='';
-  var groups={};
-  SCRIPTURES.forEach(function(s){if(!groups[s.collection])groups[s.collection]=[];groups[s.collection].push(s);});
-  Object.keys(groups).forEach(function(coll){
-    var hd=document.createElement('div');hd.className='coll-hd';hd.textContent=coll;el.appendChild(hd);
-    var grid=document.createElement('div');grid.className='dq-sc-grid';
-    groups[coll].forEach(function(s){
-      var c=document.createElement('div');
-      c.className='dq-sc-card'+(dqS.read.has(s.id)?' read':'');
-      c.innerHTML='<div style="font-size:1.1rem;margin-bottom:.2rem">'+s.icon+'</div>'
-        +'<div style="font-size:11px;font-weight:600;color:var(--a);line-height:1.35">'+s.title_ja+'</div>'
-        +'<div style="font-size:9px;color:var(--mu);margin-top:.15rem">'+s.ref+'</div>'
-        +(dqS.read.has(s.id)?'<div style="font-size:9px;color:var(--a);margin-top:.2rem">✓ 読了</div>':'<div style="font-size:9px;color:var(--di)">+25 XP</div>');
-      c.onclick=function(){openDQReader(s.id);};
-      grid.appendChild(c);
-    });
-    el.appendChild(grid);
-  });
-}
-function renderDQBadges(){
-  var el=document.getElementById('dqview-badges');if(!el||typeof BADGES==='undefined')return;
-  el.innerHTML='<div class="dq-badge-grid">';
-  var html='<div class="dq-badge-grid">';
-  BADGES.forEach(function(b){
-    var earned=dqS.earnedBadges.has(b.id);
-    html+='<div class="dq-badge'+(earned?' earned':'')+(earned?'':' locked')+'">'
-      +'<div style="font-size:1.5rem;'+(earned?'':'filter:grayscale(1);opacity:.4')+'">'+b.icon+'</div>'
-      +'<div style="font-size:10px;font-weight:600;color:var(--a);line-height:1.3;margin-top:.2rem">'+b.name_ja+'</div>'
-      +'<div style="font-size:9px;color:var(--mu)">'+b.desc_ja+'</div>'
-      +'</div>';
-  });
-  html+='</div>';
-  el.innerHTML=html;
-}
-// ── 原典リーダー ──
-function openDQStageTexts(ids){
-  if(!ids||!ids.length)return;
-  openDQReader(ids[0]);
-}
-function openDQReader(id){
-  if(typeof SCRIPTURES==='undefined')return;
-  var s=null;
-  for(var i=0;i<SCRIPTURES.length;i++){if(SCRIPTURES[i].id===id){s=SCRIPTURES[i];break;}}
-  if(!s)return;
-  var body=document.getElementById('dqReaderBody');if(!body)return;
-  // XP付与
-  var firstRead=!dqS.read.has(id);
-  if(firstRead){dqS.read.add(id);dqCheckBadges();dqAddXP(25);}
-  // 内容レンダリング
-  var html='<div style="font-size:10px;color:var(--mu);margin-bottom:.25rem">'+s.collection+' · '+s.ref+'</div>'
-    +'<div style="font-size:15px;font-weight:700;color:var(--a);margin-bottom:.1rem">'+s.title_ja+'</div>'
-    +(s.title_en?'<div style="font-size:11px;color:var(--mu);font-style:italic;margin-bottom:.35rem;opacity:.7">'+s.title_en+'</div>':'')
-    +(firstRead?'<div style="font-size:11px;color:var(--ok);margin-bottom:.5rem">✨ +25 XP 初読了！</div>':'')
-    +'<div style="font-size:11px;font-weight:600;color:var(--mu);margin-bottom:.25rem">意訳</div>'
-    +'<div class="dq-iyaku">'+s.iyaku_ja+'</div>'
-    +'<div style="font-size:11px;font-weight:600;color:var(--mu);margin:.625rem 0 .2rem">パーリ語原文</div>';
-  (s.lines||[]).forEach(function(line){
-    html+='<div class="dq-reader-pali">'+line.pali+'</div>';
-  });
-  html+='<div style="font-size:11px;font-weight:600;color:var(--mu);margin:.625rem 0 .2rem">解説</div>'
-    +'<div class="dq-ctx">'+s.ctx_ja+'</div>';
-  if(s.summary_ja){
-    html+='<div style="font-size:11px;font-weight:600;color:var(--mu);margin:.625rem 0 .2rem">まとめ</div>'
-      +'<div style="font-size:11px;color:var(--tx);line-height:1.7;background:var(--bi);border-radius:8px;padding:.625rem">'+s.summary_ja+'</div>';
-  }
-  body.innerHTML=html;
-  document.getElementById('dqReaderOv').classList.add('show');
-  if(st.tab==='texts')renderDQTexts();
-}
-function closeDQReader(){document.getElementById('dqReaderOv').classList.remove('show');}
-// ── クイズ ──
-var _dqQuizStageId=null,_dqQuizIdx=0,_dqQuizScore=0,_dqQuizAnswered=false;
-function openDQQuiz(stageId){
-  if(typeof STAGES==='undefined'||typeof QUIZZES==='undefined')return;
-  var sg=null;for(var i=0;i<STAGES.length;i++){if(STAGES[i].id===stageId){sg=STAGES[i];break;}}
-  if(!sg)return;
-  var quiz=QUIZZES[sg.quiz_id];if(!quiz)return;
-  var scIds=sg.scriptures||[];
-  var readCount=scIds.filter(function(id){return dqS.read.has(id);}).length;
-  if(scIds.length>0&&readCount===0){
-    showToast('📜 クイズの前に「原典を読む」から経典を読んでください。');
-    return;
-  }
-  _dqQuizStageId=stageId;_dqQuizIdx=0;_dqQuizScore=0;_dqQuizAnswered=false;
-  renderDQQuizQ(quiz);
-  document.getElementById('dqQuizOv').classList.add('show');
-}
-function renderDQQuizQ(quiz){
-  var body=document.getElementById('dqQuizBody');if(!body)return;
-  var q=quiz.questions[_dqQuizIdx];if(!q){finishDQQuiz(quiz);return;}
-  var total=quiz.questions.length;
-  var titleEn=quiz.title_en?'<span style="opacity:.55;font-size:.9em"> / '+quiz.title_en+'</span>':'';
-  var html='<div style="font-size:10px;color:var(--mu);margin-bottom:.5rem">'+quiz.title_ja+titleEn+' ('+(_dqQuizIdx+1)+'/'+total+')</div>'
-    +'<div class="dq-quiz-q">'+q.q_ja+(q.q_en?'<div style="font-size:.78em;opacity:.55;margin-top:.25rem;font-weight:400">'+q.q_en+'</div>':'')+'</div>';
-  q.choices_ja.forEach(function(c,i){
-    var en=q.choices_en&&q.choices_en[i]?'<span style="display:block;font-size:.8em;opacity:.5">'+q.choices_en[i]+'</span>':'';
-    html+='<button class="dq-quiz-ch" onclick="answerDQQuiz('+i+')">'+c+en+'</button>';
-  });
-  html+='<div class="dq-exp" id="dqExp">'+q.exp_ja+(q.exp_en?'<div style="font-size:.88em;opacity:.65;margin-top:.3rem;border-top:1px solid rgba(255,255,255,.1);padding-top:.3rem">'+q.exp_en+'</div>':'')+'</div>';
-  if(_dqQuizIdx>0){
-    html='<div style="font-size:11px;color:var(--mu);margin-bottom:.5rem">'+_dqQuizScore+'/'+_dqQuizIdx+' 正解</div>'+html;
-  }
-  body.innerHTML=html;
-}
-function answerDQQuiz(choiceIdx){
-  if(_dqQuizAnswered)return;
-  _dqQuizAnswered=true;
-  if(typeof STAGES==='undefined'||typeof QUIZZES==='undefined')return;
-  var sg=null;for(var i=0;i<STAGES.length;i++){if(STAGES[i].id===_dqQuizStageId){sg=STAGES[i];break;}}
-  var quiz=QUIZZES[sg.quiz_id];
-  var q=quiz.questions[_dqQuizIdx];
-  var correct=choiceIdx===q.ans;
-  if(correct)_dqQuizScore++;
-  // ボタン色付け
-  var btns=document.querySelectorAll('.dq-quiz-ch');
-  btns.forEach(function(b,i){
-    b.disabled=true;
-    if(i===q.ans)b.classList.add('correct');
-    else if(i===choiceIdx&&!correct)b.classList.add('wrong');
-  });
-  var expEl=document.getElementById('dqExp');if(expEl)expEl.style.display='block';
-  // 次の問へ
-  setTimeout(function(){
-    _dqQuizIdx++;_dqQuizAnswered=false;
-    var quiz2=QUIZZES[sg.quiz_id];
-    if(_dqQuizIdx>=quiz2.questions.length){finishDQQuiz(quiz2);}
-    else{renderDQQuizQ(quiz2);}
-  },1600);
-}
-function finishDQQuiz(quiz){
-  var body=document.getElementById('dqQuizBody');if(!body)return;
-  var total=quiz.questions.length;
-  var pct=Math.round(_dqQuizScore/total*100);
-  var passed=pct>=75;
-  // 結果保存
-  var sg=null;for(var i=0;i<STAGES.length;i++){if(STAGES[i].id===_dqQuizStageId){sg=STAGES[i];break;}}
-  var prev=dqS.quizResults[sg.quiz_id]||{};
-  dqS.quizResults[sg.quiz_id]={passed:passed||prev.passed,bestScore:Math.max(_dqQuizScore,prev.bestScore||0)};
-  if(passed&&!dqS.stagesDone.has(_dqQuizStageId)){
-    dqS.stagesDone.add(_dqQuizStageId);
-    dqCheckBadges();
-    dqAddXP(80);
-  }else{saveDQNative();}
-  body.innerHTML='<div style="text-align:center;padding:1rem 0">'
-    +'<div style="font-size:3rem;margin-bottom:.625rem">'+(passed?'🌟':'🙏')+'</div>'
-    +'<div style="font-size:1.4rem;font-weight:700;color:'+(passed?'var(--a)':'var(--mu)')+'">'+_dqQuizScore+'/'+total+'</div>'
-    +'<div style="font-size:12px;color:var(--mu);margin:.4rem 0 .75rem">'+(passed?'合格！ステージクリア 🎊':'もう一度チャレンジしましょう（75%以上で合格）')+'</div>'
-    +(passed?'<div style="font-size:11px;color:var(--a)">+80 XP 獲得</div>':'')
-    +'<button class="btn-big accent" style="margin-top:.875rem" onclick="closeDQQuiz();renderDQMap()">マップに戻る</button>'
-    +'</div>';
-}
-function closeDQQuiz(){document.getElementById('dqQuizOv').classList.remove('show');}
 
 // ══════════════════════════════════════════════════════════
-//  蓮池タブ
+//  煩悩データ（「今日の煩悩」カードで使用）
 // ══════════════════════════════════════════════════════════
 var KLESHA_DATA={
   tan:{name:'貪',reading:'tanha',emoji:'🔥',desc:'執着・欲しいのに得られない',
@@ -5154,71 +3945,6 @@ var KLESHA_DATA={
     sutra:'Dhp.21: Appamādo amatapadaṃ — 怠らないことが不死の道',
     dq_id:'tisarana'}
 };
-var LOTUS_STAGES=[
-  {min:0,     name:'凡夫',  en:'Puthujjana',icon:'🌱',next:1000},
-  {min:1000,  name:'三帰依',en:'Ti-saraṇa', icon:'🕯️',next:5000},
-  {min:5000,  name:'預流果',en:'Sotāpanna', icon:'🌊',next:20000},
-  {min:20000, name:'一来果',en:'Sakadāgāmi',icon:'🌿',next:80000},
-  {min:80000, name:'不還果',en:'Anāgāmi',  icon:'🌸',next:300000},
-  {min:300000,name:'阿羅漢',en:'Arahant',   icon:'🪷',next:null}
-];
-function getCurrentStage(){
-  var dq=getDQState();
-  var dqBonus=dq&&dq.stagesDone?dq.stagesDone.length*2000:0;
-  var score=(st.totalChants||0)+dqBonus;
-  for(var i=LOTUS_STAGES.length-1;i>=0;i--)
-    if(score>=LOTUS_STAGES[i].min)return{sg:LOTUS_STAGES[i],score:score};
-  return{sg:LOTUS_STAGES[0],score:0};
-}
-function tomoshibiEstimate(){
-  var h=new Date().getHours(),m=new Date().getMinutes();
-  var b=[8,5,4,4,5,8,18,40,32,25,20,22,28,24,20,18,20,25,38,60,80,85,70,48];
-  var base=b[h]||10;
-  return Math.max(3,base+Math.round(Math.sin(m*0.31)*base*0.18));
-}
-function buildTomoshibiDots(n){
-  var d=document.getElementById('tomoshibiDots');if(!d)return;
-  d.innerHTML='';
-  for(var i=0;i<Math.min(n,24);i++){
-    var dot=document.createElement('span');dot.className='tdot';
-    dot.style.setProperty('--dl',(Math.random()*1.5).toFixed(2)+'s');
-    d.appendChild(dot);
-  }
-}
-function renderLotusTab(){
-  buildSangaKleshaSelect();
-}
-function openSangaForm(){
-  var sheet=document.getElementById('sangaFormSheet');
-  if(!sheet)return;
-  sheet.style.display='flex';
-  buildSangaKleshaSelect();
-  updateSangaPreview();
-  // 週間カウンター表示を更新
-  var btn=document.getElementById('sangaLotusCountBtn');
-  if(btn){
-    var used=getWeeklyLotusUsed();
-    var limit=getTierLotusLimit();
-    btn.textContent='🪷 今週 '+used+'/'+(limit>=999?'∞':limit)+'個';
-    btn.style.color=canSendLotus()?'rgba(255,255,255,.45)':'rgba(232,121,160,.8)';
-  }
-  setTimeout(function(){var t=document.getElementById('sangaRoomTitle');if(t)t.focus();},200);
-}
-function closeSangaForm(){
-  var sheet=document.getElementById('sangaFormSheet');
-  if(sheet)sheet.style.display='none';
-}
-(function(){
-  var _lastTap=0;
-  document.addEventListener('click',function(e){
-    var _tcLotus=document.getElementById('tc-lotus');
-    if(!_tcLotus||!_tcLotus.classList.contains('on'))return;
-    if(e.target.closest('#sangaFormSheet')||e.target.closest('.sanga-overlay'))return;
-    var now=Date.now();
-    if(now-_lastTap<380){openSangaForm();}
-    _lastTap=now;
-  });
-})();
 function buildKleshaGrid(){
   var g=document.getElementById('kleshaGrid');if(!g)return;
   g.innerHTML='';
@@ -5248,7 +3974,7 @@ function showRxCard(k){
   var btn=document.createElement('button');
   btn.className='btn-s rx-dq-link';btn.style.marginTop='.625rem';
   btn.textContent='📿 探求で「'+d.pali+'」を学ぶ →';
-  btn.onclick=function(){actTab('quest');};
+  btn.onclick=function(){openQuest();};
   card.appendChild(btn);
 }
 function sendEko(){
@@ -5308,9 +4034,6 @@ function startRoulette(){
 }
 
 (function(){var rb=document.getElementById('rouletteBtn');if(rb)rb.addEventListener('click',function(){startRoulette();});})();
-document.querySelectorAll('.dq-snb').forEach(function(b){
-  b.addEventListener('click',function(){dqNavTo(b.getAttribute('data-dqv'));});
-});
 (function(){
   var bh=document.getElementById('btnHeat');if(bh)bh.addEventListener('click',function(){st.calView='heat';lsS(UK,st);renderCal();});
   var bm=document.getElementById('btnMon');if(bm)bm.addEventListener('click',function(){st.calView='monthly';lsS(UK,st);renderCal();});
@@ -5361,15 +4084,6 @@ function getWeeklyLotusUsed(){
     if(data.week!==_getWeekStart())return 0;
     return data.count||0;
   }catch(e){return 0;}
-}
-function addWeeklyLotus(){
-  try{
-    var data=JSON.parse(localStorage.getItem(TIER_LOTUS_KEY))||{};
-    var ws=_getWeekStart();
-    if(data.week!==ws)data={week:ws,count:0};
-    data.count=(data.count||0)+1;
-    localStorage.setItem(TIER_LOTUS_KEY,JSON.stringify(data));
-  }catch(e){}
 }
 function canSendLotus(){return getWeeklyLotusUsed()<getTierLotusLimit();}
 function openTierModal(){
