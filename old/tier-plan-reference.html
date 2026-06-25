@@ -1,0 +1,271 @@
+<!--
+  有料プラン（蓮の花プラン／松竹梅仏ティア）参照用アーカイブ
+  2026-06-21 にユーザー要望により index.html から削除（「プラン関係入りません」）。
+  将来、実際に課金機能を作る場合の参考としてここに保存する。
+  実装当時、実際の決済（Stripe）リンクは未設定（STRIPE_TIER_URLS が REPLACE_*_LINK のプレースホルダのまま）で、
+  ボタンを押すと「準備中」のメール登録案内が出るだけの状態だった。
+
+  index.html に残したもの（功徳計算で使うため）:
+    TIER_DEF, TIER_KEY, TIER_LOTUS_KEY, getUserTier(), tierMult(), hasTierAccess(),
+    getTierLotusLimit(), _getWeekStart(), getWeeklyLotusUsed(), canSendLotus()
+  → これらは常に free tier (tierMult()=1) として動作する。
+-->
+
+<!-- ========== HTML ========== -->
+
+<!-- メニュー内 ティアプラン表示ブロック -->
+<p style="font-size:11px;color:var(--mu);margin-bottom:.35rem">蓮の花プラン</p>
+<div id="menuTierBlock" style="background:rgba(255,255,255,.06);border-radius:12px;padding:.75rem;margin-bottom:.5rem">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+    <div id="menuTierName" style="font-size:13px;font-weight:700;color:var(--a)">🌿 無料</div>
+    <div id="menuTierMult" style="font-size:11px;color:rgba(212,168,67,.8);font-weight:700">功徳 ×1.0</div>
+  </div>
+  <button onclick="openTierModal();togMenu()" style="width:100%;padding:9px;border-radius:12px;
+    background:linear-gradient(135deg,rgba(212,168,67,.7),rgba(232,121,160,.6));
+    color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:700">
+    🪷 プランを確認 / アップグレード
+  </button>
+</div>
+
+<!-- グローバルヘッダー内 ティアバッジ -->
+<button class="hdr-tier" id="hdrTierBtn" onclick="openTierModal()" title="プランを確認">🌿 無料</button>
+
+<!-- ならいタブ ストリークカード内 アップグレードCTA -->
+<div id="naraiTierUpgradeCta" style="display:none">
+  <button onclick="openTierModal()" style="width:100%;margin-top:.5rem;padding:8px;border-radius:10px;
+    background:linear-gradient(135deg,rgba(212,168,67,.7),rgba(232,121,160,.6));
+    color:#fff;border:none;cursor:pointer;font-size:11px;font-weight:700">
+    🪷 プランアップグレードで功徳UP
+  </button>
+</div>
+
+<!-- ならいタブ シェア・招待・プランボタン列の「プラン」ボタン -->
+<button onclick="openTierModal()" style="flex:1;padding:8px 4px;border-radius:11px;background:rgba(232,121,160,.1);border:1px solid rgba(232,121,160,.25);color:rgba(232,121,160,.9);font-size:10px;cursor:pointer;font-weight:600">🪷 プラン</button>
+
+<!-- JS参照用の非表示要素（ならいタブ） -->
+<div id="naraiTierCard" style="display:none"></div>
+
+<!-- ティア選択モーダル本体 -->
+<div class="tier-modal" id="tierModal" onclick="if(event.target===this)closeTierModal()">
+  <div class="tier-modal-inner">
+    <div style="text-align:center;margin-bottom:.875rem">
+      <div style="font-size:1.2rem;font-weight:700;color:rgba(255,255,255,.93)">🪷 蓮の花プラン</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.38);margin-top:.2rem">流せる蓮の数はプランによって変わります</div>
+    </div>
+    <div id="tierWeeklyInfo" style="background:rgba(255,255,255,.06);border-radius:12px;
+      padding:.5rem .875rem;margin-bottom:.75rem;text-align:center;
+      font-size:11px;color:rgba(255,255,255,.55);line-height:1.6"></div>
+    <div id="tierList"></div>
+    <div style="margin-top:.75rem;font-size:9px;color:rgba(255,255,255,.2);text-align:center;line-height:1.6">
+      ※ いつでもキャンセル可能です
+    </div>
+    <button onclick="closeTierModal()" style="width:100%;margin-top:.75rem;padding:12px;
+      border-radius:50px;background:transparent;border:1px solid rgba(255,255,255,.14);
+      color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;">閉じる</button>
+  </div>
+</div>
+
+<!-- ========== CSS (index.html <style> 内) ==========
+.tier-modal{position:fixed;inset:0;z-index:505;background:rgba(0,0,0,.78);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  display:none;align-items:center;justify-content:center;padding:1rem;}
+.tier-modal.show{display:flex;}
+.tier-modal-inner{background:linear-gradient(160deg,rgba(10,12,25,.97),rgba(20,8,30,.97));
+  border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:1.5rem 1.25rem;
+  width:100%;max-width:360px;max-height:90vh;overflow-y:auto;}
+.tier-modal-inner::-webkit-scrollbar{display:none;}
+.tier-row{display:flex;flex-direction:column;padding:.7rem .875rem;border-radius:16px;
+  border:1px solid rgba(255,255,255,.1);margin-bottom:.5rem;cursor:pointer;
+  transition:background .18s,border-color .18s;}
+.tier-row.t-active{border-color:rgba(232,121,160,.55);background:rgba(232,121,160,.08);}
+.tier-row:active{background:rgba(255,255,255,.07);}
+.tier-row-head{display:flex;align-items:center;gap:.625rem;width:100%;}
+.tier-badge{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0;}
+.tier-info{flex:1;min-width:0;}
+.tier-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.92);display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;}
+.tier-feat{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;line-height:1.45;}
+.tier-desc{font-size:10px;color:rgba(255,255,255,.42);margin-top:1px;line-height:1.4;}
+.tier-price{font-size:12px;color:rgba(212,168,67,.9);font-weight:700;white-space:nowrap;flex-shrink:0;}
+.tier-upgrade-btn{width:100%;padding:11px;border-radius:12px;margin-top:.6rem;
+  background:linear-gradient(135deg,rgba(212,168,67,.9),rgba(232,121,160,.8));
+  color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.04em;
+  box-shadow:0 4px 16px rgba(212,168,67,.25);transition:opacity .15s,transform .1s;display:block;}
+.tier-upgrade-btn:active{opacity:.85;transform:scale(.98);}
+.tier-merit-tag{display:inline-flex;align-items:center;background:rgba(212,168,67,.18);
+  border:1px solid rgba(212,168,67,.38);border-radius:20px;padding:2px 8px;
+  font-size:10px;font-weight:700;color:#d4a843;}
+.hdr-tier{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;
+  border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.65);transition:all .15s;white-space:nowrap;}
+.hdr-tier:active{background:rgba(255,255,255,.13);}
+.hdr-tier.tier-ume{border-color:rgba(232,121,160,.4);color:rgba(232,121,160,.85);}
+.hdr-tier.tier-take{border-color:rgba(120,200,120,.4);color:rgba(120,200,120,.85);}
+.hdr-tier.tier-matsu{border-color:rgba(232,121,160,.55);color:rgba(232,121,160,.9);}
+.hdr-tier.tier-butsu{border-color:rgba(212,168,67,.55);color:rgba(212,168,67,.9);}
+========================================================== -->
+
+<script>
+// ========== JS (index.html <script> 内) ==========
+// 注: TIER_DEF / getUserTier / tierMult / hasTierAccess / getTierLotusLimit /
+//     _getWeekStart / getWeeklyLotusUsed / canSendLotus は index.html に残存（功徳計算で使用）。
+//     ここには「UIを開く・更新する」系のみを retain。
+
+function setUserTier(key){
+  try{localStorage.setItem(TIER_KEY,key);}catch(e){}
+  renderTierModal();
+  updateHdrTier();
+}
+function openTierModal(){
+  renderTierModal();
+  document.getElementById('tierModal').classList.add('show');
+}
+function closeTierModal(){document.getElementById('tierModal').classList.remove('show');}
+var STRIPE_TIER_URLS={
+  ume:'https://buy.stripe.com/REPLACE_UME_LINK',
+  take:'https://buy.stripe.com/REPLACE_TAKE_LINK',
+  matsu:'https://buy.stripe.com/REPLACE_MATSU_LINK',
+  butsu:'https://buy.stripe.com/REPLACE_BUTSU_LINK'
+};
+var TIER_MULT_MAP={free:1,ume:2,take:3,matsu:5,butsu:10};
+function openTierUpgrade(tierKey){
+  var url=STRIPE_TIER_URLS[tierKey];
+  if(!url||url.indexOf('REPLACE')>=0){
+    var ov=document.createElement('div');
+    ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)';
+    var d2=TIER_DEF[tierKey]||TIER_DEF.ume;
+    ov.innerHTML='<div style="text-align:center;padding:2rem 1.5rem;max-width:300px">'
+      +'<div style="font-size:2.5rem;margin-bottom:.875rem">🙏</div>'
+      +'<div style="font-size:16px;font-weight:700;color:rgba(255,255,255,.93);margin-bottom:.5rem">'+d2.badge+' '+d2.name+'プラン — 準備中</div>'
+      +'<div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1rem">'
+      +'間もなく開始予定です。<br>メールアドレスをご登録いただくと、<br>先行案内をお届けします。</div>'
+      +'<div style="background:rgba(255,255,255,.07);border-radius:12px;padding:14px;margin-bottom:14px;text-align:left">'
+      +'<div style="font-size:11px;color:rgba(212,168,67,.8);font-weight:700;margin-bottom:8px">'+d2.name+'プランの特典</div>'
+      +'<div style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.9">'
+      +'🪷 功徳倍率 ×'+d2.mult+'<br>'
+      +'🌸 蓮池に週'+( d2.lotus>=999?'無制限':d2.lotus)+'個<br>'
+      +'🛡 ストリークシールド毎週付与<br>'
+      +(d2.msgRx>0?'💬 サンガカスタムメッセージ<br>':'')
+      +(tierKey==='take'||tierKey==='matsu'||tierKey==='butsu'?'📖 探求Stage5 菩薩道解放<br>':'')
+      +'</div></div>'
+      +'<a href="mailto:panda0416okura@gmail.com?subject=%E3%82%88%E3%82%80%E3%82%88%E3%82%80'+encodeURIComponent(d2.name)+'%E3%83%97%E3%83%A9%E3%83%B3%E5%85%88%E8%A1%8C%E7%99%BB%E9%8C%B2&body='+encodeURIComponent(d2.name+'プランに興味があります。開始したらすぐに案内をお送りください。\n\nプラン: '+d2.name+' ('+d2.price+')\n\nよむよむお題目アプリより') +'" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:50px;background:linear-gradient(135deg,rgba(212,168,67,.85),rgba(232,121,160,.75));color:#fff;text-decoration:none;font-size:14px;font-weight:700;margin-bottom:10px">📧 先行登録する（無料）</a>'
+      +'<button onclick="this.parentNode.parentNode.remove()" style="padding:10px;width:100%;border-radius:50px;background:transparent;border:none;color:rgba(255,255,255,.3);font-size:12px;cursor:pointer">あとで</button>'
+      +'</div>';
+    ov.onclick=function(e){if(e.target===ov)ov.remove();};
+    document.body.appendChild(ov);
+    return;
+  }
+  var ret=encodeURIComponent(location.origin+location.pathname+'?tier='+tierKey);
+  window.open(url+'?success_url='+ret+'&client_reference_id='+tierKey,'_blank');
+}
+function updateHdrTier(){
+  var t=getUserTier();var d=TIER_DEF[t]||TIER_DEF.free;
+  var btn=document.getElementById('hdrTierBtn');
+  if(btn){btn.textContent=d.badge+' '+d.name;btn.className='hdr-tier tier-'+t;}
+  var mn=document.getElementById('menuTierName');
+  if(mn)mn.textContent=d.badge+' '+d.name+'プラン';
+  var mm=document.getElementById('menuTierMult');
+  var mult=(TIER_MULT_MAP&&TIER_MULT_MAP[t])||1.0;
+  if(mm)mm.textContent='功徳 ×'+mult;
+}
+function renderTierModal(){
+  var cur=getUserTier();
+  var used=getWeeklyLotusUsed();
+  var limit=getTierLotusLimit();
+  var info=document.getElementById('tierWeeklyInfo');
+  var tierOrder=['free','ume','take','matsu','butsu'];
+  if(info){
+    info.innerHTML='<span style="color:rgba(255,255,255,.55)">今週の蓮</span> '
+      +'<strong style="color:rgba(232,121,160,.9);font-size:13px">'+used+'</strong>'
+      +'<span style="color:rgba(255,255,255,.35)"> / '+(limit>=999?'∞':limit)+'個</span>'
+      +(canSendLotus()?'':' <span style="color:rgba(232,121,160,.7);font-size:10px">— 上限に達しました</span>');
+  }
+  var list=document.getElementById('tierList');if(!list)return;
+  list.innerHTML='';
+  tierOrder.forEach(function(k){
+    var d=TIER_DEF[k];
+    var isActive=cur===k;
+    var lotusStr=d.lotus>=999?'∞':d.lotus;
+    var msgStr=d.msgRx===0?'スタンプのみ':d.msgRx>=999?'全文読み書き':d.msgRx+'文字';
+    var mult=TIER_MULT_MAP[k]||1.0;
+    var isUpgrade=tierOrder.indexOf(k)>tierOrder.indexOf(cur);
+    var row=document.createElement('div');
+    row.className='tier-row'+(isActive?' t-active':'');
+    var upgradeHTML='';
+    if(isUpgrade&&k!=='free'){
+      upgradeHTML='<button class="tier-upgrade-btn" data-tier-upgrade="'+k+'">✨ '+d.name+'プランにする（'+d.price+'）</button>';
+    }
+    row.innerHTML=
+      '<div class="tier-row-head">'+
+        '<div class="tier-badge">'+d.badge+'</div>'+
+        '<div class="tier-info">'+
+          '<div class="tier-name">'+d.name
+            +(isActive?'<span style="font-size:9px;background:rgba(232,121,160,.22);color:rgba(232,121,160,.9);border-radius:20px;padding:1px 7px">現在のプラン</span>':'')
+            +'<span class="tier-merit-tag">功徳×'+mult+'</span>'+
+          '</div>'+
+          '<div class="tier-feat">'+d.feat+'</div>'+
+        '</div>'+
+        '<div class="tier-price">'+d.price+'</div>'+
+      '</div>'+
+      upgradeHTML;
+    row.addEventListener('click',function(e){
+      var btn=e.target.closest('[data-tier-upgrade]');
+      if(btn){e.stopPropagation();openTierUpgrade(btn.dataset.tierUpgrade);}
+    });
+    list.appendChild(row);
+  });
+}
+function showStreakUpgradeCta(days){
+  var existing=document.getElementById('streakCtaOverlay');
+  if(existing)existing.remove();
+  var mult={7:'×1.1',30:'×1.25',100:'×1.5'}[days]||'×1.1';
+  var badge={7:'梅',30:'竹',100:'松'}[days]||'梅';
+  var tier={7:'ume',30:'take',100:'matsu'}[days]||'ume';
+  var ov=document.createElement('div');
+  ov.id='streakCtaOverlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center';
+  ov.innerHTML='<div style="width:100%;max-width:430px;background:linear-gradient(160deg,#0a0c19,#140820);border:1px solid rgba(212,168,67,.4);border-radius:22px 22px 0 0;padding:28px 20px 44px">'
+    +'<div style="text-align:center;margin-bottom:18px">'
+    +'<div style="font-size:3rem;margin-bottom:8px">🔥</div>'
+    +'<div style="font-size:1.4rem;font-weight:800;color:#d4a843;font-family:serif;margin-bottom:6px">'+days+'日連続達成！</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:18px">'
+    +days+'日間、毎日修行を続けられました。<br>あなたの功徳は本物です。</div>'
+    +'<div style="background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.3);border-radius:14px;padding:16px;margin-bottom:16px">'
+    +'<div style="font-size:11px;color:rgba(212,168,67,.7);font-weight:700;letter-spacing:.08em;margin-bottom:8px">'+badge+'プランにアップグレードすると</div>'
+    +'<div style="display:flex;flex-direction:column;gap:7px;text-align:left">'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.8)">🪷 功徳倍率 <strong style="color:#d4a843">'+mult+'</strong> に増加</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.8)">🛡 連続修行シールド毎週付与</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.8)">💬 サンガでカスタムメッセージ送信</div>'
+    +'</div></div>'
+    +'<button onclick="document.getElementById(\'streakCtaOverlay\').remove();openTierModal()" style="width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,rgba(212,168,67,.85),rgba(232,121,160,.75));border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:10px">🪷 '+badge+'プランを見る</button>'
+    +'<button onclick="document.getElementById(\'streakCtaOverlay\').remove()" style="width:100%;padding:12px;border-radius:14px;background:transparent;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer">今は無料のまま続ける</button>'
+    +'</div></div>';
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+function showFirstTimeCta(){
+  var existing=document.getElementById('firstTimeCtaOverlay');if(existing)existing.remove();
+  var ov=document.createElement('div');
+  ov.id='firstTimeCtaOverlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:flex;align-items:flex-end;justify-content:center';
+  ov.innerHTML='<div style="width:100%;max-width:430px;background:linear-gradient(160deg,#0a0c19,#160a26);border:1px solid rgba(212,168,67,.4);border-radius:22px 22px 0 0;padding:28px 20px 44px">'
+    +'<div style="text-align:center;margin-bottom:18px">'
+    +'<div style="font-size:3rem;margin-bottom:8px">🪷</div>'
+    +'<div style="font-size:1.4rem;font-weight:800;color:#d4a843;font-family:serif;margin-bottom:6px">10回の功徳、積まれました</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.75;margin-bottom:18px">'
+    +'南無妙法蓮華経を唱えるたびに<br>功徳が積み重なっていきます。<br>梅プランで功徳の流れを加速しませんか？</div>'
+    +'<div style="background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.25);border-radius:14px;padding:16px;margin-bottom:16px;text-align:left">'
+    +'<div style="font-size:11px;color:rgba(212,168,67,.8);font-weight:700;letter-spacing:.08em;margin-bottom:10px">🌸 梅プラン ¥480/月 でできること</div>'
+    +'<div style="display:flex;flex-direction:column;gap:8px">'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.85)">🔥 功徳倍率 <strong style="color:#d4a843">×1.1</strong> に増加</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.85)">🛡 連続修行シールド（週1回）</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.85)">💬 サンガで25回メッセージ送信</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.85)">🎋 ダルマクエスト全ステージ開放</div>'
+    +'</div></div>'
+    +'<button onclick="document.getElementById(\'firstTimeCtaOverlay\').remove();openTierModal()" style="width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,rgba(212,168,67,.9),rgba(232,121,160,.8));border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:10px">🌸 梅プランを見る（¥480/月）</button>'
+    +'<button onclick="document.getElementById(\'firstTimeCtaOverlay\').remove()" style="width:100%;padding:12px;border-radius:14px;background:transparent;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer">今は無料のまま続ける</button>'
+    +'</div></div>';
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+</script>
